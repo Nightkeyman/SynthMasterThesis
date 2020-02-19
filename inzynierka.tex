@@ -1,0 +1,77 @@
+\documentclass[nostrict]{szablonPG}
+
+
+\usepackage{pdfpages}
+\usepackage{multicol} % do sk³adu w dwÃ³ch kolumnach
+\usepackage[nottoc]{tocbibind}
+\usepackage[unicode=true]{hyperref}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{siunitx}
+\usepackage{caption}
+\usepackage[singlelinecheck=false % <-- important
+]{caption}
+\newcommand{\desctotoc}[1]{%
+	\addtocontents{toc}{\medskip\noindent\detokenize{#1}\leavevmode\par\medskip}
+}
+\begin{document}
+\includepdf[pages=-]{StronaTytulowa_160648.pdf}
+\includepdf[pages=-]{Oswiadczenie_160648.pdf}
+
+	\setcounter{page}{3}
+	\let\cleardoublepage\clearpage
+	\include{streszczenie}
+	\include{abstract}
+%	\tableofcontents    % spis treci
+	
+	\include{spis}
+	\include{skroty}
+	\include{chapter1}
+	\include{chapter2}
+	\include{chapter3}
+	\include{chapter5}
+	\include{chapter4}
+%	\include{chapter6}
+	\include{chapter7}
+	\include{podsumowanie}
+
+
+	\listoffigures      % spis obrazkÃ³w
+	\listoftables
+
+	\bibliographystyle{plain}                       % styl bibliografi
+	\begin{thebibliography}{20}                      % poczÂ¹tek rodowiska
+		\small              % spisy i bibliografie sk³adamy mniejszym stopniem pisma
+		\bibitem{wahadlo}      % \bibitem{etykieta}
+		Ryan Lee Robles, Yuri A.W. Shardt, \emph{Linear Motion Inverted Pendulum}, Laboratory of manual.
+		
+		\bibitem{strona_net_wahadlo_rownania}
+		Control Tutorials for Matlab and Simulink, http://ctms.engin.umich.edu (data dost\k{e}pu 15.10.2018 r.).
+		
+		\bibitem{encyklopedia_automatyki}		
+		W\l{}adyslaw Findeisen, Henryk Le\'skiewicz, Stefan W\k{e}grzyn, \emph{Encyklopedia Techniki. Tom Automatyka}, str.~162, Wydawnictwo Naukowo-Techniczne Warszawa, 1972.
+		
+		\bibitem{dtr_stabilizator}
+		 LM78XX/LM78XXA 3-Terminal 1A Positive Voltage Regulator, http://hades.mech.northwestern.edu (data dost\k{e}pu 12.10.2018 r.).
+		
+		\bibitem{identyfikacja_procesow}
+		Torsten S{\H o}derst{\H o}m, \emph{Identyfikacja Proces\'ow}, Wydawnictwo Naukowe PWN, 1997.
+		
+		\bibitem{Kaczorek_tom1}
+		Tadeusz Kaczorek, \emph{Teoria Sterowania Tom 1}, Pa\'nstwowe Wydawnictwo Naukowe, 1977.
+		
+		\bibitem{Kaczorek_tom2}
+		Tadeusz Kaczorek, \emph{Teoria Sterowania Tom 2}, Pa\'nstwowe Wydawnictwo Naukowe, 1981.
+		
+		\bibitem{Brogan}
+		William L. Brogan, \emph{Modern Control Theory}, trzecia edycja, Pearson, 1990.
+
+		\bibitem{wahadlo_lqr}
+		Adam Owczarkowski, Jaros\l{}aw Go\'sli\'nski, \emph{Stabilizacja Wahad\l{}a Odwr\'oconego z Nap\k{e}dem Inercyjnym}, Politechnika Pozna\'nska, Wydzia\l{} Elektryczny, 2012.
+				
+		\bibitem{lesnicki}
+		Andrzej Le\'snicki, \emph{Technika Cyfrowego Przetwarzania Sygna\l{}\'ow }, Wydawnictwo Politechniki Gda\'nskiej, 2016.
+			
+	\end{thebibliography}
+	
+\end{document}
