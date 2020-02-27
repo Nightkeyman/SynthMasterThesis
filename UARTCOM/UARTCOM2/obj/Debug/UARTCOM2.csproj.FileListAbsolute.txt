@@ -1,0 +1,9 @@
+C:\Users\Jakub\Documents\Visual Studio 2019\C#Projects\UARTCOM2\UARTCOM2\bin\Debug\UARTCOM2.exe.config
+C:\Users\Jakub\Documents\Visual Studio 2019\C#Projects\UARTCOM2\UARTCOM2\bin\Debug\UARTCOM2.exe
+C:\Users\Jakub\Documents\Visual Studio 2019\C#Projects\UARTCOM2\UARTCOM2\bin\Debug\UARTCOM2.pdb
+C:\Users\Jakub\Documents\Visual Studio 2019\C#Projects\UARTCOM2\UARTCOM2\obj\Debug\UARTCOM2.csprojAssemblyReference.cache
+C:\Users\Jakub\Documents\Visual Studio 2019\C#Projects\UARTCOM2\UARTCOM2\obj\Debug\UARTCOM2.Form1.resources
+C:\Users\Jakub\Documents\Visual Studio 2019\C#Projects\UARTCOM2\UARTCOM2\obj\Debug\UARTCOM2.Properties.Resources.resources
+C:\Users\Jakub\Documents\Visual Studio 2019\C#Projects\UARTCOM2\UARTCOM2\obj\Debug\UARTCOM2.csproj.GenerateResource.cache
+C:\Users\Jakub\Documents\Visual Studio 2019\C#Projects\UARTCOM2\UARTCOM2\obj\Debug\UARTCOM2.exe
+C:\Users\Jakub\Documents\Visual Studio 2019\C#Projects\UARTCOM2\UARTCOM2\obj\Debug\UARTCOM2.pdb
