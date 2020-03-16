@@ -1,0 +1,613 @@
+******************************************************************************
+               TMS320C6x Linker PC v7.4.14                     
+******************************************************************************
+>> Linked Wed Mar 04 17:46:33 2020
+
+OUTPUT FILE NAME:   <UART.out>
+ENTRY POINT SYMBOL: "_c_int00"  address: 1000fb80
+
+
+MEMORY CONFIGURATION
+
+         name            origin    length      used     unused   attr    fill
+----------------------  --------  ---------  --------  --------  ----  --------
+  ROM_VECS              00000000   00001000  00000000  00001000  RWIX
+  ROM                   00001000   000bf000  00000000  000bf000  RWIX
+  VEC                   10000000   00001c00  00000000  00001c00  RWIX
+  RAM                   10001c00   0003e400  00010d29  0002d6d7  RWIX
+  SDRAM                 80000000   08000000  00000000  08000000  RWIX
+  ASYNC2                90000000   00008000  00000000  00008000  RWIX
+
+
+SECTION ALLOCATION MAP
+
+ output                                  attributes/
+section   page    origin      length       input sections
+--------  ----  ----------  ----------   ----------------
+.pinit     0    10001c00    00000000     UNINITIALIZED
+
+.data      0    10001c00    00000000     UNINITIALIZED
+
+.text      0    10001c00    0000e700     
+                  10001c00    00001340     PADK6d.lib : PADK_I2C.obj (.text)
+                  10002f40    00000940     csl_c6727_CCS6d.lib : csl_mcaspHwSetup.obj (.text:csl_section:mcasp)
+                  10003880    00000740                         : csl_dmaxHwControl.obj (.text)
+                  10003fc0    000006c0                         : csl_dmaxHwSetup.obj (.text:csl_section:dmax)
+                  10004680    000006a0     rts67plus.lib : _printfi.obj (.text:__getarg_diouxp)
+                  10004d20    00000660                   : divd.obj (.text:__divd)
+                  10005380    00000600                   : _printfi.obj (.text:__setfield)
+                  10005980    00000600     csl_c6727_CCS6d.lib : csl_i2cHwControl.obj (.text)
+                  10005f80    00000560     PADK6d.lib : PADK_UART.obj (.text)
+                  100064e0    00000520     rts67plus.lib : _printfi.obj (.text:__printfi)
+                  10006a00    000004a0                   : fputs.obj (.text:_fputs)
+                  10006ea0    00000480     csl_c6727_CCS6d.lib : csl_i2cGetHwStatus.obj (.text)
+                  10007320    00000420     PADK6d.lib : PADK_GPIO.obj (.text)
+                  10007740    000003e0     rts67plus.lib : _printfi.obj (.text:__pproc_fge)
+                  10007b20    000003e0     main.obj (.text:retain)
+                  10007f00    000003c0     csl_c6727_CCS6d.lib : csl_dmaxOpen.obj (.text:csl_section:dmax)
+                  100082c0    000003c0                         : csl_intcHookIsr.obj (.text:csl_section:intc)
+                  10008680    000003c0     main.obj (.text)
+                  10008a40    000003a0     rts67plus.lib : _printfi.obj (.text:_fcvt)
+                  10008de0    00000380                   : _printfi.obj (.text:_ecvt)
+                  10009160    00000360                   : _printfi.obj (.text:__pproc_fwp)
+                  100094c0    00000360                   : memory.obj (.text:_free)
+                  10009820    00000340     csl_c6727_CCS6d.lib : csl_dmaxHwSetupGpParam.obj (.text:csl_section:dmax)
+                  10009b60    00000300     rts67plus.lib : _printfi.obj (.text:__pconv_e)
+                  10009e60    000002e0                   : imath64.obj (.text:__divull)
+                  1000a140    000002e0                   : _printfi.obj (.text:__pproc_diouxp)
+                  1000a420    000002e0     csl_c6727_CCS6d.lib : csl_i2cGetHwStatus.obj (.text:csl_section:i2c)
+                  1000a700    000002e0                         : csl_i2cHwSetup.obj (.text:csl_section:i2c)
+                  1000a9e0    000002a0     rts67plus.lib : _printfi.obj (.text:__pproc_str)
+                  1000ac80    000002a0                   : setvbuf.obj (.text:_setvbuf)
+                  1000af20    000002a0     csl_c6727_CCS6d.lib : csl_i2cHwControl.obj (.text:csl_section:i2c)
+                  1000b1c0    00000280     rts67plus.lib : _printfi.obj (.text:__pconv_g)
+                  1000b440    00000280                   : fputc.obj (.text:_fputc)
+                  1000b6c0    00000240     csl_c6727_CCS6d.lib : csl_i2cHwSetupRaw.obj (.text:csl_section:i2c)
+                  1000b900    00000220     rts67plus.lib : trgdrv.obj (.text:_HOSTrename)
+                  1000bb20    00000220                   : _printfi.obj (.text:__mcpy)
+                  1000bd40    00000220                   : memory.obj (.text:_malloc)
+                  1000bf60    00000200                   : memcpy62.obj (.text:_memcpy)
+                  1000c160    000001c0                   : imath40.obj (.text:__divul)
+                  1000c320    000001c0                   : lowlev.obj (.text:_getdevice)
+                  1000c4e0    000001a0                   : fseek.obj (.text:_fseek)
+                  1000c680    000001a0     csl_c6727_CCS6d.lib : csl_dmaxHwControl.obj (.text:csl_section:dmax)
+                  1000c820    00000180     rts67plus.lib : _printfi.obj (.text:__ltostr)
+                  1000c9a0    00000180                   : _printfi.obj (.text:__pproc_fflags)
+                  1000cb20    00000160                   : fclose.obj (.text:__closefile)
+                  1000cc80    00000160     csl_c6727_CCS6d.lib : CSL_dmaxGetNextFreeParamEntry.obj (.text)
+                  1000cde0    00000160                         : csl_dmaxHwSetupFifoParam.obj (.text:csl_section:dmax)
+                  1000cf40    00000160                         : csl_intcOpen.obj (.text:csl_section:intc)
+                  1000d0a0    00000160                         : csl_mcaspGetChipCtxt.obj (.text:csl_section:mcasp)
+                  1000d200    00000140     rts67plus.lib : trgdrv.obj (.text:_HOSTlseek)
+                  1000d340    00000140                   : atoi.obj (.text:_atoi)
+                  1000d480    00000140     csl_c6727_CCS6d.lib : csl_dmaxClose.obj (.text:csl_section:dmax)
+                  1000d5c0    00000120     rts67plus.lib : trgdrv.obj (.text:_HOSTopen)
+                  1000d6e0    00000120                   : trgdrv.obj (.text:_HOSTread)
+                  1000d800    00000120                   : trgdrv.obj (.text:_HOSTwrite)
+                  1000d920    00000120                   : frcmpyd_div.obj (.text:__frcmpyd_div)
+                  1000da40    00000120                   : _io_perm.obj (.text:__wrt_ok)
+                  1000db60    00000120                   : lowlev.obj (.text:_close)
+                  1000dc80    00000120                   : fprintf.obj (.text:_fprintf)
+                  1000dda0    00000120                   : ltoa.obj (.text:_ltoa)
+                  1000dec0    00000120                   : memset.obj (.text:_memset)
+                  1000dfe0    00000120     csl_c6727_CCS6d.lib : csl_i2cOpen.obj (.text:csl_section:i2c)
+                  1000e100    00000120                         : csl_mcaspOpen.obj (.text:csl_section:mcasp)
+                  1000e220    00000100     rts67plus.lib : trgdrv.obj (.text:_HOSTunlink)
+                  1000e320    00000100                   : autoinit.obj (.text:__auto_init)
+                  1000e420    00000100                   : _printfi.obj (.text:__div)
+                  1000e520    00000100                   : _printfi.obj (.text:__pconv_f)
+                  1000e620    00000100                   : strasg.obj (.text:__strasgi)
+                  1000e720    00000100     csl_c6727_CCS6d.lib : csl_dmaxHwSetupSpiParam.obj (.text:csl_section:dmax)
+                  1000e820    000000e0     rts67plus.lib : trgdrv.obj (.text:_HOSTclose)
+                  1000e900    000000e0                   : fopen.obj (.text:__cleanup)
+                  1000e9e0    000000e0                   : fflush.obj (.text:__doflush)
+                  1000eac0    000000e0                   : _printfi.obj (.text:__fcpy)
+                  1000eba0    000000e0                   : exit.obj (.text:_exit)
+                  1000ec80    000000e0                   : lowlev.obj (.text:_lseek)
+                  1000ed60    000000e0                   : memory.obj (.text:_mremove)
+                  1000ee40    000000e0                   : lowlev.obj (.text:_write)
+                  1000ef20    000000e0     csl_c6727_CCS6d.lib : csl_dmaxHwSetup1dParam.obj (.text:csl_section:dmax)
+                  1000f000    000000e0                         : csl_intcEventEnable.obj (.text:csl_section:intc)
+                  1000f0e0    000000e0                         : csl_intcInit.obj (.text:csl_section:intc)
+                  1000f1c0    000000c0     rts67plus.lib : imath40.obj (.text:__divli)
+                  1000f280    000000c0                   : divu.obj (.text:__divu)
+                  1000f340    000000c0                   : _printfi.obj (.text:__ecpy)
+                  1000f400    000000c0                   : cpy_tbl.obj (.text:_copy_in)
+                  1000f4c0    000000c0                   : lowlev.obj (.text:_finddevice)
+                  1000f580    000000c0                   : memory.obj (.text:_minsert)
+                  1000f640    000000c0     csl_c6727_CCS6d.lib : csl_i2cGetBaseAddress.obj (.text:csl_section:i2c)
+                  1000f700    000000a0     rts67plus.lib : fixdli.obj (.text:__fixdli)
+                  1000f7a0    000000a0                   : trgmsg.obj (.text:_readmsg)
+                  1000f840    000000a0                   : lowlev.obj (.text:_unlink)
+                  1000f8e0    000000a0     csl_c6727_CCS6d.lib : csl_dmaxGetBaseAddress.obj (.text:csl_section:dmax)
+                  1000f980    00000080     rts67plus.lib : cpp_init.obj (.text:___TI_cpp_init)
+                  1000fa00    00000080                   : fltlid.obj (.text:__fltlid)
+                  1000fa80    00000080                   : llshift.obj (.text:__llshl)
+                  1000fb00    00000080                   : mpyll.obj (.text:__mpyll)
+                  1000fb80    00000080                   : boot.obj (.text:_c_int00)
+                  1000fc00    00000080                   : memccpy.obj (.text:_memccpy)
+                  1000fc80    00000080                   : trgmsg.obj (.text:_writemsg)
+                  1000fd00    00000060                   : llshift.obj (.text:__llshru)
+                  1000fd60    00000060                   : imath40.obj (.text:__remli)
+                  1000fdc0    00000060                   : imath64.obj (.text:__subcull)
+                  1000fe20    00000060     csl_c6727_CCS6d.lib : _CSL_eventEnorDisable.obj (.text)
+                  1000fe80    00000060                         : csl_i2cClose.obj (.text:csl_section:i2c)
+                  1000fee0    00000060                         : csl_intcGlobalDisable.obj (.text:csl_section:intc)
+                  1000ff40    00000060                         : csl_intcGlobalEnable.obj (.text:csl_section:intc)
+                  1000ffa0    00000060                         : csl_intcGlobalRestore.obj (.text:csl_section:intc)
+                  10010000    00000060                         : csl_intcSetVectorPtr.obj (.text:csl_section:intc)
+                  10010060    00000040     rts67plus.lib : isinf.obj (.text:___isinf)
+                  100100a0    00000040                   : _printfi.obj (.text:___isnan)
+                  100100e0    00000040                   : args_main.obj (.text:__args_main)
+                  10010120    00000040     csl_c6727_CCS6d.lib : _CSL_intcGlobalEnorDisable.obj (.text)
+                  10010160    00000040                         : csl_dmaxSetDetr.obj (.text)
+                  100101a0    00000020     rts67plus.lib : negll.obj (.text:__negll)
+                  100101c0    00000020                   : _lock.obj (.text:__nop)
+                  100101e0    00000020                   : fprintf.obj (.text:__outc)
+                  10010200    00000020                   : fprintf.obj (.text:__outs)
+                  10010220    00000020                   : exit.obj (.text:_abort)
+                  10010240    00000020                   : remove.obj (.text:_remove)
+                  10010260    00000020     csl_c6727_CCS6d.lib : _CSL_intcFetchPacket.obj (.text)
+                  10010280    00000020                         : _CSL_intcISTP.obj (.text)
+                  100102a0    00000020                         : _CSL_intcReadISTP.obj (.text)
+                  100102c0    00000020                         : csl_chipInit.obj (.text:csl_section:chip)
+                  100102e0    00000020                         : csl_i2cInit.obj (.text:csl_section:i2c)
+
+.far       0    10010300    00000b31     UNINITIALIZED
+                  10010300    00000674     main.obj (.far)
+                  10010974    00000324     rts67plus.lib : defs.obj (.far)
+                  10010c98    0000011c                   : lowlev.obj (.far)
+                  10010db4    00000034     PADK6d.lib : PADK_I2C.obj (.far)
+                  10010de8    00000020     csl_c6727_CCS6d.lib : csl_dmaxInit.obj (.far)
+                  10010e08    0000000c     rts67plus.lib : exit.obj (.far)
+                  10010e14    00000008                   : _lock.obj (.far)
+                  10010e1c    00000008                   : memory.obj (.far)
+                  10010e24    00000008                   : trgdrv.obj (.far)
+                  10010e2c    00000004                   : fopen.obj (.far)
+                  10010e30    00000001     PADK6d.lib : PADK_GPIO.obj (.far)
+
+.stack     0    10010e38    00000800     
+                  10010e38    00000008     rts67plus.lib : boot.obj (.stack) [fill = deadbeef]
+                  10010e40    000007f8     --HOLE-- [fill = deadbeef]
+
+.sysmem    0    10011638    00000800     UNINITIALIZED
+                  10011638    00000008     rts67plus.lib : memory.obj (.sysmem)
+                  10011640    000007f8     --HOLE--
+
+.cinit     0    10011e38    0000070c     
+                  10011e38    000004ec     main.obj (.cinit)
+                  10012324    00000004     --HOLE-- [fill = 0]
+                  10012328    0000005c     rts67plus.lib : defs.obj (.cinit)
+                  10012384    00000004     --HOLE-- [fill = 0]
+                  10012388    0000005c                   : lowlev.obj (.cinit)
+                  100123e4    00000004     --HOLE-- [fill = 0]
+                  100123e8    00000048     PADK6d.lib : PADK_I2C.obj (.cinit)
+                  10012430    00000048     csl_c6727_CCS6d.lib : csl_intcInit.obj (.cinit)
+                  10012478    0000002c     rts67plus.lib : exit.obj (.cinit)
+                  100124a4    00000004     --HOLE-- [fill = 0]
+                  100124a8    0000002c                   : memory.obj (.cinit)
+                  100124d4    00000004     --HOLE-- [fill = 0]
+                  100124d8    00000028     csl_c6727_CCS6d.lib : csl_dmaxInit.obj (.cinit)
+                  10012500    0000001c     rts67plus.lib : _lock.obj (.cinit)
+                  1001251c    00000004     --HOLE-- [fill = 0]
+                  10012520    0000000c     csl_c6727_CCS6d.lib : csl_intcOpen.obj (.cinit)
+                  1001252c    00000004     --HOLE-- [fill = 0]
+                  10012530    0000000c     rts67plus.lib : fopen.obj (.cinit)
+                  1001253c    00000004     --HOLE-- [fill = 0]
+                  10012540    00000004     (.pad.cinit) [fill = 0]
+
+.const     0    10012544    000001ac     
+                  10012544    00000101     rts67plus.lib : ctype.obj (.const:.string:__ctypes_)
+                  10012645    00000002                   : fputs.obj (.const:.string)
+                  10012647    00000001     --HOLE-- [fill = 0]
+                  10012648    00000040     main.obj (.const:.string)
+                  10012688    0000002c     PADK6d.lib : PADK_I2C.obj (.const)
+                  100126b4    00000023     rts67plus.lib : _printfi.obj (.const:.string)
+                  100126d7    00000001     --HOLE-- [fill = 0]
+                  100126d8    00000018     PADK6d.lib : PADK_UART.obj (.const)
+
+.cio       0    100126f0    00000120     UNINITIALIZED
+                  100126f0    00000120     rts67plus.lib : trgmsg.obj (.cio)
+
+.switch    0    10012810    000000d8     
+                  10012810    00000050     csl_c6727_CCS6d.lib : csl_i2cHwControl.obj (.switch:_CSL_i2cHwControl)
+                  10012860    0000004c                         : csl_i2cGetHwStatus.obj (.switch:_CSL_i2cGetHwStatus)
+                  100128ac    0000002c                         : csl_dmaxHwControl.obj (.switch:_CSL_dmaxHwControl)
+                  100128d8    00000010                         : csl_dmaxHwSetupGpParam.obj (.switch:_CSL_dmaxSetupGeneralXFRParameterEntry)
+
+.bss       0    100128e8    00000048     UNINITIALIZED
+                  100128e8    00000042     csl_c6727_CCS6d.lib : csl_intcInit.obj (.bss:csl_section:intc)
+                  1001292a    00000002     --HOLE--
+                  1001292c    00000004                         : csl_intcOpen.obj (.bss:csl_section:intc)
+
+
+GLOBAL SYMBOLS: SORTED ALPHABETICALLY BY Name 
+
+address    name
+--------   ----
+100128e8   $bss
+100128e8   .bss
+10001c00   .data
+10001c00   .text
+10010220   C$$EXIT
+1000fcf0   C$$IO$$
+100102c0   _CSL_chipInit
+1000d480   _CSL_dmaxClose
+1000f8e0   _CSL_dmaxGetBaseAddress
+1000cc80   _CSL_dmaxGetNextFreeParamEntry
+1000c680   _CSL_dmaxHwControl
+10003fc0   _CSL_dmaxHwSetup
+10007f00   _CSL_dmaxOpen
+10010160   _CSL_dmaxSetDetr
+1000ef20   _CSL_dmaxSetup1dXFRParameterEntry
+1000cde0   _CSL_dmaxSetupFifoXFRParameterEntry
+10009820   _CSL_dmaxSetupGeneralXFRParameterEntry
+1000e720   _CSL_dmaxSetupSpiXFRParameterEntry
+1000fe80   _CSL_i2cClose
+1000f640   _CSL_i2cGetBaseAddress
+1000a420   _CSL_i2cGetHwStatus
+1000af20   _CSL_i2cHwControl
+1000a700   _CSL_i2cHwSetup
+1000b6c0   _CSL_i2cHwSetupRaw
+100102e0   _CSL_i2cInit
+1000dfe0   _CSL_i2cOpen
+1000f000   _CSL_intcEventEnable
+1000fee0   _CSL_intcGlobalDisable
+1000ff40   _CSL_intcGlobalEnable
+1000ffa0   _CSL_intcGlobalRestore
+100082c0   _CSL_intcHookIsr
+1000f0e0   _CSL_intcInit
+1000cf40   _CSL_intcOpen
+10010000   _CSL_intcSetVectorPtr
+1000d0a0   _CSL_mcaspGetChipCtxt
+10002f40   _CSL_mcaspHwSetup
+1000e100   _CSL_mcaspOpen
+10010de8   _CslDmaxAlloc
+10010300   _Dane
+1000770c   _GPIO_ClearDeltaPushButton
+1000759c   _GPIO_EnableLed
+100074fc   _GPIO_GetDIPSwitch
+100076e0   _GPIO_GetDeltaPushButton
+100076ac   _GPIO_GetPushButton
+10007320   _GPIO_Reset
+10007654   _GPIO_SetBCD
+1000e820   _HOSTclose
+1000d200   _HOSTlseek
+1000d5c0   _HOSTopen
+1000d6e0   _HOSTread
+1000b900   _HOSTrename
+1000e220   _HOSTunlink
+1000d800   _HOSTwrite
+10002638   _I2C_ReadMem
+100023e4   _I2C_ReadReg
+10002910   _I2C_ReadVal
+10001e08   _I2C_WriteMem
+10001c00   _I2C_WriteReg
+1000216c   _I2C_WriteVal
+100087f4   _SetupInterrupts
+10006424   _UART_EnableLed1
+10006478   _UART_EnableLed2
+10006408   _UART_GetInterruptId
+10005f80   _UART_Init
+10006134   _UART_Read
+100060c4   _UART_Reset
+10006288   _UART_Write
+100126f0   __CIOBUF_
+10012928   __CSL_IntcContextFlags
+1001292c   __CSL_IntcEventAllocMask
+100128e8   __CSL_IntcEventTable
+1000fe48   __CSL_intcEventDisable
+1000fe20   __CSL_intcEventEnable
+10010260   __CSL_intcFetchPacket
+1001013c   __CSL_intcGlobalDisable
+10010120   __CSL_intcGlobalEnable
+10010280   __CSL_intcISTP
+100102a0   __CSL_intcReadISTP
+10011638   __STACK_END
+00000800   __STACK_SIZE
+00000800   __SYSMEM_SIZE
+00000001   __TI_args_main
+1000f980   ___TI_cpp_init
+10010e10   ___TI_enable_exit_profile_output
+ffffffff   ___TI_pprof_out_hndl
+ffffffff   ___TI_prof_data_size
+ffffffff   ___TI_prof_data_start
+ffffffff   ___binit__
+100128e8   ___bss__
+ffffffff   ___c_args__
+10011e38   ___cinit__
+10001c00   ___data__
+10001c00   ___edata__
+10012930   ___end__
+10010300   ___etext__
+10010060   ___isinf
+ffffffff   ___pinit__
+10001c00   ___text__
+100100e0   __args_main
+1000e320   __auto_init
+1000f280   __c6xabi_divu
+1000e620   __c6xabi_strasgi
+1000e900   __cleanup
+10010e08   __cleanup_ptr
+1000cb20   __closefile
+10012544   __ctypes_
+10004d20   __divd
+1000f1c0   __divli
+1000f280   __divu
+1000c160   __divul
+10009e60   __divull
+1000e9e0   __doflush
+10010e0c   __dtors_ptr
+1000f700   __fixdli
+1000fa00   __fltlid
+1000d920   __frcmpyd_div
+10010c94   __ft_end
+10010974   __ftable
+1000fa80   __llshl
+1000fd00   __llshru
+10010e14   __lock
+1000fb00   __mpyll
+100101a0   __negll
+100101c0   __nop
+100064e0   __printfi
+1000fd60   __remli
+10010e38   __stack
+1000e620   __strasgi
+1000fdc0   __subcull
+10011638   __sys_memory
+10010b54   __tmpnams
+10010e18   __unlock
+1000da40   __wrt_ok
+10010220   _abort
+1000d340   _atoi
+10010910   _bcditer
+1000fb80   _c_int00
+1000db60   _close
+1000f400   _copy_in
+10010920   _data
+10010944   _data_out
+10010568   _demo_pres
+10010468   _dmaxUartObj
+10010490   _eventStat
+1000eba0   _exit
+10008680   _fDaneDSP
+1001096c   _flaga
+1000dc80   _fprintf
+1000b440   _fputc
+10006a00   _fputs
+100094c0   _free
+1000c4e0   _fseek
+10010914   _gain
+10010918   _gainOld
+10010480   _hDmaxUart
+10010484   _hIntc
+10010454   _hMcasp0
+10010900   _int2bcd
+10010488   _intcObj
+1000ec80   _lseek
+1000dda0   _ltoa
+100086c4   _main
+1000bd40   _malloc
+100104bc   _mcasp0HwCfg
+10010458   _mcasp0Obj
+1000fc00   _memccpy
+1000bf60   _memcpy
+1000dec0   _memset
+10007b20   _nmi_isr
+10010968   _num
+1001091c   _opcja
+1000b440   _putc
+1000f7a0   _readmsg
+10010240   _remove
+100108fc   _rst_cursor_pos
+1000ac80   _setvbuf
+100104b4   _uartDmaxHwSetup
+100104ac   _uartEventSetup
+10010494   _uartParams
+10007b28   _uart_isr
+1000f840   _unlink
+1000ee40   _write
+1000fc80   _writemsg
+ffffffff   binit
+10011e38   cinit
+10001c00   edata
+10012930   end
+10010300   etext
+ffffffff   pinit
+
+
+GLOBAL SYMBOLS: SORTED BY Symbol Address 
+
+address    name
+--------   ----
+00000001   __TI_args_main
+00000800   __STACK_SIZE
+00000800   __SYSMEM_SIZE
+10001c00   .data
+10001c00   .text
+10001c00   _I2C_WriteReg
+10001c00   ___data__
+10001c00   ___edata__
+10001c00   ___text__
+10001c00   edata
+10001e08   _I2C_WriteMem
+1000216c   _I2C_WriteVal
+100023e4   _I2C_ReadReg
+10002638   _I2C_ReadMem
+10002910   _I2C_ReadVal
+10002f40   _CSL_mcaspHwSetup
+10003fc0   _CSL_dmaxHwSetup
+10004d20   __divd
+10005f80   _UART_Init
+100060c4   _UART_Reset
+10006134   _UART_Read
+10006288   _UART_Write
+10006408   _UART_GetInterruptId
+10006424   _UART_EnableLed1
+10006478   _UART_EnableLed2
+100064e0   __printfi
+10006a00   _fputs
+10007320   _GPIO_Reset
+100074fc   _GPIO_GetDIPSwitch
+1000759c   _GPIO_EnableLed
+10007654   _GPIO_SetBCD
+100076ac   _GPIO_GetPushButton
+100076e0   _GPIO_GetDeltaPushButton
+1000770c   _GPIO_ClearDeltaPushButton
+10007b20   _nmi_isr
+10007b28   _uart_isr
+10007f00   _CSL_dmaxOpen
+100082c0   _CSL_intcHookIsr
+10008680   _fDaneDSP
+100086c4   _main
+100087f4   _SetupInterrupts
+100094c0   _free
+10009820   _CSL_dmaxSetupGeneralXFRParameterEntry
+10009e60   __divull
+1000a420   _CSL_i2cGetHwStatus
+1000a700   _CSL_i2cHwSetup
+1000ac80   _setvbuf
+1000af20   _CSL_i2cHwControl
+1000b440   _fputc
+1000b440   _putc
+1000b6c0   _CSL_i2cHwSetupRaw
+1000b900   _HOSTrename
+1000bd40   _malloc
+1000bf60   _memcpy
+1000c160   __divul
+1000c4e0   _fseek
+1000c680   _CSL_dmaxHwControl
+1000cb20   __closefile
+1000cc80   _CSL_dmaxGetNextFreeParamEntry
+1000cde0   _CSL_dmaxSetupFifoXFRParameterEntry
+1000cf40   _CSL_intcOpen
+1000d0a0   _CSL_mcaspGetChipCtxt
+1000d200   _HOSTlseek
+1000d340   _atoi
+1000d480   _CSL_dmaxClose
+1000d5c0   _HOSTopen
+1000d6e0   _HOSTread
+1000d800   _HOSTwrite
+1000d920   __frcmpyd_div
+1000da40   __wrt_ok
+1000db60   _close
+1000dc80   _fprintf
+1000dda0   _ltoa
+1000dec0   _memset
+1000dfe0   _CSL_i2cOpen
+1000e100   _CSL_mcaspOpen
+1000e220   _HOSTunlink
+1000e320   __auto_init
+1000e620   __c6xabi_strasgi
+1000e620   __strasgi
+1000e720   _CSL_dmaxSetupSpiXFRParameterEntry
+1000e820   _HOSTclose
+1000e900   __cleanup
+1000e9e0   __doflush
+1000eba0   _exit
+1000ec80   _lseek
+1000ee40   _write
+1000ef20   _CSL_dmaxSetup1dXFRParameterEntry
+1000f000   _CSL_intcEventEnable
+1000f0e0   _CSL_intcInit
+1000f1c0   __divli
+1000f280   __c6xabi_divu
+1000f280   __divu
+1000f400   _copy_in
+1000f640   _CSL_i2cGetBaseAddress
+1000f700   __fixdli
+1000f7a0   _readmsg
+1000f840   _unlink
+1000f8e0   _CSL_dmaxGetBaseAddress
+1000f980   ___TI_cpp_init
+1000fa00   __fltlid
+1000fa80   __llshl
+1000fb00   __mpyll
+1000fb80   _c_int00
+1000fc00   _memccpy
+1000fc80   _writemsg
+1000fcf0   C$$IO$$
+1000fd00   __llshru
+1000fd60   __remli
+1000fdc0   __subcull
+1000fe20   __CSL_intcEventEnable
+1000fe48   __CSL_intcEventDisable
+1000fe80   _CSL_i2cClose
+1000fee0   _CSL_intcGlobalDisable
+1000ff40   _CSL_intcGlobalEnable
+1000ffa0   _CSL_intcGlobalRestore
+10010000   _CSL_intcSetVectorPtr
+10010060   ___isinf
+100100e0   __args_main
+10010120   __CSL_intcGlobalEnable
+1001013c   __CSL_intcGlobalDisable
+10010160   _CSL_dmaxSetDetr
+100101a0   __negll
+100101c0   __nop
+10010220   C$$EXIT
+10010220   _abort
+10010240   _remove
+10010260   __CSL_intcFetchPacket
+10010280   __CSL_intcISTP
+100102a0   __CSL_intcReadISTP
+100102c0   _CSL_chipInit
+100102e0   _CSL_i2cInit
+10010300   _Dane
+10010300   ___etext__
+10010300   etext
+10010454   _hMcasp0
+10010458   _mcasp0Obj
+10010468   _dmaxUartObj
+10010480   _hDmaxUart
+10010484   _hIntc
+10010488   _intcObj
+10010490   _eventStat
+10010494   _uartParams
+100104ac   _uartEventSetup
+100104b4   _uartDmaxHwSetup
+100104bc   _mcasp0HwCfg
+10010568   _demo_pres
+100108fc   _rst_cursor_pos
+10010900   _int2bcd
+10010910   _bcditer
+10010914   _gain
+10010918   _gainOld
+1001091c   _opcja
+10010920   _data
+10010944   _data_out
+10010968   _num
+1001096c   _flaga
+10010974   __ftable
+10010b54   __tmpnams
+10010c94   __ft_end
+10010de8   _CslDmaxAlloc
+10010e08   __cleanup_ptr
+10010e0c   __dtors_ptr
+10010e10   ___TI_enable_exit_profile_output
+10010e14   __lock
+10010e18   __unlock
+10010e38   __stack
+10011638   __STACK_END
+10011638   __sys_memory
+10011e38   ___cinit__
+10011e38   cinit
+10012544   __ctypes_
+100126f0   __CIOBUF_
+100128e8   $bss
+100128e8   .bss
+100128e8   __CSL_IntcEventTable
+100128e8   ___bss__
+10012928   __CSL_IntcContextFlags
+1001292c   __CSL_IntcEventAllocMask
+10012930   ___end__
+10012930   end
+ffffffff   ___TI_pprof_out_hndl
+ffffffff   ___TI_prof_data_size
+ffffffff   ___TI_prof_data_start
+ffffffff   ___binit__
+ffffffff   ___c_args__
+ffffffff   ___pinit__
+ffffffff   binit
+ffffffff   pinit
+
+[189 symbols]

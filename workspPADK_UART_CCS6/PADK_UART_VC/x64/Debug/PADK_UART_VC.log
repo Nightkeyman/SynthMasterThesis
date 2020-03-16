@@ -1,0 +1,6 @@
+﻿  MyForm.cpp
+  ProgMain.cpp
+  Generating Code...
+  MyForm.obj : /DEBUG:FASTLINK is not supported when managed code is present; restarting link with /DEBUG:FULL
+  PADK_UART_VC.vcxproj -> E:\workspPADK_UART_CCS6\PADK_UART_VC\x64\Debug\PADK_UART_VC.exe
+  PADK_UART_VC.vcxproj -> E:\workspPADK_UART_CCS6\PADK_UART_VC\x64\Debug\PADK_UART_VC.pdb (Partial PDB)
