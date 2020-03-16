@@ -1,0 +1,10 @@
+# Directories:
+UARTCOM/UARTCOM2/bin/
+UARTCOM/obj/
+UARTCOM/UARTCOM2/obj/Debug/UARTCOM.csproj.GenerateResource.cache
+UARTCOM/UARTCOM2/obj/Debug/UARTCOM.csproj.FileListAbsolute.txt
+UARTCOM/UARTCOM2/obj/Debug/UARTCOM.csproj.CoreCompileInputs.cache
+
+# File types:
+*.exe
+*.pdb
