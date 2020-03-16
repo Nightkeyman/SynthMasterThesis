@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section name="Workbench">
+	<section name="com.ti.ccstudio.project.ui.internal.properties.DynamicPropertiesPageManager">
+	</section>
+	<section name="com.ti.ccstudio.project.ui.internal.preferences.DynamicPreferencePageManager">
+	</section>
+	<section name="com.ti.ccstudio.project.ui.internal.wizards.project.ProjectSettingsPage">
+		<item value="C:\ti\ccsv6\ccs_base\common\targetdb\devices\c6727.xml" key="CCS.TARGET"/>
+		<item value="C:\ti\ccsv6\ccs_base\common\targetdb\connections\SD510USB_Connection.xml" key="CCS.CONNECTION"/>
+		<section name="1">
+			<item value="7.4.14" key="CCS.TOOL_VERSION"/>
+			<item value="" key="CCS.DEVICE_ENDIANNESS"/>
+			<item value="TI" key="CCS.TOOL_CHAIN"/>
+			<item value="C:\Documents and Settings\Krzysztof\Moje dokumenty\workspPADK_AnLpBk_UART_CCS6\UART\padk.cmd" key="CCS.LINKER_COMMAND_FILE"/>
+			<item value="null" key="CCS.RUNTIME_SUPPORT_LIB"/>
+			<item value="executable" key="CCS.OUTPUT_TYPE"/>
+			<item value="" key="CCS.OUTPUT_FORMAT"/>
+		</section>
+	</section>
+</section>

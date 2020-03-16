@@ -1,0 +1,36 @@
+
+**** Clean-only build of configuration Debug for project UART ****
+
+"D:\\instalki\\ti\\ccsv6\\utils\\bin\\gmake" -k clean 
+DEL /F  "UART.out"  "UART.hex" 
+DEL /F "DaneDSP.pp" 
+DEL /F "main.pp" 
+DEL /F "DaneDSP.obj" "main.obj" 
+'Finished clean'
+' '
+
+**** Build Finished ****
+
+**** Build of configuration Debug for project UART ****
+
+"D:\\instalki\\ti\\ccsv6\\utils\\bin\\gmake" -k all 
+'Building file: ../DaneDSP.cpp'
+'Invoking: C6000 Compiler'
+"D:/instalki/ti/ccsv6/tools/compiler/c6000_7.4.14/bin/cl6x" -mv67p --abi=coffabi -Ooff -g --include_path="D:/instalki/ti/ccsv6/tools/compiler/c6000_7.4.14/include" --include_path="D:/instalki/ti/ccsv6/tools/compiler/c6000_7.4.14/bin/cl6x/PADK/dsp/gel" --include_path="D:/instalki/ti/ccsv6/tools/compiler/c6000_7.4.14/C672x/inc" --include_path="D:/instalki/ti/ccsv6/tools/compiler/c6000_7.4.14/PADK/dsp/inc" --define=c6727 --display_error_number --diag_suppress=16002 --diag_warning=225 --diag_wrap=off --mem_model:data=far --wchar_t=16 --preproc_with_compile --preproc_dependency="DaneDSP.pp"  "../DaneDSP.cpp"
+'Finished building: ../DaneDSP.cpp'
+' '
+'Building file: ../main.c'
+'Invoking: C6000 Compiler'
+"D:/instalki/ti/ccsv6/tools/compiler/c6000_7.4.14/bin/cl6x" -mv67p --abi=coffabi -Ooff -g --include_path="D:/instalki/ti/ccsv6/tools/compiler/c6000_7.4.14/include" --include_path="D:/instalki/ti/ccsv6/tools/compiler/c6000_7.4.14/bin/cl6x/PADK/dsp/gel" --include_path="D:/instalki/ti/ccsv6/tools/compiler/c6000_7.4.14/C672x/inc" --include_path="D:/instalki/ti/ccsv6/tools/compiler/c6000_7.4.14/PADK/dsp/inc" --define=c6727 --display_error_number --diag_suppress=16002 --diag_warning=225 --diag_wrap=off --mem_model:data=far --wchar_t=16 --preproc_with_compile --preproc_dependency="main.pp"  "../main.c"
+"../main.c", line 240: warning #179-D: variable "num_of_midi_bytes" was declared but never referenced
+"../main.c", line 241: warning #179-D: variable "toggle_midi" was declared but never referenced
+'Finished building: ../main.c'
+' '
+'Building target: UART.out'
+'Invoking: C6000 Linker'
+"D:/instalki/ti/ccsv6/tools/compiler/c6000_7.4.14/bin/cl6x" -mv67p --abi=coffabi -Ooff -g --define=c6727 --display_error_number --diag_suppress=16002 --diag_warning=225 --diag_wrap=off --mem_model:data=far --wchar_t=16 -z --stack_size=0x800 -m"UART.map" --heap_size=0x800 -i"D:/instalki/ti/ccsv6/tools/compiler/c6000_7.4.14/lib" -i"D:/instalki/ti/ccsv6/tools/compiler/c6000_7.4.14/C672x/lib" -i"D:/instalki/ti/ccsv6/tools/compiler/c6000_7.4.14/PADK/dsp/lib" -i"D:/instalki/ti/ccsv6/tools/compiler/c6000_7.4.14/PADK/patchdsprom" --reread_libs --warn_sections --display_error_number --diag_suppress=225 --diag_wrap=off --xml_link_info="UART_linkInfo.xml" --rom_model -o "UART.out" "./DaneDSP.obj" "./main.obj" "../padk.cmd"  -l"rts67plus.lib" -lcsl_c6727_CCS6d.lib -lcsl_C672x_intc.lib -lPADK6d.lib -lc672xSystemPatchV2_00_00.lib 
+<Linking>
+'Finished building target: UART.out'
+' '
+
+**** Build Finished ****
