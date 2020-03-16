@@ -4,8 +4,9 @@ UARTCOM/obj/
 UARTCOM/UARTCOM2/obj/Debug/UARTCOM.csproj.GenerateResource.cache
 UARTCOM/UARTCOM2/obj/Debug/UARTCOM.csproj.FileListAbsolute.txt
 UARTCOM/UARTCOM2/obj/Debug/UARTCOM.csproj.CoreCompileInputs.cache
-workspPADK_UART_CCS6/.metadata
-
+workspPADK_UART_CCS6/.metadata/
+workspPADK_UART_CCS6/UART/Debug/
+workspPADK_UART_CCS6/UART/.lanuches/UART.launch
 
 # File types:
 *.exe
