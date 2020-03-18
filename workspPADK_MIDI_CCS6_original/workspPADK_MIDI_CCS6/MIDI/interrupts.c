@@ -48,19 +48,11 @@ int SetupInterrupts()
 	/*---------------------------------------------------------------*/
 	/*---------------------------------------------------------------*/
 
-    //CSL_Status                    status;
-    //CSL_IntcGlobalEnableState     state;
-
-    /*---------------------------------------------------------------*/
-    /* INTC Module Initialization                                    */
-    /*---------------------------------------------------------------*/   
-	//status = CSL_intcInit( NULL );
-
     /*---------------------------------------------------------------*/
     /* Hook Transfert completion Notification from DMAX (INT8)       */
     /*---------------------------------------------------------------*/
 
-    hIntc = CSL_intcOpen( &intcObj, CSL_INTC_EVENTID_DMAXEVTOUT1, NULL, &status );
+    //hIntc = CSL_intcOpen( &intcObj, CSL_INTC_EVENTID_DMAXEVTOUT1, NULL, &status );
 	//if( (hIntc == NULL) || (status != CSL_SOK) )
 	//{
 	//	return -1;
