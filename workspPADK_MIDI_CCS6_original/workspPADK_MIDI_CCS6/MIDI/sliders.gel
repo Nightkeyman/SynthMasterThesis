@@ -1,0 +1,13 @@
+menuitem "DwaSlidery"
+
+slider opcja(1,4,1,1,parameter) /*zmiany od 1 do 4 co 1 
+                                       przy klikaniu w slider skoki co 1 */
+{
+  opcja = parameter; /*zmiana metody przetwarzania*/
+}
+
+slider gain(1, 10, 1, 1, param1)
+{
+  gain = param1;   /*zmiana poziomu sygla³u*/
+}
+
