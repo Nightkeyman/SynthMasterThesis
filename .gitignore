@@ -6,7 +6,12 @@ UARTCOM/UARTCOM2/obj/Debug/UARTCOM.csproj.FileListAbsolute.txt
 UARTCOM/UARTCOM2/obj/Debug/UARTCOM.csproj.CoreCompileInputs.cache
 workspPADK_UART_CCS6/.metadata/
 workspPADK_UART_CCS6/UART/Debug/
-workspPADK_UART_CCS6/UART/.lanuches/UART.launch
+workspPADK_UART_CCS6/UART/.lanuches/
+workspPADK_MIDI_CCS6_original/workspPADK_MIDI_CCS6/MIDI/Debug/
+workspPADK_MIDI_CCS6_original/workspPADK_MIDI_CCS6/MIDI/.launches/
+workspPADK_MIDI_CCS6_original/.metadata/
+workspPADK_MIDI_CCS6_original/workspPADK_MIDI_CCS6/.metadata/
+workspPADK_MIDI_CCS6_original/workspPADK_MIDI_CCS6/PADK_USB1/
 
 # File types:
 *.exe
