@@ -8,47 +8,86 @@
 
 interrupt void dmax_isr( void );
 interrupt void nmi_isr( void );
+interrupt void uart_isr( void );
 
 #include "audioBufConst&ExtVar.h"
 
 int SetupInterrupts()
 {
-    CSL_Status                    status;   
+	CSL_Status                    status;
     CSL_IntcGlobalEnableState     state;
 
-    
+    /*---------------------------------------------------------------*/
+	/* INTC Module Initialization                                    */
+	/*---------------------------------------------------------------*/
+	status = CSL_intcInit( NULL );
+
+    /*---------------------------------------------------------------*/
+    /* Hook Transfert completion Notification from DMAX (INT11)       */
+    /*---------------------------------------------------------------*/
+    hIntc_uart = CSL_intcOpen( &intcObj_uart, CSL_INTC_EVENTID_DMAXEVTOUT4, NULL, &status );
+	if( (hIntc_uart == NULL) || (status != CSL_SOK) )
+	{
+		return -1;
+	}
+
+    CSL_intcHookIsr( CSL_INTC_EVENTID_DMAXEVTOUT4, (Uint32)uart_isr );
+
+    CSL_intcHookIsr( CSL_INTC_EVENTID_NMI, (Uint32)nmi_isr );
+
+    CSL_intcEventEnable( CSL_INTC_EVENTID_DMAXEVTOUT4, &eventStat );
+
+    CSL_intcEventEnable( CSL_INTC_EVENTID_NMI, &eventStat );
+    CSL_intcGlobalEnable( &state );
+
+	return 0;
+
+	/*---------------------------------------------------------------*/
+	/*---------------------------------------------------------------*/
+	// **************** TO CO BYLO DO ADC I DAC *********************//
+	/*---------------------------------------------------------------*/
+	/*---------------------------------------------------------------*/
+
+    //CSL_Status                    status;
+    //CSL_IntcGlobalEnableState     state;
+
     /*---------------------------------------------------------------*/
     /* INTC Module Initialization                                    */
     /*---------------------------------------------------------------*/   
-	status = CSL_intcInit( NULL ); 
+	//status = CSL_intcInit( NULL );
 
     /*---------------------------------------------------------------*/
     /* Hook Transfert completion Notification from DMAX (INT8)       */
-    /*---------------------------------------------------------------*/   
+    /*---------------------------------------------------------------*/
+
     hIntc = CSL_intcOpen( &intcObj, CSL_INTC_EVENTID_DMAXEVTOUT1, NULL, &status );
-	if( (hIntc == NULL) || (status != CSL_SOK) ) 
-	{	
-		return -1;
-	}
+	//if( (hIntc == NULL) || (status != CSL_SOK) )
+	//{
+	//	return -1;
+	//}
     
-  	CSL_intcHookIsr( CSL_INTC_EVENTID_DMAXEVTOUT1, (Uint32)dmax_isr );    
-    CSL_intcEventEnable( CSL_INTC_EVENTID_DMAXEVTOUT1, &eventStat );
+  	//CSL_intcHookIsr( CSL_INTC_EVENTID_DMAXEVTOUT1, (Uint32)dmax_isr );
+    //CSL_intcEventEnable( CSL_INTC_EVENTID_DMAXEVTOUT1, &eventStat );
 
     /*---------------------------------------------------------------*/
     /* Hook NMI                                                      */
     /*---------------------------------------------------------------*/   
-  	CSL_intcHookIsr( CSL_INTC_EVENTID_NMI, (Uint32)nmi_isr );
-    CSL_intcEventEnable( CSL_INTC_EVENTID_NMI, &eventStat );
+  	//CSL_intcHookIsr( CSL_INTC_EVENTID_NMI, (Uint32)nmi_isr );
+    //CSL_intcEventEnable( CSL_INTC_EVENTID_NMI, &eventStat );
 
     /*---------------------------------------------------------------*/
     /* Enable Interrupts                                             */
     /*---------------------------------------------------------------*/   
-    CSL_intcGlobalEnable( &state );  
+    //CSL_intcGlobalEnable( &state );
 
-	return 0;
+	//return 0;
+
+	/*---------------------------------------------------------------*/
+	/*---------------------  KONIEC     -----------------------------*/
+	/*---------------------------------------------------------------*/
 }
 
-
+// ################## DAC/ADC RELATED VARs #########
 #define LEFT		(0)
 #define RIGHT		(1)
 #define LEFT_o		(1) /* odwrotne oznaczenie kanalów */
@@ -57,7 +96,6 @@ int SetupInterrupts()
 #define CH_1		(1)
 #define CH_2		(2)
 #define CH_3		(3)
-
 
 int we[STEREO][NUM_CHANNEL];
 int wy[STEREO][NUM_CHANNEL];
@@ -72,10 +110,27 @@ int k=0;
 #define M_PI 3.1416
 extern int notes[128];
 int generator_interator = 0;
+// ################## DAC/ADC end ##################
+
+
+// ################## UART RELATED VARs ############
+#define UART_WAIT       1
+#define UART_NO_WAIT    0
+unsigned char uartdata[1];
+// ################## UART end #####################
 
 interrupt void nmi_isr( void )
 {
     while(1);
+}
+
+interrupt void uart_isr( void )
+{
+    static int toggle = 0;
+	UART_EnableLed1( toggle ^= 1 );
+    UART_EnableLed2( !toggle );
+    UART_Read(  uartdata, 1, UART_NO_WAIT );
+    UART_Write( uartdata, 1, UART_NO_WAIT);
 }
 
 interrupt void dmax_isr( void )

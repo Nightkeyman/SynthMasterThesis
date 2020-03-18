@@ -14,6 +14,12 @@
 //
 CSL_McaspHandle  hMcasp0;
 CSL_McaspObj 	 mcasp0Obj;
+
+// ################## UART ##################
+// McASP UART
+CSL_McaspHandle hMcasp0_uart;
+CSL_McaspObj 	mcasp0Obj_uart;
+
 //CSL_McaspHwSetup mcasp0HwCfg = PADK_MCASP0_HWSETUP_DEFAULTS;
 //
 // McASP initialization structure
@@ -80,6 +86,10 @@ CSL_DmaxHwSetup              dacDmaxHwSetup;
 CSL_DmaxGPTransferEventSetup dacGpxfrEventSetup;
 CSL_DmaxGPXFRParameterSetup  dacGpxfrParameterSetup;
 
+// Dmax UART
+CSL_DmaxObj 	dmaxUartObj;
+CSL_DmaxHandle 	hDmaxUart;
+
 //
 // CSL INTC Module
 //
@@ -87,6 +97,12 @@ CSL_IntcObj              intcObj;
 CSL_IntcHandle           hIntc;
 CSL_IntcEventEnableState eventStat;
 //
+
+// Intc
+CSL_IntcHandle           hIntc_uart;
+CSL_IntcObj              intcObj_uart;
+CSL_IntcEventEnableState eventStat_uart;
+
 // PADK CLKGEN Module
 //
 CLKGEN_Params clkgenParams = CLKGEN_DEFAULT_PARAMS;
@@ -102,6 +118,12 @@ ADC_Params adcParams = ADC_DEFAULT_PARAMS;
 // PADK DAC Module
 //
 DAC_Params dacParams = DAC_DEFAULT_PARAMS;
+
+
+// PADK UART Module
+//
+UART_Params uartParams = UART_DEFAULT_PARAMS;
+
 
 //
 // Forward Declaration

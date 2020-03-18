@@ -273,25 +273,6 @@ void bandStopFilter(int freqLow, int freqHigh) {
 //  Main Functions
 //
 
-// ################## UART ##################
-// McASP
-CSL_McaspHandle hMcasp0;
-CSL_McaspObj 	mcasp0Obj;
-
-// Dmax
-CSL_DmaxObj 	dmaxUartObj;
-CSL_DmaxHandle 	hDmaxUart;
-
-// Intc
-CSL_IntcHandle           hIntc;
-CSL_IntcObj              intcObj;
-CSL_IntcEventEnableState eventStat;
-
-//
-// PADK UART Module
-//
-UART_Params uartParams = UART_DEFAULT_PARAMS;
-
 CSL_DmaxCpuintEventSetup uartEventSetup =
 {
 	CSL_DMAX_EVENT28_ETYPE_CPUINT,
@@ -310,34 +291,14 @@ CSL_DmaxHwSetup	uartDmaxHwSetup =
 	&uartEventSetup
 };
 
-//
-// UART related defines
-//
-#define UART_WAIT       1
-#define UART_NO_WAIT    0
-//int UART_Write( unsigned char *data, int N, int wait );
-interrupt void uart_isr( void );
-int SetupInterruptsUART();
-interrupt void nmi_isr( void );
-
-unsigned char uartdata[1];
-// ################## UART end ##################
 
 int notes[128] = {{0}};
 
 int main( int argc, char *argv[] ) {
 
-//#include "ALL_init.h"
+	#include "ALL_init.h"
 
-	CSL_chipInit( NULL );
-
-	CSL_intcSetVectorPtr( 0x10000000 );
-	/*---------------------------------------------------------------*/
-	/* Initialize the UART module with default values                */
-	/*---------------------------------------------------------------*/
-	uartParams.ier = 1;
-	UART_Init( &uartParams );
-	int ret = SetupInterruptsUART();
+	//int ret = SetupInterruptsUART();
 
 	int i = 0;
 	//clkgenParams.adc_scki
@@ -428,84 +389,4 @@ int main( int argc, char *argv[] ) {
 			}
     	}
     }	
-}
-interrupt void uart_isr( void )
-{
-	//flaga = 0;
-    static int toggle = 0;
-	UART_EnableLed1( toggle ^= 1 );
-    UART_EnableLed2( !toggle );
-    UART_Read(  uartdata, 1, UART_NO_WAIT );
-    UART_Write( uartdata, 1, UART_NO_WAIT);
-//    num = UART_Read( Dane.Buf, Dane.DxDSP.daneClassSize, UART_NO_WAIT );
-   // if( num )
-   // {
-    	//gain = (int)data[0];
-    	//data_out[0] = data[0];
-   // }
-    //flaga = 1;
-}
-int SetupInterruptsUART()
-{
-    CSL_Status                    status;
-    CSL_IntcGlobalEnableState     state;
-
-
-    /*---------------------------------------------------------------*/
-    /* INTC Module Initialization                                    */
-    /*---------------------------------------------------------------*/
-	status = CSL_intcInit( NULL );
-
-    /*---------------------------------------------------------------*/
-    /* Hook Transfert completion Notification from DMAX (INT11)       */
-    /*---------------------------------------------------------------*/
-    hIntc = CSL_intcOpen( &intcObj, CSL_INTC_EVENTID_DMAXEVTOUT4, NULL, &status );
-	if( (hIntc == NULL) || (status != CSL_SOK) )
-	{
-		return -1;
-	}
-	 /*---------------------------------------------------------------*/
-	/* Hook Transfert completion Notification from DMAX (INT8)       */
-	/*---------------------------------------------------------------*/
-	//hIntc = CSL_intcOpen( &intcObj, CSL_INTC_EVENTID_DMAXEVTOUT1, NULL, &status );
-	//if( (hIntc == NULL) || (status != CSL_SOK) )
-	//{
-	//	return -1;
-	//}
-
-   /*---------------------------------------------------------------*/
-   /* Create CPU Interrupt Event Entry - dMax EVENT 28 corresponds  */
-   /* to AMUTEIN2 (External Int 6 -> UART)                          */
-   /*---------------------------------------------------------------*/
-
-	// Reserve MCASP 0
-    hMcasp0 = CSL_mcaspOpen( &mcasp0Obj, CSL_MCASP_0, (CSL_McaspParam *)NULL, &status );
-	status = CSL_mcaspHwSetup( hMcasp0, &mcasp0HwCfg );
-
-	//Reserve dMax
-	dmaxUartObj.eventUid = CSL_DMAX_HIPRIORITY_EVENT28_UID;
-	hDmaxUart = CSL_dmaxOpen( &dmaxUartObj, CSL_DMAX, (CSL_DmaxParam *)NULL, &status );
-
-    // Set Dmax Event Entry 28
-    status = CSL_dmaxHwSetup( hDmaxUart, &uartDmaxHwSetup );
-    if ( status != CSL_SOK )
-    {
-        fprintf( stderr, "Failed to setup the dMAX Module \n" );
-	    return -1;
-	}
-
-    // Dmax Event Enable
-	CSL_dmaxHwControl( hDmaxUart, CSL_DMAX_CMD_EVENTENABLE, NULL );
-
-    CSL_intcHookIsr( CSL_INTC_EVENTID_DMAXEVTOUT4, (Uint32)uart_isr );
-
-    CSL_intcHookIsr( CSL_INTC_EVENTID_NMI, (Uint32)nmi_isr );
-
-    CSL_intcEventEnable( CSL_INTC_EVENTID_DMAXEVTOUT4, &eventStat );
-
-    CSL_intcEventEnable( CSL_INTC_EVENTID_NMI, &eventStat );
-    CSL_intcGlobalEnable( &state );
-
-	return 0;
-
 }

@@ -13,6 +13,10 @@ extern CSL_IntcObj              intcObj;
 extern CSL_IntcHandle           hIntc;
 extern CSL_IntcEventEnableState eventStat;
 
+extern CSL_IntcObj              intcObj_uart;
+extern CSL_IntcHandle           hIntc_uart;
+extern CSL_IntcEventEnableState eventStat_uart;
+
 //
 //  Audio Buffers const
 //
