@@ -63,9 +63,7 @@
 #include <stdlib.h>
 
 #include "PADK_UART.h"
-//	unsigned char int2bcd[10] = {
-//		0x3F, 0x06, 0x5B, 0x4F, 0x66, 0x6D, 0x7D, 0x07, 0x7F, 0xEF //0x67
-//	};//  0     1	  2		3	  4		5	  6		7	  8		9.	   9	
+
 	unsigned char int2bcd[16] = {
 		0x3F, 0x06, 0x5B, 0x4F, 0x66, 0x6D, 0x7D, 0x07, 0x7F, 0x6F, 0x77, 0x7C, 0x39, 0x5E, 0x79, 0x71
 	};//  0     1	  2		3	  4		5	  6		7	  8		9	  A		b	  C		d	  E		F
@@ -95,8 +93,7 @@ unsigned char MIDI_buff_iterator = 0;
 
 #include "var&fun.h"
 
-
-	MIDI_Params params = MIDI_DEFAULT_PARAMS;  // structure of MIDI params
+MIDI_Params params = MIDI_DEFAULT_PARAMS;  // structure of MIDI params
 
 //int 	xx = MIDI_Reset();
 #define M_PI 3.1416
@@ -291,9 +288,6 @@ CSL_IntcObj              intcObj;
 CSL_IntcEventEnableState eventStat;
 
 //
-
-
-//
 // PADK UART Module
 //
 UART_Params uartParams = UART_DEFAULT_PARAMS;
@@ -315,7 +309,6 @@ CSL_DmaxHwSetup	uartDmaxHwSetup =
 	// DMAX Event initialization structure (eventSetup)
 	&uartEventSetup
 };
-
 
 //
 // UART related defines
@@ -346,14 +339,6 @@ int main( int argc, char *argv[] ) {
 	UART_Init( &uartParams );
 	int ret = SetupInterruptsUART();
 
-	//while(ret == 0) printf("chuj");
-	/*if ( SetupInterruptsUART() )
-	{
-		fprintf( stderr, "Failed to setup interrupts\n" );
-	    return -1;
-    }*/
-
-
 	int i = 0;
 	//clkgenParams.adc_scki
 	// SINUSOID //
@@ -365,11 +350,11 @@ int main( int argc, char *argv[] ) {
 
 	// SQUARE//
 	/*for(i = 0; i < 2*N; i++) {
-			v[i] = (float)(1*sin((double)(i/2)*2.0*M_PI*F_sq*(1.0/Fs)));// + (float)(5*sin((double)(i/2)*2.0*M_PI*F_sqq*(1.0/Fs)));
-			if(v[i] >= 0) v[i] = 1;
-			else v[i] = -1;
-			waveform[i] = v[i];
-			if(i%2 == 1) v[i] = 0;
+		v[i] = (float)(1*sin((double)(i/2)*2.0*M_PI*F_sq*(1.0/Fs)));// + (float)(5*sin((double)(i/2)*2.0*M_PI*F_sqq*(1.0/Fs)));
+		if(v[i] >= 0) v[i] = 1;
+		else v[i] = -1;
+		waveform[i] = v[i];
+		if(i%2 == 1) v[i] = 0;
 	}*/
 
 	// SAWTOOTH //
@@ -442,34 +427,6 @@ int main( int argc, char *argv[] ) {
 				}
 			}
     	}
-    	/*GPIO_SetBCD( int2bcd[bcditer++] );
-    	if (bcditer > 10)
-    		bcditer = 0;
-
-    	/*---------------------------------------------------------------*/
-		/* Read the status of the push buttons                           */
-		/* Send the new status is something has changed                  */
-		/*---------------------------------------------------------------*/
-		/*if (   btn1 != GPIO_GetPushButton(1)
-			|| btn2 != GPIO_GetPushButton(2) )
-		{
-			btn1 = GPIO_GetPushButton( 1 );
-			btn2 = GPIO_GetPushButton( 2 );
-			data = (btn2<<1) | btn1;
-			USB_Write( USB_DSP2HOST_PIPE1, &data, 1, 1 );
-		}
-		USB_Write( USB_DSP2HOST_PIPE1, &data, 1, 1 );
-
-		/*---------------------------------------------------------------*/
-		/* Verify if the host has sent a new value to display on the BCD */
-		/*---------------------------------------------------------------*/
-		/*
-		if ( USB_Read(USB_HOST2DSP_PIPE1, &bcd, 1, 0) )
-		{
-			GPIO_SetBCD( int2bcd[bcd] );
-			gain = bcd;
-		}	
-		*/
     }	
 }
 interrupt void uart_isr( void )

@@ -49,11 +49,6 @@ int SetupInterrupts()
 }
 
 
-interrupt void nmi_isr( void )
-{
-    while(1);
-}
-
 #define LEFT		(0)
 #define RIGHT		(1)
 #define LEFT_o		(1) /* odwrotne oznaczenie kanalów */
@@ -77,6 +72,11 @@ int k=0;
 #define M_PI 3.1416
 extern int notes[128];
 int generator_interator = 0;
+
+interrupt void nmi_isr( void )
+{
+    while(1);
+}
 
 interrupt void dmax_isr( void )
 {
@@ -141,7 +141,6 @@ interrupt void dmax_isr( void )
 		
 		OBuf2.pBuf = pDac;
 		OBuf2.ptab[LEFT][CH_0] = sound;
-		//OBuf2.ptab[LEFT][CH_0] = wy[LEFT][CH_0];
 		OBuf2.ptab[RIGHT][CH_0] = wy[RIGHT][CH_0];
 		OBuf2.ptab[LEFT][CH_1] = wy[LEFT][CH_1];
 		OBuf2.ptab[RIGHT][CH_1] = wy[RIGHT][CH_1];
