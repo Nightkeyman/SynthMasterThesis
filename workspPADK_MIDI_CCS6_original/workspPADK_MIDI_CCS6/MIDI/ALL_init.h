@@ -366,7 +366,7 @@
 	status = CSL_mcaspHwSetup( hMcasp0_uart, &mcasp0HwCfg );
   	if ( status != CSL_SOK )
     {
-        fprintf( stderr, "Failed to setup the McASP 0\n" );
+        fprintf( stderr, "Failed to setup the McASP UART\n" );
 	    return -1;
     }
 
@@ -394,42 +394,39 @@
     }
 
     /*---------------------------------------------------------------*/
+    /* Take receive and transmit state machine out of reset          */
+    /*---------------------------------------------------------------*/
+    CSL_mcaspHwControl( hMcasp0, CSL_MCASP_CMD_ACTIVATE_SM_RCV_XMT, NULL );
+
+    /*---------------------------------------------------------------*/
+    /* Take receive and transmit frame sync out of reset             */
+    /*---------------------------------------------------------------*/
+    CSL_mcaspHwControl( hMcasp0, CSL_MCASP_CMD_ACTIVATE_FS_RCV_XMT, NULL );
+
+    /*---------------------------------------------------------------*/
     /* Take receive serial clock, high frequency clock and           */
     /* serializer out of reset                                       */
     /*---------------------------------------------------------------*/
-
-	// TU SIE WYPIERDALA
-
-	//hMcasp0->regs->RSTAT = 0x1FFF;
-    //mask =  CSL_MCASP_GBLCTL_RCLKRST_MASK   |
-    //        CSL_MCASP_GBLCTL_RHCLKRST_MASK  |
-    //        CSL_MCASP_GBLCTL_RSRCLR_MASK;
-    //CSL_mcaspResetCtrl( hMcasp0, mask );
+	hMcasp0->regs->RSTAT = 0x1FFF;
+    mask =  CSL_MCASP_GBLCTL_RCLKRST_MASK   |
+            CSL_MCASP_GBLCTL_RHCLKRST_MASK  |
+            CSL_MCASP_GBLCTL_RSRCLR_MASK;
+    CSL_mcaspResetCtrl( hMcasp0, mask ); 	// < ------ TU SIE WYWALA !!!!!!!!!!
 
     /*---------------------------------------------------------------*/
     /* Take transmit serial clock, high frequency clock and          */
     /* serializer out of reset                                       */
     /*---------------------------------------------------------------*/
-	//hMcasp0->regs->XSTAT = 0x1FFF;
-    //mask =  CSL_MCASP_GBLCTL_XCLKRST_MASK   |
-    //        CSL_MCASP_GBLCTL_XHCLKRST_MASK  |
-    //        CSL_MCASP_GBLCTL_XSRCLR_MASK;
-    //CSL_mcaspResetCtrl( hMcasp0, mask );
+	hMcasp0->regs->XSTAT = 0x1FFF;
+    mask =  CSL_MCASP_GBLCTL_XCLKRST_MASK   |
+            CSL_MCASP_GBLCTL_XHCLKRST_MASK  |
+            CSL_MCASP_GBLCTL_XSRCLR_MASK;
+    CSL_mcaspResetCtrl( hMcasp0, mask );
 
     /*---------------------------------------------------------------*/
     /* Verify all transmit buffers are serviced                      */
     /*---------------------------------------------------------------*/
-    //while ( (hMcasp0->regs->XSTAT & 0x0020) == 0x0020 );
-
-    /*---------------------------------------------------------------*/
-    /* Take receive and transmit state machine out of reset          */
-    /*---------------------------------------------------------------*/
-    //CSL_mcaspHwControl( hMcasp0, CSL_MCASP_CMD_ACTIVATE_SM_RCV_XMT, NULL );
-
-    /*---------------------------------------------------------------*/
-    /* Take receive and transmit frame sync out of reset             */
-    /*---------------------------------------------------------------*/
-    //CSL_mcaspHwControl( hMcasp0, CSL_MCASP_CMD_ACTIVATE_FS_RCV_XMT, NULL );
+    while ( (hMcasp0->regs->XSTAT & 0x0020) == 0x0020 );
 
     /*---------------------------------------------------------------*/
     /* Unmute audio outputs                                          */

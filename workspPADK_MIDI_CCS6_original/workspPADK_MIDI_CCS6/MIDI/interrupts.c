@@ -31,13 +31,25 @@ int SetupInterrupts()
 		return -1;
 	}
 
+    /*---------------------------------------------------------------*/
+    /* Hook Transfert completion Notification from DMAX (INT8)       */
+    /*---------------------------------------------------------------*/
+    hIntc = CSL_intcOpen( &intcObj, CSL_INTC_EVENTID_DMAXEVTOUT1, NULL, &status );
+	if( (hIntc == NULL) || (status != CSL_SOK) )
+	{
+		return -1;
+	}
+
     CSL_intcHookIsr( CSL_INTC_EVENTID_DMAXEVTOUT4, (Uint32)uart_isr );
-
     CSL_intcHookIsr( CSL_INTC_EVENTID_NMI, (Uint32)nmi_isr );
+    CSL_intcHookIsr( CSL_INTC_EVENTID_DMAXEVTOUT1, (Uint32)dmax_isr );
 
+    // DMAXEVTOUT4 for UART
     CSL_intcEventEnable( CSL_INTC_EVENTID_DMAXEVTOUT4, &eventStat );
-
     CSL_intcEventEnable( CSL_INTC_EVENTID_NMI, &eventStat );
+    // DMAXEVTOUT1 for DAC/ADC
+    CSL_intcEventEnable( CSL_INTC_EVENTID_DMAXEVTOUT1, &eventStat );
+
     CSL_intcGlobalEnable( &state );
 
 	return 0;
@@ -51,12 +63,6 @@ int SetupInterrupts()
     /*---------------------------------------------------------------*/
     /* Hook Transfert completion Notification from DMAX (INT8)       */
     /*---------------------------------------------------------------*/
-
-    //hIntc = CSL_intcOpen( &intcObj, CSL_INTC_EVENTID_DMAXEVTOUT1, NULL, &status );
-	//if( (hIntc == NULL) || (status != CSL_SOK) )
-	//{
-	//	return -1;
-	//}
     
   	//CSL_intcHookIsr( CSL_INTC_EVENTID_DMAXEVTOUT1, (Uint32)dmax_isr );
     //CSL_intcEventEnable( CSL_INTC_EVENTID_DMAXEVTOUT1, &eventStat );

@@ -19,11 +19,12 @@ CSL_McaspObj 	 mcasp0Obj;
 // McASP UART
 CSL_McaspHandle hMcasp0_uart;
 CSL_McaspObj 	mcasp0Obj_uart;
-
-//CSL_McaspHwSetup mcasp0HwCfg = PADK_MCASP0_HWSETUP_DEFAULTS;
+// for DMAX HW setup
+CSL_McaspHwSetup mcasp0HwCfg = PADK_MCASP0_HWSETUP_DEFAULTS;
 //
 // McASP initialization structure
 //
+/*
 CSL_McaspHwSetup mcasp0HwCfg = {
     // Value to be loaded in global control register (GLBCTL)
     {
@@ -66,6 +67,7 @@ CSL_McaspHwSetup mcasp0HwCfg = {
     // Power down emulation mode params - PWRDEMU
     CSL_MCASP_PWRDEMU_FREE_OFF
 };
+*/
 
 #include "audioBufConst&ExtVar.h"
 
