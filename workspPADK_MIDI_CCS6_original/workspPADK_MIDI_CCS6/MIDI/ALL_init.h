@@ -69,7 +69,6 @@
     /* McASP Initilization                                           */
     /*---------------------------------------------------------------*/
 	CSL_mcaspInit( NULL );
-	printf("Correctly inited");
 
     /*---------------------------------------------------------------*/
     /* Opening McASP Module                                          */
@@ -79,7 +78,7 @@
     /*---------------------------------------------------------------*/
 
 	// Reserve MCASP UART
-    hMcasp0_uart = CSL_mcaspOpen( &mcasp0Obj_uart, CSL_MCASP_0, (CSL_McaspParam *)NULL, &status );
+    hMcasp0_uart = CSL_mcaspOpen( &mcasp0Obj_uart, CSL_MCASP_1, (CSL_McaspParam *)NULL, &status );
     if ( (hMcasp0_uart == NULL) || (status != CSL_SOK) )
     {
         fprintf( stderr, "Failed to open the McASP Module \n" );
@@ -100,7 +99,11 @@
 	//Reserve dMax UART
 	dmaxUartObj.eventUid = CSL_DMAX_HIPRIORITY_EVENT28_UID;
 	hDmaxUart = CSL_dmaxOpen( &dmaxUartObj, CSL_DMAX, (CSL_DmaxParam *)NULL, &status );
-
+	if ( (status != CSL_SOK) || (hDmaxUart == (CSL_DmaxHandle)CSL_DMAX_BADHANDLE) )
+	{
+        fprintf( stderr, "Failed to open the dMAX Module \n" );
+	    return -1;
+	}
 
 	adcDmaxObj.eventUid = CSL_DMAX_HIPRIORITY_MCASP0RX_UID;
 	adcDmaxObj.paramUid = CSL_DMAX_HIPRIORITY_PARAMETERENTRY_ANY;
@@ -128,17 +131,17 @@
 	// Dmax Event Disable
 	CSL_dmaxHwControl( hDmaxAdc, CSL_DMAX_CMD_EVENTDISABLE, NULL );
 	CSL_dmaxHwControl( hDmaxDac, CSL_DMAX_CMD_EVENTDISABLE, NULL );
+    CSL_dmaxHwControl( hDmaxUart, CSL_DMAX_CMD_EVENTDISABLE, NULL );
 
 	// Clear TCC
 	CSL_dmaxHwControl( hDmaxAdc, CSL_DMAX_CMD_CLEARTCC, NULL );
 	CSL_dmaxHwControl( hDmaxDac, CSL_DMAX_CMD_CLEARTCC, NULL );
+    CSL_dmaxHwControl( hDmaxUart, CSL_DMAX_CMD_CLEARTCC, NULL );
 
 	// Dmax Event Enable
 	CSL_dmaxHwControl( hDmaxAdc, CSL_DMAX_CMD_EVENTENABLE, NULL );
     CSL_dmaxHwControl( hDmaxDac, CSL_DMAX_CMD_EVENTENABLE, NULL );
-
-    // Dmax Event Enable UART & NMI
-	CSL_dmaxHwControl( hDmaxUart, CSL_DMAX_CMD_EVENTENABLE, NULL );
+    CSL_dmaxHwControl( hDmaxUart, CSL_DMAX_CMD_EVENTENABLE, NULL );
 
     /*---------------------------------------------------------------*/
     /* DMAX for data transfer on MCASP0RX DMA REQ - 3D Transfer      */
@@ -230,6 +233,7 @@
     // DMAX initialization structure
     //
 
+
 	// DMAX Priority
     adcDmaxHwSetup.priority = CSL_DMAX_HI_PRIORITY;
 
@@ -238,15 +242,6 @@
 
 	// DMAX Event initialization structure
     adcDmaxHwSetup.eventSetup = &adcGpxfrEventSetup;
-
-
-    // Set Dmax Event Entry 28 UART
-    status = CSL_dmaxHwSetup( hDmaxUart, &uartDmaxHwSetup );
-    if ( status != CSL_SOK )
-    {
-        fprintf( stderr, "Failed to setup the dMAX Module \n" );
-	    return -1;
-	}
 
     status = CSL_dmaxHwSetup( hDmaxAdc, &adcDmaxHwSetup );
     if ( status != CSL_SOK )
@@ -359,6 +354,32 @@
 	    return -1;
 	}
 
+    //
+    // UART Initialization structure
+    //
+
+    CSL_DmaxCpuintEventSetup uartEventSetup =
+    {
+    	CSL_DMAX_EVENT28_ETYPE_CPUINT,
+    	CSL_DMAX_EVENT28_INT_INT11
+    };
+
+    // DMAX Priority
+    uartDmaxHwSetup.priority = CSL_DMAX_HI_PRIORITY;
+
+	//DMAX Polarity
+    uartDmaxHwSetup.polarity = CSL_DMAX_POLARITY_RISING_EDGE;
+
+	// DMAX Event initialization structure
+    uartDmaxHwSetup.eventSetup = &uartEventSetup;
+
+    // Set Dmax Event Entry 28 UART
+    status = CSL_dmaxHwSetup( hDmaxUart, &uartDmaxHwSetup );
+    if ( status != CSL_SOK )
+    {
+        fprintf( stderr, "Failed to setup the dMAX Module \n" );
+	    return -1;
+	}
 
     /*---------------------------------------------------------------*/
     /* McASP UART Setup - (Default PADK values)                          */
@@ -394,16 +415,6 @@
     }
 
     /*---------------------------------------------------------------*/
-    /* Take receive and transmit state machine out of reset          */
-    /*---------------------------------------------------------------*/
-    CSL_mcaspHwControl( hMcasp0, CSL_MCASP_CMD_ACTIVATE_SM_RCV_XMT, NULL );
-
-    /*---------------------------------------------------------------*/
-    /* Take receive and transmit frame sync out of reset             */
-    /*---------------------------------------------------------------*/
-    CSL_mcaspHwControl( hMcasp0, CSL_MCASP_CMD_ACTIVATE_FS_RCV_XMT, NULL );
-
-    /*---------------------------------------------------------------*/
     /* Take receive serial clock, high frequency clock and           */
     /* serializer out of reset                                       */
     /*---------------------------------------------------------------*/
@@ -411,7 +422,7 @@
     mask =  CSL_MCASP_GBLCTL_RCLKRST_MASK   |
             CSL_MCASP_GBLCTL_RHCLKRST_MASK  |
             CSL_MCASP_GBLCTL_RSRCLR_MASK;
-    CSL_mcaspResetCtrl( hMcasp0, mask ); 	// < ------ TU SIE WYWALA !!!!!!!!!!
+    CSL_mcaspResetCtrl( hMcasp0, mask );
 
     /*---------------------------------------------------------------*/
     /* Take transmit serial clock, high frequency clock and          */
@@ -427,6 +438,16 @@
     /* Verify all transmit buffers are serviced                      */
     /*---------------------------------------------------------------*/
     while ( (hMcasp0->regs->XSTAT & 0x0020) == 0x0020 );
+
+    /*---------------------------------------------------------------*/
+    /* Take receive and transmit state machine out of reset          */
+    /*---------------------------------------------------------------*/
+    CSL_mcaspHwControl( hMcasp0, CSL_MCASP_CMD_ACTIVATE_SM_RCV_XMT, NULL );
+
+    /*---------------------------------------------------------------*/
+    /* Take receive and transmit frame sync out of reset             */
+    /*---------------------------------------------------------------*/
+    CSL_mcaspHwControl( hMcasp0, CSL_MCASP_CMD_ACTIVATE_FS_RCV_XMT, NULL );
 
     /*---------------------------------------------------------------*/
     /* Unmute audio outputs                                          */

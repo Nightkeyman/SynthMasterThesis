@@ -273,25 +273,6 @@ void bandStopFilter(int freqLow, int freqHigh) {
 //  Main Functions
 //
 
-CSL_DmaxCpuintEventSetup uartEventSetup =
-{
-	CSL_DMAX_EVENT28_ETYPE_CPUINT,
-	CSL_DMAX_EVENT28_INT_INT11
-};
-
-CSL_DmaxHwSetup	uartDmaxHwSetup =
-{
-	// DMAX Priority (priority)
-	CSL_DMAX_HI_PRIORITY,
-
-	//DMAX Polarity (polarity)
-    CSL_DMAX_POLARITY_RISING_EDGE,
-
-	// DMAX Event initialization structure (eventSetup)
-	&uartEventSetup
-};
-
-
 int notes[128] = {{0}};
 
 int main( int argc, char *argv[] ) {

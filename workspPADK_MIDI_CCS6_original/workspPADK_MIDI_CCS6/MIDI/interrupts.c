@@ -53,36 +53,6 @@ int SetupInterrupts()
     CSL_intcGlobalEnable( &state );
 
 	return 0;
-
-	/*---------------------------------------------------------------*/
-	/*---------------------------------------------------------------*/
-	// **************** TO CO BYLO DO ADC I DAC *********************//
-	/*---------------------------------------------------------------*/
-	/*---------------------------------------------------------------*/
-
-    /*---------------------------------------------------------------*/
-    /* Hook Transfert completion Notification from DMAX (INT8)       */
-    /*---------------------------------------------------------------*/
-    
-  	//CSL_intcHookIsr( CSL_INTC_EVENTID_DMAXEVTOUT1, (Uint32)dmax_isr );
-    //CSL_intcEventEnable( CSL_INTC_EVENTID_DMAXEVTOUT1, &eventStat );
-
-    /*---------------------------------------------------------------*/
-    /* Hook NMI                                                      */
-    /*---------------------------------------------------------------*/   
-  	//CSL_intcHookIsr( CSL_INTC_EVENTID_NMI, (Uint32)nmi_isr );
-    //CSL_intcEventEnable( CSL_INTC_EVENTID_NMI, &eventStat );
-
-    /*---------------------------------------------------------------*/
-    /* Enable Interrupts                                             */
-    /*---------------------------------------------------------------*/   
-    //CSL_intcGlobalEnable( &state );
-
-	//return 0;
-
-	/*---------------------------------------------------------------*/
-	/*---------------------  KONIEC     -----------------------------*/
-	/*---------------------------------------------------------------*/
 }
 
 // ################## DAC/ADC RELATED VARs #########
@@ -211,7 +181,7 @@ interrupt void dmax_isr( void )
 //		OBuf2.ptab[LEFT_o][CH_3] = wy[LEFT][CH_3];
 //		OBuf2.ptab[RIGHT_o][CH_3] = wy[RIGHT][CH_3];
 
-        Buf[k] = OBuf2.ptab[LEFT][CH_0];  //Zapamiêtanie próbki wyjœciowej
+        Buf[k] = IBuf2.ptab[RIGHT][CH_3];  //Zapamiêtanie próbki wyjœciowej
         k++;							  //w buforze pomocniczym
         if (k == N) { k = 0; }
 	}

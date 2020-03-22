@@ -91,6 +91,7 @@ CSL_DmaxGPXFRParameterSetup  dacGpxfrParameterSetup;
 // Dmax UART
 CSL_DmaxObj 	dmaxUartObj;
 CSL_DmaxHandle 	hDmaxUart;
+CSL_DmaxHwSetup	uartDmaxHwSetup;
 
 //
 // CSL INTC Module
