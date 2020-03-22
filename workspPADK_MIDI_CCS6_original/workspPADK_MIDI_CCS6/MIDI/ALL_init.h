@@ -55,6 +55,12 @@
     DAC_Init( &dacParams );
 
     /*---------------------------------------------------------------*/
+	/* UART Initilization (use default values)                        */
+	/*---------------------------------------------------------------*/
+	uartParams.ier = 1;
+	UART_Init( &uartParams );
+
+    /*---------------------------------------------------------------*/
     /* DMAX Initilization                                            */
     /*---------------------------------------------------------------*/
     CSL_dmaxInit( NULL );
@@ -66,7 +72,19 @@
 
     /*---------------------------------------------------------------*/
     /* Opening McASP Module                                          */
+	/*---------------------------------------------------------------*/
+    /* Create CPU Interrupt Event Entry - dMax EVENT 28 corresponds  */
+    /* to AMUTEIN2 (External Int 6 -> UART)                          */
     /*---------------------------------------------------------------*/
+
+	// Reserve MCASP UART
+    hMcasp0_uart = CSL_mcaspOpen( &mcasp0Obj_uart, CSL_MCASP_1, (CSL_McaspParam *)NULL, &status );
+    if ( (hMcasp0_uart == NULL) || (status != CSL_SOK) )
+    {
+        fprintf( stderr, "Failed to open the McASP Module \n" );
+   	    return -1;
+    }
+
     hMcasp0 = CSL_mcaspOpen( &mcasp0Obj, CSL_MCASP_0, NULL, &status );
     if ( (hMcasp0 == NULL) || (status != CSL_SOK) )
     {
@@ -77,6 +95,16 @@
     /*---------------------------------------------------------------*/
     /* Opening dMAX Module                                           */
     /*---------------------------------------------------------------*/
+
+	//Reserve dMax UART
+	dmaxUartObj.eventUid = CSL_DMAX_HIPRIORITY_EVENT28_UID;
+	hDmaxUart = CSL_dmaxOpen( &dmaxUartObj, CSL_DMAX, (CSL_DmaxParam *)NULL, &status );
+	if ( (status != CSL_SOK) || (hDmaxUart == (CSL_DmaxHandle)CSL_DMAX_BADHANDLE) )
+	{
+        fprintf( stderr, "Failed to open the dMAX Module \n" );
+	    return -1;
+	}
+
 	adcDmaxObj.eventUid = CSL_DMAX_HIPRIORITY_MCASP0RX_UID;
 	adcDmaxObj.paramUid = CSL_DMAX_HIPRIORITY_PARAMETERENTRY_ANY;
 	hDmaxAdc = CSL_dmaxOpen( &adcDmaxObj, CSL_DMAX, NULL ,&status );
@@ -95,6 +123,7 @@
 	    return -1;
 	}
 
+
     /*---------------------------------------------------------------*/
     /* Event Enable                                                  */
     /*---------------------------------------------------------------*/
@@ -102,14 +131,17 @@
 	// Dmax Event Disable
 	CSL_dmaxHwControl( hDmaxAdc, CSL_DMAX_CMD_EVENTDISABLE, NULL );
 	CSL_dmaxHwControl( hDmaxDac, CSL_DMAX_CMD_EVENTDISABLE, NULL );
+    CSL_dmaxHwControl( hDmaxUart, CSL_DMAX_CMD_EVENTDISABLE, NULL );
 
 	// Clear TCC
 	CSL_dmaxHwControl( hDmaxAdc, CSL_DMAX_CMD_CLEARTCC, NULL );
 	CSL_dmaxHwControl( hDmaxDac, CSL_DMAX_CMD_CLEARTCC, NULL );
+    CSL_dmaxHwControl( hDmaxUart, CSL_DMAX_CMD_CLEARTCC, NULL );
 
 	// Dmax Event Enable
 	CSL_dmaxHwControl( hDmaxAdc, CSL_DMAX_CMD_EVENTENABLE, NULL );
     CSL_dmaxHwControl( hDmaxDac, CSL_DMAX_CMD_EVENTENABLE, NULL );
+    CSL_dmaxHwControl( hDmaxUart, CSL_DMAX_CMD_EVENTENABLE, NULL );
 
     /*---------------------------------------------------------------*/
     /* DMAX for data transfer on MCASP0RX DMA REQ - 3D Transfer      */
@@ -200,6 +232,7 @@
     //
     // DMAX initialization structure
     //
+
 
 	// DMAX Priority
     adcDmaxHwSetup.priority = CSL_DMAX_HI_PRIORITY;
@@ -321,6 +354,43 @@
 	    return -1;
 	}
 
+    //
+    // UART Initialization structure
+    //
+
+    CSL_DmaxCpuintEventSetup uartEventSetup =
+    {
+    	CSL_DMAX_EVENT28_ETYPE_CPUINT,
+    	CSL_DMAX_EVENT28_INT_INT11
+    };
+
+    // DMAX Priority
+    uartDmaxHwSetup.priority = CSL_DMAX_HI_PRIORITY;
+
+	//DMAX Polarity
+    uartDmaxHwSetup.polarity = CSL_DMAX_POLARITY_RISING_EDGE;
+
+	// DMAX Event initialization structure
+    uartDmaxHwSetup.eventSetup = &uartEventSetup;
+
+    // Set Dmax Event Entry 28 UART
+    status = CSL_dmaxHwSetup( hDmaxUart, &uartDmaxHwSetup );
+    if ( status != CSL_SOK )
+    {
+        fprintf( stderr, "Failed to setup the dMAX Module \n" );
+	    return -1;
+	}
+
+    /*---------------------------------------------------------------*/
+    /* McASP UART Setup - (Default PADK values)                          */
+    /*---------------------------------------------------------------*/
+	status = CSL_mcaspHwSetup( hMcasp0_uart, &mcasp0HwCfg );
+  	if ( status != CSL_SOK )
+    {
+        fprintf( stderr, "Failed to setup the McASP UART\n" );
+	    return -1;
+    }
+
     /*---------------------------------------------------------------*/
     /* McASP0 Setup - (Default PADK values)                          */
     /*---------------------------------------------------------------*/
@@ -338,12 +408,12 @@
     /*---------------------------------------------------------------*/
     /* Setup interrupt handler                                       */
     /*---------------------------------------------------------------*/
-	/*if ( SetupInterrupts() )
+	if ( SetupInterrupts() )
 	{
 		fprintf( stderr, "Failed to setup interrupts\n" );
 	    return -1;
     }
-	*/
+
     /*---------------------------------------------------------------*/
     /* Take receive serial clock, high frequency clock and           */
     /* serializer out of reset                                       */
