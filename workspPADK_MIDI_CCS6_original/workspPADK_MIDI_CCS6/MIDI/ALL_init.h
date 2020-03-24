@@ -60,6 +60,12 @@
 	uartParams.ier = 1;
 	UART_Init( &uartParams );
 
+	/*---------------------------------------------------------------*/
+	/* UART Initilization (use default values)                        */
+	/*---------------------------------------------------------------*/
+	midiParams.ier = 1;
+	MIDI_Init(&midiParams);
+
     /*---------------------------------------------------------------*/
     /* DMAX Initilization                                            */
     /*---------------------------------------------------------------*/
@@ -77,13 +83,21 @@
     /* to AMUTEIN2 (External Int 6 -> UART)                          */
     /*---------------------------------------------------------------*/
 
+	// Reserve MCASP MIDI
+    /*hMcasp0_midi = CSL_mcaspOpen( &mcasp0Obj_midi, CSL_MCASP_2, (CSL_McaspParam *)NULL, &status );
+    if ( (hMcasp0_midi == NULL) || (status != CSL_SOK) )
+    {
+        fprintf( stderr, "Failed to open the McASP Module \n" );
+   	    return -1;
+    }
+
 	// Reserve MCASP UART
     hMcasp0_uart = CSL_mcaspOpen( &mcasp0Obj_uart, CSL_MCASP_1, (CSL_McaspParam *)NULL, &status );
     if ( (hMcasp0_uart == NULL) || (status != CSL_SOK) )
     {
         fprintf( stderr, "Failed to open the McASP Module \n" );
    	    return -1;
-    }
+    }*/
 
     hMcasp0 = CSL_mcaspOpen( &mcasp0Obj, CSL_MCASP_0, NULL, &status );
     if ( (hMcasp0 == NULL) || (status != CSL_SOK) )
@@ -96,12 +110,21 @@
     /* Opening dMAX Module                                           */
     /*---------------------------------------------------------------*/
 
+	//Reserve dMax MIDI --> Event 26 is INT13 (dMAX_spru795d.pdf) // TU SIE WYWALA !!!!
+	dmaxMidiObj.eventUid = CSL_DMAX_HIPRIORITY_EVENT26_UID;
+	hDmaxMidi = CSL_dmaxOpen( &dmaxMidiObj, CSL_DMAX, (CSL_DmaxParam *)NULL, &status );
+	if ( (status != CSL_SOK) || (hDmaxMidi == (CSL_DmaxHandle)CSL_DMAX_BADHANDLE) )
+	{
+        fprintf( stderr, "Failed to open the dMAX MIDI Module \n" );
+	    return -1;
+	}
+
 	//Reserve dMax UART
 	dmaxUartObj.eventUid = CSL_DMAX_HIPRIORITY_EVENT28_UID;
 	hDmaxUart = CSL_dmaxOpen( &dmaxUartObj, CSL_DMAX, (CSL_DmaxParam *)NULL, &status );
 	if ( (status != CSL_SOK) || (hDmaxUart == (CSL_DmaxHandle)CSL_DMAX_BADHANDLE) )
 	{
-        fprintf( stderr, "Failed to open the dMAX Module \n" );
+        fprintf( stderr, "Failed to open the dMAX UART Module \n" );
 	    return -1;
 	}
 
@@ -110,7 +133,7 @@
 	hDmaxAdc = CSL_dmaxOpen( &adcDmaxObj, CSL_DMAX, NULL ,&status );
 	if ( (status != CSL_SOK) || (hDmaxAdc == (CSL_DmaxHandle)CSL_DMAX_BADHANDLE) )
 	{
-        fprintf( stderr, "Failed to open the dMAX Module \n" );
+        fprintf( stderr, "Failed to open the dMAX ADC Module \n" );
 	    return -1;
 	}
 
@@ -119,7 +142,7 @@
 	hDmaxDac = CSL_dmaxOpen( &dacDmaxObj, CSL_DMAX, NULL ,&status );
 	if ( (status != CSL_SOK) || (hDmaxDac == (CSL_DmaxHandle)CSL_DMAX_BADHANDLE) )
 	{
-        fprintf( stderr, "Failed to open the dMAX Module \n" );
+        fprintf( stderr, "Failed to open the dMAX DAC Module \n" );
 	    return -1;
 	}
 
@@ -132,16 +155,19 @@
 	CSL_dmaxHwControl( hDmaxAdc, CSL_DMAX_CMD_EVENTDISABLE, NULL );
 	CSL_dmaxHwControl( hDmaxDac, CSL_DMAX_CMD_EVENTDISABLE, NULL );
     CSL_dmaxHwControl( hDmaxUart, CSL_DMAX_CMD_EVENTDISABLE, NULL );
+    CSL_dmaxHwControl( hDmaxMidi, CSL_DMAX_CMD_EVENTDISABLE, NULL );
 
 	// Clear TCC
 	CSL_dmaxHwControl( hDmaxAdc, CSL_DMAX_CMD_CLEARTCC, NULL );
 	CSL_dmaxHwControl( hDmaxDac, CSL_DMAX_CMD_CLEARTCC, NULL );
     CSL_dmaxHwControl( hDmaxUart, CSL_DMAX_CMD_CLEARTCC, NULL );
+    CSL_dmaxHwControl( hDmaxMidi, CSL_DMAX_CMD_CLEARTCC, NULL );
 
 	// Dmax Event Enable
 	CSL_dmaxHwControl( hDmaxAdc, CSL_DMAX_CMD_EVENTENABLE, NULL );
     CSL_dmaxHwControl( hDmaxDac, CSL_DMAX_CMD_EVENTENABLE, NULL );
     CSL_dmaxHwControl( hDmaxUart, CSL_DMAX_CMD_EVENTENABLE, NULL );
+    CSL_dmaxHwControl( hDmaxMidi, CSL_DMAX_CMD_EVENTENABLE, NULL );
 
     /*---------------------------------------------------------------*/
     /* DMAX for data transfer on MCASP0RX DMA REQ - 3D Transfer      */
@@ -384,10 +410,47 @@
     /*---------------------------------------------------------------*/
     /* McASP UART Setup - (Default PADK values)                          */
     /*---------------------------------------------------------------*/
-	status = CSL_mcaspHwSetup( hMcasp0_uart, &mcasp0HwCfg );
+	/*status = CSL_mcaspHwSetup( hMcasp0_uart, &mcasp0HwCfg );
   	if ( status != CSL_SOK )
     {
         fprintf( stderr, "Failed to setup the McASP UART\n" );
+	    return -1;
+    }*/
+
+    //
+    // MIDI Initialization structure
+    //
+
+    CSL_DmaxCpuintEventSetup midiEventSetup =
+    {
+    	CSL_DMAX_EVENT26_ETYPE_CPUINT,
+    	CSL_DMAX_EVENT26_INT_INT13
+    };
+
+    // DMAX Priority
+    midiDmaxHwSetup.priority = CSL_DMAX_HI_PRIORITY;
+
+	//DMAX Polarity
+    midiDmaxHwSetup.polarity = CSL_DMAX_POLARITY_RISING_EDGE;
+
+	// DMAX Event initialization structure
+    midiDmaxHwSetup.eventSetup = &midiEventSetup;
+
+    // Set Dmax Event Entry 26 MIDI
+    status = CSL_dmaxHwSetup( hDmaxMidi, &midiDmaxHwSetup );
+    if ( status != CSL_SOK )
+    {
+        fprintf( stderr, "Failed to setup the dMAX Module \n" );
+	    return -1;
+	}
+
+    /*---------------------------------------------------------------*/
+    /* McASP MIDI Setup - (Default PADK values)                          */
+    /*---------------------------------------------------------------*/
+	/*status = CSL_mcaspHwSetup( hMcasp0_midi, &mcasp0HwCfg );
+  	if ( status != CSL_SOK )
+    {
+        fprintf( stderr, "Failed to setup the McASP MIDI\n" );
 	    return -1;
     }
 

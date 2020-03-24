@@ -84,7 +84,7 @@
 //
 	unsigned char data;
 	unsigned char bcd;
-	unsigned char data_midi[32];
+	//unsigned char data_midi[32];
 	int btn1, btn2;
 
 #define MIDI_buff_length 3
@@ -279,8 +279,6 @@ int main( int argc, char *argv[] ) {
 
 	#include "ALL_init.h"
 
-	//int ret = SetupInterruptsUART();
-
 	int i = 0;
 	//clkgenParams.adc_scki
 	// SINUSOID //
@@ -337,7 +335,7 @@ int main( int argc, char *argv[] ) {
 	/*---------------------------------------------------------------*/
 	/* Initialise the MIDI receiver/transmitter                      */
 	/*---------------------------------------------------------------*/
-	MIDI_Init(&params);
+
 
 	/*---------------------------------------------------------------*/
 	/* Read and send the initial status of the push button           */
@@ -346,11 +344,10 @@ int main( int argc, char *argv[] ) {
 	btn2 = GPIO_GetPushButton( 2 );
 	data = (btn2<<1) | btn1;
 	GPIO_SetBCD( int2bcd[0] );
-	//USB_Write( USB_DSP2HOST_PIPE1, &data, 1, 1 );
 	int bcditer = 0;
 	int toggle_midi = 0;
     while(1)  {
-    	if(MIDI_Read(data_midi, 1, 1) > 0) {
+    	/*if(MIDI_Read(data_midi, 1, 1) > 0) {
 			MIDI_EnableLed1(toggle_midi ^= 1);
 			MIDI_EnableLed2(!toggle_midi);
 			if(data_midi[0] != 248) {
@@ -368,6 +365,6 @@ int main( int argc, char *argv[] ) {
 					MIDI_clear();
 				}
 			}
-    	}
+    	}*/
     }	
 }
