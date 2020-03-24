@@ -12,7 +12,7 @@ interrupt void uart_isr( void );
 interrupt void midi_isr( void );
 
 #include "audioBufConst&ExtVar.h"
-
+#include "uart_fifo.h"
 int SetupInterrupts()
 {
 	CSL_Status                    status;
@@ -110,8 +110,8 @@ interrupt void midi_isr( void )
 	static int toggle_midi = 0;
 	MIDI_EnableLed1(toggle_midi ^= 1);
 	MIDI_EnableLed2(!toggle_midi);
-	MIDI_Read(data_midi, 3, UART_NO_WAIT);
-	MIDI_Write(data_midi, 3, UART_NO_WAIT);
+	MIDI_Read(data_midi, 1, UART_NO_WAIT);
+	MIDI_Write(data_midi, 1, UART_NO_WAIT);
 }
 
 interrupt void uart_isr( void )
@@ -120,7 +120,20 @@ interrupt void uart_isr( void )
 	UART_EnableLed1( toggle ^= 1 );
     UART_EnableLed2( !toggle );
     UART_Read(uartdata, 1, UART_WAIT);
-    UART_Write(uartdata, 1, UART_WAIT);
+    UART_push(uartdata[0]);
+    switch(UART_pull(0)){
+    case 100:
+    	if (UART_pull(7) == 101){
+    		if (UART_pull(8) == UART_checksum()){
+    			if (UART_pull(1) == 1){
+    				UART_send(100, 1, 0,0,0,0,0);
+    			} else if (UART_pull(1) == 2){
+    				UART_send(100, 2, 0,0,0,0,0);
+    			}
+    		}
+    	}
+    	break;
+    }
 }
 
 interrupt void dmax_isr( void )
