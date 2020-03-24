@@ -15,10 +15,14 @@
 CSL_McaspHandle  hMcasp0;
 CSL_McaspObj 	 mcasp0Obj;
 
-// ################## UART ##################
 // McASP UART
 CSL_McaspHandle hMcasp0_uart;
 CSL_McaspObj 	mcasp0Obj_uart;
+
+// McASP MIDI
+CSL_McaspHandle hMcasp0_midi;
+CSL_McaspObj 	mcasp0Obj_midi;
+
 // for DMAX HW setup
 CSL_McaspHwSetup mcasp0HwCfg = PADK_MCASP0_HWSETUP_DEFAULTS;
 //
@@ -93,6 +97,11 @@ CSL_DmaxObj 	dmaxUartObj;
 CSL_DmaxHandle 	hDmaxUart;
 CSL_DmaxHwSetup	uartDmaxHwSetup;
 
+// Dmax MIDI
+CSL_DmaxObj 	dmaxMidiObj;
+CSL_DmaxHandle 	hDmaxMidi;
+CSL_DmaxHwSetup	midiDmaxHwSetup;
+
 //
 // CSL INTC Module
 //
@@ -101,10 +110,15 @@ CSL_IntcHandle           hIntc;
 CSL_IntcEventEnableState eventStat;
 //
 
-// Intc
+// Intc UART
 CSL_IntcHandle           hIntc_uart;
 CSL_IntcObj              intcObj_uart;
 CSL_IntcEventEnableState eventStat_uart;
+
+// Intc MIDI
+CSL_IntcHandle           hIntc_midi;
+CSL_IntcObj              intcObj_midi;
+CSL_IntcEventEnableState eventStat_midi;
 
 // PADK CLKGEN Module
 //
@@ -127,6 +141,9 @@ DAC_Params dacParams = DAC_DEFAULT_PARAMS;
 //
 UART_Params uartParams = UART_DEFAULT_PARAMS;
 
+// PADK MID Module
+//
+MIDI_Params midiParams = MIDI_DEFAULT_PARAMS;
 
 //
 // Forward Declaration

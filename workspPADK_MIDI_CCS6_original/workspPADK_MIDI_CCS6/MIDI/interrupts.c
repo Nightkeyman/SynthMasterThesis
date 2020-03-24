@@ -9,6 +9,7 @@
 interrupt void dmax_isr( void );
 interrupt void nmi_isr( void );
 interrupt void uart_isr( void );
+interrupt void midi_isr( void );
 
 #include "audioBufConst&ExtVar.h"
 
@@ -23,10 +24,19 @@ int SetupInterrupts()
 	status = CSL_intcInit( NULL );
 
     /*---------------------------------------------------------------*/
-    /* Hook Transfert completion Notification from DMAX (INT11)       */
+    /* Hook Transfert completion Notification from DMAX (INT11)      */
     /*---------------------------------------------------------------*/
     hIntc_uart = CSL_intcOpen( &intcObj_uart, CSL_INTC_EVENTID_DMAXEVTOUT4, NULL, &status );
 	if( (hIntc_uart == NULL) || (status != CSL_SOK) )
+	{
+		return -1;
+	}
+
+    /*---------------------------------------------------------------*/
+    /* Hook Transfert completion Notification from DMAX (INT13)      */
+    /*---------------------------------------------------------------*/
+    hIntc_midi = CSL_intcOpen( &intcObj_midi, CSL_INTC_EVENTID_DMAXEVTOUT6, NULL, &status );
+	if( (hIntc_midi == NULL) || (status != CSL_SOK) )
 	{
 		return -1;
 	}
@@ -41,11 +51,13 @@ int SetupInterrupts()
 	}
 
     CSL_intcHookIsr( CSL_INTC_EVENTID_DMAXEVTOUT4, (Uint32)uart_isr );
+    CSL_intcHookIsr( CSL_INTC_EVENTID_DMAXEVTOUT6, (Uint32)midi_isr );
     CSL_intcHookIsr( CSL_INTC_EVENTID_NMI, (Uint32)nmi_isr );
     CSL_intcHookIsr( CSL_INTC_EVENTID_DMAXEVTOUT1, (Uint32)dmax_isr );
 
     // DMAXEVTOUT4 for UART
     CSL_intcEventEnable( CSL_INTC_EVENTID_DMAXEVTOUT4, &eventStat );
+    CSL_intcEventEnable( CSL_INTC_EVENTID_DMAXEVTOUT6, &eventStat );
     CSL_intcEventEnable( CSL_INTC_EVENTID_NMI, &eventStat );
     // DMAXEVTOUT1 for DAC/ADC
     CSL_intcEventEnable( CSL_INTC_EVENTID_DMAXEVTOUT1, &eventStat );
@@ -84,7 +96,8 @@ int generator_interator = 0;
 // ################## UART RELATED VARs ############
 #define UART_WAIT       1
 #define UART_NO_WAIT    0
-unsigned char uartdata[1];
+unsigned char uartdata[3];
+unsigned char data_midi[10];
 // ################## UART end #####################
 
 interrupt void nmi_isr( void )
@@ -92,13 +105,22 @@ interrupt void nmi_isr( void )
     while(1);
 }
 
+interrupt void midi_isr( void )
+{
+	static int toggle_midi = 0;
+	MIDI_EnableLed1(toggle_midi ^= 1);
+	MIDI_EnableLed2(!toggle_midi);
+	MIDI_Read(data_midi, 3, UART_NO_WAIT);
+	MIDI_Write(data_midi, 3, UART_NO_WAIT);
+}
+
 interrupt void uart_isr( void )
 {
     static int toggle = 0;
 	UART_EnableLed1( toggle ^= 1 );
     UART_EnableLed2( !toggle );
-    UART_Read(  uartdata, 1, UART_NO_WAIT );
-    UART_Write( uartdata, 1, UART_NO_WAIT);
+    UART_Read(uartdata, 1, UART_WAIT);
+    UART_Write(uartdata, 1, UART_WAIT);
 }
 
 interrupt void dmax_isr( void )
