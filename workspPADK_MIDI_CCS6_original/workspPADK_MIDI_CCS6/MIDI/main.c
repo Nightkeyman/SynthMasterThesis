@@ -63,6 +63,7 @@
 #include <stdlib.h>
 
 #include "PADK_UART.h"
+#include "midi_fifo.h"
 
 	unsigned char int2bcd[16] = {
 		0x3F, 0x06, 0x5B, 0x4F, 0x66, 0x6D, 0x7D, 0x07, 0x7F, 0x6F, 0x77, 0x7C, 0x39, 0x5E, 0x79, 0x71
@@ -87,44 +88,15 @@
 	//unsigned char data_midi[32];
 	int btn1, btn2;
 
-#define MIDI_buff_length 3
-volatile unsigned char MIDI_buff[MIDI_buff_length] = {{0}};
-unsigned char MIDI_buff_iterator = 0;
+unsigned char data_midi[1];
 
 #include "var&fun.h"
 
-//int 	xx = MIDI_Reset();
 #define M_PI 3.1416
 
 void bit_rev(float* x, int n);
 int gen_twiddle(float *w, int n);
 void bitrev_index(short *index, int n);
-void MIDI_push(unsigned char data);
-unsigned char MIDI_pull(  char offset);
-void MIDI_clear();
-
-void MIDI_push(unsigned char data){ // 600 nanoseconds
-	MIDI_buff_iterator++;
-    if (MIDI_buff_iterator >= MIDI_buff_length)
-    	MIDI_buff_iterator = 0;
-    MIDI_buff[MIDI_buff_iterator] = data;
-}
-
-unsigned char MIDI_pull(char offset){
-
-	int index = 0;
-	if (MIDI_buff_iterator + offset >= 0)
-		index = MIDI_buff_iterator + offset ;
-	else
-		index = MIDI_buff_length + MIDI_buff_iterator + offset;
-	return MIDI_buff[index];
-
-}
-void MIDI_clear(){
-	unsigned char i = 0;
-	for (i = 0; i < MIDI_buff_length; i++)
-		MIDI_buff[i] = 0;
-}
 
 
 #define N 1024
@@ -309,7 +281,10 @@ int main( int argc, char *argv[] ) {
 	}*/
 
 	// OKNO HANNINGA
-	//for(i = 0; i < 2*N; i+=2) waveform[i] = waveform[i]*hann[i/2];
+	for(i = 0; i < 2*N; i+=2) {
+		waveform[i] = waveform[i]*hann[i/2];
+		waveform[i+1] = waveform[i+1]*hann[i/2];
+	}
 	// OKNO HANNINGA
 	//for(i = 0; i < 2*N; i+=2) v[i] = v[i]*hann[i/2];
 
@@ -340,7 +315,6 @@ int main( int argc, char *argv[] ) {
 	/*---------------------------------------------------------------*/
 	/* Initialise the MIDI receiver/transmitter                      */
 	/*---------------------------------------------------------------*/
-
 
 	/*---------------------------------------------------------------*/
 	/* Read and send the initial status of the push button           */

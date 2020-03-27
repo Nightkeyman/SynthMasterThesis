@@ -12,6 +12,7 @@ interrupt void uart_isr( void );
 interrupt void midi_isr( void );
 
 #include "audioBufConst&ExtVar.h"
+#include "midi_fifo.h"
 
 int SetupInterrupts()
 {
@@ -101,7 +102,7 @@ double sound_double = 0;
 #define UART_WAIT       1
 #define UART_NO_WAIT    0
 unsigned char uartdata[1];
-unsigned char data_midi[1];
+extern unsigned char data_midi[1];
 // ################## UART end #####################
 
 interrupt void nmi_isr( void )
