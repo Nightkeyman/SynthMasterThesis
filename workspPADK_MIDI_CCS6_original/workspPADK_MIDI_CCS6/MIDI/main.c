@@ -89,6 +89,7 @@
 	int btn1, btn2;
 
 unsigned char data_midi[1];
+int notes[128];
 
 #include "var&fun.h"
 
@@ -180,7 +181,7 @@ void bitrev_index(short *index, int n)
 }
 
 #define Fs 96000
-#define F_sq 1000
+#define F_sq 440
 #define F_sqq 10000
 double waveform[2*N];
 double sig_amp = 1000000000;
@@ -241,24 +242,24 @@ void bandStopFilter(int freqLow, int freqHigh) {
 	}
 }
 //
-//  Main Functions
+//  Main Function
 //
-
-int notes[128] = {{0}};
 
 int main( int argc, char *argv[] ) {
 
 	#include "ALL_init.h"
 
+	// INITIALIZE VARIABLES
 	int i = 0;
 	int sound1 = 0;
 	double sound_double1 = 0;
-	sound_double1 = sin(M_PI/4);
-	sound1 = (int)sound_double1;
-	//clkgenParams.adc_scki
+	for(i = 0; i < 128; i++)
+		notes[i] = 0;
+
 	// SINUSOID //
 	for(i = 0; i < 2*N; i++) {
-		v[i] = (float)(1*sin((double)(i/2)*2.0*M_PI*F_sq*(1.0/Fs))); // + (float)(5*sin((double)(i/2)*2.0*M_PI*F_sqq*(1.0/Fs)));
+		//v[i] = (float)(1*sin((double)(i/2)*2.0*M_PI*F_sq*(1.0/Fs))); // + (float)(5*sin((double)(i/2)*2.0*M_PI*F_sqq*(1.0/Fs)));
+		v[i] = (float)(1*sin((double)(i)*2.0*M_PI*F_sq*(1.0/Fs))); // + (float)(5*sin((double)(i/2)*2.0*M_PI*F_sqq*(1.0/Fs)));
 		waveform[i] = sig_amp*v[i];
 		if(i%2 == 1) v[i] = 0;
 	}
@@ -313,37 +314,23 @@ int main( int argc, char *argv[] ) {
 	DSPF_sp_icfftr2_dif(v,w,N);
 
 	/*---------------------------------------------------------------*/
-	/* Initialise the MIDI receiver/transmitter                      */
+	/*							 MAIN LOOP 		                     */
 	/*---------------------------------------------------------------*/
 
-	/*---------------------------------------------------------------*/
-	/* Read and send the initial status of the push button           */
-	/*---------------------------------------------------------------*/
-	btn1 = GPIO_GetPushButton( 1 );
-	btn2 = GPIO_GetPushButton( 2 );
-	data = (btn2<<1) | btn1;
-	GPIO_SetBCD( int2bcd[0] );
-	int bcditer = 0;
-	int toggle_midi = 0;
+	int freq_wav = 0;
+	int j = 0;
     while(1)  {
-    	/*if(MIDI_Read(data_midi, 1, 1) > 0) {
-			MIDI_EnableLed1(toggle_midi ^= 1);
-			MIDI_EnableLed2(!toggle_midi);
-			if(data_midi[0] != 248) {
-				MIDI_push(data_midi[0]);
-				unsigned char status = (MIDI_pull(-2)>>4)&0x0F;
-				if (status == 0x09) { // note on
-					printf(" [MIDI note on] pitch: %d, velocity: %d \n", MIDI_pull(-1), MIDI_pull(0));
-					unsigned char note = MIDI_pull(-1)&0x7f;
-					notes[note] = 1;
-					MIDI_clear();
-				} else if (status == 0x08) { // note off
-					printf(" [MIDI note off] pitch: %d, velocity: %d \n", MIDI_pull(-1), MIDI_pull(0));
-					unsigned char note = MIDI_pull(-1)&0x7f;
-					notes[note] = 0;
-					MIDI_clear();
-				}
-			}
-    	}*/
+    	for(i = 0; i < 128; i++) {
+    		if(notes[i] == 1) {
+    			freq_wav = 261*pow(1.059463,i - 48);
+    			for(j = 0; j < 2*N; j++) {
+    				waveform[j] = sig_amp*(sin((double)(j)*2.0*M_PI*freq_wav*(1.0/Fs)));
+					waveform[j] = waveform[j]*hann[j/2];
+    			}
+    		}
+    		while(notes[i] == 1);
+			for(j = 0; j < 2*N; j++)
+				waveform[j] = 0;
+    	}
     }	
 }

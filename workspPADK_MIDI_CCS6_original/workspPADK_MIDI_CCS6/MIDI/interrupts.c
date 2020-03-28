@@ -82,7 +82,7 @@ int we[STEREO][NUM_CHANNEL];
 int wy[STEREO][NUM_CHANNEL];
 //int wl1, wp1, wl2, wp2, wl3, wp3, wl4, wp4;
 
-#define N 4098
+#define N 4096
 int Buf_1[N];  // bufor pomocniczy do "obserwacji" danych wejsciowych
 int Buf[N];  // bufor pomocniczy do "obserwacji" danych wyjœciowych
 int k=0;
@@ -115,8 +115,21 @@ interrupt void midi_isr( void )
 	static int toggle_midi = 0;
 	MIDI_EnableLed1(toggle_midi ^= 1);
 	MIDI_EnableLed2(!toggle_midi);
-	MIDI_Read(data_midi, 1, UART_NO_WAIT);
-	//MIDI_Write(data_midi, 3, UART_NO_WAIT);
+	if(MIDI_Read(data_midi, 1, 1) > 0) {
+		if(data_midi[0] != 248) {
+			MIDI_push(data_midi[0]);
+			unsigned char status = (MIDI_pull(-2)>>4)&0x0F;
+			if (status == 0x09) { // note on
+				unsigned char note = MIDI_pull(-1)&0x7f;
+				notes[note] = 1;
+				MIDI_clear();
+			} else if (status == 0x08) { // note off
+				unsigned char note = MIDI_pull(-1)&0x7f;
+				notes[note] = 0;
+				MIDI_clear();
+			}
+		}
+	}
 	UART_Write(data_midi, 1, UART_NO_WAIT);
 }
 
@@ -199,7 +212,7 @@ interrupt void dmax_isr( void )
 //		OBuf2.ptab[RIGHT_o][CH_3] = wy[RIGHT][CH_3];
 
 		wav_iterator++;
-		if(wav_iterator >= 2048)
+		if(wav_iterator >= N/2)
 			wav_iterator = 0;
 
         Buf[k] = OBuf2.ptab[LEFT][CH_0];  //Zapamiêtanie próbki wyjœciowej
