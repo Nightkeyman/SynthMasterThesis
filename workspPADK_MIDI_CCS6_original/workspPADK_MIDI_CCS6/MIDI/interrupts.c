@@ -83,7 +83,6 @@ int wy[STEREO][NUM_CHANNEL];
 //int wl1, wp1, wl2, wp2, wl3, wp3, wl4, wp4;
 
 #define N 4096
-#define M 96000
 int Buf_1[N];  // bufor pomocniczy do "obserwacji" danych wejsciowych
 int Buf[N];  // bufor pomocniczy do "obserwacji" danych wyjœciowych
 int k=0;
@@ -194,8 +193,8 @@ interrupt void dmax_isr( void )
 		wy[RIGHT][CH_3] = gain * we[RIGHT][CH_3];
 
 		OBuf2.pBuf = pDac;
-		OBuf2.ptab[LEFT][CH_0] = (int)waveform[wav_iterator/2];
-		OBuf2.ptab[RIGHT][CH_0] = (int)waveform[wav_iterator/2];
+		OBuf2.ptab[LEFT][CH_0] = (int)waveform[wav_iterator];
+		OBuf2.ptab[RIGHT][CH_0] = (int)waveform[wav_iterator];
 		OBuf2.ptab[LEFT][CH_1] = wy[LEFT][CH_1];
 		OBuf2.ptab[RIGHT][CH_1] = wy[RIGHT][CH_1];
 		OBuf2.ptab[LEFT][CH_2] = wy[LEFT][CH_2];
@@ -213,7 +212,7 @@ interrupt void dmax_isr( void )
 //		OBuf2.ptab[RIGHT_o][CH_3] = wy[RIGHT][CH_3];
 
 		wav_iterator++;
-		if(wav_iterator >= M)
+		if(wav_iterator >= N/2)
 			wav_iterator = 0;
 
         Buf[k] = OBuf2.ptab[LEFT][CH_0];  //Zapamiêtanie próbki wyjœciowej
