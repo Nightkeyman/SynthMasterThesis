@@ -184,6 +184,8 @@ void bitrev_index(short *index, int n)
 #define F_sq 440
 #define F_sqq 10000
 double waveform[2*N];
+double waveform2[2*N];
+double s = 0;
 double sig_amp = 1000000000;
 float vv[2*N];
 float vv_test[2*N];
@@ -319,18 +321,37 @@ int main( int argc, char *argv[] ) {
 
 	int freq_wav = 0;
 	int j = 0;
+	int mono = 0;
     while(1)  {
-    	for(i = 0; i < 128; i++) {
-    		if(notes[i] == 1) {
-    			freq_wav = 261*pow(1.059463,i - 48);
-    			for(j = 0; j < 2*N; j++) {
-    				waveform[j] = sig_amp*(sin((double)(j)*2.0*M_PI*freq_wav*(1.0/Fs)));
-					waveform[j] = waveform[j]*hann[j/2];
-    			}
+    	// MONOPHONIC KEYBOARD
+    	if(mono == 1) {
+    		for(i = 0; i < 128; i++) {
+				if(notes[i] == 1) {
+					freq_wav = 261*pow(1.059463,i - 48);
+					for(j = 0; j < 2*N; j++) {
+						waveform[j] = sig_amp*(sin((double)(j)*2.0*M_PI*freq_wav*(1.0/Fs)));
+						waveform[j] = waveform[j]*hann[j/2];
+					}
+				}
+				while(notes[i] == 1);
+				for(j = 0; j < 2*N; j++)
+					waveform[j] = 0;
     		}
-    		while(notes[i] == 1);
-			for(j = 0; j < 2*N; j++)
-				waveform[j] = 0;
+    	// POLYPHONIC KEYBOARD
+    	} else {
+    		for(j = 0; j < 2*N; j++)
+				waveform2[j] = 0;
+			for(i = 0; i < 128; i++) {
+				if(notes[i] == 1) {
+					freq_wav = 261*pow(1.059463,i - 48);
+					for(j = 0; j < 2*N; j++) {
+						s = sig_amp*(sin((double)(j)*2.0*M_PI*freq_wav*(1.0/Fs)));
+						waveform2[j] += s*hann[j/2];
+					}
+				}
+				for(j = 0; j < 2*N; j++)
+					waveform[j] = waveform2[j];
+			}
     	}
     }	
 }
