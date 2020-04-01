@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<configurations XML_version="1.2" id="configurations_0">
+<configuration XML_version="1.2" id="Spectrum Digital XDS510USB Emulator_0">
+        <instance XML_version="1.2" desc="Spectrum Digital XDS510USB Emulator_0" href="connections\SD510USB_Connection.xml" id="Spectrum Digital XDS510USB Emulator_0" xml="SD510USB_Connection.xml" xmlpath="connections"/>
+        <connection XML_version="1.2" id="Spectrum Digital XDS510USB Emulator_0">
+            <instance XML_version="1.2" href="drivers\sdgo6xusb.xml" id="drivers" xml="sdgo6xusb.xml" xmlpath="drivers"/>
+            <platform XML_version="1.2" id="platform_0">
+                <instance XML_version="1.2" desc="TMS320C6727_0" href="Devices\c6727.xml" id="TMS320C6727_0" xml="c6727.xml" xmlpath="Devices"/>
+            <device HW_revision="1" XML_version="1.2" description="C67x+ Floating-point DSP" id="TMS320C6727_0" partnum="TMS320C6727" simulation="no">
+                    <cpu HW_revision="1.0" XML_version="1.2" description="C672x CPU" deviceSim="false" id="C672X_0" isa="TMS320C672X">
+                        <property Type="filepathfield" Value="..\..\..\tools\compiler\c6000_7.4.14\PADK\dsp\gel\padk_350MHz.gel" id="GEL File"/>
+                    </cpu>
+                </device>
+            </platform>
+        </connection>
+    </configuration>
+</configurations>
