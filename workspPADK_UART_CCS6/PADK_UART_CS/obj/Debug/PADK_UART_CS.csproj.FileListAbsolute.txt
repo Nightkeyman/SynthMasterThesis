@@ -1,9 +1,0 @@
-E:\workspPADK_UART_CCS6\PADK_UART_CS\bin\Debug\PADK_UART_CS.exe.config
-E:\workspPADK_UART_CCS6\PADK_UART_CS\bin\Debug\PADK_UART_CS.exe
-E:\workspPADK_UART_CCS6\PADK_UART_CS\bin\Debug\PADK_UART_CS.pdb
-E:\workspPADK_UART_CCS6\PADK_UART_CS\obj\Debug\PADK_UART_CS.csprojResolveAssemblyReference.cache
-E:\workspPADK_UART_CCS6\PADK_UART_CS\obj\Debug\PADK_UART_CS.Form1.resources
-E:\workspPADK_UART_CCS6\PADK_UART_CS\obj\Debug\PADK_UART_CS.Properties.Resources.resources
-E:\workspPADK_UART_CCS6\PADK_UART_CS\obj\Debug\PADK_UART_CS.csproj.GenerateResource.Cache
-E:\workspPADK_UART_CCS6\PADK_UART_CS\obj\Debug\PADK_UART_CS.exe
-E:\workspPADK_UART_CCS6\PADK_UART_CS\obj\Debug\PADK_UART_CS.pdb
