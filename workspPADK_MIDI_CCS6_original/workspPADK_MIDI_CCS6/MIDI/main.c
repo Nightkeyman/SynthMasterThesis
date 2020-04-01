@@ -322,7 +322,10 @@ int main( int argc, char *argv[] ) {
 	int freq_wav = 0;
 	int j = 0;
 	int mono = 0;
-    while(1)  {
+
+	notes[56] = 1;
+	notes[65] = 1;
+    while(1)  {/*
     	// MONOPHONIC KEYBOARD
     	if(mono == 1) {
     		for(i = 0; i < 128; i++) {
@@ -352,6 +355,6 @@ int main( int argc, char *argv[] ) {
 				for(j = 0; j < 2*N; j++)
 					waveform[j] = waveform2[j];
 			}
-    	}
+    	}*/
     }	
 }

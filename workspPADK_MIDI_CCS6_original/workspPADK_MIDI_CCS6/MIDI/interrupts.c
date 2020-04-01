@@ -93,7 +93,8 @@ int wav_iterator = 0;
 #define M_PI 3.1416
 extern int notes[128];
 int generator_interator = 0;
-int sound = 0;
+double sound = 0;
+double sig_amp = 1000000000;
 double sound_double = 0;
 // ################## DAC/ADC end ##################
 
@@ -150,7 +151,14 @@ interrupt void dmax_isr( void )
     static int *pAdc = (int *)dmaxAdcBuffer[0];
     //sound = generator_interator - Fs/200;
     //sound_double = (sin((double)(generator_interator)*2.0*M_PI*(1*100.0)*(1.0/Fs)));
-
+    sound = 0;
+    int i = 0;
+    for ( i = 0; i < 128; i++){
+    	if (notes[i] == 1){
+			double freq = 440*pow(1.059463,i - 69);
+			sound += sig_amp*(sin((double)(wav_iterator)*2.0*M_PI*(freq/Fs)));
+    	}
+    }
 	// Verify if a DAC transfer completed
 	if( hDmaxDac->regs->DTCR0 & (1<<DAC_TCC) )
 	{
@@ -193,8 +201,8 @@ interrupt void dmax_isr( void )
 		wy[RIGHT][CH_3] = gain * we[RIGHT][CH_3];
 
 		OBuf2.pBuf = pDac;
-		OBuf2.ptab[LEFT][CH_0] = (int)waveform[wav_iterator];
-		OBuf2.ptab[RIGHT][CH_0] = (int)waveform[wav_iterator];
+		OBuf2.ptab[LEFT][CH_0] = (int)sound;
+		OBuf2.ptab[RIGHT][CH_0] = (int)sound;
 		OBuf2.ptab[LEFT][CH_1] = wy[LEFT][CH_1];
 		OBuf2.ptab[RIGHT][CH_1] = wy[RIGHT][CH_1];
 		OBuf2.ptab[LEFT][CH_2] = wy[LEFT][CH_2];
@@ -212,7 +220,7 @@ interrupt void dmax_isr( void )
 //		OBuf2.ptab[RIGHT_o][CH_3] = wy[RIGHT][CH_3];
 
 		wav_iterator++;
-		if(wav_iterator >= N/2)
+		if(wav_iterator >= Fs)
 			wav_iterator = 0;
 
         Buf[k] = OBuf2.ptab[LEFT][CH_0];  //Zapamiêtanie próbki wyjœciowej
