@@ -12,6 +12,7 @@ interrupt void uart_isr( void );
 interrupt void midi_isr( void );
 
 #include "audioBufConst&ExtVar.h"
+#include "midi_fifo.h"
 
 int SetupInterrupts()
 {
@@ -81,23 +82,27 @@ int we[STEREO][NUM_CHANNEL];
 int wy[STEREO][NUM_CHANNEL];
 //int wl1, wp1, wl2, wp2, wl3, wp3, wl4, wp4;
 
-#define N 4098
+#define N 4096
 int Buf_1[N];  // bufor pomocniczy do "obserwacji" danych wejsciowych
 int Buf[N];  // bufor pomocniczy do "obserwacji" danych wyjœciowych
 int k=0;
+extern double waveform[N/2];
+int wav_iterator = 0;
 
 #define Fs 96000
 #define M_PI 3.1416
 extern int notes[128];
 int generator_interator = 0;
+int sound = 0;
+double sound_double = 0;
 // ################## DAC/ADC end ##################
 
 
 // ################## UART RELATED VARs ############
 #define UART_WAIT       1
 #define UART_NO_WAIT    0
-unsigned char uartdata[3];
-unsigned char data_midi[10];
+unsigned char uartdata[1];
+extern unsigned char data_midi[1];
 // ################## UART end #####################
 
 interrupt void nmi_isr( void )
@@ -110,8 +115,22 @@ interrupt void midi_isr( void )
 	static int toggle_midi = 0;
 	MIDI_EnableLed1(toggle_midi ^= 1);
 	MIDI_EnableLed2(!toggle_midi);
-	MIDI_Read(data_midi, 3, UART_NO_WAIT);
-	MIDI_Write(data_midi, 3, UART_NO_WAIT);
+	if(MIDI_Read(data_midi, 1, 1) > 0) {
+		if(data_midi[0] != 248) {
+			MIDI_push(data_midi[0]);
+			unsigned char status = (MIDI_pull(-2)>>4)&0x0F;
+			if (status == 0x09) { // note on
+				unsigned char note = MIDI_pull(-1)&0x7f;
+				notes[note] = 1;
+				MIDI_clear();
+			} else if (status == 0x08) { // note off
+				unsigned char note = MIDI_pull(-1)&0x7f;
+				notes[note] = 0;
+				MIDI_clear();
+			}
+		}
+	}
+	UART_Write(data_midi, 1, UART_NO_WAIT);
 }
 
 interrupt void uart_isr( void )
@@ -119,8 +138,8 @@ interrupt void uart_isr( void )
     static int toggle = 0;
 	UART_EnableLed1( toggle ^= 1 );
     UART_EnableLed2( !toggle );
-    UART_Read(uartdata, 1, UART_WAIT);
-    UART_Write(uartdata, 1, UART_WAIT);
+    UART_Read(uartdata, 1, UART_NO_WAIT);
+    UART_Write(uartdata, 1, UART_NO_WAIT);
 }
 
 interrupt void dmax_isr( void )
@@ -129,19 +148,9 @@ interrupt void dmax_isr( void )
     volatile unsigned *GPTransferEntry;
     static int *pDac = (int *)dmaxDacBuffer[0];
     static int *pAdc = (int *)dmaxAdcBuffer[0];
-    int sound = 0;
-    int i;
     //sound = generator_interator - Fs/200;
-    sound = (int)(1000.0*sin((double)(generator_interator)*2.0*M_PI*(1*100.0)*(1.0/Fs)));
-    //sound = sound*100000;
-    /*for(i = 0; i < 128; i++) {
-    	if (notes[i] == 1){
-    		sound += (int)(1000.0*sin((double)(generator_interator)*2.0*M_PI*(i*100.0)*(1.0/Fs)));
-    	}
-	}*/
-    generator_interator++;
-    if (generator_interator >= Fs/100-1)
-    	generator_interator = 0;
+    //sound_double = (sin((double)(generator_interator)*2.0*M_PI*(1*100.0)*(1.0/Fs)));
+
 	// Verify if a DAC transfer completed
 	if( hDmaxDac->regs->DTCR0 & (1<<DAC_TCC) )
 	{
@@ -183,10 +192,9 @@ interrupt void dmax_isr( void )
 		wy[LEFT][CH_3] = gain * we[LEFT][CH_3];
 		wy[RIGHT][CH_3] = gain * we[RIGHT][CH_3];
 
-		
 		OBuf2.pBuf = pDac;
-		OBuf2.ptab[LEFT][CH_0] = sound;
-		OBuf2.ptab[RIGHT][CH_0] = wy[RIGHT][CH_0];
+		OBuf2.ptab[LEFT][CH_0] = (int)waveform[wav_iterator];
+		OBuf2.ptab[RIGHT][CH_0] = (int)waveform[wav_iterator];
 		OBuf2.ptab[LEFT][CH_1] = wy[LEFT][CH_1];
 		OBuf2.ptab[RIGHT][CH_1] = wy[RIGHT][CH_1];
 		OBuf2.ptab[LEFT][CH_2] = wy[LEFT][CH_2];
@@ -203,7 +211,11 @@ interrupt void dmax_isr( void )
 //		OBuf2.ptab[LEFT_o][CH_3] = wy[LEFT][CH_3];
 //		OBuf2.ptab[RIGHT_o][CH_3] = wy[RIGHT][CH_3];
 
-        Buf[k] = IBuf2.ptab[RIGHT][CH_3];  //Zapamiêtanie próbki wyjœciowej
+		wav_iterator++;
+		if(wav_iterator >= N/2)
+			wav_iterator = 0;
+
+        Buf[k] = OBuf2.ptab[LEFT][CH_0];  //Zapamiêtanie próbki wyjœciowej
         k++;							  //w buforze pomocniczym
         if (k == N) { k = 0; }
 	}

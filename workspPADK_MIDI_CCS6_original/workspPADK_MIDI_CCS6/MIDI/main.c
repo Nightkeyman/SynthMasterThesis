@@ -63,6 +63,7 @@
 #include <stdlib.h>
 
 #include "PADK_UART.h"
+#include "midi_fifo.h"
 
 	unsigned char int2bcd[16] = {
 		0x3F, 0x06, 0x5B, 0x4F, 0x66, 0x6D, 0x7D, 0x07, 0x7F, 0x6F, 0x77, 0x7C, 0x39, 0x5E, 0x79, 0x71
@@ -87,46 +88,16 @@
 	//unsigned char data_midi[32];
 	int btn1, btn2;
 
-#define MIDI_buff_length 3
-volatile unsigned char MIDI_buff[MIDI_buff_length] = {{0}};
-unsigned char MIDI_buff_iterator = 0;
+unsigned char data_midi[1];
+int notes[128];
 
 #include "var&fun.h"
 
-MIDI_Params params = MIDI_DEFAULT_PARAMS;  // structure of MIDI params
-
-//int 	xx = MIDI_Reset();
 #define M_PI 3.1416
 
 void bit_rev(float* x, int n);
 int gen_twiddle(float *w, int n);
 void bitrev_index(short *index, int n);
-void MIDI_push(unsigned char data);
-unsigned char MIDI_pull(  char offset);
-void MIDI_clear();
-
-void MIDI_push(unsigned char data){ // 600 nanoseconds
-	MIDI_buff_iterator++;
-    if (MIDI_buff_iterator >= MIDI_buff_length)
-    	MIDI_buff_iterator = 0;
-    MIDI_buff[MIDI_buff_iterator] = data;
-}
-
-unsigned char MIDI_pull(char offset){
-
-	int index = 0;
-	if (MIDI_buff_iterator + offset >= 0)
-		index = MIDI_buff_iterator + offset ;
-	else
-		index = MIDI_buff_length + MIDI_buff_iterator + offset;
-	return MIDI_buff[index];
-
-}
-void MIDI_clear(){
-	unsigned char i = 0;
-	for (i = 0; i < MIDI_buff_length; i++)
-		MIDI_buff[i] = 0;
-}
 
 
 #define N 1024
@@ -210,9 +181,12 @@ void bitrev_index(short *index, int n)
 }
 
 #define Fs 96000
-#define F_sq 1000
+#define F_sq 440
 #define F_sqq 10000
 double waveform[2*N];
+double waveform2[2*N];
+double s = 0;
+double sig_amp = 1000000000;
 float vv[2*N];
 float vv_test[2*N];
 //float hann[256] = {0,0.00015177,0.000607,0.0013654,0.0024265,0.0037897,0.0054542,0.0074189,0.0096826,0.012244,0.015102,0.018253,0.021698,0.025433,0.029455,0.033764,0.038355,0.043227,0.048376,0.0538,0.059494,0.065456,0.071681,0.078166,0.084908,0.091902,0.099143,0.10663,0.11435,0.12231,0.1305,0.13891,0.14754,0.15638,0.16543,0.17469,0.18414,0.19379,0.20362,0.21363,0.22382,0.23417,0.24468,0.25535,0.26617,0.27713,0.28823,0.29945,0.31079,0.32225,0.33382,0.34549,0.35725,0.3691,0.38103,0.39303,0.4051,0.41722,0.4294,0.44161,0.45387,0.46615,0.47845,0.49076,0.50308,0.5154,0.52771,0.54,0.55226,0.5645,0.5767,0.58885,0.60094,0.61298,0.62494,0.63683,0.64864,0.66036,0.67197,0.68349,0.69489,0.70618,0.71734,0.72837,0.73926,0.75,0.76059,0.77103,0.7813,0.7914,0.80132,0.81106,0.82061,0.82996,0.83912,0.84807,0.85681,0.86533,0.87363,0.8817,0.88954,0.89714,0.90451,0.91163,0.91849,0.92511,0.93146,0.93756,0.94339,0.94895,0.95423,0.95924,0.96398,0.96843,0.97259,0.97647,0.98006,0.98336,0.98636,0.98907,0.99149,0.9936,0.99542,0.99693,0.99814,0.99905,0.99966,0.99996,0.99996,0.99966,0.99905,0.99814,0.99693,0.99542,0.9936,0.99149,0.98907,0.98636,0.98336,0.98006,0.97647,0.97259,0.96843,0.96398,0.95924,0.95423,0.94895,0.94339,0.93756,0.93146,0.92511,0.91849,0.91163,0.90451,0.89714,0.88954,0.8817,0.87363,0.86533,0.85681,0.84807,0.83912,0.82996,0.82061,0.81106,0.80132,0.7914,0.7813,0.77103,0.76059,0.75,0.73926,0.72837,0.71734,0.70618,0.69489,0.68349,0.67197,0.66036,0.64864,0.63683,0.62494,0.61298,0.60094,0.58885,0.5767,0.5645,0.55226,0.54,0.52771,0.5154,0.50308,0.49076,0.47845,0.46615,0.45387,0.44161,0.4294,0.41722,0.4051,0.39303,0.38103,0.3691,0.35725,0.34549,0.33382,0.32225,0.31079,0.29945,0.28823,0.27713,0.26617,0.25535,0.24468,0.23417,0.22382,0.21363,0.20362,0.19379,0.18414,0.17469,0.16543,0.15638,0.14754,0.13891,0.1305,0.12231,0.11435,0.10663,0.099143,0.091902,0.084908,0.078166,0.071681,0.065456,0.059494,0.0538,0.048376,0.043227,0.038355,0.033764,0.029455,0.025433,0.021698,0.018253,0.015102,0.012244,0.0096826,0.0074189,0.0054542,0.0037897,0.0024265,0.0013654,0.000607,0.00015177,0};
@@ -270,21 +244,25 @@ void bandStopFilter(int freqLow, int freqHigh) {
 	}
 }
 //
-//  Main Functions
+//  Main Function
 //
-
-int notes[128] = {{0}};
 
 int main( int argc, char *argv[] ) {
 
 	#include "ALL_init.h"
 
+	// INITIALIZE VARIABLES
 	int i = 0;
-	//clkgenParams.adc_scki
+	int sound1 = 0;
+	double sound_double1 = 0;
+	for(i = 0; i < 128; i++)
+		notes[i] = 0;
+
 	// SINUSOID //
 	for(i = 0; i < 2*N; i++) {
-		v[i] = (float)(1*sin((double)(i/2)*2.0*M_PI*F_sq*(1.0/Fs))); // + (float)(5*sin((double)(i/2)*2.0*M_PI*F_sqq*(1.0/Fs)));
-		waveform[i] = v[i];
+		//v[i] = (float)(1*sin((double)(i/2)*2.0*M_PI*F_sq*(1.0/Fs))); // + (float)(5*sin((double)(i/2)*2.0*M_PI*F_sqq*(1.0/Fs)));
+		v[i] = (float)(1*sin((double)(i)*2.0*M_PI*F_sq*(1.0/Fs))); // + (float)(5*sin((double)(i/2)*2.0*M_PI*F_sqq*(1.0/Fs)));
+		waveform[i] = sig_amp*v[i];
 		if(i%2 == 1) v[i] = 0;
 	}
 
@@ -305,6 +283,11 @@ int main( int argc, char *argv[] ) {
 		if(i%2 == 1) v[i] = 0;
 	}*/
 
+	// OKNO HANNINGA
+	for(i = 0; i < 2*N; i+=2) {
+		waveform[i] = waveform[i]*hann[i/2];
+		waveform[i+1] = waveform[i+1]*hann[i/2];
+	}
 	// OKNO HANNINGA
 	//for(i = 0; i < 2*N; i+=2) v[i] = v[i]*hann[i/2];
 
@@ -333,38 +316,42 @@ int main( int argc, char *argv[] ) {
 	DSPF_sp_icfftr2_dif(v,w,N);
 
 	/*---------------------------------------------------------------*/
-	/* Initialise the MIDI receiver/transmitter                      */
+	/*							 MAIN LOOP 		                     */
 	/*---------------------------------------------------------------*/
 
-
-	/*---------------------------------------------------------------*/
-	/* Read and send the initial status of the push button           */
-	/*---------------------------------------------------------------*/
-	btn1 = GPIO_GetPushButton( 1 );
-	btn2 = GPIO_GetPushButton( 2 );
-	data = (btn2<<1) | btn1;
-	GPIO_SetBCD( int2bcd[0] );
-	int bcditer = 0;
-	int toggle_midi = 0;
+	int freq_wav = 0;
+	int j = 0;
+	int mono = 0;
     while(1)  {
-    	/*if(MIDI_Read(data_midi, 1, 1) > 0) {
-			MIDI_EnableLed1(toggle_midi ^= 1);
-			MIDI_EnableLed2(!toggle_midi);
-			if(data_midi[0] != 248) {
-				MIDI_push(data_midi[0]);
-				unsigned char status = (MIDI_pull(-2)>>4)&0x0F;
-				if (status == 0x09) { // note on
-					printf(" [MIDI note on] pitch: %d, velocity: %d \n", MIDI_pull(-1), MIDI_pull(0));
-					unsigned char note = MIDI_pull(-1)&0x7f;
-					notes[note] = 1;
-					MIDI_clear();
-				} else if (status == 0x08) { // note off
-					printf(" [MIDI note off] pitch: %d, velocity: %d \n", MIDI_pull(-1), MIDI_pull(0));
-					unsigned char note = MIDI_pull(-1)&0x7f;
-					notes[note] = 0;
-					MIDI_clear();
+    	// MONOPHONIC KEYBOARD
+    	if(mono == 1) {
+    		for(i = 0; i < 128; i++) {
+				if(notes[i] == 1) {
+					freq_wav = 261*pow(1.059463,i - 48);
+					for(j = 0; j < 2*N; j++) {
+						waveform[j] = sig_amp*(sin((double)(j)*2.0*M_PI*freq_wav*(1.0/Fs)));
+						waveform[j] = waveform[j]*hann[j/2];
+					}
 				}
+				while(notes[i] == 1);
+				for(j = 0; j < 2*N; j++)
+					waveform[j] = 0;
+    		}
+    	// POLYPHONIC KEYBOARD
+    	} else {
+    		for(j = 0; j < 2*N; j++)
+				waveform2[j] = 0;
+			for(i = 0; i < 128; i++) {
+				if(notes[i] == 1) {
+					freq_wav = 261*pow(1.059463,i - 48);
+					for(j = 0; j < 2*N; j++) {
+						s = sig_amp*(sin((double)(j)*2.0*M_PI*freq_wav*(1.0/Fs)));
+						waveform2[j] += s*hann[j/2];
+					}
+				}
+				for(j = 0; j < 2*N; j++)
+					waveform[j] = waveform2[j];
 			}
-    	}*/
+    	}
     }	
 }
