@@ -188,6 +188,7 @@ namespace UARTCOM2
 
         private void button_subtractive_en_Click(object sender, EventArgs e)
         {
+            Console.WriteLine("siemsa");
             if (button_subtractive_en.Text.Equals("Disabled"))
             {
                 send(100, 1, 0, 0, 0, 0, 0);
@@ -198,6 +199,78 @@ namespace UARTCOM2
                 send(100, 2, 0, 0, 0, 0, 0);
                
             }
+        }
+
+
+        private void richTextBox_received_MouseUp(object sender, MouseEventArgs e)
+        {
+            Console.WriteLine("siema");
+        }
+
+        private void knobControl1_ValueChanged(object Sender)
+        {
+            textBox_subtractive_frequency.Text = knobControl1.Value.ToString();
+        }
+
+        private void knobControl1_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button_subtractive_toggle_Click(object sender, EventArgs e)
+        {
+            if (button_subtractive_toggle.Text.Equals("High"))
+            {
+                button_subtractive_toggle.Text = "Low";
+                knobControl1.Maximum = 1200;
+            } else
+            {
+                button_subtractive_toggle.Text = "High";
+                knobControl1.Maximum = 12000;
+            }
+          
+        }
+
+        private void trackBar_subtractive_freq1_Scroll(object sender, EventArgs e)
+        {
+            textBox_subtractive_freq1.Text = trackBar_subtractive_freq1.Value.ToString();
+        }
+
+        private void trackBar_subtractive_freq2_Scroll(object sender, EventArgs e)
+        {
+            textBox_subtractive_freq2.Text = trackBar_subtractive_freq2.Value.ToString();
+        }
+
+        private void radioButton_subtractive_lowpass_CheckedChanged(object sender, EventArgs e)
+        {
+            trackBar_subtractive_freq1.Enabled = true;
+            textBox_subtractive_freq1.Enabled = true;
+            trackBar_subtractive_freq2.Enabled = false;
+            textBox_subtractive_freq2.Enabled = false;
+        }
+
+        private void radioButton_subtractive_highpass_CheckedChanged(object sender, EventArgs e)
+        {
+            trackBar_subtractive_freq2.Enabled = true;
+            textBox_subtractive_freq2.Enabled = true;
+            trackBar_subtractive_freq1.Enabled = false;
+            textBox_subtractive_freq1.Enabled = false;
+        }
+
+        private void radioButton_subtractive_bandpass_CheckedChanged(object sender, EventArgs e)
+        {
+            trackBar_subtractive_freq1.Enabled = true;
+            textBox_subtractive_freq1.Enabled = true;
+            trackBar_subtractive_freq2.Enabled = true;
+            textBox_subtractive_freq2.Enabled = true;
+        }
+
+        private void radioButton_subtractive_bandstop_CheckedChanged(object sender, EventArgs e)
+        {
+            trackBar_subtractive_freq1.Enabled = true;
+            textBox_subtractive_freq1.Enabled = true;
+            trackBar_subtractive_freq2.Enabled = true;
+            textBox_subtractive_freq2.Enabled = true;
         }
     }
 }

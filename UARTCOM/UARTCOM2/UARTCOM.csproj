@@ -79,5 +79,11 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\..\..\Downloads\knobcontrol\KnobControl\KnobControl.csproj">
+      <Project>{04123F59-331D-4582-BE0D-721FEAB6050F}</Project>
+      <Name>KnobControl</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
