@@ -6,11 +6,6 @@
  */
 #include "filters.h"
 
-#define N 1024
-#define Fs 96000
-extern float v[2*N];
-extern float vv[2*N];
-
 void lowPassFilter(int freq) {
 	freq = N - freq*N/Fs - 1;
 	int i = 0;
