@@ -10,15 +10,18 @@
 
 #define M_PI 3.14159
 #define N 1024
+
 extern float w[N];
 extern short table[64];
+extern float v[2*N];
 
-void bit_rev(float* x, int n);
+// FUNCTIONS //
+void bit_rev(int n);
+int gen_twiddle(int n);
+void bitrev_index(int n);
+void bitrev_full();
+void fft_full();
+void ifft_full();
 
-int gen_twiddle(float *w, int n);
-
-void bitrev_index(short *index, int n);
-
-void bitrev_full(short *index, float *w, );
 
 #endif /* MYFFT_H_ */

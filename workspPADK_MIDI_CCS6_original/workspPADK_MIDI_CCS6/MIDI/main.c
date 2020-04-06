@@ -1,54 +1,3 @@
-// This demo shows how to perform an analog audio loopback on the PADK.
-//
-// The sampling rate will be set to 96 kHz and will be generated
-// by one of the onboard oscillators. The sampling frequency source will 
-// be configured using the module CLKGEN of the PADK library.
-//
-// Each ADC channel will be sent to the corresponding DAC channel:
-//      ADC #1 -> DAC #1
-//      ADC #2 -> DAC #2
-//      ADC #3 -> DAC #3
-//      ADC #4 -> DAC #4
-//
-// The ADC and the DAC devices will be initialized using the functions
-// of the PADK library. These devices are connected to the DSP through 
-// the serializers of the McASP #0. 
-//      ADC #1 -> McASP0 Serializer 0 (AXR0_0)
-//      ADC #2 -> McASP0 Serializer 1 (AXR0_1)
-//      ADC #3 -> McASP0 Serializer 2 (AXR0_2)
-//      ADC #4 -> McASP0 Serializer 3 (AXR0_3)
-//      DAC #1 -> McASP0 Serializer 4 (AXR0_4)
-//      DAC #2 -> McASP0 Serializer 5 (AXR0_5)
-//      DAC #3 -> McASP0 Serializer 6 (AXR0_6)
-//      DAC #4 -> McASP0 Serializer 10 (AXR0_10)
-//
-// The McASP and the dMAX will be initialized using TI's CSL library.
-// The dMAX will be used to sort the input data coming from the ADCs 
-// into a separate buffer for each stereo channel (left and right buffer). 
-// The same organisation will be used for the DAC output data.
-// 
-//      ADC #0 Left Sample 0
-//      ADC #0 Left Sample 1
-//      ...
-//      ADC #0 Left Sample n-1
-//      ADC #0 Left Sample n
-//      ADC #1 Left Sample 0
-//      ADC #1 Left Sample 1
-//      ...
-//      ADC #1 Left Sample n-1
-//      ADC #2 Left Sample n
-//      ADC #2 Left Sample 0
-//      ADC #2 Left Sample 1
-//      ...
-//      ADC #2 Left Sample n-1
-//      ADC #2 Left Sample n
-//      ADC #3 Left Sample 0
-//      ADC #3 Left Sample 1
-//      ...
-//      ADC #3 Left Sample n-1
-//      ADC #3 Left Sample n
-//
-
 // CSL Modules
 #include <soc.h>
 #include <csl_chip.h>
@@ -67,6 +16,7 @@
 #include "filters.h"
 #include "waveforms.h"
 #include "var&fun.h"
+//#include "myfft.h"
 
 
 #define M_PI 3.14159
@@ -108,19 +58,13 @@ int main( int argc, char *argv[] ) {
 	sin_wave(440, 1000000000);
 	// HANNING TIME WINDOW
 	for(i = 0; i < 2*N; i+=2) {
+		v[i] = v[i]*hann[i/2];
 		waveform[i] = waveform[i]*hann[i/2];
 		waveform[i+1] = waveform[i+1]*hann[i/2];
-		//v[i] = v[i]*hann[i/2];
 	}
 
-	//bitrev_index(table,N);
-	//gen_twiddle(w, N);
-	//bit_rev(w,N>>1);
-	bitrev_full(table, w, N);
-
 	// FFT
-	DSPF_sp_cfftr2_dit(v,w,N);
-	DSPF_sp_bitrev_cplx((double*)v,table,N);
+	fft_full();
 
 	for(i = 0; i < 2*N; i+=2) {		// Liczenie modulu widma
 		v[i] = v[i]/(float)N;		// Skalowanie do najwyzszej probki --> moze to zrobic jakos lepiej ze znalezieniem najwiekszej wartosci?
@@ -131,14 +75,11 @@ int main( int argc, char *argv[] ) {
 		vv_test[i+1] = 0;
 	}
 
-	lowPassFilter(20625);
-	//highPassFilter(20625);
-	//bandPassFilter(10500, 20625);
-	//bandStopFilter(10500, 20625);
+	// Filtering
+	highPassFilter(440); // cos tu nie tak z czestotliwoscia? jak daje 2000 to juz ucina
 
 	// Inverse FFT
-	DSPF_sp_bitrev_cplx((double*)v,table,N);
-	DSPF_sp_icfftr2_dif(v,w,N);
+	ifft_full();
 
 	/*---------------------------------------------------------------*/
 	/*							 MAIN LOOP 		                     */

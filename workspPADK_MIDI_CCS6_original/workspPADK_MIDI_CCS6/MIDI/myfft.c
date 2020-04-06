@@ -5,8 +5,9 @@
  *      Author: Jan
  */
 #include "myfft.h"
+#include <math.h>
 
-void bit_rev(float* x, int n)
+void bit_rev(int n)
 {
 	 int i, j, k;
 	 float rtemp, itemp;
@@ -23,17 +24,17 @@ void bit_rev(float* x, int n)
 		j += k;
 		if(i < j)
 		  {
-		   rtemp    = x[j*2];
-		   x[j*2]   = x[i*2];
-		   x[i*2]   = rtemp;
-		   itemp    = x[j*2+1];
-		   x[j*2+1] = x[i*2+1];
-		   x[i*2+1] = itemp;
+		   rtemp    = w[j*2];
+		   w[j*2]   = w[i*2];
+		   w[i*2]   = rtemp;
+		   itemp    = w[j*2+1];
+		   w[j*2+1] = w[i*2+1];
+		   w[i*2+1] = itemp;
 		  }
 		}
 }
 
-int gen_twiddle(float *w, int n)
+int gen_twiddle(int n)
 {
 	double delta = 2 * M_PI / n;
 	int i;
@@ -46,7 +47,7 @@ int gen_twiddle(float *w, int n)
  return n;
 }
 
-void bitrev_index(short *index, int n)
+void bitrev_index(int n)
 {
 	int   i, j, k, radix = 2;
 	short nbits, nbot, ntop, ndiff, n2, raddiv2;
@@ -66,21 +67,32 @@ void bitrev_index(short *index, int n)
 	ntop    = nbot + ndiff;
 	n2      = 1 << ntop;
 
-	index[0] = 0;
+	table[0] = 0;
 	for ( i = 1, j = n2/radix + 1; i < n2 - 1; i++)
 	{
-		index[i] = j - 1;
+		table[i] = j - 1;
 
 		for (k = n2/radix; k*(radix-1) < j; k /= radix)
 			j -= k*(radix-1);
 
 		j += k;
 	}
-	index[n2 - 1] = n2 - 1;
+	table[n2 - 1] = n2 - 1;
 }
 
 void bitrev_full() {
-	bitrev_index(table,N);
-	gen_twiddle(w, N);
-	bit_rev(w,N>>1);
+	bitrev_index(N);
+	gen_twiddle(N);
+	bit_rev(N>>1);
+}
+
+void fft_full() {
+	bitrev_full();
+	DSPF_sp_cfftr2_dit(v, w, N);
+	DSPF_sp_bitrev_cplx((double*)v, table, N);
+}
+
+void ifft_full() {
+	DSPF_sp_bitrev_cplx((double*)v,table,N);
+	DSPF_sp_icfftr2_dif(v,w,N);
 }
