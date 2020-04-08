@@ -29,6 +29,8 @@
  float  v[2*N];
 #pragma DATA_ALIGN(w, 8)
  float  w[N];
+#pragma DATA_ALIGN(output1, 32)
+float output1[24000];
 
 double waveform[2*N];
 double waveform2[2*N];
