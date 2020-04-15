@@ -155,6 +155,24 @@ namespace UARTCOM2
                             }
                         }
                         break;
+                    case 101:
+                        if (Buffer_pull(7) == 101)
+                        {
+                            if (Checksum() == Buffer_pull(8))
+                            {
+                                if (Buffer_pull(1) == 1)
+                                {
+                                    button_subtractive_en.Text = "Enabled";
+                                    button_subtractive_en.ForeColor = Color.Green;
+                                }
+                                else if (Buffer_pull(1) == 2)
+                                {
+                                    button_subtractive_en.Text = "Disabled";
+                                    button_subtractive_en.ForeColor = Color.Red;
+                                }
+                            }
+                        }
+                        break;
                 }
             }
                 
@@ -271,6 +289,52 @@ namespace UARTCOM2
             textBox_subtractive_freq1.Enabled = true;
             trackBar_subtractive_freq2.Enabled = true;
             textBox_subtractive_freq2.Enabled = true;
+        }
+
+        private void label7_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label7_Click_1(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button_additive_en_Click(object sender, EventArgs e)
+        {
+            Console.WriteLine("siemsa");
+            if (button_additive_hammond_en.Text.Equals("Disabled"))
+            {
+                send(101, 1, 0, 0, 0, 0, 0);
+
+            }
+            else
+            {
+                send(101, 2, 0, 0, 0, 0, 0);
+
+            }
+        }
+
+        private void drawbar1_Load_1(object sender, EventArgs e)
+        {
+            byte[] byteArray = BitConverter.GetBytes(drawbar1.Value);
+            send(110, byteArray[0], byteArray[1], 0, 0, 0, 0);
+        }
+
+        private void drawbar3_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void tabPage_additive_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void tabPage_additive_hammond_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
