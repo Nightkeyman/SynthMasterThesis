@@ -1,6 +1,7 @@
 # Directories:
 UARTCOM/UARTCOM2/bin/
-UARTCOM/obj/
+UARTCOM/UARTCOM2/obj/
+UARTCOM/.vs/
 UARTCOM/UARTCOM2/obj/Debug/UARTCOM.csproj.GenerateResource.cache
 UARTCOM/UARTCOM2/obj/Debug/UARTCOM.csproj.FileListAbsolute.txt
 UARTCOM/UARTCOM2/obj/Debug/UARTCOM.csproj.CoreCompileInputs.cache
@@ -16,3 +17,4 @@ workspPADK_MIDI_CCS6_original/workspPADK_MIDI_CCS6/PADK_USB1/
 # File types:
 *.exe
 *.pdb
+*.cache
