@@ -12,6 +12,7 @@ interrupt void uart_isr( void );
 interrupt void midi_isr( void );
 
 #include "audioBufConst&ExtVar.h"
+#include "uart_fifo.h"
 #include "midi_fifo.h"
 
 int SetupInterrupts()
@@ -71,7 +72,7 @@ int SetupInterrupts()
 // ################## DAC/ADC RELATED VARs #########
 #define LEFT		(0)
 #define RIGHT		(1)
-#define LEFT_o		(1) /* odwrotne oznaczenie kanalów */
+#define LEFT_o		(1) /* odwrotne oznaczenie kanalÃ³w */
 #define RIGHT_o		(0)
 #define CH_0		(0)
 #define CH_1		(1)
@@ -84,7 +85,7 @@ int wy[STEREO][NUM_CHANNEL];
 
 #define N 4096
 int Buf_1[N];  // bufor pomocniczy do "obserwacji" danych wejsciowych
-int Buf[N];  // bufor pomocniczy do "obserwacji" danych wyjœciowych
+int Buf[N];  // bufor pomocniczy do "obserwacji" danych wyjÅ“ciowych
 int k=0;
 extern double waveform[N/2];
 int wav_iterator = 0;
@@ -136,10 +137,23 @@ interrupt void midi_isr( void )
 interrupt void uart_isr( void )
 {
     static int toggle = 0;
-	UART_EnableLed1( toggle ^= 1 );
+	  UART_EnableLed1( toggle ^= 1 );
     UART_EnableLed2( !toggle );
-    UART_Read(uartdata, 1, UART_NO_WAIT);
-    UART_Write(uartdata, 1, UART_NO_WAIT);
+    UART_Read(uartdata, 1, UART_WAIT);
+    UART_push(uartdata[0]);
+    switch(UART_pull(0)){
+    case 100:
+    	if (UART_pull(7) == 101){
+    		if (UART_pull(8) == UART_checksum()){
+    			if (UART_pull(1) == 1){
+    				UART_send(100, 1, 0,0,0,0,0);
+    			} else if (UART_pull(1) == 2){
+    				UART_send(100, 2, 0,0,0,0,0);
+    			}
+    		}
+    	}
+    	break;
+    }
 }
 
 interrupt void dmax_isr( void )
@@ -202,7 +216,7 @@ interrupt void dmax_isr( void )
 		OBuf2.ptab[LEFT][CH_3] = wy[LEFT][CH_3];
 		OBuf2.ptab[RIGHT][CH_3] = wy[RIGHT][CH_3];
 
-//		OBuf2.ptab[LEFT_o][CH_0] = wy[LEFT][CH_0];  // zamiana kanalów: Left <-> Right
+//		OBuf2.ptab[LEFT_o][CH_0] = wy[LEFT][CH_0];  // zamiana kanalÃ³w: Left <-> Right
 //		OBuf2.ptab[RIGHT_o][CH_0] = wy[RIGHT][CH_0];
 //		OBuf2.ptab[LEFT_o][CH_1] = wy[LEFT][CH_1];
 //		OBuf2.ptab[RIGHT_o][CH_1] = wy[RIGHT][CH_1];
@@ -215,7 +229,7 @@ interrupt void dmax_isr( void )
 		if(wav_iterator >= N/2)
 			wav_iterator = 0;
 
-        Buf[k] = OBuf2.ptab[LEFT][CH_0];  //Zapamiêtanie próbki wyjœciowej
+        Buf[k] = OBuf2.ptab[LEFT][CH_0];  //ZapamiÃªtanie prÃ³bki wyjÅ“ciowej
         k++;							  //w buforze pomocniczym
         if (k == N) { k = 0; }
 	}
