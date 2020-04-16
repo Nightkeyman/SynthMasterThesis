@@ -4,7 +4,7 @@
 #include <csl_dmax.h>
 #include <csl_mcasp.h>
 #include <stdint.h>
-
+#include <math.h>
 
 interrupt void dmax_isr( void );
 interrupt void nmi_isr( void );
@@ -13,6 +13,7 @@ interrupt void midi_isr( void );
 
 #include "audioBufConst&ExtVar.h"
 #include "midi_fifo.h"
+#include "sinustable.h"
 
 int SetupInterrupts()
 {
@@ -92,8 +93,8 @@ int wav_iterator = 0;
 #define Fs 96000
 #define M_PI 3.1416
 extern int notes[128];
-int generator_interator = 0;
-int sound = 0;
+int generator_iterator = 0;
+float sound = 0;
 double sound_double = 0;
 // ################## DAC/ADC end ##################
 
@@ -148,8 +149,395 @@ interrupt void dmax_isr( void )
     volatile unsigned *GPTransferEntry;
     static int *pDac = (int *)dmaxDacBuffer[0];
     static int *pAdc = (int *)dmaxAdcBuffer[0];
-    //sound = generator_interator - Fs/200;
-    //sound_double = (sin((double)(generator_interator)*2.0*M_PI*(1*100.0)*(1.0/Fs)));
+
+    sound = 0;
+    if (notes[0] == 1) {
+    	sound += notes[(int)round(generator_iterator*0)%N_LUT];
+    }
+    if (notes[1] == 1) {
+    	sound += notes[(int)round(generator_iterator*0)%N_LUT];
+    }
+    if (notes[2] == 1) {
+    	sound += notes[(int)round(generator_iterator*0)%N_LUT];
+    }
+    if (notes[3] == 1) {
+    	sound += notes[(int)round(generator_iterator*0)%N_LUT];
+    }
+    if (notes[4] == 1) {
+    	sound += notes[(int)round(generator_iterator*0)%N_LUT];
+    }
+    if (notes[5] == 1) {
+    	sound += notes[(int)round(generator_iterator*0)%N_LUT];
+    }
+    if (notes[6] == 1) {
+    	sound += notes[(int)round(generator_iterator*0)%N_LUT];
+    }
+    if (notes[7] == 1) {
+    	sound += notes[(int)round(generator_iterator*0)%N_LUT];
+    }
+    if (notes[8] == 1) {
+    	sound += notes[(int)round(generator_iterator*0)%N_LUT];
+    }
+    if (notes[9] == 1) {
+    	sound += notes[(int)round(generator_iterator*0)%N_LUT];
+    }
+    if (notes[10] == 1) {
+    	sound += notes[(int)round(generator_iterator*0)%N_LUT];
+    }
+    if (notes[11] == 1) {
+    	sound += notes[(int)round(generator_iterator*0)%N_LUT];
+    }
+    if (notes[12] == 1) {
+    	sound += notes[(int)round(generator_iterator*0)%N_LUT];
+    }
+    if (notes[13] == 1) {
+    	sound += notes[(int)round(generator_iterator*0)%N_LUT];
+    }
+    if (notes[14] == 1) {
+    	sound += notes[(int)round(generator_iterator*0)%N_LUT];
+    }
+    if (notes[15] == 1) {
+    	sound += notes[(int)round(generator_iterator*1)%N_LUT];
+    }
+    if (notes[16] == 1) {
+    	sound += notes[(int)round(generator_iterator*1)%N_LUT];
+    }
+    if (notes[17] == 1) {
+    	sound += notes[(int)round(generator_iterator*1)%N_LUT];
+    }
+    if (notes[18] == 1) {
+    	sound += notes[(int)round(generator_iterator*1)%N_LUT];
+    }
+    if (notes[19] == 1) {
+    	sound += notes[(int)round(generator_iterator*1)%N_LUT];
+    }
+    if (notes[20] == 1) {
+    	sound += notes[(int)round(generator_iterator*1)%N_LUT];
+    }
+    if (notes[21] == 1) {
+    	sound += notes[(int)round(generator_iterator*1)%N_LUT];
+    }
+    if (notes[22] == 1) {
+    	sound += notes[(int)round(generator_iterator*1)%N_LUT];
+    }
+    if (notes[23] == 1) {
+    	sound += notes[(int)round(generator_iterator*1)%N_LUT];
+    }
+    if (notes[24] == 1) {
+    	sound += notes[(int)round(generator_iterator*1)%N_LUT];
+    }
+    if (notes[25] == 1) {
+    	sound += notes[(int)round(generator_iterator*1)%N_LUT];
+    }
+    if (notes[26] == 1) {
+    	sound += notes[(int)round(generator_iterator*1)%N_LUT];
+    }
+    if (notes[27] == 1) {
+    	sound += notes[(int)round(generator_iterator*1)%N_LUT];
+    }
+    if (notes[28] == 1) {
+    	sound += notes[(int)round(generator_iterator*1)%N_LUT];
+    }
+    if (notes[29] == 1) {
+    	sound += notes[(int)round(generator_iterator*1)%N_LUT];
+    }
+    if (notes[30] == 1) {
+    	sound += notes[(int)round(generator_iterator*1)%N_LUT];
+    }
+    if (notes[31] == 1) {
+    	sound += notes[(int)round(generator_iterator*1)%N_LUT];
+    }
+    if (notes[32] == 1) {
+    	sound += notes[(int)round(generator_iterator*1)%N_LUT];
+    }
+    if (notes[33] == 1) {
+    	sound += notes[(int)round(generator_iterator*1)%N_LUT];
+    }
+    if (notes[34] == 1) {
+    	sound += notes[(int)round(generator_iterator*2)%N_LUT];
+    }
+    if (notes[35] == 1) {
+    	sound += notes[(int)round(generator_iterator*2)%N_LUT];
+    }
+    if (notes[36] == 1) {
+    	sound += notes[(int)round(generator_iterator*2)%N_LUT];
+    }
+    if (notes[37] == 1) {
+    	sound += notes[(int)round(generator_iterator*2)%N_LUT];
+    }
+    if (notes[38] == 1) {
+    	sound += notes[(int)round(generator_iterator*2)%N_LUT];
+    }
+    if (notes[39] == 1) {
+    	sound += notes[(int)round(generator_iterator*2)%N_LUT];
+    }
+    if (notes[40] == 1) {
+    	sound += notes[(int)round(generator_iterator*2)%N_LUT];
+    }
+    if (notes[41] == 1) {
+    	sound += notes[(int)round(generator_iterator*2)%N_LUT];
+    }
+    if (notes[42] == 1) {
+    	sound += notes[(int)round(generator_iterator*2)%N_LUT];
+    }
+    if (notes[43] == 1) {
+    	sound += notes[(int)round(generator_iterator*3)%N_LUT];
+    }
+    if (notes[44] == 1) {
+    	sound += notes[(int)round(generator_iterator*3)%N_LUT];
+    }
+    if (notes[45] == 1) {
+    	sound += notes[(int)round(generator_iterator*3)%N_LUT];
+    }
+    if (notes[46] == 1) {
+    	sound += notes[(int)round(generator_iterator*3)%N_LUT];
+    }
+    if (notes[47] == 1) {
+    	sound += notes[(int)round(generator_iterator*3)%N_LUT];
+    }
+    if (notes[48] == 1) {
+    	sound += notes[(int)round(generator_iterator*3)%N_LUT];
+    }
+    if (notes[49] == 1) {
+    	sound += notes[(int)round(generator_iterator*4)%N_LUT];
+    }
+    if (notes[50] == 1) {
+    	sound += notes[(int)round(generator_iterator*4)%N_LUT];
+    }
+    if (notes[51] == 1) {
+    	sound += notes[(int)round(generator_iterator*4)%N_LUT];
+    }
+    if (notes[52] == 1) {
+    	sound += notes[(int)round(generator_iterator*4)%N_LUT];
+    }
+    if (notes[53] == 1) {
+    	sound += notes[(int)round(generator_iterator*5)%N_LUT];
+    }
+    if (notes[54] == 1) {
+    	sound += notes[(int)round(generator_iterator*5)%N_LUT];
+    }
+    if (notes[55] == 1) {
+    	sound += notes[(int)round(generator_iterator*5)%N_LUT];
+    }
+    if (notes[56] == 1) {
+    	sound += notes[(int)round(generator_iterator*6)%N_LUT];
+    }
+    if (notes[57] == 1) {
+    	sound += notes[(int)round(generator_iterator*6)%N_LUT];
+    }
+    if (notes[58] == 1) {
+    	sound += notes[(int)round(generator_iterator*6)%N_LUT];
+    }
+    if (notes[59] == 1) {
+    	sound += notes[(int)round(generator_iterator*7)%N_LUT];
+    }
+    if (notes[60] == 1) {
+    	sound += notes[(int)round(generator_iterator*7)%N_LUT];
+    }
+    if (notes[61] == 1) {
+    	sound += notes[(int)round(generator_iterator*7)%N_LUT];
+    }
+    if (notes[62] == 1) {
+    	sound += notes[(int)round(generator_iterator*8)%N_LUT];
+    }
+    if (notes[63] == 1) {
+    	sound += notes[(int)round(generator_iterator*8)%N_LUT];
+    }
+    if (notes[64] == 1) {
+    	sound += notes[(int)round(generator_iterator*9)%N_LUT];
+    }
+    if (notes[65] == 1) {
+    	sound += notes[(int)round(generator_iterator*9)%N_LUT];
+    }
+    if (notes[66] == 1) {
+    	sound += notes[(int)round(generator_iterator*10)%N_LUT];
+    }
+    if (notes[67] == 1) {
+    	sound += notes[(int)round(generator_iterator*10)%N_LUT];
+    }
+    if (notes[68] == 1) {
+    	sound += notes[(int)round(generator_iterator*11)%N_LUT];
+    }
+    if (notes[69] == 1) {
+    	sound += notes[(int)round(generator_iterator*12)%N_LUT];
+    }
+    if (notes[70] == 1) {
+    	sound += notes[(int)round(generator_iterator*12)%N_LUT];
+    }
+    if (notes[71] == 1) {
+    	sound += notes[(int)round(generator_iterator*13)%N_LUT];
+    }
+    if (notes[72] == 1) {
+    	sound += notes[(int)round(generator_iterator*14)%N_LUT];
+    }
+    if (notes[73] == 1) {
+    	sound += notes[(int)round(generator_iterator*15)%N_LUT];
+    }
+    if (notes[74] == 1) {
+    	sound += notes[(int)round(generator_iterator*16)%N_LUT];
+    }
+    if (notes[75] == 1) {
+    	sound += notes[(int)round(generator_iterator*16)%N_LUT];
+    }
+    if (notes[76] == 1) {
+    	sound += notes[(int)round(generator_iterator*17)%N_LUT];
+    }
+    if (notes[77] == 1) {
+    	sound += notes[(int)round(generator_iterator*18)%N_LUT];
+    }
+    if (notes[78] == 1) {
+    	sound += notes[(int)round(generator_iterator*20)%N_LUT];
+    }
+    if (notes[79] == 1) {
+    	sound += notes[(int)round(generator_iterator*21)%N_LUT];
+    }
+    if (notes[80] == 1) {
+    	sound += notes[(int)round(generator_iterator*22)%N_LUT];
+    }
+    if (notes[81] == 1) {
+    	sound += notes[(int)round(generator_iterator*23)%N_LUT];
+    }
+    if (notes[82] == 1) {
+    	sound += notes[(int)round(generator_iterator*25)%N_LUT];
+    }
+    if (notes[83] == 1) {
+    	sound += notes[(int)round(generator_iterator*26)%N_LUT];
+    }
+    if (notes[84] == 1) {
+    	sound += notes[(int)round(generator_iterator*28)%N_LUT];
+    }
+    if (notes[85] == 1) {
+    	sound += notes[(int)round(generator_iterator*29)%N_LUT];
+    }
+    if (notes[86] == 1) {
+    	sound += notes[(int)round(generator_iterator*31)%N_LUT];
+    }
+    if (notes[87] == 1) {
+    	sound += notes[(int)round(generator_iterator*33)%N_LUT];
+    }
+    if (notes[88] == 1) {
+    	sound += notes[(int)round(generator_iterator*35)%N_LUT];
+    }
+    if (notes[89] == 1) {
+    	sound += notes[(int)round(generator_iterator*37)%N_LUT];
+    }
+    if (notes[90] == 1) {
+    	sound += notes[(int)round(generator_iterator*39)%N_LUT];
+    }
+    if (notes[91] == 1) {
+    	sound += notes[(int)round(generator_iterator*42)%N_LUT];
+    }
+    if (notes[92] == 1) {
+    	sound += notes[(int)round(generator_iterator*44)%N_LUT];
+    }
+    if (notes[93] == 1) {
+    	sound += notes[(int)round(generator_iterator*47)%N_LUT];
+    }
+    if (notes[94] == 1) {
+    	sound += notes[(int)round(generator_iterator*49)%N_LUT];
+    }
+    if (notes[95] == 1) {
+    	sound += notes[(int)round(generator_iterator*52)%N_LUT];
+    }
+    if (notes[96] == 1) {
+    	sound += notes[(int)round(generator_iterator*55)%N_LUT];
+    }
+    if (notes[97] == 1) {
+    	sound += notes[(int)round(generator_iterator*59)%N_LUT];
+    }
+    if (notes[98] == 1) {
+    	sound += notes[(int)round(generator_iterator*62)%N_LUT];
+    }
+    if (notes[99] == 1) {
+    	sound += notes[(int)round(generator_iterator*66)%N_LUT];
+    }
+    if (notes[100] == 1) {
+    	sound += notes[(int)round(generator_iterator*70)%N_LUT];
+    }
+    if (notes[101] == 1) {
+    	sound += notes[(int)round(generator_iterator*74)%N_LUT];
+    }
+    if (notes[102] == 1) {
+    	sound += notes[(int)round(generator_iterator*78)%N_LUT];
+    }
+    if (notes[103] == 1) {
+    	sound += notes[(int)round(generator_iterator*83)%N_LUT];
+    }
+    if (notes[104] == 1) {
+    	sound += notes[(int)round(generator_iterator*88)%N_LUT];
+    }
+    if (notes[105] == 1) {
+    	sound += notes[(int)round(generator_iterator*93)%N_LUT];
+    }
+    if (notes[106] == 1) {
+    	sound += notes[(int)round(generator_iterator*99)%N_LUT];
+    }
+    if (notes[107] == 1) {
+    	sound += notes[(int)round(generator_iterator*105)%N_LUT];
+    }
+    if (notes[108] == 1) {
+    	sound += notes[(int)round(generator_iterator*111)%N_LUT];
+    }
+    if (notes[109] == 1) {
+    	sound += notes[(int)round(generator_iterator*117)%N_LUT];
+    }
+    if (notes[110] == 1) {
+    	sound += notes[(int)round(generator_iterator*124)%N_LUT];
+    }
+    if (notes[111] == 1) {
+    	sound += notes[(int)round(generator_iterator*132)%N_LUT];
+    }
+    if (notes[112] == 1) {
+    	sound += notes[(int)round(generator_iterator*140)%N_LUT];
+    }
+    if (notes[113] == 1) {
+    	sound += notes[(int)round(generator_iterator*148)%N_LUT];
+    }
+    if (notes[114] == 1) {
+    	sound += notes[(int)round(generator_iterator*157)%N_LUT];
+    }
+    if (notes[115] == 1) {
+    	sound += notes[(int)round(generator_iterator*166)%N_LUT];
+    }
+    if (notes[116] == 1) {
+    	sound += notes[(int)round(generator_iterator*176)%N_LUT];
+    }
+    if (notes[117] == 1) {
+    	sound += notes[(int)round(generator_iterator*186)%N_LUT];
+    }
+    if (notes[118] == 1) {
+    	sound += notes[(int)round(generator_iterator*198)%N_LUT];
+    }
+    if (notes[119] == 1) {
+    	sound += notes[(int)round(generator_iterator*209)%N_LUT];
+    }
+    if (notes[120] == 1) {
+    	sound += notes[(int)round(generator_iterator*222)%N_LUT];
+    }
+    if (notes[121] == 1) {
+    	sound += notes[(int)round(generator_iterator*235)%N_LUT];
+    }
+    if (notes[122] == 1) {
+    	sound += notes[(int)round(generator_iterator*249)%N_LUT];
+    }
+    if (notes[123] == 1) {
+    	sound += notes[(int)round(generator_iterator*264)%N_LUT];
+    }
+    if (notes[124] == 1) {
+    	sound += notes[(int)round(generator_iterator*279)%N_LUT];
+    }
+    if (notes[125] == 1) {
+    	sound += notes[(int)round(generator_iterator*296)%N_LUT];
+    }
+    if (notes[126] == 1) {
+    	sound += notes[(int)round(generator_iterator*314)%N_LUT];
+    }
+    if (notes[127] == 1) {
+    	sound += notes[(int)round(generator_iterator*332)%N_LUT];
+    }
+
+
+
 
 	// Verify if a DAC transfer completed
 	if( hDmaxDac->regs->DTCR0 & (1<<DAC_TCC) )
@@ -193,8 +581,8 @@ interrupt void dmax_isr( void )
 		wy[RIGHT][CH_3] = gain * we[RIGHT][CH_3];
 
 		OBuf2.pBuf = pDac;
-		OBuf2.ptab[LEFT][CH_0] = (int)waveform[wav_iterator];
-		OBuf2.ptab[RIGHT][CH_0] = (int)waveform[wav_iterator];
+		OBuf2.ptab[LEFT][CH_0] = (int)(sound*100000.0);
+		OBuf2.ptab[RIGHT][CH_0] = (int)(sound*100000.0);
 		OBuf2.ptab[LEFT][CH_1] = wy[LEFT][CH_1];
 		OBuf2.ptab[RIGHT][CH_1] = wy[RIGHT][CH_1];
 		OBuf2.ptab[LEFT][CH_2] = wy[LEFT][CH_2];
@@ -211,6 +599,9 @@ interrupt void dmax_isr( void )
 //		OBuf2.ptab[LEFT_o][CH_3] = wy[LEFT][CH_3];
 //		OBuf2.ptab[RIGHT_o][CH_3] = wy[RIGHT][CH_3];
 
+		generator_iterator++;
+		if (generator_iterator >= 96000)
+			generator_iterator = 0;
 		wav_iterator++;
 		if(wav_iterator >= N/2)
 			wav_iterator = 0;
