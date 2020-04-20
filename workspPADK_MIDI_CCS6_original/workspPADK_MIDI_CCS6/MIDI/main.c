@@ -71,7 +71,7 @@ int main( int argc, char *argv[] ) {
 	}
 
 	// Filtering
-	highPassFilter(220); // cos tu nie tak z czestotliwoscia? jak daje 2000 to juz ucina
+	highPassFilter(220);
 
 	// Inverse FFT
 	ifft_full();
