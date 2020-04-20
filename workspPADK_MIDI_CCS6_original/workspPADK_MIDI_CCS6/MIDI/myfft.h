@@ -9,7 +9,7 @@
 #define MYFFT_H_
 
 #define M_PI 3.14159
-#define N 1024
+#define N 2048
 
 extern float w[N];
 extern short table[64];

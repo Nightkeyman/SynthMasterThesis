@@ -15,8 +15,6 @@ void lowPassFilter(int freq) {
 			v[i] = 0;
 			v[i+1] = 0;
 		}
-		vv[i] = sqrt(v[i]*v[i] + v[i+1]*v[i+1]);
-		vv[i+1] = 0;
 	}
 }
 
@@ -28,8 +26,6 @@ void highPassFilter(int freq) {
 			v[i] = 0;
 			v[i+1] = 0;
 		}
-		vv[i] = sqrt(v[i]*v[i] + v[i+1]*v[i+1]);
-		vv[i+1] = 0;
 	}
 }
 
@@ -42,8 +38,6 @@ void bandPassFilter(int freqLow, int freqHigh) {
 			v[i] = 0;
 			v[i+1] = 0;
 		}
-		vv[i] = sqrt(v[i]*v[i] + v[i+1]*v[i+1]);
-		vv[i+1] = 0;
 	}
 }
 
@@ -56,8 +50,6 @@ void bandStopFilter(int freqLow, int freqHigh) {
 			v[i] = 0;
 			v[i+1] = 0;
 		}
-		vv[i] = sqrt(v[i]*v[i] + v[i+1]*v[i+1]);
-		vv[i+1] = 0;
 	}
 }
 
