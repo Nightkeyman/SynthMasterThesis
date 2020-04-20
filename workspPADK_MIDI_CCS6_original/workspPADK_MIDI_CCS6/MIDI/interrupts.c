@@ -83,11 +83,11 @@ int we[STEREO][NUM_CHANNEL];
 int wy[STEREO][NUM_CHANNEL];
 //int wl1, wp1, wl2, wp2, wl3, wp3, wl4, wp4;
 
-#define N 4096
+#define N 4096 // musi byc 2x tablica wystawiana na przerwanie (??)
 int Buf_1[N];  // bufor pomocniczy do "obserwacji" danych wejsciowych
 int Buf[N];  // bufor pomocniczy do "obserwacji" danych wyjœciowych
 int k=0;
-extern double waveform[N/2];
+extern float waveform[N];
 int wav_iterator = 0;
 
 #define Fs 96000
@@ -226,7 +226,7 @@ interrupt void dmax_isr( void )
 //		OBuf2.ptab[RIGHT_o][CH_3] = wy[RIGHT][CH_3];
 
 		wav_iterator++;
-		if(wav_iterator >= N/2)
+		if(wav_iterator >= N)
 			wav_iterator = 0;
 
         Buf[k] = OBuf2.ptab[LEFT][CH_0];  //Zapamiêtanie próbki wyjœciowej

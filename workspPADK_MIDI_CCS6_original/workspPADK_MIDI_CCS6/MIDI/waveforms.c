@@ -18,7 +18,7 @@ void sin_wave(int freq, int amp) {
 	}
 }
 
-void squre_wave(int freq, int amp) {
+void square_wave(int freq, int amp) {
 	int i = 0;
 	for(i = 0; i < 2*N; i++) {
 		v[i] = (float)(1*sin((double)(i/2)*2.0*M_PI*freq*(1.0/Fs)));// + (float)(5*sin((double)(i/2)*2.0*M_PI*F_sqq*(1.0/Fs)));
