@@ -15,7 +15,8 @@ spect_dens = 20*log10(abs(spectrum));
 figure(4);
 f = ((f-1)/fft_size)*Fs;
 plot(f,spect_dens);
-axis([0 4000 -40 40])
+
+axis([0 10000 -40 40])
 title('Flute sound spectral density');
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -24,8 +25,8 @@ f = 0:0.1:round(Fs/2);
 T = 3;
 s = [1 zeros(1,length(0:1/Fs:T-1/Fs))];
 insig = randn(length(0:1/Fs:T-1/Fs), 1);
-insig = ADSR(insig,5,2,2,2);
-%outsig = noise(length(0:1/Fs:T-1/Fs), 1, 'white');
+insig = ADSR(insig,3,2,2,2);
+% insig = noise(length(0:1/Fs:T-1/Fs), 1, 'white');
 Resonances_freq_A = [440 880 1312 1764 2194 2649 3513];
 Resonances_mag_A = [33.6 30.58 18.289 22.35 4.53 0.67 -4.06];
 Resonances_mag_A = 100.^(Resonances_mag_A/20);
@@ -69,5 +70,5 @@ t = 0:1/Fs:length(y)/Fs - 1/Fs;
 plot(Y);
 y = y/max(y);
 Y = Y/max(Y);
-
-sound(Y*0.2, Fs);
+insig = insig/max(insig);
+sound(Y, Fs);

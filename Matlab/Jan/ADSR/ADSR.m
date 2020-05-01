@@ -10,7 +10,7 @@ function [ y ] = ADSR(sig, att, dec, sus, rel)
   dec_time = max_dec_time*(dec/10);
   
   % sus - amplitude (0 - 10)
-  sus_amp = sus*sig;
+  sus_amp = sus*mean(abs(sig));
   
   % rel - time (0 - 10)
   max_rel_time = length(sig)/5;
@@ -18,16 +18,16 @@ function [ y ] = ADSR(sig, att, dec, sus, rel)
   
   % Attack - narastanie od 0 do att_amp
   for i = 1:att_time
-    dx = i/att_time;
-    sig(i) = sig(i)*dx*att_amp;
+    dx = (i/att_time)*att_amp;
+    sig(i) = sig(i)*dx;
   end
   
   % Decay - opadanie od att_amp do sus_amp
-  %for i = (att_time + 1):(att_time + dec_time)
-  %  dx = (i - att_time + 1)/(dec_time);
-  %  sig(i) = sig(i)*dx;
-  %end
-  %{
+  for i = (att_time + 1):(att_time + dec_time)
+    dx = ((i - att_time + 1)/(dec_time))*sus_amp;
+    sig(i) = sig(i)*dx;
+  end
+
   % Sus - przemnozenie sygnalu przez sus_amp
   
   % Rel - opadanie od sus_amp do 0 w czasie rel_time
