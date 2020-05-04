@@ -3,7 +3,7 @@ function [ y ] = ADSR(sig, att, dec, sus, rel)
   % start amplitude is sus*1.5 or smth like that
   max_att_time = length(sig)/5;
   att_time = max_att_time*(att/10);
-  att_amp = sus*5;
+  att_amp = sus*2;
   
   % dec - time (0 - 10)
   max_dec_time = length(sig)/5;
