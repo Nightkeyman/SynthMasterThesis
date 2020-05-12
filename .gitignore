@@ -17,6 +17,8 @@ workspPADK_MIDI_CCS6_original/workspPADK_MIDI_CCS6/PADK_USB1/
 *.pdb
 *.cache
 *.asv
+*.zip
+*.wav
 
 # Files:
 UARTCOM/UARTCOM2/obj/Debug/UARTCOM.csproj.GenerateResource.cache
