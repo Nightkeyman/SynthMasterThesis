@@ -13,7 +13,7 @@
 #define M_PI 3.14159
 extern float v[2*N];
 extern float vv[2*N];
-extern double waveform[2*N];
+extern float waveform[2*N];
 
 void sin_wave(int freq, int amp);
 void squre_wave(int freq, int amp);

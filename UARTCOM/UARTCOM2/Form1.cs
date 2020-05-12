@@ -143,14 +143,17 @@ namespace UARTCOM2
                         {
                             if (Checksum() == Buffer_pull(8))
                             {
-                                if (Buffer_pull(1) == 1)
-                                {
-                                    button_subtractive_en.Text = "Enabled";
-                                    button_subtractive_en.ForeColor = Color.Green;
-                                } else if (Buffer_pull(1) == 2)
-                                {
-                                    button_subtractive_en.Text = "Disabled";
-                                    button_subtractive_en.ForeColor = Color.Red;
+                                if (Buffer_pull(1) == 1) { 
+                                    if (Buffer_pull(2) == 1)
+                                    {
+                                        button_subtractive_en.Text = "Enabled";
+                                        button_subtractive_en.ForeColor = Color.Green;
+                                    }
+                                    else if (Buffer_pull(2) == 2)
+                                    {
+                                        button_subtractive_en.Text = "Disabled";
+                                        button_subtractive_en.ForeColor = Color.Red;
+                                    }
                                 }
                             }
                         }
@@ -162,6 +165,14 @@ namespace UARTCOM2
         byte Checksum()
         {
             return (byte)(Buffer_pull(1) + Buffer_pull(2) + Buffer_pull(3) + Buffer_pull(4) + Buffer_pull(5) + Buffer_pull(6));
+        }
+
+        void sendInt(byte id, byte subid, UInt32 data)
+        {
+            byte[] intbytes = BitConverter.GetBytes(data);
+
+            send(id, subid, intbytes[0], intbytes[1], intbytes[2], intbytes[3], 0);
+
         }
         void send(byte b0, byte b1, byte b2, byte b3, byte b4, byte b5, byte b6)
         {
@@ -191,13 +202,13 @@ namespace UARTCOM2
             Console.WriteLine("siemsa");
             if (button_subtractive_en.Text.Equals("Disabled"))
             {
-                send(100, 1, 0, 0, 0, 0, 0);
+                send(100, 1, 1, 0, 0, 0, 0); // subtractive enable request
                 
             }
             else
             {
-                send(100, 2, 0, 0, 0, 0, 0);
-               
+                send(100, 1, 2, 0, 0, 0, 0); // subtractive disable request
+
             }
         }
 
@@ -234,27 +245,34 @@ namespace UARTCOM2
         private void trackBar_subtractive_freq1_Scroll(object sender, EventArgs e)
         {
             textBox_subtractive_freq1.Text = trackBar_subtractive_freq1.Value.ToString();
+            sendInt(100, 2, (UInt32)trackBar_subtractive_freq1.Value);
         }
 
         private void trackBar_subtractive_freq2_Scroll(object sender, EventArgs e)
         {
             textBox_subtractive_freq2.Text = trackBar_subtractive_freq2.Value.ToString();
+            sendInt(100, 3, (UInt32)trackBar_subtractive_freq2.Value);
         }
 
         private void radioButton_subtractive_lowpass_CheckedChanged(object sender, EventArgs e)
-        {
-            trackBar_subtractive_freq1.Enabled = true;
-            textBox_subtractive_freq1.Enabled = true;
-            trackBar_subtractive_freq2.Enabled = false;
-            textBox_subtractive_freq2.Enabled = false;
-        }
-
-        private void radioButton_subtractive_highpass_CheckedChanged(object sender, EventArgs e)
         {
             trackBar_subtractive_freq2.Enabled = true;
             textBox_subtractive_freq2.Enabled = true;
             trackBar_subtractive_freq1.Enabled = false;
             textBox_subtractive_freq1.Enabled = false;
+            sendInt(100, 3, (UInt32)trackBar_subtractive_freq2.Value); // set higher frequency
+            sendInt(100, 2, 0); // zero lower frequency
+
+        }
+
+        private void radioButton_subtractive_highpass_CheckedChanged(object sender, EventArgs e)
+        {
+            trackBar_subtractive_freq1.Enabled = true;
+            textBox_subtractive_freq1.Enabled = true;
+            trackBar_subtractive_freq2.Enabled = false;
+            textBox_subtractive_freq2.Enabled = false;
+            sendInt(100, 2, (UInt32)trackBar_subtractive_freq1.Value); // set lower frequency
+            sendInt(100, 3, 96000); // max higher frequency
         }
 
         private void radioButton_subtractive_bandpass_CheckedChanged(object sender, EventArgs e)
@@ -263,6 +281,8 @@ namespace UARTCOM2
             textBox_subtractive_freq1.Enabled = true;
             trackBar_subtractive_freq2.Enabled = true;
             textBox_subtractive_freq2.Enabled = true;
+            sendInt(100, 2, (UInt32)trackBar_subtractive_freq1.Value); // set lower frequency
+            sendInt(100, 3, (UInt32)trackBar_subtractive_freq2.Value); // set higher frequency
         }
 
         private void radioButton_subtractive_bandstop_CheckedChanged(object sender, EventArgs e)
@@ -271,6 +291,7 @@ namespace UARTCOM2
             textBox_subtractive_freq1.Enabled = true;
             trackBar_subtractive_freq2.Enabled = true;
             textBox_subtractive_freq2.Enabled = true;
+            //not done yet at DSP side
         }
     }
 }

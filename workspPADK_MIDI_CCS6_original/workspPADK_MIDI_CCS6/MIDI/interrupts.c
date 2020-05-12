@@ -87,7 +87,7 @@ int wy[STEREO][NUM_CHANNEL];
 int Buf_1[N];  // bufor pomocniczy do "obserwacji" danych wejsciowych
 int Buf[N];  // bufor pomocniczy do "obserwacji" danych wyjœciowych
 int k=0;
-extern double waveform[N/2];
+extern float waveform[];
 int wav_iterator = 0;
 
 #define Fs 96000
@@ -104,7 +104,14 @@ double sound_double = 0;
 #define UART_NO_WAIT    0
 unsigned char uartdata[1];
 extern unsigned char data_midi[1];
+
 // ################## UART end #####################
+
+// SUBTRACTIVE GLOBAL VARIABLES
+extern enum modetype{subtractive, additive, fm};
+extern enum modetype mode;
+extern int sub_lowfreq;
+extern int sub_highfreq;
 
 interrupt void nmi_isr( void )
 {
@@ -144,13 +151,31 @@ interrupt void uart_isr( void )
     switch(UART_pull(0)){
     case 100:
     	if (UART_pull(7) == 101){
+
+
     		if (UART_pull(8) == UART_checksum()){
     			if (UART_pull(1) == 1){
-    				UART_send(100, 1, 0,0,0,0,0);
-    			} else if (UART_pull(1) == 2){
-    				UART_send(100, 2, 0,0,0,0,0);
+					if (UART_pull(2) == 1){	// enable SUBTRACTIVE
+						UART_send(100, 1, 1,0,0,0,0);
+						mode = subtractive;
+					} else if (UART_pull(2) == 2){ // disable SUBTRACTIVE
+						UART_send(100, 1, 2,0,0,0,0);
+					}
     			}
+
+
+				if (UART_pull(1) == 2){
+						sub_highfreq = UART_pull(3) + UART_pull(3)*256 + UART_pull(3)*256*256;
+					}
+				 if (UART_pull(1) == 3){
+						sub_lowfreq = UART_pull(3) + UART_pull(3)*256 + UART_pull(3)*256*256;
+					}
+
     		}
+
+
+
+
     	}
     	break;
     }
@@ -225,8 +250,8 @@ interrupt void dmax_isr( void )
 //		OBuf2.ptab[LEFT_o][CH_3] = wy[LEFT][CH_3];
 //		OBuf2.ptab[RIGHT_o][CH_3] = wy[RIGHT][CH_3];
 
-		wav_iterator++;
-		if(wav_iterator >= N/2)
+		wav_iterator+=2;
+		if(wav_iterator >= 1024)
 			wav_iterator = 0;
 
         Buf[k] = OBuf2.ptab[LEFT][CH_0];  //Zapamiêtanie próbki wyjœciowej
