@@ -60,7 +60,7 @@ void UART_send(unsigned char b0, unsigned char b1, unsigned char b2, unsigned ch
 	bytes[8] = suma;
 
 	//unsigned char bytes[] = { 0, 1,2,3,4,5 };
-	UART_Write(bytes, 9, UART_NO_WAIT);
+	UART_Write(bytes, 9, UART_WAIT);
 }
 
 
