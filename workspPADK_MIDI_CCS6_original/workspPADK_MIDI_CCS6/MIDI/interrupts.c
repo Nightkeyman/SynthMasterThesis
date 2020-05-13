@@ -106,6 +106,14 @@ unsigned char uartdata[1];
 extern unsigned char data_midi[1];
 // ################## UART end #####################
 
+
+// SUBTRACTIVE GLOBAL VARIABLES
+extern enum modetype{subtractive, additive, fm};
+extern enum modetype mode;
+extern int sub_lowfreq;
+extern int sub_highfreq;
+extern int bylklawisz;
+
 interrupt void nmi_isr( void )
 {
     while(1);
@@ -123,34 +131,54 @@ interrupt void midi_isr( void )
 			if (status == 0x09) { // note on
 				unsigned char note = MIDI_pull(-1)&0x7f;
 				notes[note] = 1;
+				bylklawisz = 1;
 				MIDI_clear();
 			} else if (status == 0x08) { // note off
 				unsigned char note = MIDI_pull(-1)&0x7f;
 				notes[note] = 0;
+				bylklawisz = 1;
 				MIDI_clear();
 			}
 		}
 	}
-	UART_Write(data_midi, 1, UART_NO_WAIT);
+	//UART_Write(data_midi, 1, UART_NO_WAIT);
 }
 
 interrupt void uart_isr( void )
 {
     static int toggle = 0;
-	UART_EnableLed1( toggle ^= 1 );
+	  UART_EnableLed1( toggle ^= 1 );
     UART_EnableLed2( !toggle );
     UART_Read(uartdata, 1, UART_WAIT);
     UART_push(uartdata[0]);
     switch(UART_pull(0)){
     case 100:
     	if (UART_pull(7) == 101){
+
+
     		if (UART_pull(8) == UART_checksum()){
     			if (UART_pull(1) == 1){
-    				UART_send(100, 1, 0,0,0,0,0);
-    			} else if (UART_pull(1) == 2){
-    				UART_send(100, 2, 0,0,0,0,0);
+					if (UART_pull(2) == 1){	// enable SUBTRACTIVE
+						UART_send(100, 1, 1,0,0,0,0);
+						mode = subtractive;
+					} else if (UART_pull(2) == 2){ // disable SUBTRACTIVE
+						UART_send(100, 1, 2,0,0,0,0);
+					}
     			}
+
+
+				if (UART_pull(1) == 2){
+						sub_highfreq = UART_pull(3) + UART_pull(3)*256 + UART_pull(3)*256*256;
+					}
+				 if (UART_pull(1) == 3){
+						sub_lowfreq = UART_pull(3) + UART_pull(3)*256 + UART_pull(3)*256*256;
+					}
+
     		}
+
+
+
+
     	}
     	break;
     }

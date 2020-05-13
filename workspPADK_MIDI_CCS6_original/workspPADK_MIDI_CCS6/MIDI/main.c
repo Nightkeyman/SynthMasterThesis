@@ -39,6 +39,12 @@ float hann[2048] = {0,2.3554e-06,9.4216e-06,2.1198e-05,3.7686e-05,5.8884e-05,8.4
 unsigned char data_midi[1];
 int notes[128];
 
+// SUBTRACTIVE GLOBAL VARIABLES
+enum modetype{subtractive, additive, fm};
+enum modetype mode;
+int sub_lowfreq = 0;
+int sub_highfreq = 96000;
+int bylklawisz = 0;
 //
 //  Main Function
 //
@@ -76,11 +82,33 @@ int main( int argc, char *argv[] ) {
 	// Inverse FFT
 	ifft_full();
 
+	for(j = 0; j < 2*N; j++)
+		waveform2[j] = 0;
 	/*---------------------------------------------------------------*/
 	/*							 MAIN LOOP 		                     */
 	/*---------------------------------------------------------------*/
 
     while(1)  {
+    	if (bylklawisz == 1){
+			if (mode == subtractive){
+				for(j = 0; j < 2*N; j++)
+						waveform2[j] = 0;
+
+				for(i = 0; i < 128; i++) {
+					if(notes[i] == 1) {
+						freq_wav = 440*pow(1.059463,i - 69);
+						square_wave(freq_wav, 1000000000);
+						bandPassFilter(sub_lowfreq, sub_highfreq);
+						ifft_full();
+						for(j = 0; j < 2*N; j++)
+							waveform2[j] += v[j];
+					}
+					for(j = 0; j < 2*N; j++)
+						waveform[j] = waveform2[j];
+				}
+			}
+    	}
+    	/*
     	// MONOPHONIC KEYBOARD
     	if(mono == 1) {
     		for(i = 0; i < 128; i++) {
@@ -111,5 +139,7 @@ int main( int argc, char *argv[] ) {
 					waveform[j] = waveform2[j];
 			}
     	}
+
+    	*/
     }
 }
