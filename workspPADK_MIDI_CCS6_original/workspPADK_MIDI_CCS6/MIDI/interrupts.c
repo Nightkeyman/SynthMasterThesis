@@ -137,7 +137,7 @@ interrupt void midi_isr( void )
 interrupt void uart_isr( void )
 {
     static int toggle = 0;
-	  UART_EnableLed1( toggle ^= 1 );
+	UART_EnableLed1( toggle ^= 1 );
     UART_EnableLed2( !toggle );
     UART_Read(uartdata, 1, UART_WAIT);
     UART_push(uartdata[0]);

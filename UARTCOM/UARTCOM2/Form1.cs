@@ -7,6 +7,8 @@ using System.Linq;
 using System.Text;
 using System.IO.Ports;
 using System.Windows.Forms;
+using System.Linq.Expressions;
+using System.Reflection;
 
 namespace UARTCOM2
 {
@@ -126,6 +128,7 @@ namespace UARTCOM2
             }
             return ret;
         }
+
         private void port_DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
             // Show all the incoming data in the port's buffer
@@ -145,12 +148,20 @@ namespace UARTCOM2
                             {
                                 if (Buffer_pull(1) == 1)
                                 {
-                                    button_subtractive_en.Text = "Enabled";
-                                    button_subtractive_en.ForeColor = Color.Green;
+                                    button_subtractive_en.Invoke((MethodInvoker)delegate {
+                                        button_subtractive_en.Text = "Enabled";
+                                    });
+                                    button_subtractive_en.Invoke((MethodInvoker)delegate {
+                                        button_subtractive_en.ForeColor = Color.Green;
+                                    });
                                 } else if (Buffer_pull(1) == 2)
                                 {
-                                    button_subtractive_en.Text = "Disabled";
-                                    button_subtractive_en.ForeColor = Color.Red;
+                                    button_subtractive_en.Invoke((MethodInvoker)delegate {
+                                        button_subtractive_en.Text = "Disabled";
+                                    });
+                                    button_subtractive_en.Invoke((MethodInvoker)delegate {
+                                        button_subtractive_en.ForeColor = Color.Red;
+                                    });
                                 }
                             }
                         }
@@ -218,7 +229,6 @@ namespace UARTCOM2
                
             }
         }
-
 
         private void richTextBox_received_MouseUp(object sender, MouseEventArgs e)
         {
