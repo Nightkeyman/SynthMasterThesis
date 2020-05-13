@@ -42,33 +42,47 @@
             this.tabPage_Connection = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.tabPage_subtractive = new System.Windows.Forms.TabPage();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.textBox_subtractive_freq2 = new System.Windows.Forms.TextBox();
+            this.label6 = new System.Windows.Forms.Label();
+            this.trackBar_subtractive_freq2 = new System.Windows.Forms.TrackBar();
+            this.textBox_subtractive_freq1 = new System.Windows.Forms.TextBox();
+            this.label5 = new System.Windows.Forms.Label();
+            this.trackBar_subtractive_freq1 = new System.Windows.Forms.TrackBar();
+            this.radioButton_subtractive_bandstop = new System.Windows.Forms.RadioButton();
+            this.radioButton_subtractive_bandpass = new System.Windows.Forms.RadioButton();
+            this.radioButton_subtractive_highpass = new System.Windows.Forms.RadioButton();
+            this.radioButton_subtractive_lowpass = new System.Windows.Forms.RadioButton();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.radioButton_subtractive_sawtooth = new System.Windows.Forms.RadioButton();
+            this.radioButton_subtractive_triangle = new System.Windows.Forms.RadioButton();
+            this.radioButton_subtractive_square = new System.Windows.Forms.RadioButton();
+            this.button_subtractive_toggle = new System.Windows.Forms.Button();
             this.label4 = new System.Windows.Forms.Label();
             this.textBox_subtractive_frequency = new System.Windows.Forms.TextBox();
             this.knobControl1 = new KnobControl.KnobControl();
             this.button_subtractive_en = new System.Windows.Forms.Button();
-            this.button_subtractive_toggle = new System.Windows.Forms.Button();
-            this.radioButton_subtractive_square = new System.Windows.Forms.RadioButton();
-            this.radioButton_subtractive_triangle = new System.Windows.Forms.RadioButton();
-            this.radioButton_subtractive_sawtooth = new System.Windows.Forms.RadioButton();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.radioButton_subtractive_lowpass = new System.Windows.Forms.RadioButton();
-            this.radioButton_subtractive_highpass = new System.Windows.Forms.RadioButton();
-            this.radioButton_subtractive_bandpass = new System.Windows.Forms.RadioButton();
-            this.radioButton_subtractive_bandstop = new System.Windows.Forms.RadioButton();
-            this.trackBar_subtractive_freq1 = new System.Windows.Forms.TrackBar();
-            this.label5 = new System.Windows.Forms.Label();
-            this.textBox_subtractive_freq1 = new System.Windows.Forms.TextBox();
-            this.textBox_subtractive_freq2 = new System.Windows.Forms.TextBox();
-            this.label6 = new System.Windows.Forms.Label();
-            this.trackBar_subtractive_freq2 = new System.Windows.Forms.TrackBar();
+            this.tabPage_additive = new System.Windows.Forms.TabPage();
+            this.tabControl1 = new System.Windows.Forms.TabControl();
+            this.tabPage_additive_hammond = new System.Windows.Forms.TabPage();
+            this.drawbar1 = new KnobControl.KnobControl();
+            this.drawbar6 = new KnobControl.KnobControl();
+            this.drawbar2 = new KnobControl.KnobControl();
+            this.drawbar5 = new KnobControl.KnobControl();
+            this.drawbar3 = new KnobControl.KnobControl();
+            this.drawbar4 = new KnobControl.KnobControl();
+            this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.button_additive_hammond_en = new System.Windows.Forms.Button();
             this.tabPage_Connection.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage_subtractive.SuspendLayout();
-            this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBar_subtractive_freq1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar_subtractive_freq2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBar_subtractive_freq1)).BeginInit();
+            this.groupBox1.SuspendLayout();
+            this.tabPage_additive.SuspendLayout();
+            this.tabControl1.SuspendLayout();
+            this.tabPage_additive_hammond.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnGetSerialPorts
@@ -174,6 +188,7 @@
             // 
             this.tabPage_Connection.Controls.Add(this.tabPage1);
             this.tabPage_Connection.Controls.Add(this.tabPage_subtractive);
+            this.tabPage_Connection.Controls.Add(this.tabPage_additive);
             this.tabPage_Connection.Location = new System.Drawing.Point(-1, 0);
             this.tabPage_Connection.Name = "tabPage_Connection";
             this.tabPage_Connection.SelectedIndex = 0;
@@ -214,120 +229,6 @@
             this.tabPage_subtractive.TabIndex = 1;
             this.tabPage_subtractive.Text = "Subtractive";
             // 
-            // groupBox1
-            // 
-            this.groupBox1.Controls.Add(this.radioButton_subtractive_sawtooth);
-            this.groupBox1.Controls.Add(this.radioButton_subtractive_triangle);
-            this.groupBox1.Controls.Add(this.radioButton_subtractive_square);
-            this.groupBox1.Controls.Add(this.button_subtractive_toggle);
-            this.groupBox1.Controls.Add(this.label4);
-            this.groupBox1.Controls.Add(this.textBox_subtractive_frequency);
-            this.groupBox1.Controls.Add(this.knobControl1);
-            this.groupBox1.Location = new System.Drawing.Point(10, 36);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(182, 325);
-            this.groupBox1.TabIndex = 2;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Waveform";
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(23, 293);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(60, 13);
-            this.label4.TabIndex = 3;
-            this.label4.Text = "Frequency:";
-            // 
-            // textBox_subtractive_frequency
-            // 
-            this.textBox_subtractive_frequency.Location = new System.Drawing.Point(89, 290);
-            this.textBox_subtractive_frequency.Name = "textBox_subtractive_frequency";
-            this.textBox_subtractive_frequency.Size = new System.Drawing.Size(59, 20);
-            this.textBox_subtractive_frequency.TabIndex = 2;
-            this.textBox_subtractive_frequency.Text = "100";
-            // 
-            // knobControl1
-            // 
-            this.knobControl1.DrawDivInside = true;
-            this.knobControl1.EndAngle = 405F;
-            this.knobControl1.ImeMode = System.Windows.Forms.ImeMode.Close;
-            this.knobControl1.KnobBackColor = System.Drawing.Color.White;
-            this.knobControl1.KnobPointerStyle = KnobControl.KnobControl.KnobPointerStyles.circle;
-            this.knobControl1.LargeChange = 5;
-            this.knobControl1.Location = new System.Drawing.Point(6, 121);
-            this.knobControl1.Maximum = 12000;
-            this.knobControl1.Minimum = 0;
-            this.knobControl1.Name = "knobControl1";
-            this.knobControl1.PointerColor = System.Drawing.Color.LightSteelBlue;
-            this.knobControl1.ScaleColor = System.Drawing.Color.Black;
-            this.knobControl1.ScaleDivisions = 11;
-            this.knobControl1.ScaleFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.knobControl1.ScaleSubDivisions = 4;
-            this.knobControl1.ShowLargeScale = true;
-            this.knobControl1.ShowSmallScale = false;
-            this.knobControl1.Size = new System.Drawing.Size(159, 159);
-            this.knobControl1.SmallChange = 1;
-            this.knobControl1.StartAngle = 135F;
-            this.knobControl1.TabIndex = 1;
-            this.knobControl1.Value = 100;
-            this.knobControl1.ValueChanged += new KnobControl.ValueChangedEventHandler(this.knobControl1_ValueChanged);
-            this.knobControl1.Load += new System.EventHandler(this.knobControl1_Load);
-            // 
-            // button_subtractive_en
-            // 
-            this.button_subtractive_en.ForeColor = System.Drawing.Color.Red;
-            this.button_subtractive_en.Location = new System.Drawing.Point(6, 6);
-            this.button_subtractive_en.Name = "button_subtractive_en";
-            this.button_subtractive_en.Size = new System.Drawing.Size(75, 23);
-            this.button_subtractive_en.TabIndex = 0;
-            this.button_subtractive_en.Text = "Disabled";
-            this.button_subtractive_en.UseVisualStyleBackColor = true;
-            this.button_subtractive_en.Click += new System.EventHandler(this.button_subtractive_en_Click);
-            // 
-            // button_subtractive_toggle
-            // 
-            this.button_subtractive_toggle.Location = new System.Drawing.Point(65, 190);
-            this.button_subtractive_toggle.Name = "button_subtractive_toggle";
-            this.button_subtractive_toggle.Size = new System.Drawing.Size(38, 23);
-            this.button_subtractive_toggle.TabIndex = 4;
-            this.button_subtractive_toggle.Text = "High";
-            this.button_subtractive_toggle.UseVisualStyleBackColor = true;
-            this.button_subtractive_toggle.Click += new System.EventHandler(this.button_subtractive_toggle_Click);
-            // 
-            // radioButton_subtractive_square
-            // 
-            this.radioButton_subtractive_square.AutoSize = true;
-            this.radioButton_subtractive_square.Location = new System.Drawing.Point(7, 20);
-            this.radioButton_subtractive_square.Name = "radioButton_subtractive_square";
-            this.radioButton_subtractive_square.Size = new System.Drawing.Size(59, 17);
-            this.radioButton_subtractive_square.TabIndex = 5;
-            this.radioButton_subtractive_square.TabStop = true;
-            this.radioButton_subtractive_square.Text = "Square";
-            this.radioButton_subtractive_square.UseVisualStyleBackColor = true;
-            // 
-            // radioButton_subtractive_triangle
-            // 
-            this.radioButton_subtractive_triangle.AutoSize = true;
-            this.radioButton_subtractive_triangle.Location = new System.Drawing.Point(6, 44);
-            this.radioButton_subtractive_triangle.Name = "radioButton_subtractive_triangle";
-            this.radioButton_subtractive_triangle.Size = new System.Drawing.Size(63, 17);
-            this.radioButton_subtractive_triangle.TabIndex = 6;
-            this.radioButton_subtractive_triangle.TabStop = true;
-            this.radioButton_subtractive_triangle.Text = "Triangle";
-            this.radioButton_subtractive_triangle.UseVisualStyleBackColor = true;
-            // 
-            // radioButton_subtractive_sawtooth
-            // 
-            this.radioButton_subtractive_sawtooth.AutoSize = true;
-            this.radioButton_subtractive_sawtooth.Location = new System.Drawing.Point(6, 68);
-            this.radioButton_subtractive_sawtooth.Name = "radioButton_subtractive_sawtooth";
-            this.radioButton_subtractive_sawtooth.Size = new System.Drawing.Size(70, 17);
-            this.radioButton_subtractive_sawtooth.TabIndex = 7;
-            this.radioButton_subtractive_sawtooth.TabStop = true;
-            this.radioButton_subtractive_sawtooth.Text = "Sawtooth";
-            this.radioButton_subtractive_sawtooth.UseVisualStyleBackColor = true;
-            // 
             // groupBox2
             // 
             this.groupBox2.Controls.Add(this.textBox_subtractive_freq2);
@@ -346,87 +247,6 @@
             this.groupBox2.TabIndex = 3;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Filter";
-            // 
-            // radioButton_subtractive_lowpass
-            // 
-            this.radioButton_subtractive_lowpass.AutoSize = true;
-            this.radioButton_subtractive_lowpass.Location = new System.Drawing.Point(7, 20);
-            this.radioButton_subtractive_lowpass.Name = "radioButton_subtractive_lowpass";
-            this.radioButton_subtractive_lowpass.Size = new System.Drawing.Size(70, 17);
-            this.radioButton_subtractive_lowpass.TabIndex = 0;
-            this.radioButton_subtractive_lowpass.TabStop = true;
-            this.radioButton_subtractive_lowpass.Text = "Low pass";
-            this.radioButton_subtractive_lowpass.UseVisualStyleBackColor = true;
-            this.radioButton_subtractive_lowpass.CheckedChanged += new System.EventHandler(this.radioButton_subtractive_lowpass_CheckedChanged);
-            // 
-            // radioButton_subtractive_highpass
-            // 
-            this.radioButton_subtractive_highpass.AutoSize = true;
-            this.radioButton_subtractive_highpass.Location = new System.Drawing.Point(7, 44);
-            this.radioButton_subtractive_highpass.Name = "radioButton_subtractive_highpass";
-            this.radioButton_subtractive_highpass.Size = new System.Drawing.Size(72, 17);
-            this.radioButton_subtractive_highpass.TabIndex = 1;
-            this.radioButton_subtractive_highpass.TabStop = true;
-            this.radioButton_subtractive_highpass.Text = "High pass";
-            this.radioButton_subtractive_highpass.UseVisualStyleBackColor = true;
-            this.radioButton_subtractive_highpass.CheckedChanged += new System.EventHandler(this.radioButton_subtractive_highpass_CheckedChanged);
-            // 
-            // radioButton_subtractive_bandpass
-            // 
-            this.radioButton_subtractive_bandpass.AutoSize = true;
-            this.radioButton_subtractive_bandpass.Location = new System.Drawing.Point(7, 68);
-            this.radioButton_subtractive_bandpass.Name = "radioButton_subtractive_bandpass";
-            this.radioButton_subtractive_bandpass.Size = new System.Drawing.Size(75, 17);
-            this.radioButton_subtractive_bandpass.TabIndex = 2;
-            this.radioButton_subtractive_bandpass.TabStop = true;
-            this.radioButton_subtractive_bandpass.Text = "Band pass";
-            this.radioButton_subtractive_bandpass.UseVisualStyleBackColor = true;
-            this.radioButton_subtractive_bandpass.CheckedChanged += new System.EventHandler(this.radioButton_subtractive_bandpass_CheckedChanged);
-            // 
-            // radioButton_subtractive_bandstop
-            // 
-            this.radioButton_subtractive_bandstop.AutoSize = true;
-            this.radioButton_subtractive_bandstop.Location = new System.Drawing.Point(7, 92);
-            this.radioButton_subtractive_bandstop.Name = "radioButton_subtractive_bandstop";
-            this.radioButton_subtractive_bandstop.Size = new System.Drawing.Size(73, 17);
-            this.radioButton_subtractive_bandstop.TabIndex = 3;
-            this.radioButton_subtractive_bandstop.TabStop = true;
-            this.radioButton_subtractive_bandstop.Text = "Band stop";
-            this.radioButton_subtractive_bandstop.UseVisualStyleBackColor = true;
-            this.radioButton_subtractive_bandstop.CheckedChanged += new System.EventHandler(this.radioButton_subtractive_bandstop_CheckedChanged);
-            // 
-            // trackBar_subtractive_freq1
-            // 
-            this.trackBar_subtractive_freq1.AllowDrop = true;
-            this.trackBar_subtractive_freq1.Enabled = false;
-            this.trackBar_subtractive_freq1.LargeChange = 50;
-            this.trackBar_subtractive_freq1.Location = new System.Drawing.Point(6, 168);
-            this.trackBar_subtractive_freq1.Maximum = 12000;
-            this.trackBar_subtractive_freq1.Name = "trackBar_subtractive_freq1";
-            this.trackBar_subtractive_freq1.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.trackBar_subtractive_freq1.Size = new System.Drawing.Size(490, 45);
-            this.trackBar_subtractive_freq1.SmallChange = 10;
-            this.trackBar_subtractive_freq1.TabIndex = 4;
-            this.trackBar_subtractive_freq1.TickFrequency = 1000;
-            this.trackBar_subtractive_freq1.Scroll += new System.EventHandler(this.trackBar_subtractive_freq1_Scroll);
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(6, 152);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(69, 13);
-            this.label5.TabIndex = 5;
-            this.label5.Text = "Frequency 1:";
-            // 
-            // textBox_subtractive_freq1
-            // 
-            this.textBox_subtractive_freq1.Enabled = false;
-            this.textBox_subtractive_freq1.Location = new System.Drawing.Point(81, 149);
-            this.textBox_subtractive_freq1.Name = "textBox_subtractive_freq1";
-            this.textBox_subtractive_freq1.Size = new System.Drawing.Size(100, 20);
-            this.textBox_subtractive_freq1.TabIndex = 6;
-            this.textBox_subtractive_freq1.Text = "0";
             // 
             // textBox_subtractive_freq2
             // 
@@ -462,6 +282,428 @@
             this.trackBar_subtractive_freq2.TickStyle = System.Windows.Forms.TickStyle.TopLeft;
             this.trackBar_subtractive_freq2.Scroll += new System.EventHandler(this.trackBar_subtractive_freq2_Scroll);
             // 
+            // textBox_subtractive_freq1
+            // 
+            this.textBox_subtractive_freq1.Enabled = false;
+            this.textBox_subtractive_freq1.Location = new System.Drawing.Point(81, 149);
+            this.textBox_subtractive_freq1.Name = "textBox_subtractive_freq1";
+            this.textBox_subtractive_freq1.Size = new System.Drawing.Size(100, 20);
+            this.textBox_subtractive_freq1.TabIndex = 6;
+            this.textBox_subtractive_freq1.Text = "0";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(6, 152);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(69, 13);
+            this.label5.TabIndex = 5;
+            this.label5.Text = "Frequency 1:";
+            // 
+            // trackBar_subtractive_freq1
+            // 
+            this.trackBar_subtractive_freq1.AllowDrop = true;
+            this.trackBar_subtractive_freq1.Enabled = false;
+            this.trackBar_subtractive_freq1.LargeChange = 50;
+            this.trackBar_subtractive_freq1.Location = new System.Drawing.Point(6, 168);
+            this.trackBar_subtractive_freq1.Maximum = 12000;
+            this.trackBar_subtractive_freq1.Name = "trackBar_subtractive_freq1";
+            this.trackBar_subtractive_freq1.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.trackBar_subtractive_freq1.Size = new System.Drawing.Size(490, 45);
+            this.trackBar_subtractive_freq1.SmallChange = 10;
+            this.trackBar_subtractive_freq1.TabIndex = 4;
+            this.trackBar_subtractive_freq1.TickFrequency = 1000;
+            this.trackBar_subtractive_freq1.Scroll += new System.EventHandler(this.trackBar_subtractive_freq1_Scroll);
+            // 
+            // radioButton_subtractive_bandstop
+            // 
+            this.radioButton_subtractive_bandstop.AutoSize = true;
+            this.radioButton_subtractive_bandstop.Location = new System.Drawing.Point(7, 92);
+            this.radioButton_subtractive_bandstop.Name = "radioButton_subtractive_bandstop";
+            this.radioButton_subtractive_bandstop.Size = new System.Drawing.Size(73, 17);
+            this.radioButton_subtractive_bandstop.TabIndex = 3;
+            this.radioButton_subtractive_bandstop.TabStop = true;
+            this.radioButton_subtractive_bandstop.Text = "Band stop";
+            this.radioButton_subtractive_bandstop.UseVisualStyleBackColor = true;
+            this.radioButton_subtractive_bandstop.CheckedChanged += new System.EventHandler(this.radioButton_subtractive_bandstop_CheckedChanged);
+            // 
+            // radioButton_subtractive_bandpass
+            // 
+            this.radioButton_subtractive_bandpass.AutoSize = true;
+            this.radioButton_subtractive_bandpass.Location = new System.Drawing.Point(7, 68);
+            this.radioButton_subtractive_bandpass.Name = "radioButton_subtractive_bandpass";
+            this.radioButton_subtractive_bandpass.Size = new System.Drawing.Size(75, 17);
+            this.radioButton_subtractive_bandpass.TabIndex = 2;
+            this.radioButton_subtractive_bandpass.TabStop = true;
+            this.radioButton_subtractive_bandpass.Text = "Band pass";
+            this.radioButton_subtractive_bandpass.UseVisualStyleBackColor = true;
+            this.radioButton_subtractive_bandpass.CheckedChanged += new System.EventHandler(this.radioButton_subtractive_bandpass_CheckedChanged);
+            // 
+            // radioButton_subtractive_highpass
+            // 
+            this.radioButton_subtractive_highpass.AutoSize = true;
+            this.radioButton_subtractive_highpass.Location = new System.Drawing.Point(7, 44);
+            this.radioButton_subtractive_highpass.Name = "radioButton_subtractive_highpass";
+            this.radioButton_subtractive_highpass.Size = new System.Drawing.Size(72, 17);
+            this.radioButton_subtractive_highpass.TabIndex = 1;
+            this.radioButton_subtractive_highpass.TabStop = true;
+            this.radioButton_subtractive_highpass.Text = "High pass";
+            this.radioButton_subtractive_highpass.UseVisualStyleBackColor = true;
+            this.radioButton_subtractive_highpass.CheckedChanged += new System.EventHandler(this.radioButton_subtractive_highpass_CheckedChanged);
+            // 
+            // radioButton_subtractive_lowpass
+            // 
+            this.radioButton_subtractive_lowpass.AutoSize = true;
+            this.radioButton_subtractive_lowpass.Location = new System.Drawing.Point(7, 20);
+            this.radioButton_subtractive_lowpass.Name = "radioButton_subtractive_lowpass";
+            this.radioButton_subtractive_lowpass.Size = new System.Drawing.Size(70, 17);
+            this.radioButton_subtractive_lowpass.TabIndex = 0;
+            this.radioButton_subtractive_lowpass.TabStop = true;
+            this.radioButton_subtractive_lowpass.Text = "Low pass";
+            this.radioButton_subtractive_lowpass.UseVisualStyleBackColor = true;
+            this.radioButton_subtractive_lowpass.CheckedChanged += new System.EventHandler(this.radioButton_subtractive_lowpass_CheckedChanged);
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.radioButton_subtractive_sawtooth);
+            this.groupBox1.Controls.Add(this.radioButton_subtractive_triangle);
+            this.groupBox1.Controls.Add(this.radioButton_subtractive_square);
+            this.groupBox1.Controls.Add(this.button_subtractive_toggle);
+            this.groupBox1.Controls.Add(this.label4);
+            this.groupBox1.Controls.Add(this.textBox_subtractive_frequency);
+            this.groupBox1.Controls.Add(this.knobControl1);
+            this.groupBox1.Location = new System.Drawing.Point(10, 36);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(182, 325);
+            this.groupBox1.TabIndex = 2;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Waveform";
+            // 
+            // radioButton_subtractive_sawtooth
+            // 
+            this.radioButton_subtractive_sawtooth.AutoSize = true;
+            this.radioButton_subtractive_sawtooth.Location = new System.Drawing.Point(6, 68);
+            this.radioButton_subtractive_sawtooth.Name = "radioButton_subtractive_sawtooth";
+            this.radioButton_subtractive_sawtooth.Size = new System.Drawing.Size(70, 17);
+            this.radioButton_subtractive_sawtooth.TabIndex = 7;
+            this.radioButton_subtractive_sawtooth.TabStop = true;
+            this.radioButton_subtractive_sawtooth.Text = "Sawtooth";
+            this.radioButton_subtractive_sawtooth.UseVisualStyleBackColor = true;
+            // 
+            // radioButton_subtractive_triangle
+            // 
+            this.radioButton_subtractive_triangle.AutoSize = true;
+            this.radioButton_subtractive_triangle.Location = new System.Drawing.Point(6, 44);
+            this.radioButton_subtractive_triangle.Name = "radioButton_subtractive_triangle";
+            this.radioButton_subtractive_triangle.Size = new System.Drawing.Size(63, 17);
+            this.radioButton_subtractive_triangle.TabIndex = 6;
+            this.radioButton_subtractive_triangle.TabStop = true;
+            this.radioButton_subtractive_triangle.Text = "Triangle";
+            this.radioButton_subtractive_triangle.UseVisualStyleBackColor = true;
+            // 
+            // radioButton_subtractive_square
+            // 
+            this.radioButton_subtractive_square.AutoSize = true;
+            this.radioButton_subtractive_square.Location = new System.Drawing.Point(7, 20);
+            this.radioButton_subtractive_square.Name = "radioButton_subtractive_square";
+            this.radioButton_subtractive_square.Size = new System.Drawing.Size(59, 17);
+            this.radioButton_subtractive_square.TabIndex = 5;
+            this.radioButton_subtractive_square.TabStop = true;
+            this.radioButton_subtractive_square.Text = "Square";
+            this.radioButton_subtractive_square.UseVisualStyleBackColor = true;
+            // 
+            // button_subtractive_toggle
+            // 
+            this.button_subtractive_toggle.Location = new System.Drawing.Point(65, 190);
+            this.button_subtractive_toggle.Name = "button_subtractive_toggle";
+            this.button_subtractive_toggle.Size = new System.Drawing.Size(38, 23);
+            this.button_subtractive_toggle.TabIndex = 4;
+            this.button_subtractive_toggle.Text = "High";
+            this.button_subtractive_toggle.UseVisualStyleBackColor = true;
+            this.button_subtractive_toggle.Click += new System.EventHandler(this.button_subtractive_toggle_Click);
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(23, 293);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(60, 13);
+            this.label4.TabIndex = 3;
+            this.label4.Text = "Frequency:";
+            // 
+            // textBox_subtractive_frequency
+            // 
+            this.textBox_subtractive_frequency.Location = new System.Drawing.Point(89, 290);
+            this.textBox_subtractive_frequency.Name = "textBox_subtractive_frequency";
+            this.textBox_subtractive_frequency.Size = new System.Drawing.Size(59, 20);
+            this.textBox_subtractive_frequency.TabIndex = 2;
+            this.textBox_subtractive_frequency.Text = "100";
+            // 
+            // knobControl1
+            // 
+            this.knobControl1.DrawDivInside = true;
+            this.knobControl1.EndAngle = 405F;
+            this.knobControl1.ImeMode = System.Windows.Forms.ImeMode.Close;
+            this.knobControl1.KnobBackColor = System.Drawing.Color.White;
+            this.knobControl1.KnobPointerStyle = KnobControl.KnobControl.KnobPointerStyles.line;
+            this.knobControl1.LargeChange = 5;
+            this.knobControl1.Location = new System.Drawing.Point(6, 125);
+            this.knobControl1.Maximum = 12000;
+            this.knobControl1.Minimum = 0;
+            this.knobControl1.Name = "knobControl1";
+            this.knobControl1.PointerColor = System.Drawing.Color.LightSteelBlue;
+            this.knobControl1.ScaleColor = System.Drawing.Color.Black;
+            this.knobControl1.ScaleDivisions = 11;
+            this.knobControl1.ScaleFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.knobControl1.ScaleSubDivisions = 4;
+            this.knobControl1.ShowLargeScale = true;
+            this.knobControl1.ShowSmallScale = false;
+            this.knobControl1.Size = new System.Drawing.Size(159, 159);
+            this.knobControl1.SmallChange = 1;
+            this.knobControl1.StartAngle = 135F;
+            this.knobControl1.TabIndex = 1;
+            this.knobControl1.Value = 100;
+            this.knobControl1.ValueChanged += new KnobControl.ValueChangedEventHandler(this.knobControl1_ValueChanged);
+            this.knobControl1.Load += new System.EventHandler(this.knobControl1_Load);
+            // 
+            // button_subtractive_en
+            // 
+            this.button_subtractive_en.ForeColor = System.Drawing.Color.Red;
+            this.button_subtractive_en.Location = new System.Drawing.Point(6, 6);
+            this.button_subtractive_en.Name = "button_subtractive_en";
+            this.button_subtractive_en.Size = new System.Drawing.Size(75, 23);
+            this.button_subtractive_en.TabIndex = 0;
+            this.button_subtractive_en.Text = "Disabled";
+            this.button_subtractive_en.UseVisualStyleBackColor = true;
+            this.button_subtractive_en.Click += new System.EventHandler(this.button_subtractive_en_Click);
+            // 
+            // tabPage_additive
+            // 
+            this.tabPage_additive.BackColor = System.Drawing.Color.Brown;
+            this.tabPage_additive.CausesValidation = false;
+            this.tabPage_additive.Controls.Add(this.tabControl1);
+            this.tabPage_additive.Location = new System.Drawing.Point(4, 22);
+            this.tabPage_additive.Name = "tabPage_additive";
+            this.tabPage_additive.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage_additive.Size = new System.Drawing.Size(792, 426);
+            this.tabPage_additive.TabIndex = 2;
+            this.tabPage_additive.Text = "Additive";
+            this.tabPage_additive.Click += new System.EventHandler(this.tabPage_additive_Click);
+            // 
+            // tabControl1
+            // 
+            this.tabControl1.Controls.Add(this.tabPage_additive_hammond);
+            this.tabControl1.Controls.Add(this.tabPage3);
+            this.tabControl1.ItemSize = new System.Drawing.Size(97, 18);
+            this.tabControl1.Location = new System.Drawing.Point(0, 6);
+            this.tabControl1.Name = "tabControl1";
+            this.tabControl1.SelectedIndex = 0;
+            this.tabControl1.Size = new System.Drawing.Size(792, 420);
+            this.tabControl1.TabIndex = 7;
+            // 
+            // tabPage_additive_hammond
+            // 
+            this.tabPage_additive_hammond.Controls.Add(this.drawbar1);
+            this.tabPage_additive_hammond.Controls.Add(this.button_additive_hammond_en);
+            this.tabPage_additive_hammond.Controls.Add(this.drawbar6);
+            this.tabPage_additive_hammond.Controls.Add(this.drawbar2);
+            this.tabPage_additive_hammond.Controls.Add(this.drawbar5);
+            this.tabPage_additive_hammond.Controls.Add(this.drawbar3);
+            this.tabPage_additive_hammond.Controls.Add(this.drawbar4);
+            this.tabPage_additive_hammond.Location = new System.Drawing.Point(4, 22);
+            this.tabPage_additive_hammond.Name = "tabPage_additive_hammond";
+            this.tabPage_additive_hammond.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage_additive_hammond.Size = new System.Drawing.Size(784, 394);
+            this.tabPage_additive_hammond.TabIndex = 0;
+            this.tabPage_additive_hammond.Text = "Hammond Organs";
+            this.tabPage_additive_hammond.UseVisualStyleBackColor = true;
+            this.tabPage_additive_hammond.Click += new System.EventHandler(this.tabPage_additive_hammond_Click);
+            // 
+            // drawbar1
+            // 
+            this.drawbar1.BackColor = System.Drawing.Color.DimGray;
+            this.drawbar1.EndAngle = 405F;
+            this.drawbar1.ImeMode = System.Windows.Forms.ImeMode.On;
+            this.drawbar1.KnobBackColor = System.Drawing.Color.Transparent;
+            this.drawbar1.KnobPointerStyle = KnobControl.KnobControl.KnobPointerStyles.circle;
+            this.drawbar1.LargeChange = 1;
+            this.drawbar1.Location = new System.Drawing.Point(6, 168);
+            this.drawbar1.Maximum = 8;
+            this.drawbar1.Minimum = 0;
+            this.drawbar1.MouseWheelBarPartitions = 1;
+            this.drawbar1.Name = "drawbar1";
+            this.drawbar1.PointerColor = System.Drawing.Color.SlateBlue;
+            this.drawbar1.ScaleColor = System.Drawing.Color.Black;
+            this.drawbar1.ScaleDivisions = 9;
+            this.drawbar1.ScaleFont = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.drawbar1.ScaleFontAutoSize = false;
+            this.drawbar1.ScaleSubDivisions = 4;
+            this.drawbar1.ShowLargeScale = true;
+            this.drawbar1.ShowSmallScale = false;
+            this.drawbar1.Size = new System.Drawing.Size(122, 122);
+            this.drawbar1.SmallChange = 1;
+            this.drawbar1.StartAngle = 135F;
+            this.drawbar1.TabIndex = 1;
+            this.drawbar1.Value = 0;
+            this.drawbar1.Load += new System.EventHandler(this.drawbar1_Load_1);
+            // 
+            // drawbar6
+            // 
+            this.drawbar6.BackColor = System.Drawing.Color.DimGray;
+            this.drawbar6.EndAngle = 405F;
+            this.drawbar6.ImeMode = System.Windows.Forms.ImeMode.On;
+            this.drawbar6.KnobBackColor = System.Drawing.Color.White;
+            this.drawbar6.KnobPointerStyle = KnobControl.KnobControl.KnobPointerStyles.circle;
+            this.drawbar6.LargeChange = 1;
+            this.drawbar6.Location = new System.Drawing.Point(646, 168);
+            this.drawbar6.Maximum = 8;
+            this.drawbar6.Minimum = 0;
+            this.drawbar6.MouseWheelBarPartitions = 1;
+            this.drawbar6.Name = "drawbar6";
+            this.drawbar6.PointerColor = System.Drawing.Color.SlateBlue;
+            this.drawbar6.ScaleColor = System.Drawing.Color.Black;
+            this.drawbar6.ScaleDivisions = 9;
+            this.drawbar6.ScaleFont = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.drawbar6.ScaleFontAutoSize = false;
+            this.drawbar6.ScaleSubDivisions = 4;
+            this.drawbar6.ShowLargeScale = true;
+            this.drawbar6.ShowSmallScale = false;
+            this.drawbar6.Size = new System.Drawing.Size(122, 122);
+            this.drawbar6.SmallChange = 1;
+            this.drawbar6.StartAngle = 135F;
+            this.drawbar6.TabIndex = 6;
+            this.drawbar6.Value = 0;
+            // 
+            // drawbar2
+            // 
+            this.drawbar2.BackColor = System.Drawing.Color.DimGray;
+            this.drawbar2.EndAngle = 405F;
+            this.drawbar2.ImeMode = System.Windows.Forms.ImeMode.On;
+            this.drawbar2.KnobBackColor = System.Drawing.Color.White;
+            this.drawbar2.KnobPointerStyle = KnobControl.KnobControl.KnobPointerStyles.circle;
+            this.drawbar2.LargeChange = 1;
+            this.drawbar2.Location = new System.Drawing.Point(134, 168);
+            this.drawbar2.Maximum = 8;
+            this.drawbar2.Minimum = 0;
+            this.drawbar2.MouseWheelBarPartitions = 1;
+            this.drawbar2.Name = "drawbar2";
+            this.drawbar2.PointerColor = System.Drawing.Color.SlateBlue;
+            this.drawbar2.ScaleColor = System.Drawing.Color.Black;
+            this.drawbar2.ScaleDivisions = 9;
+            this.drawbar2.ScaleFont = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.drawbar2.ScaleFontAutoSize = false;
+            this.drawbar2.ScaleSubDivisions = 4;
+            this.drawbar2.ShowLargeScale = true;
+            this.drawbar2.ShowSmallScale = false;
+            this.drawbar2.Size = new System.Drawing.Size(122, 122);
+            this.drawbar2.SmallChange = 1;
+            this.drawbar2.StartAngle = 135F;
+            this.drawbar2.TabIndex = 1;
+            this.drawbar2.Value = 0;
+            // 
+            // drawbar5
+            // 
+            this.drawbar5.BackColor = System.Drawing.Color.DimGray;
+            this.drawbar5.EndAngle = 405F;
+            this.drawbar5.ImeMode = System.Windows.Forms.ImeMode.On;
+            this.drawbar5.KnobBackColor = System.Drawing.Color.White;
+            this.drawbar5.KnobPointerStyle = KnobControl.KnobControl.KnobPointerStyles.circle;
+            this.drawbar5.LargeChange = 1;
+            this.drawbar5.Location = new System.Drawing.Point(518, 168);
+            this.drawbar5.Maximum = 8;
+            this.drawbar5.Minimum = 0;
+            this.drawbar5.MouseWheelBarPartitions = 1;
+            this.drawbar5.Name = "drawbar5";
+            this.drawbar5.PointerColor = System.Drawing.Color.SlateBlue;
+            this.drawbar5.ScaleColor = System.Drawing.Color.Black;
+            this.drawbar5.ScaleDivisions = 9;
+            this.drawbar5.ScaleFont = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.drawbar5.ScaleFontAutoSize = false;
+            this.drawbar5.ScaleSubDivisions = 4;
+            this.drawbar5.ShowLargeScale = true;
+            this.drawbar5.ShowSmallScale = false;
+            this.drawbar5.Size = new System.Drawing.Size(122, 122);
+            this.drawbar5.SmallChange = 1;
+            this.drawbar5.StartAngle = 135F;
+            this.drawbar5.TabIndex = 5;
+            this.drawbar5.Value = 0;
+            // 
+            // drawbar3
+            // 
+            this.drawbar3.BackColor = System.Drawing.Color.DimGray;
+            this.drawbar3.EndAngle = 405F;
+            this.drawbar3.ImeMode = System.Windows.Forms.ImeMode.On;
+            this.drawbar3.KnobBackColor = System.Drawing.Color.White;
+            this.drawbar3.KnobPointerStyle = KnobControl.KnobControl.KnobPointerStyles.circle;
+            this.drawbar3.LargeChange = 1;
+            this.drawbar3.Location = new System.Drawing.Point(262, 168);
+            this.drawbar3.Maximum = 8;
+            this.drawbar3.Minimum = 0;
+            this.drawbar3.MouseWheelBarPartitions = 1;
+            this.drawbar3.Name = "drawbar3";
+            this.drawbar3.PointerColor = System.Drawing.Color.SlateBlue;
+            this.drawbar3.ScaleColor = System.Drawing.Color.Black;
+            this.drawbar3.ScaleDivisions = 9;
+            this.drawbar3.ScaleFont = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.drawbar3.ScaleFontAutoSize = false;
+            this.drawbar3.ScaleSubDivisions = 4;
+            this.drawbar3.ShowLargeScale = true;
+            this.drawbar3.ShowSmallScale = false;
+            this.drawbar3.Size = new System.Drawing.Size(122, 122);
+            this.drawbar3.SmallChange = 1;
+            this.drawbar3.StartAngle = 135F;
+            this.drawbar3.TabIndex = 2;
+            this.drawbar3.Value = 0;
+            this.drawbar3.Load += new System.EventHandler(this.drawbar3_Load);
+            // 
+            // drawbar4
+            // 
+            this.drawbar4.BackColor = System.Drawing.Color.DimGray;
+            this.drawbar4.EndAngle = 405F;
+            this.drawbar4.ImeMode = System.Windows.Forms.ImeMode.On;
+            this.drawbar4.KnobBackColor = System.Drawing.Color.White;
+            this.drawbar4.KnobPointerStyle = KnobControl.KnobControl.KnobPointerStyles.circle;
+            this.drawbar4.LargeChange = 1;
+            this.drawbar4.Location = new System.Drawing.Point(390, 168);
+            this.drawbar4.Maximum = 8;
+            this.drawbar4.Minimum = 0;
+            this.drawbar4.MouseWheelBarPartitions = 1;
+            this.drawbar4.Name = "drawbar4";
+            this.drawbar4.PointerColor = System.Drawing.Color.SlateBlue;
+            this.drawbar4.ScaleColor = System.Drawing.Color.Black;
+            this.drawbar4.ScaleDivisions = 9;
+            this.drawbar4.ScaleFont = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.drawbar4.ScaleFontAutoSize = false;
+            this.drawbar4.ScaleSubDivisions = 4;
+            this.drawbar4.ShowLargeScale = true;
+            this.drawbar4.ShowSmallScale = false;
+            this.drawbar4.Size = new System.Drawing.Size(122, 122);
+            this.drawbar4.SmallChange = 1;
+            this.drawbar4.StartAngle = 135F;
+            this.drawbar4.TabIndex = 4;
+            this.drawbar4.Value = 0;
+            // 
+            // tabPage3
+            // 
+            this.tabPage3.Location = new System.Drawing.Point(4, 22);
+            this.tabPage3.Name = "tabPage3";
+            this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage3.Size = new System.Drawing.Size(784, 394);
+            this.tabPage3.TabIndex = 1;
+            this.tabPage3.Text = "tabPage3";
+            this.tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // button_additive_hammond_en
+            // 
+            this.button_additive_hammond_en.ForeColor = System.Drawing.Color.Red;
+            this.button_additive_hammond_en.Location = new System.Drawing.Point(6, 3);
+            this.button_additive_hammond_en.Name = "button_additive_hammond_en";
+            this.button_additive_hammond_en.Size = new System.Drawing.Size(75, 23);
+            this.button_additive_hammond_en.TabIndex = 3;
+            this.button_additive_hammond_en.Text = "Disabled";
+            this.button_additive_hammond_en.UseVisualStyleBackColor = true;
+            this.button_additive_hammond_en.Click += new System.EventHandler(this.button_additive_en_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -474,12 +716,15 @@
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
             this.tabPage_subtractive.ResumeLayout(false);
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBar_subtractive_freq1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar_subtractive_freq2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBar_subtractive_freq1)).EndInit();
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
+            this.tabPage_additive.ResumeLayout(false);
+            this.tabControl1.ResumeLayout(false);
+            this.tabPage_additive_hammond.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -520,6 +765,17 @@
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.TrackBar trackBar_subtractive_freq2;
         private System.Windows.Forms.TextBox textBox_subtractive_freq1;
+        private System.Windows.Forms.TabPage tabPage_additive;
+        private System.Windows.Forms.Button button_additive_hammond_en;
+        private KnobControl.KnobControl drawbar3;
+        private KnobControl.KnobControl drawbar2;
+        private KnobControl.KnobControl drawbar4;
+        private KnobControl.KnobControl drawbar6;
+        private KnobControl.KnobControl drawbar5;
+        private System.Windows.Forms.TabControl tabControl1;
+        private System.Windows.Forms.TabPage tabPage_additive_hammond;
+        private KnobControl.KnobControl drawbar1;
+        private System.Windows.Forms.TabPage tabPage3;
     }
 }
 
