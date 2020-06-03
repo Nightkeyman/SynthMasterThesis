@@ -11,7 +11,7 @@ void lowPassFilter(int freq) {
 	freq = N - 2*freq*N/Fs - 1;
 	int i = 0;
 	for(i = 0; i < 2*N; i+=2) {		// Liczenie modulu widma
-		if((i/2 >= (N - freq)) && (i/2 <= (N + freq))) {	// Stworzenie filtru dolnoprzepustowego idealnego
+		if((i >= (N - freq)) && (i <= (N + freq))) {	// Stworzenie filtru dolnoprzepustowego idealnego
 			v[i] = 0;
 			v[i+1] = 0;
 		}

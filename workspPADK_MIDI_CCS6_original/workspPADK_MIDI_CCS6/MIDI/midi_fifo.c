@@ -10,7 +10,7 @@
 volatile unsigned char MIDI_buff[MIDI_buff_length] = {{0}};
 unsigned char MIDI_buff_iterator = 0;
 
-void MIDI_push(unsigned char data){ // 600 nanoseconds
+void MIDI_push(unsigned char data){
 	MIDI_buff_iterator++;
     if (MIDI_buff_iterator >= MIDI_buff_length)
     	MIDI_buff_iterator = 0;
