@@ -11,6 +11,8 @@ workspPADK_MIDI_CCS6_original/workspPADK_MIDI_CCS6/MIDI/.launches/
 workspPADK_MIDI_CCS6_original/.metadata/
 workspPADK_MIDI_CCS6_original/workspPADK_MIDI_CCS6/.metadata/
 workspPADK_MIDI_CCS6_original/workspPADK_MIDI_CCS6/PADK_USB1/
+workspPADK_MIDI_CCS6_original/workspPADK_MIDI_CCS6/MIDI/.metadata/
+workspPADK_MIDI_CCS6_original/workspPADK_MIDI_CCS6/MIDI/RemoteSystemsTempFiles/
 
 # File types:
 *.exe
@@ -19,6 +21,7 @@ workspPADK_MIDI_CCS6_original/workspPADK_MIDI_CCS6/PADK_USB1/
 *.asv
 *.zip
 *.wav
+*.reapeaks
 
 # Files:
 UARTCOM/UARTCOM2/obj/Debug/UARTCOM.csproj.GenerateResource.cache

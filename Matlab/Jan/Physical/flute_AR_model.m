@@ -1,4 +1,4 @@
-close all
+%close all
 clear
 Fs = 44100;
 f = 1:2048;
@@ -22,9 +22,9 @@ f = ((f-1)/fft_size)*Fs;
 plot(f,spect_dens);
 
 axis([0 4000 -40 40])
-title('Flute sound spectral density');
-xlabel("Frequency [Hz]")
-ylabel("Amplitude [dB]")
+title('Widmo czêstotliwoœciowe dŸwiêku fletu (A razkreœlne)');
+xlabel("Czestotliwosc [Hz]")
+ylabel("Amplituda [dB]")
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -32,7 +32,7 @@ f = 0:0.1:round(Fs/2);
 T = 3;
 s = [1 zeros(1,length(0:1/Fs:T-1/Fs))];
 insig = randn(length(0:1/Fs:T-1/Fs), 1);
-insig = ADSR(insig,4,4,2,2);
+insig = ADSR(insig,3,4,2,2);
 % insig = noise(length(0:1/Fs:T-1/Fs), 1, 'white');
 note = 60
 Resonances_freq_A = [440*1.059463^(note - 60) 440*1.059463^(note - 48) 440*1.059463^(note - 41) 440*1.059463^(note - 36) 440*1.059463^(note - 33) 440*1.059463^(note - 29) 440*1.059463^(note - 24)];
@@ -41,7 +41,6 @@ Resonances_mag_A = [33.6 30.58 18.289 22.35 4.53 0.67 -4.06];
 Resonances_mag_A = 200.^(Resonances_mag_A/20);
 Apoles = zeros(length(Resonances_freq_A)*2,1);
 for i=1:2:length(Apoles)
-  
     Apoles(i) = (1 - 0.05/Resonances_mag_A(fix((i+1)/2)))*exp(1i*Resonances_freq_A((i+1)/2)*2*pi/Fs);
     Apoles(i+1) = (1 - 0.05/Resonances_mag_A(fix((i+1)/2)))*exp(-1i*Resonances_freq_A((i+1)/2)*2*pi/Fs);
 end
@@ -68,8 +67,8 @@ title('Zplane of flute model')
 figure(2)
 plot(F,20*log10(abs(H)))
 grid on
-xlabel('Frequency (Hz)')
-ylabel('Amp (dB)')
+xlabel("Czestotliwosc [Hz]")
+ylabel("Amplituda [dB]")
 axis([0 5000 0 100]);
 
 abs(Apoles);
