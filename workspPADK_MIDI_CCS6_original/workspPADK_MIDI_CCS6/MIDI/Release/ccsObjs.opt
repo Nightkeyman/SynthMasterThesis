@@ -1,0 +1,1 @@
+"./filters.obj" "./interrupts.obj" "./main.obj" "./midi_fifo.obj" "./myfft.obj" "./waveforms.obj" "../dsp67x.lib" "../padk.cmd" -l"libc.a" 

@@ -90,7 +90,7 @@ int main( int argc, char *argv[] ) {
 
     while(1)  {
     	if (bylklawisz == 1){
-			if (mode == subtractive){
+			//if (mode == subtractive){
 				for(j = 0; j < 2*N; j++)
 						waveform2[j] = 0;
 
@@ -106,7 +106,7 @@ int main( int argc, char *argv[] ) {
 					for(j = 0; j < 2*N; j++)
 						waveform[j] = waveform2[j];
 				}
-			}
+			//}
     	}
     	/*
     	// MONOPHONIC KEYBOARD
