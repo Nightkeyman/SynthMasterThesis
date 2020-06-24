@@ -90,6 +90,7 @@ int Buf[N];  // bufor pomocniczy do "obserwacji" danych wyjœciowych
 int k=0;
 extern float waveform[N];
 int wav_iterator = 0;
+volatile unsigned PP;
 
 #define Fs 96000
 #define M_PI 3.1416
@@ -159,10 +160,9 @@ interrupt void uart_isr( void )
 
 interrupt void dmax_isr( void )
 {
-	unsigned PP;
     volatile unsigned *GPTransferEntry;
     static int *pDac = (int *)dmaxDacBuffer[0];
-    static int *pAdc = (int *)dmaxAdcBuffer[0];
+    //static int *pAdc = (int *)dmaxAdcBuffer[0];
 
 	// Verify if a DAC transfer completed
 	if( hDmaxDac->regs->DTCR0 & (1<<DAC_TCC) )
@@ -175,16 +175,16 @@ interrupt void dmax_isr( void )
 	    PP = GPTransferEntry[2] >> 31;
 		pDac = (int *)dmaxDacBuffer[!PP];
 
-		OBuf2.pBuf = pDac;
+		OBuf3.pBuf = pDac;
 		//memcpy((int)waveform[wav_iterator], OBuf2.ptab[LEFT][CH_0], FRAME_SIZE);
-		OBuf2.ptab[LEFT][CH_0] = (int)waveform[wav_iterator];
-		OBuf2.ptab[RIGHT][CH_0] = (int)waveform[wav_iterator];
+		//OBuf2.ptab[LEFT][CH_0] = (int)waveform[wav_iterator];
+		//OBuf2.ptab[RIGHT][CH_0] = (int)waveform[wav_iterator];
 
 		wav_iterator = wav_iterator + 1;
 		if(wav_iterator >= N)
 			wav_iterator = 0;
 
-        Buf[k] = OBuf2.ptab[LEFT][CH_0];  //Zapamiêtanie próbki wyjœciowej
+        Buf[k] = OBuf3.ptab[LEFT][CH_0][20];  //Zapamiêtanie próbki wyjœciowej
         k++;							  //w buforze pomocniczym
         if (k == N) { k = 0; }
 	}

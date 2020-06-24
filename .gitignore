@@ -7,12 +7,14 @@ workspPADK_UART_CCS6/.metadata/
 workspPADK_UART_CCS6/UART/Debug/
 workspPADK_UART_CCS6/UART/.lanuches/
 workspPADK_MIDI_CCS6_original/workspPADK_MIDI_CCS6/MIDI/Debug/
+workspPADK_MIDI_CCS6_original/workspPADK_MIDI_CCS6/MIDI/Release/
 workspPADK_MIDI_CCS6_original/workspPADK_MIDI_CCS6/MIDI/.launches/
 workspPADK_MIDI_CCS6_original/.metadata/
 workspPADK_MIDI_CCS6_original/workspPADK_MIDI_CCS6/.metadata/
 workspPADK_MIDI_CCS6_original/workspPADK_MIDI_CCS6/PADK_USB1/
 workspPADK_MIDI_CCS6_original/workspPADK_MIDI_CCS6/MIDI/.metadata/
 workspPADK_MIDI_CCS6_original/workspPADK_MIDI_CCS6/MIDI/RemoteSystemsTempFiles/
+workspPADK_MIDI_CCS6_original/workspPADK_MIDI_CCS6/MIDI/.settings/
 
 # File types:
 *.exe
@@ -24,6 +26,7 @@ workspPADK_MIDI_CCS6_original/workspPADK_MIDI_CCS6/MIDI/RemoteSystemsTempFiles/
 *.reapeaks
 
 # Files:
+workspPADK_MIDI_CCS6_original/workspPADK_MIDI_CCS6/MIDI/.csproject
 UARTCOM/UARTCOM2/obj/Debug/UARTCOM.csproj.GenerateResource.cache
 UARTCOM/UARTCOM2/obj/Debug/UARTCOM.csproj.FileListAbsolute.txt
 UARTCOM/UARTCOM2/obj/Debug/UARTCOM.csproj.CoreCompileInputs.cache

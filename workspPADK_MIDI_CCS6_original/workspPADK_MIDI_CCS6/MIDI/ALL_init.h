@@ -193,19 +193,19 @@
     adcGpxfrParameterSetup.srcIndex0 = (Int16)1;
 
     // Destination Index0 Value
-    adcGpxfrParameterSetup.dstIndex0 = (Int16)FRAME_SIZE;
+    adcGpxfrParameterSetup.dstIndex0 = (Int16)1;
 
     // Source Index1 Value
     adcGpxfrParameterSetup.srcIndex1 = (Int16)-(NUM_CHANNEL-1);
 
     // Destination Index1 Value
-    adcGpxfrParameterSetup.dstIndex1 = (Int16)FRAME_SIZE;
+    adcGpxfrParameterSetup.dstIndex1 = (Int16)1;
 
     // Source Index2 Value
     adcGpxfrParameterSetup.srcIndex2 = (Int16)-(NUM_CHANNEL-1);
 
     // Destination Index2 Value
-    adcGpxfrParameterSetup.dstIndex2 = (Int16)-( (STEREO*NUM_CHANNEL-1)*FRAME_SIZE - 1),
+    adcGpxfrParameterSetup.dstIndex2 = (Int16)-( (STEREO*NUM_CHANNEL-1)*1 - 1),
 
     // Dimension 0 Count Value
     adcGpxfrParameterSetup.count0 = (Uint16)NUM_CHANNEL;
@@ -214,7 +214,7 @@
     adcGpxfrParameterSetup.count1 = (Uint16)STEREO;
 
     // Dimension 2 Count Value
-    adcGpxfrParameterSetup.count2 = (Uint16)FRAME_SIZE;
+    adcGpxfrParameterSetup.count2 = (Uint16)1;
 
 
     //
