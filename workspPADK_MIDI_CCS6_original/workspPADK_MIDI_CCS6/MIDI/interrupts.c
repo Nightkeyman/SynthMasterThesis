@@ -4,7 +4,8 @@
 #include <csl_dmax.h>
 #include <csl_mcasp.h>
 #include <stdint.h>
-
+#include <stdio.h>
+#include <string.h>
 
 interrupt void dmax_isr( void );
 interrupt void nmi_isr( void );
@@ -162,8 +163,6 @@ interrupt void dmax_isr( void )
     volatile unsigned *GPTransferEntry;
     static int *pDac = (int *)dmaxDacBuffer[0];
     static int *pAdc = (int *)dmaxAdcBuffer[0];
-    //sound = generator_interator - Fs/200;
-    //sound_double = (sin((double)(generator_interator)*2.0*M_PI*(1*100.0)*(1.0/Fs)));
 
 	// Verify if a DAC transfer completed
 	if( hDmaxDac->regs->DTCR0 & (1<<DAC_TCC) )
@@ -173,59 +172,15 @@ interrupt void dmax_isr( void )
 		// Save the pointer of the audio buffer that has just been transmitted
 	    GPTransferEntry  = (unsigned *)&hDmaxDac->regs->HiPriorityEventTable;
 		GPTransferEntry += ((*(hDmaxDac->hiTableEventEntryPtr)>>8)&0x07F);
-	    PP = GPTransferEntry[2] >> 31;     	
-		pDac = (int *)dmaxDacBuffer[!PP]; 
-	}
-	// Verify if a ADC transfer completed
-	if( hDmaxAdc->regs->DTCR0 & (1<<ADC_TCC) )
-	{
-		hDmaxAdc->regs->DTCR0 = (1<<ADC_TCC);
-
-		// Save the pointer of the audio buffer that has just been filled
-		GPTransferEntry  = (unsigned *)&hDmaxAdc->regs->HiPriorityEventTable;
-		GPTransferEntry += ((*(hDmaxAdc->hiTableEventEntryPtr)>>8)&0x07F);
-	    PP = GPTransferEntry[2] >> 31;     	
-		pAdc = (int *)dmaxAdcBuffer[!PP];
-		IBuf2.pBuf = pAdc;
-		we[LEFT][CH_0] = IBuf2.ptab[LEFT][CH_0];
-		we[RIGHT][CH_0] = IBuf2.ptab[RIGHT][CH_0];
-		we[LEFT][CH_1] = IBuf2.ptab[LEFT][CH_1];
-		we[RIGHT][CH_1] = IBuf2.ptab[RIGHT][CH_1];
-		we[LEFT][CH_2] = IBuf2.ptab[LEFT][CH_2];
-		we[RIGHT][CH_2] = IBuf2.ptab[RIGHT][CH_2];
-		we[LEFT][CH_3] = IBuf2.ptab[LEFT][CH_3];
-		we[RIGHT][CH_3] = IBuf2.ptab[RIGHT][CH_3];
-
-
-		wy[LEFT][CH_0] = gain * we[LEFT][CH_0];
-		wy[RIGHT][CH_0] = gain * we[RIGHT][CH_0];
-		wy[LEFT][CH_1] = gain * we[LEFT][CH_1];
-		wy[RIGHT][CH_1] = gain * we[RIGHT][CH_1];
-		wy[LEFT][CH_2] = gain * we[LEFT][CH_2];
-		wy[RIGHT][CH_2] = gain * we[RIGHT][CH_2];
-		wy[LEFT][CH_3] = gain * we[LEFT][CH_3];
-		wy[RIGHT][CH_3] = gain * we[RIGHT][CH_3];
+	    PP = GPTransferEntry[2] >> 31;
+		pDac = (int *)dmaxDacBuffer[!PP];
 
 		OBuf2.pBuf = pDac;
+		//memcpy((int)waveform[wav_iterator], OBuf2.ptab[LEFT][CH_0], FRAME_SIZE);
 		OBuf2.ptab[LEFT][CH_0] = (int)waveform[wav_iterator];
 		OBuf2.ptab[RIGHT][CH_0] = (int)waveform[wav_iterator];
-		OBuf2.ptab[LEFT][CH_1] = wy[LEFT][CH_1];
-		OBuf2.ptab[RIGHT][CH_1] = wy[RIGHT][CH_1];
-		OBuf2.ptab[LEFT][CH_2] = wy[LEFT][CH_2];
-		OBuf2.ptab[RIGHT][CH_2] = wy[RIGHT][CH_2];
-		OBuf2.ptab[LEFT][CH_3] = wy[LEFT][CH_3];
-		OBuf2.ptab[RIGHT][CH_3] = wy[RIGHT][CH_3];
 
-//		OBuf2.ptab[LEFT_o][CH_0] = wy[LEFT][CH_0];  // zamiana kanalów: Left <-> Right
-//		OBuf2.ptab[RIGHT_o][CH_0] = wy[RIGHT][CH_0];
-//		OBuf2.ptab[LEFT_o][CH_1] = wy[LEFT][CH_1];
-//		OBuf2.ptab[RIGHT_o][CH_1] = wy[RIGHT][CH_1];
-//		OBuf2.ptab[LEFT_o][CH_2] = wy[LEFT][CH_2];
-//		OBuf2.ptab[RIGHT_o][CH_2] = wy[RIGHT][CH_2];
-//		OBuf2.ptab[LEFT_o][CH_3] = wy[LEFT][CH_3];
-//		OBuf2.ptab[RIGHT_o][CH_3] = wy[RIGHT][CH_3];
-
-		wav_iterator++;
+		wav_iterator = wav_iterator + 1;
 		if(wav_iterator >= N)
 			wav_iterator = 0;
 
