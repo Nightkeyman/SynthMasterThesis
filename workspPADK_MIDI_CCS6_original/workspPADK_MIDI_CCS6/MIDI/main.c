@@ -48,7 +48,7 @@ float mySin(int counter, float freq)
 //
 //  Main Function
 //
-
+#define SIN(counter, freq) sinusek[(int)((float)counter*freq*(0.02083333333))%2000]
 int main( int argc, char *argv[] ) {
 
 	#include "ALL_init.h"
