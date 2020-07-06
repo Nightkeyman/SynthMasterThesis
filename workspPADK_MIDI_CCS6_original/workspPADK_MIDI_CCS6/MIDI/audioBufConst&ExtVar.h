@@ -25,7 +25,7 @@ extern CSL_IntcEventEnableState eventStat_midi;
 //  Audio Buffers const
 //
 //#define FRAME_SIZE  80
-#define FRAME_SIZE  217
+#define FRAME_SIZE  128
 #define NUM_CHANNEL 4
 #define STEREO      2
 #define PINGPONG    2

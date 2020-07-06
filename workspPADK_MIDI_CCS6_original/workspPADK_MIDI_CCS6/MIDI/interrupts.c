@@ -88,15 +88,17 @@ int wy[STEREO][NUM_CHANNEL];
 int Buf_1[N];  // bufor pomocniczy do "obserwacji" danych wejsciowych
 int Buf[N];  // bufor pomocniczy do "obserwacji" danych wyjœciowych
 int k=0;
-extern float waveform[N];
+extern int waveform[N];
 int wav_iterator = 0;
 volatile unsigned PP;
+volatile unsigned sem_dac = 0;
 
 #define Fs 96000
 #define M_PI 3.1416
 extern int notes[128];
 int generator_interator = 0;
 int sound = 0;
+int licz = 0;
 double sound_double = 0;
 // ################## DAC/ADC end ##################
 
@@ -162,7 +164,6 @@ interrupt void dmax_isr( void )
 {
     volatile unsigned *GPTransferEntry;
     static int *pDac = (int *)dmaxDacBuffer[0];
-    //static int *pAdc = (int *)dmaxAdcBuffer[0];
 
 	// Verify if a DAC transfer completed
 	if( hDmaxDac->regs->DTCR0 & (1<<DAC_TCC) )
@@ -174,9 +175,14 @@ interrupt void dmax_isr( void )
 		GPTransferEntry += ((*(hDmaxDac->hiTableEventEntryPtr)>>8)&0x07F);
 	    PP = GPTransferEntry[2] >> 31;
 		pDac = (int *)dmaxDacBuffer[!PP];
+	    //pDac = (int *)waveform[licz*128];
 
 		OBuf3.pBuf = pDac;
-		//memcpy((int)waveform[wav_iterator], OBuf2.ptab[LEFT][CH_0], FRAME_SIZE);
+		//memcpy(pDac, (int *)waveform[licz*FRAME_SIZE], FRAME_SIZE*4);
+		int i = 0;
+		for(i = 0; i < 128; i++) {
+			dmaxDacBuffer[!PP][0][0][i] = waveform[licz*FRAME_SIZE + i];
+		}
 		//OBuf2.ptab[LEFT][CH_0] = (int)waveform[wav_iterator];
 		//OBuf2.ptab[RIGHT][CH_0] = (int)waveform[wav_iterator];
 
@@ -187,6 +193,12 @@ interrupt void dmax_isr( void )
         Buf[k] = OBuf3.ptab[LEFT][CH_0][20];  //Zapamiêtanie próbki wyjœciowej
         k++;							  //w buforze pomocniczym
         if (k == N) { k = 0; }
+
+        licz++;
+        if(licz >= 16) {
+        	licz = 0;
+        	sem_dac = 1;
+        }
 	}
 }
 

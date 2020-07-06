@@ -30,7 +30,7 @@
 #pragma DATA_ALIGN(w, 8)
  float  w[N];
 
-float waveform[2*N];
+int waveform[2*N];
 //float waveform2[2*N];
 double s = 0;
 double sig_amp = 10000000;
@@ -39,6 +39,7 @@ float hann[2048] = {0,2.3554e-06,9.4216e-06,2.1198e-05,3.7686e-05,5.8884e-05,8.4
 unsigned char data_midi[1];
 int notes[128];
 extern volatile unsigned PP;
+extern volatile unsigned sem_dac;
 
 float sinusek[2000];
 float mySin(int counter, float freq)
@@ -56,7 +57,7 @@ float mySqr(int counter, float freq)
 //
 //  Main Function
 //
-#define SIN(counter, freq) sinusek[(int)((float)counter*freq*(0.02083333333))%2000]
+#define SINEXD(counter, freq) sinusek[(int)((float)counter*freq*(0.02083333333))%2000]
 int main( int argc, char *argv[] ) {
 
 	#include "ALL_init.h"
@@ -64,7 +65,8 @@ int main( int argc, char *argv[] ) {
 	// INITIALIZE VARIABLES
 	int i = 0, j = 0;
 	int freq_wav = 0;
-	int mono = 0;
+	int mono = 1;
+	int mode = 0; // 0 - subtractivem, 1 - additive
 	for(i = 0; i < 128; i++)
 		notes[i] = 0;
 
@@ -72,8 +74,8 @@ int main( int argc, char *argv[] ) {
 	// HANNING TIME WINDOW
 	for(i = 0; i < 2*N; i+=2) {
 		//v[i] = v[i]*hann[i/2];
-		waveform[i] = waveform[i]*hann[i/2];
-		waveform[i+1] = waveform[i+1]*hann[i/2];
+		//waveform[i] = waveform[i]*hann[i/2];
+		//waveform[i+1] = waveform[i+1]*hann[i/2];
 	}
 
 	// FFT
@@ -97,41 +99,51 @@ int main( int argc, char *argv[] ) {
 		sinusek[i] = sig_amp*sin(2.0*M_PI*(i/2000.0));
 	}
 	for(i = 0; i < 80; i++) {
-		dmaxDacBuffer[0][0][0][i] = 1*sig_amp;
-		dmaxDacBuffer[1][0][0][i] = -1*sig_amp;
+		//dmaxDacBuffer[0][0][0][i] = 1*sig_amp;
+		//dmaxDacBuffer[1][0][0][i] = -1*sig_amp;
+	}
+	for (i = 0; i < N; i++){
+		//waveform[i] = (int)(sig_amp*sin(i*2.0*468.75*M_PI*(1.0/Fs)));
 	}
 
 
 	int k = 0;
     while(1)  {
-    	if(PP == 0 || PP == 1) {
+    	// ADDITIVE
+    	if((PP == 0 || PP == 1) && mode == 1) {
     		for(i = 0; i < FRAME_SIZE; i++) {
-    			dmaxDacBuffer[PP][0][0][i] = 0.8*mySin(k+i, 220) + 0.9*mySin(k+i, 440) + 0.8*mySin(k+i, 660) +
+    			/*dmaxDacBuffer[PP][0][0][i] = 0.8*mySin(k+i, 220) + 0.9*mySin(k+i, 440) + 0.8*mySin(k+i, 660) +
     					+ 0.8*mySin(k+i, 880) + 0.8*mySin(k+i, 1320)
 						+ 0.8*mySin(k+i, 1760) + 0.8*mySin(k+i, 2200)
-						+ 0.8*mySin(k+i, 2640) + 0.8*mySin(k+i, 3520);
-    			//dmaxDacBuffer[PP][0][0][i] = 0.5*mySqr(k+i, 220) + 0.9*mySqr(k+i, 440) + 0.8*mySqr(k+i, 660)
-    			//+ 0.8*mySqr(k+i, 880) + 0.8*mySqr(k+i, 1320);
+						+ 0.8*mySin(k+i, 2640) + 0.8*mySin(k+i, 3520);*/
     		}
     		k += FRAME_SIZE;
         	PP = 3;
     	}
 
+    	///// SUBTRACTIVE /////
     	// MONOPHONIC KEYBOARD
-    	/*
     	if(mono == 1) {
     		for(i = 0; i < 128; i++) {
 				if(notes[i] == 1) {
-					freq_wav = 261*pow(1.059463,i - 48);
-					for(j = 0; j < 2*N; j++) {
-						waveform[j] = sig_amp*(sin((double)(j)*2.0*M_PI*freq_wav*(1.0/Fs)));
-						waveform[j] = waveform[j]*hann[j/2];
-					}
+					do {
+						freq_wav = 261*pow(1.059463,i - 48);
+						square_wave(freq_wav, sig_amp, k);
+						fft_full();
+						lowPassFilter(3000);
+						ifft_full();
+						while(sem_dac == 0);
+						sem_dac = 0;
+						for(j = 0; j < N; j++) {
+							waveform[j] = 10000*v[j*2];
+						}
+						k += 2048;
+					} while(notes[i] == 1);
+					for(j = 0; j < 2*N; j++)
+						waveform[j] = 0;
 				}
-				while(notes[i] == 1);
-				for(j = 0; j < 2*N; j++);
-					waveform[j] = 0;
     		}
+    	/*
     	// POLYPHONIC KEYBOARD
     	} else {
     		for(j = 0; j < 2*N; j++)
@@ -148,5 +160,6 @@ int main( int argc, char *argv[] ) {
 					waveform[j] = waveform2[j];
 			}
     	}*/
-    }
+		}
+	}
 }
