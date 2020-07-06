@@ -45,6 +45,14 @@ float mySin(int counter, float freq)
 {
 	return sinusek[(int)((float)counter*freq*(0.02083333333))%2000]; //2000/96000
 }
+float mySqr(int counter, float freq)
+{
+	if(sinusek[(int)((float)counter*freq*(0.02083333333))%2000] >= 0) {
+		return sig_amp;
+	} else {
+		return -1*sig_amp;
+	}
+}
 //
 //  Main Function
 //
@@ -96,26 +104,18 @@ int main( int argc, char *argv[] ) {
 
 	int k = 0;
     while(1)  {
-    	if(PP == 0) {
+    	if(PP == 0 || PP == 1) {
     		for(i = 0; i < FRAME_SIZE; i++) {
-    			dmaxDacBuffer[0][0][0][i] = 0.8*mySin(k+i, 220) + 0.9*mySin(k+i, 440) + 0.8*mySin(k+i, 660) +
+    			dmaxDacBuffer[PP][0][0][i] = 0.8*mySin(k+i, 220) + 0.9*mySin(k+i, 440) + 0.8*mySin(k+i, 660) +
     					+ 0.8*mySin(k+i, 880) + 0.8*mySin(k+i, 1320)
 						+ 0.8*mySin(k+i, 1760) + 0.8*mySin(k+i, 2200)
 						+ 0.8*mySin(k+i, 2640) + 0.8*mySin(k+i, 3520);
-    		}
-    		k += FRAME_SIZE;
-        	PP = 3;
-    	} else if(PP == 1){
-    		for(i = 0; i < FRAME_SIZE; i++) {
-    			dmaxDacBuffer[1][0][0][i] = 0.8*mySin(k+i, 220) + 0.9*mySin(k+i, 440) + 0.8*mySin(k+i, 660) +
-    					+ 0.8*mySin(k+i, 880) + 0.8*mySin(k+i, 1320)
-						+ 0.8*mySin(k+i, 1760) + 0.8*mySin(k+i, 2200)
-						+ 0.8*mySin(k+i, 2640) + 0.8*mySin(k+i, 3520);
+    			//dmaxDacBuffer[PP][0][0][i] = 0.5*mySqr(k+i, 220) + 0.9*mySqr(k+i, 440) + 0.8*mySqr(k+i, 660)
+    			//+ 0.8*mySqr(k+i, 880) + 0.8*mySqr(k+i, 1320);
     		}
     		k += FRAME_SIZE;
         	PP = 3;
     	}
-
 
     	// MONOPHONIC KEYBOARD
     	/*
