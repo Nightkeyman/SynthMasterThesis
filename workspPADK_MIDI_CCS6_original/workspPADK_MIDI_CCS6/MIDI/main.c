@@ -91,6 +91,7 @@ int main( int argc, char *argv[] ) {
 	}
 
 	// FFT
+
 	fft_full();
 
 	for(i = 0; i < 2*N; i+=2) {		// Liczenie modulu widma
