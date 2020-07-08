@@ -87,11 +87,12 @@ int wy[STEREO][NUM_CHANNEL];
 #define N 4096 // musi byc 2x tablica wystawiana na przerwanie (??)
 int Buf_1[N];  // bufor pomocniczy do "obserwacji" danych wejsciowych
 int Buf[N];  // bufor pomocniczy do "obserwacji" danych wyjœciowych
-int k=0;
+int k = 0;
 extern int waveform[N];
 int wav_iterator = 0;
 volatile unsigned PP;
 volatile unsigned sem_dac = 0;
+
 
 #define Fs 96000
 #define M_PI 3.1416
@@ -110,6 +111,10 @@ unsigned char uartdata[1];
 extern unsigned char data_midi[1];
 // ################## UART end #####################
 
+// ################## MIDI RELATED VARs ############
+int sem_new_note = 0; // 0 - 128
+// ################## MIDI end #####################
+
 interrupt void nmi_isr( void )
 {
     while(1);
@@ -127,6 +132,7 @@ interrupt void midi_isr( void )
 			if (status == 0x09) { // note on
 				unsigned char note = MIDI_pull(-1)&0x7f;
 				notes[note] = 1;
+				sem_new_note = note;
 				MIDI_clear();
 			} else if (status == 0x08) { // note off
 				unsigned char note = MIDI_pull(-1)&0x7f;
@@ -180,8 +186,11 @@ interrupt void dmax_isr( void )
 		OBuf3.pBuf = pDac;
 		//memcpy(pDac, (int *)waveform[licz*FRAME_SIZE], FRAME_SIZE*4);
 		int i = 0;
-		for(i = 0; i < 128; i++) {
-			dmaxDacBuffer[!PP][0][0][i] = waveform[licz*FRAME_SIZE + i];
+		if(sem_dac == 0) {
+			for(i = 0; i < FRAME_SIZE; i++) {
+				dmaxDacBuffer[!PP][0][0][i] = waveform[licz*FRAME_SIZE + i];
+				dmaxDacBuffer[!PP][1][0][i] = waveform[licz*FRAME_SIZE + i];
+			}
 		}
 		//OBuf2.ptab[LEFT][CH_0] = (int)waveform[wav_iterator];
 		//OBuf2.ptab[RIGHT][CH_0] = (int)waveform[wav_iterator];
