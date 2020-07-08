@@ -6,6 +6,7 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <string.h>
+#include <math.h>
 
 interrupt void dmax_isr( void );
 interrupt void nmi_isr( void );
@@ -84,7 +85,7 @@ int we[STEREO][NUM_CHANNEL];
 int wy[STEREO][NUM_CHANNEL];
 //int wl1, wp1, wl2, wp2, wl3, wp3, wl4, wp4;
 
-#define N 4096 // musi byc 2x tablica wystawiana na przerwanie (??)
+#define N 2048 // musi byc 2x tablica wystawiana na przerwanie (??)
 int Buf_1[N];  // bufor pomocniczy do "obserwacji" danych wejsciowych
 int Buf[N];  // bufor pomocniczy do "obserwacji" danych wyjœciowych
 int k = 0;
@@ -141,7 +142,7 @@ interrupt void midi_isr( void )
 						break;
 					}
 				}
-				//pressedkeys++;
+				pressedkeys++;
 				MIDI_clear();
 			} else if (status == 0x08) { // note off
 				unsigned char note = MIDI_pull(-1)&0x7f;
@@ -154,12 +155,11 @@ interrupt void midi_isr( void )
 						break;
 					}
 				}
-				//pressedkeys--;
+				pressedkeys--;
 				MIDI_clear();
 			}
 		}
 	}
-	UART_Write(data_midi, 1, UART_NO_WAIT);
 }
 
 interrupt void uart_isr( void )
@@ -222,7 +222,7 @@ interrupt void dmax_isr( void )
         if (k == N) { k = 0; }
 */
         licz++;
-        if(licz >= 16) {
+        if(licz >= 8) {
         	licz = 0;
         	sem_dac = 1;
         }

@@ -8,7 +8,7 @@
 #ifndef WAVEFORMS_H_
 #define WAVEFORMS_H_
 
-#define N 2048
+#define N 1024
 #define Fs 96000
 #define M_PI 3.14159
 extern float v[2*N];
