@@ -96,7 +96,8 @@ volatile unsigned sem_dac = 0;
 
 #define Fs 96000
 #define M_PI 3.1416
-extern int notes[128];
+extern float freqs[128];
+extern int pressedkeys;
 int generator_interator = 0;
 int sound = 0;
 int licz = 0;
@@ -131,12 +132,29 @@ interrupt void midi_isr( void )
 			unsigned char status = (MIDI_pull(-2)>>4)&0x0F;
 			if (status == 0x09) { // note on
 				unsigned char note = MIDI_pull(-1)&0x7f;
-				notes[note] = 1;
-				sem_new_note = note;
+				float freq_wav = 261*pow(1.059463,note - 48);
+				int i = 0;
+
+				for (i = 0; i< 6; i++){
+					if (freqs[i] == 0){
+						freqs[i] = freq_wav;
+						break;
+					}
+				}
+				//pressedkeys++;
 				MIDI_clear();
 			} else if (status == 0x08) { // note off
 				unsigned char note = MIDI_pull(-1)&0x7f;
-				notes[note] = 0;
+				float freq_wav = 261*pow(1.059463,note - 48);
+				int i = 0;
+
+				for (i = 0; i< 6; i++){
+					if (freqs[i] >= freq_wav-0.5 && freqs[i] <= freq_wav+0.5){
+						freqs[i] = 0;
+						break;
+					}
+				}
+				//pressedkeys--;
 				MIDI_clear();
 			}
 		}
@@ -186,15 +204,15 @@ interrupt void dmax_isr( void )
 		OBuf3.pBuf = pDac;
 		//memcpy(pDac, (int *)waveform[licz*FRAME_SIZE], FRAME_SIZE*4);
 		int i = 0;
-		if(sem_dac == 0) {
+		//if(sem_dac == 0) {
 			for(i = 0; i < FRAME_SIZE; i++) {
 				dmaxDacBuffer[!PP][0][0][i] = waveform[licz*FRAME_SIZE + i];
 				dmaxDacBuffer[!PP][1][0][i] = waveform[licz*FRAME_SIZE + i];
 			}
-		}
+		//}
 		//OBuf2.ptab[LEFT][CH_0] = (int)waveform[wav_iterator];
 		//OBuf2.ptab[RIGHT][CH_0] = (int)waveform[wav_iterator];
-
+/*
 		wav_iterator = wav_iterator + 1;
 		if(wav_iterator >= N)
 			wav_iterator = 0;
@@ -202,7 +220,7 @@ interrupt void dmax_isr( void )
         Buf[k] = OBuf3.ptab[LEFT][CH_0][20];  //Zapamiêtanie próbki wyjœciowej
         k++;							  //w buforze pomocniczym
         if (k == N) { k = 0; }
-
+*/
         licz++;
         if(licz >= 16) {
         	licz = 0;
