@@ -22,6 +22,10 @@ workspPADK_MIDI_CCS6_original/workspPADK_MIDI_CCS6/MIDI/RemoteSystemsTempFiles/
 *.zip
 *.wav
 *.reapeaks
+*.aux
+*.log
+*.pdf
+*.gz
 
 # Files:
 UARTCOM/UARTCOM2/obj/Debug/UARTCOM.csproj.GenerateResource.cache
