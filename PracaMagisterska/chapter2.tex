@@ -44,7 +44,7 @@ Jednym z głównych zadań niniejszego projektu magisterskiego jest implementacj
 
 \section{Przegląd metod syntezy dźwięku}
 % http://legacy.spa.aalto.fi/publications/reports/sound_synth_report.pdf
-Podział metod syntezy dźwięku w literaturze jest bardzo zróżnicowany. Najczęściej spotykany podział na metody syntezy ze względu na różne podejścia to:
+Podział metod syntezy dźwięku w literaturze jest bardzo zróżnicowany. Najczęściej spotykany podział na metod występuje pod względem różnych podejść do syntezy:
 \begin{enumerate}
 	\item metody widmowe,
 	\item algorytmy abstrakcyjne,
@@ -93,7 +93,14 @@ Z uwagi na nieunaukowy charakter tego rodzaju metody syntezy dźwięku, żadna s
 
 
 \section{Analogowa i cyfrowa synteza dźwięku}
+% Porownanie: https://www.synthtopia.com/content/2019/01/11/analog-vs-digital-synthesizer-blind-test/  W opisie na YT sa wyniki
+Debata na temat tego, który rodzaj syntezatorów jest lepszy, trwa już od samego wprowadzenia na rynek syntezatorów cyfrowych.
+Argumenty za i przeciw obu stron tego konfliku zazwyczaj odnoszą się do charakteru brzmienia obu rodzajów syntezatorów.
+Lorenzo Furlanetto w ramach swojej pracy magisterskiej dokonał ślepego porównania klasycznego syntezatora analogowego oraz jego cyfrowej emulacji.
+Wyniki ślepego testu pokazały, iż 51\% ankietowanych rozpoznało, który z syntezatorów był analogowy, natomiast aż 57\% osób orzekło, iż dźwięk syntezatorów cyfrowych jest przyjemniejszy.
+Oznacza to, że ciężkim jest dokonanie odróżnienia syntezatorów cyfrowych od analogowych oraz że większość ludzi preferuje brzmienie syntezatorów cyfrowych.
 
+Syntezatory cyfrowe, w stosunku do analogowych, posiadają wiele zalet. Jedną z nich jest programowalność
 
 
 
@@ -115,7 +122,9 @@ Poza całym przesyłam informacji między dwoma urządzeniami MIDI, występuje d
 
 
 
-\section{Dyskretna transformata Fouriera}
-Jednym z najważniejszych narzędzi w dziedzinie cyfrowego przetwarzania sygnałów jest dyskretna transformata Fouriera.
+\section{Dyskretna transformacja Fouriera}
+%Technika cyfrowego przetwarzania sygnałów - A. Leśnicki
+Jednym z najważniejszych narzędzi w dziedzinie cyfrowego przetwarzania sygnałów jest dyskretna transformata Fouriera. Jest to przekształcenie zdefiniowane dla skończonych sygnałów dyskretnych. Pozwala ono na przekształcenie dyskretnego sygnału czasowego na próbki widma dyskretnego.
 
 \subsection{Algorytm FFT}
+Obliczenia DFT wykonuje się z wykorzystaniem bardzo efektywnego algorytmu szybkiej transformacji Fouriera (ang. FFT).
