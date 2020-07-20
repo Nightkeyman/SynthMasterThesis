@@ -1,8 +1,10 @@
 \chapter{Wprowadzenie teoretyczne}\label{chapter2}
 
 W niniejszym rozdziale przedstawiono podstawowe pojęcia związane z dziedzinami muzyki, syntezy dźwięku oraz przetwarzania sygnałów cyfrowych. Wszystkie omówione zagadnienia odnoszą się do całości pracy. Nie są one powiązane szczególnie z konkretnymi metodami syntezy.
-\section{Dźwięk}
 
+
+
+\section{Dźwięk}
 Dźwięk można rozpatrywać na dwa sposoby: fizyczny oraz muzyczny. Z fizycznego punktu widzenia, dźwięk jest zaburzeniem falowym w ośrodku sprężystym gazowym, ciekłym lub stałym, który wywołuje wrażenie słuchowe u człowieka. Poddziedzina fizyki, zajmująca się ściśle tematem dźwięku, nazywana jest akustyką. % (źródło: https://encyklopedia.pwn.pl/haslo/dzwiek;3896050.html) 
 W muzyce, dźwięk rozpatrywany jest jako zjawisko, które wydobywane jest z instrumentów muzycznych lub głosu ludzkiego. Główne właściwości dźwięku to:
 
@@ -28,9 +30,7 @@ Istnieje również zależność między kolejnymi półtonami. Jest ona wyrażon
 \section{Rodzaje klawiatur muzycznych}
 Podstawowy podział klawiatur muzycznych rozpatruje się pod względem możliwości wydawania z siebie jednego lub kilku dźwięków przy naciśnięciu kilku klawiszy na raz. Typy te nazwano klawiaturami monofonicznymi oraz polifonicznymi.
 
-
 Monofonia w muzyce to faktura muzyczna utworzona z pojedynczej linii melodycznej. W danej chwili czasu utworu, powinien występować tylko jeden dźwięk, aby był on nazwany monofonicznym. W szczególnym odniesieniu do klawiatury cyfrowej lub analogowej oznacza to, iż wydobywać się z niej może się maksymalnie jeden dźwięk w jednym momencie czasu, przy naciśnięciu kilku klawiszy. Klasycznym przykładem klawiatury monofonicznej jest syntezator analogowy Minimoog.
-
 
 Polifonia w muzyce oznacza natomiast występowanie kilku linii melodycznych w tym samym czasie. Polifonia klawiatury zatem oznacza możliwość wydobycia wielu dźwięków, przy naciśnięciu kilku klawiszy w tym samym czasie. Pojęcie polifonicznej klawiatury muzycznej nie precyzuje jaką ilośc wydobywających się dźwięków klawiatura powinna mieć możliwość realizacji. Cyfrowe instrumenty muzyczne na rynku posiadają ograniczoną maksymalną liczbę wydobywanych na raz dźwięków, przez skończoną moc obliczeniową procesorów.
 
@@ -40,44 +40,73 @@ Polifonia w muzyce oznacza natomiast występowanie kilku linii melodycznych w ty
 
 Jednym z głównych zadań niniejszego projektu magisterskiego jest implementacja polifonicznej klawiatury muzycznej.
 
+
+
 \section{Przegląd metod syntezy dźwięku}
-W literaturze podział metod syntezy dźwięku jest bardzo różny. Najczęściej wymieniane w literaturze to:
+% http://legacy.spa.aalto.fi/publications/reports/sound_synth_report.pdf
+Podział metod syntezy dźwięku w literaturze jest bardzo zróżnicowany. Najczęściej spotykany podział na metody syntezy ze względu na różne podejścia to:
 \begin{enumerate}
-	\item metoda subtraktywna,
-	
-	\item metoda addytywna,
-	
-	\item metoda modulacji częstotliwości,
-	
-	\item metoda samplingowa,
-	
-	\item metoda modelowania matematycznego.
-	
-	\item metoda granulkowa
+	\item metody widmowe,
+	\item algorytmy abstrakcyjne,
+	\item metody fizyczne,
+	\item metody przetwarzania sygnału,
+	% https://ieeexplore.ieee.org/document/4412805
 \end{enumerate}
-Dwa pierwsze wymienione rodzaje syntezy zaliczane są do metod widmowych. 
-Każda z powyższych metod syntezy, z wyjątkiem samplingu, posiada poświęcony jej rozdział w tej pracy. Dokładne omówienie każdej z nich będzie poruszone w tychże rozdziałach. W tym podrozdziale przedstawiono po krótce pozostałe metody syntezy, które nie będą opisywane w dalszej części pracy.
 
-\subsection{Inne metody syntezy dźwięku}
-Metoda samplingowa sprowadza się do nagrania pewnego dźwięku naturalnego, a następnie odtwarzania go w postaci cyfrowej.
+W poniższych podrozdziałach scharakteryzowano poszczególne rodzaje metod syntezy dźwięku.
 
-Metoda granulkowa 
+\subsection{Metody widmowe}
+Do grupy widmowych metod syntezy dźwięku zaliczana jest synteza subtraktywna oraz addytywna. Zgodnie z nazwą, skupiają się one na syntezie brzmień w dziedzinie częstotliwości. Metoda subtraktywna zajmuje się głównie wycinaniem pasm widmowych z brzmień obfitych w składowe harmoniczne. Metoda addytywna skupia się natomiast na dodawaniu kolejnych harmonicznych w dziedzinie częstotliwości. Obie metody zostały dokładnie omówione w kolejnych rozdziałach [jakie rozdziały? - zrobic odnosnik] niniejszej pracy.
 
+\subsection{Algorytmy abstrakcyjne}
+% https://ccrma.stanford.edu/~bilbao/booktop/node6.html
+% http://legacy.spa.aalto.fi/publications/reports/sound_synth_report.pdf
+Synteza poprzez algorytmy abstrakcyjne zazwyczaj odnosi się do zmian istniejących już dźwięków poprzez filtry nieliniowe lub funkcje matematyczne. Do metod algorytmów abstrakcyjnych należą między innymi synteza FM, synteza AM, synteza poprzez waveshaping lub algorytm Karplus-Strong. W literaturze można również spotkać się z określaniem tej grupy metod syntezy jako Distortion synthesis, która odnosi się do wprowadzanych zmian w istniejącym już dźwięku (zakłóceń). W niniejszej pracy poświęcono cały rozdział dla pierwszej z wymienionych metod.
+
+\subsection{Metody fizyczne}
+% https://ccrma.stanford.edu/~bilbao/booktop/node12.html
+% https://edu.pjwstk.edu.pl/wyklady/mul/scb/main37.html
+Metody fizyczne skupiają się na odwzorowywaniu instrumentów muzycznych poprzez tworzenie ich modeli fizycznych na różne sposoby. Do tej grupy należą synteza poprzez modelowanie matematyczne, synteza komórkowa (ang. Cellular Sound Synthesis) oraz synteza falowodowa (ang. Digital Waveguide Modeling).
+
+Metody syntezy oparte na modelach fizycznych są uważane za najbardziej naukowe i poświęcone jest im wiele prac naukowych. W niniejszej pracy przedstawiono głównie synteza opartą o modelowanie matematyczne.
+
+\subsection{Metody przetwarzania sygnału}
 %http://marcdata.hamu.cz/vyzkum/dokumenty/Lit92.pdf - additive, subtractive, FM. sampling
 %https://soundlab.cs.princeton.edu/publications/survey_icmc09.pdf - 4 strona, tabelka
 %https://www.youtube.com/watch?v=I64y40EIPaM
+Jako metody przetwarzania sygnału rozumiane są takie metody syntezy, które oddziaływują bezpośrednio na próbkach sygnału cyfrowego. Do tej grupy metod należą między innymi synteza tablicowa (wavetable), synteza granularna oraz synteza poprzez samplowanie.
+
+Synteza poprzez samplowanie jest najbardziej powszechną metodą syntezy dźwięku w tej grupie. Polega ona na użyciu fragmentu wcześniej dokonanego nagrania (sampla) i odtwarzanie go dla różnych wysokości dźwięków. Jest to metoda najczęściej używana przez kompozytorów w dzisiejszych czasach.
+
+Z uwagi na nieunaukowy charakter tego rodzaju metody syntezy dźwięku, żadna synteza należąca do tej grupy nie została opisana w tej pracy.
+
+
 
 \section{Klasyczne moduły syntezatorów dźwięku}
 %https://www.dummies.com/art-center/music/piano/common-keyboard-terms-and-abbreviations/
 %https://en.wikipedia.org/wiki/Modular_synthesizer#:~:text=Modular%20synthesizers%20are%20synthesizers%20composed,user%20to%20create%20a%20patch.
-\subsection{Obwiednia dźwięku}
+\subsection{Obwiednia dźwięku (ADSR)}
+
+
+
 
 \section{Analogowa i cyfrowa synteza dźwięku}
 
-\section{Protokół MIDI}
+
+
+
+\section{MIDI}
+
+
+\subsection{Warstwa sprzętowa MIDI}
+
+\subsection{Protokół MIDI}
 %https://www.midi.org/specifications-old/category/midi-1-0-detailed-specifications
+%PDF: D:\Data\Studia\Magisterka\Literatura wstepna\MIDI
+
+
+
 
 \section{Dyskretna transformata Fouriera}
 Jednym z najważniejszych narzędzi w dziedzinie cyfrowego przetwarzania sygnałów jest dyskretna transformata Fouriera. 
 \subsection{Algorytm FFT}
-
