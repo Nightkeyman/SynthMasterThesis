@@ -68,7 +68,7 @@ Synteza poprzez algorytmy abstrakcyjne zazwyczaj odnosi się do zmian istniejąc
 % https://edu.pjwstk.edu.pl/wyklady/mul/scb/main37.html
 Metody fizyczne skupiają się na odwzorowywaniu instrumentów muzycznych poprzez tworzenie ich modeli fizycznych na różne sposoby. Do tej grupy należą synteza poprzez modelowanie matematyczne, synteza komórkowa (ang. Cellular Sound Synthesis) oraz synteza falowodowa (ang. Digital Waveguide Modeling).
 
-Metody syntezy oparte na modelach fizycznych są uważane za najbardziej naukowe i poświęcone jest im wiele prac naukowych. W niniejszej pracy przedstawiono głównie synteza opartą o modelowanie matematyczne.
+Metody syntezy oparte na modelach fizycznych są uważane za najbardziej naukowe i poświęcone jest im wiele prac naukowych. W niniejszej pracy, z tej grupy metod syntezy, przedstawiono głównie synteze fizyczną opartą o modelowanie matematyczne.
 
 \subsection{Metody przetwarzania sygnału}
 %http://marcdata.hamu.cz/vyzkum/dokumenty/Lit92.pdf - additive, subtractive, FM. sampling
@@ -85,6 +85,8 @@ Z uwagi na nieunaukowy charakter tego rodzaju metody syntezy dźwięku, żadna s
 \section{Klasyczne moduły syntezatorów dźwięku}
 %https://www.dummies.com/art-center/music/piano/common-keyboard-terms-and-abbreviations/
 %https://en.wikipedia.org/wiki/Modular_synthesizer#:~:text=Modular%20synthesizers%20are%20synthesizers%20composed,user%20to%20create%20a%20patch.
+
+
 \subsection{Obwiednia dźwięku (ADSR)}
 
 
@@ -96,17 +98,24 @@ Z uwagi na nieunaukowy charakter tego rodzaju metody syntezy dźwięku, żadna s
 
 
 \section{MIDI}
-
+Cyfrowy interfejs instrumentów muzycznych (MIDI) to standard utworzony w 1983 roku, służący do przekazywania informacji między cyfrowymi instrumentami muzycznymi. Zrewolucjonizował on sektor muzyki elektronicznej. Dzięki wdrożeniu tego protokołu, muzycy mogli na scenie używać jednej klawiatury muzycznej podłączonej do wielu modułów dźwiękowych, zamiast posiadania tak zwanej "ściany syntezatorów". MIDI zawiera zarówno standard warstwy sprzętowej jak i zestaw komend służących do komunikacji urządzeń.
 
 \subsection{Warstwa sprzętowa MIDI}
+W interfejsie MIDI, informacje przesyłane są za pomocą szeregowego połączenia dwóch urządzeń cyfrowych, w trybie półdupleks. Prędkość przesyłu informacji została ustandardyzowana i wynosi 31250 bitów na sekundę. Podobnie jak w interfejsie UART, początek transmisji ramki danych, rozpoczyna bit startu o wartości 0, natomiast kończy bit stopu o wartości logoczinej jedynki. Interfejs MIDI jest interfejsem prądowym, gdzie logiczne zero oznacza brak przepływu prądu, natomiast logiczna jedynka oznacza jego przepływ.
+
+Do połączeń z instrumentem używane są wtyki DIN pięciopinowe. Schemat sprzętowy interfejsu MIDI znajdującego się po stronie instrumentu cyfrowego przedstawiono na rysunku ...
 
 \subsection{Protokół MIDI}
 %https://www.midi.org/specifications-old/category/midi-1-0-detailed-specifications
 %PDF: D:\Data\Studia\Magisterka\Literatura wstepna\MIDI
+Wiadomości MIDI utworzone są z jednego bajta statusu, po którym następuje zazwyczaj jeden lub dwa bajty danych. Są różne typy wiadomości MIDI. Najbardziej podstawowy podział dzieli je na wiadomości kanałowe (odnoszące się do jednego kanału) oraz systemowe (odnoszące się do wszystkich kanałów). Wiadomości kanałowe mogą dzielić się dalej na komunikaty trybu lub komunikaty głosu. Te drugie w praktyce stanowią większość przesyłanych komunikatów w transmisji MIDI.
+Komunikat głosu może nieść informację na przykład o: naciśnięciu klawisza, odciśnięciu klawisza, aftertouch (zmiana mocy nacisku klawisza po jakimś czasie od naciśnięcia), pitch bend (delikatna zmiana wysokości dźwięku). Protokół MIDI, w ramach bajta danych (komunikat głosu), może obsłużyć 128 wysokości dźwięków z jednego instrumentu. Poziom głośności, zależny od mocy naciśnięcia klawisza, również może przyjąć jedną ze 128 wartości.
 
+Poza całym przesyłam informacji między dwoma urządzeniami MIDI, występuje dodatkowo zegar MIDI (ang. MIDI Pulse), który pozwala na zsynchronizowanie dwóch instrumentów, aby grały w jednakowym tempie.
 
 
 
 \section{Dyskretna transformata Fouriera}
-Jednym z najważniejszych narzędzi w dziedzinie cyfrowego przetwarzania sygnałów jest dyskretna transformata Fouriera. 
+Jednym z najważniejszych narzędzi w dziedzinie cyfrowego przetwarzania sygnałów jest dyskretna transformata Fouriera.
+
 \subsection{Algorytm FFT}
