@@ -24,6 +24,11 @@ workspPADK_MIDI_CCS6_original/workspPADK_MIDI_CCS6/MIDI/.settings/
 *.zip
 *.wav
 *.reapeaks
+*.aux
+*.pdf
+*.synctex.gz
+*.ccsproject
+*.cproject
 
 # Files:
 workspPADK_MIDI_CCS6_original/workspPADK_MIDI_CCS6/MIDI/.csproject
