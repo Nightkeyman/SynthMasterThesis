@@ -29,8 +29,10 @@
  float  v[2*N];
 #pragma DATA_ALIGN(w, 8)
  float  w[N];
-
-int waveform[2*N];
+int c[222222];
+int waveform[2][2*N];
+int whichwaveform = 0;
+int overlap = 128;
 //float waveform2[2*N];
 double s = 0;
 double sig_amp = 10000000;
@@ -84,8 +86,10 @@ int main( int argc, char *argv[] ) {
 	sin_wave(440, sig_amp);
 	// HANNING TIME WINDOW
 	for(i = 0; i < 2*N; i+=2) {
-		waveform[i] = 0;
-		waveform[i+1] = 0;
+		waveform[0][i] = 0;
+		waveform[0][i+1] = 0;
+		waveform[1][i] = 0;
+		waveform[1][i+1] = 0;
 	}
 
 	// FFT
@@ -134,7 +138,10 @@ int main( int argc, char *argv[] ) {
     	if(mono == 1 && mode == 0) {
     		if(pressedkeys < 1) {
     			for(j = 0; j < N; j++) {
-					waveform[j] = 0;
+					waveform[0][j] = 0;
+				}
+    			for(j = 0; j < N; j++) {
+					waveform[1][j] = 0;
 				}
     		}
     		for(i = 0; i < 6; i++) {
@@ -147,10 +154,10 @@ int main( int argc, char *argv[] ) {
 					ifft_full();
 					while(sem_dac == 0);
 					for(j = 0; j < N; j++) {
-						waveform[j] = sig_amp*v[j*2]; // tu by bylo przepisywanie z myWav
+						waveform[!whichwaveform][j] = sig_amp*v[j*2]; // tu by bylo przepisywanie z myWav
 					}
 					sem_dac = 0;
-					k += N;
+					k += N - overlap;
 
 				}
     		}
