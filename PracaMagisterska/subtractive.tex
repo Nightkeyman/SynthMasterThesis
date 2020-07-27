@@ -24,7 +24,7 @@ W przypadku syntezatorów analogowych, poszczególne bloki są realizowane za po
 Próbki sygnału są syntezowane w sposób blokowy. Blok danych składa się z $N=1024$ próbek.
 
 \subsection{Generowanie przebiegu}
-W tablicy o $N$ elementach przechowywane są kolejne próbki sygnału bogatego w wyższe składowe harmoniczne. Po dokonaniu filtracji i wystawieniu tych próbek na przetwornik cyfrowo-analogowy, w tablicy tej należy wygenerować kolejne 1024 próbek sygnału. Trzeba przy tym pamiętać o odpowiednim przesunięciu fazowym, tak aby zachować ciągłość pomiędzy kolejnymi blokami próbek wystawianych na przetwornik. Równanie \ref{equ:sub_1} opisuje sposób generowania przebiegu prostokątnego.
+W tablicy o $N$ elementach przechowywane są kolejne próbki sygnału podstawowego, czyli sygnału bogatego w wyższe składowe harmoniczne. Po dokonaniu filtracji i wystawieniu tych próbek na przetwornik cyfrowo-analogowy, w tablicy tej należy wygenerować kolejne 1024 próbek sygnału. Trzeba przy tym pamiętać o odpowiednim przesunięciu fazowym, tak aby zachować ciągłość pomiędzy kolejnymi blokami próbek wystawianych na przetwornik. Równanie \ref{equ:sub_1} opisuje sposób generowania przebiegu prostokątnego.
 \begin{equation} \label{equ:sub_1}
 waveform[i]=\left \{\begin{array}{ r l }
 1, & \quad \text{$dla$ } sin(2\pi f\frac{k+i}{F_s}) > 0\\
@@ -56,7 +56,7 @@ Na rysunku \ref{rys:sub_waveform_blocks} pokazano dwa kolejne bloki próbek wyge
 Na podstawie wygenerowanych próbek przebiegu oblicza się DFT za pomocą algorytmu FFT. W wyniku otrzymuje się $N$ liczb zespolonych. Przechowywane są one w tablicy o rozmiarze $2N$ w taki sposób, że każdy element o indeksie parzystym to część rzeczywista próbki, a sąsiadujący z nią element o indeksie nieparzystym to część urojona tej próbki. Filtracja dokonywana jest poprzez wyzerowanie elementów o odpowiednich indeksach. Na przykład filtracja dolnoprzepustowa z częstotliwością graniczną o wartości 1400 Hz dokonywana jest według poniżego wzoru:
 \begin{equation} \label{equ:sub_3}
 waveform_{fft}[i]=\left \{\begin{array}{ r l }
-0, & \quad  \text{$dla$ } N - f_g \leqslant \frac{i}{2} \leqslant N + f_g \\
+0, & \quad  \text{dla } N - f_g \leqslant \frac{i}{2} \leqslant N + f_g \\
 waveform_{fft}[i], & \quad \text{w pozostałych przypadkach } 
 
 \end{array}
@@ -93,5 +93,27 @@ Porównanie zakładkowania dla różnych wartości $m$ przedstawiono na \ref{rys
 	\caption{Wyniki zakladkowania przy zmiennej dlugosci zakladek.}
 	\label{rys:sub_overlaps}
 \end{figure}
-siema
-elo
+
+Takie podejście wymusza użycie dwóch tablic ze zmiennymi typu float, w których przechowywane są próbki sygnału do wystawienia na przetwornik cyfrowo-analogowy. Wynika to z faktu, że w pewnych chwilach na DAC należy wystawić ważoną średnią próbek z dwóch różnych sygnałów. 
+
+\subsection{Polifonia w syntezie subtraktywnej}
+Powyższe rozważania dotyczyły syntezy pojedynczych tonów. Polifonię w danym podejściu, można osiągnąć korzystając z faktu, że przekształcenie Fouriera jest przekształceniem liniowym. Oznacza to, że jeśli
+ \begin{equation} \label{equ:sub_5}
+ \mathcal{F}\{x_n\} = X_k
+ \end{equation}
+ oraz 
+  \begin{equation} \label{equ:sub_6}
+ \mathcal{F}\{y_n\} = Y_k
+ \end{equation}
+ wówczas
+  \begin{equation} \label{equ:sub_7}
+\mathcal{F}\{ax_n + by_n\} = aX_k + bY_k.
+\end{equation} 
+Zatem w programie na DSP, zamiast obliczać ciągle DFT, filtrację oraz IDFT tyle razy, ile użytkownik naciska klawiszy, można utworzyć sygnał będący sumą przebiegów podstawowych. Dopiero taki sygnał poddawany będzie dalszemu przetwarzaniu. Na rysunku \ref{rys:sub_linearity}	zobrazowana została własność liniowości przekształcenia Fouriera. Na pierwszych trzech wykresach pokazane zostały 3 przebiegi prostokątne o różnych częstotliwościach. W drugim rzędzie widnieją te przebiegi po przepuszczeniu przez filtr dolnoprzepustowy. W trzecim rzędzie znajduje się przebieg, który jest sumą początkowych przebiegów prostokątnych (przed filtracją). W ostatnim rzędzie pokazano sumę tych przefiltrowanych przebiegów oraz przebieg z rzędu trzeciego po filtracji dolnoprzepustowej takim samym filtrem. Przykład ten pokazuje, że obie drogi prowadzą do tych samych wyników.
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=16cm]{grafiki/sub_linearity}
+	\captionsetup{justification=centering}
+	\caption{Własność liniowości przekształcenia Fouriera.}
+	\label{rys:sub_linearity}
+\end{figure}
