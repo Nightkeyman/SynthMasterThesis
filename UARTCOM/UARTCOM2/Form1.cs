@@ -252,7 +252,7 @@ namespace UARTCOM2
 
         private void knobControl1_ValueChanged(object Sender)
         {
-            textBox_subtractive_frequency.Text = knobControl1.Value.ToString();
+            //textBox_subtractive_frequency.Text = knobControl1.Value.ToString();
         }
 
         private void knobControl1_Load(object sender, EventArgs e)
@@ -262,6 +262,7 @@ namespace UARTCOM2
 
         private void button_subtractive_toggle_Click(object sender, EventArgs e)
         {
+            /*
             if (button_subtractive_toggle.Text.Equals("High"))
             {
                 button_subtractive_toggle.Text = "Low";
@@ -270,7 +271,7 @@ namespace UARTCOM2
             {
                 button_subtractive_toggle.Text = "High";
                 knobControl1.Maximum = 12000;
-            }
+            }*/
           
         }
 
@@ -370,6 +371,18 @@ namespace UARTCOM2
         private void tabPage_additive_hammond_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void textBox_subtractive_freq1_TextChanged(object sender, EventArgs e)
+        {
+            trackBar_subtractive_freq1.Value = Convert.ToInt32(textBox_subtractive_freq1.Text);
+            sendInt(100, 2, (UInt32)trackBar_subtractive_freq1.Value);
+        }
+
+        private void textBox_subtractive_freq2_TextChanged(object sender, EventArgs e)
+        {
+            trackBar_subtractive_freq2.Value = Convert.ToInt32(textBox_subtractive_freq2.Text);
+            sendInt(100, 3, (UInt32)trackBar_subtractive_freq2.Value);
         }
     }
 }
