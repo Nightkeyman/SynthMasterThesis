@@ -89,7 +89,8 @@ int wy[STEREO][NUM_CHANNEL];
 int Buf_1[N];  // bufor pomocniczy do "obserwacji" danych wejsciowych
 int Buf[N];  // bufor pomocniczy do "obserwacji" danych wyjœciowych
 int k = 0;
-extern int waveform[2][N];
+extern int waveform0[1024];
+extern int waveform1[1024];
 extern int whichwaveform;
 extern int overlap;
 
@@ -217,12 +218,22 @@ interrupt void dmax_isr( void )
 			for(i = 0; i < FRAME_SIZE; i++) {
 				index = licz*FRAME_SIZE + i;
 				if (index < 1024-overlap) {
-					dmaxDacBuffer[!PP][0][0][i] = waveform[whichwaveform][index];
-					dmaxDacBuffer[!PP][1][0][i] = waveform[whichwaveform][index];
+					if (whichwaveform){
+						dmaxDacBuffer[!PP][0][0][i] = waveform1[index];
+						dmaxDacBuffer[!PP][1][0][i] = waveform1[index];
+					} else {
+						dmaxDacBuffer[!PP][0][0][i] = waveform0[index];
+						dmaxDacBuffer[!PP][1][0][i] = waveform0[index];
+					}
 				} else {
-				//	float wsp = overlaptable[(-1024+overlap + index)];
-					dmaxDacBuffer[!PP][0][0][i] = waveform[whichwaveform][index] + waveform[!whichwaveform][index];
-					dmaxDacBuffer[!PP][1][0][i] = waveform[whichwaveform][index] + waveform[!whichwaveform][index];
+					int wsp = -1024+overlap + index;
+					if (whichwaveform){
+						dmaxDacBuffer[!PP][0][0][i] = waveform1[index] + waveform0[wsp];
+						dmaxDacBuffer[!PP][1][0][i] = waveform1[index] + waveform0[wsp];
+					} else {
+						dmaxDacBuffer[!PP][0][0][i] = waveform0[index] + waveform1[wsp];
+						dmaxDacBuffer[!PP][1][0][i] = waveform0[index] + waveform1[wsp];
+					}
 					if (index >= 1024-1){
 						whichwaveform = !whichwaveform;
 						sem_dac = 1;
