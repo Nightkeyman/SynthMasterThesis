@@ -18,11 +18,13 @@
 #include "var&fun.h"
 #include "myfft.h"
 
+#define OVERLAP 128
 #define MIDI_TONE_RANGE 128
 #define M_PI 3.14159
 #define Fs 96000
 #define F_sq 440
 #define F_sqq 10000
+
 #define N 1024
  short  table[64];
 #pragma DATA_ALIGN(v, 8)
@@ -33,7 +35,6 @@ int waveform0[N];
 int waveform1[N];
 
 volatile int whichwaveform = 0;
-int overlap = 8;
 const float overlaptable[128] = {0.008, 0.016, 0.023, 0.031, 0.039, 0.047, 0.055, 0.063, 0.070, 0.078, 0.086, 0.094, 0.102, 0.109, 0.117, 0.125, 0.133, 0.141, 0.148, 0.156, 0.164, 0.172, 0.180, 0.188, 0.195, 0.203, 0.211, 0.219, 0.227, 0.234, 0.242, 0.250, 0.258, 0.266, 0.273, 0.281, 0.289, 0.297, 0.305, 0.313, 0.320, 0.328, 0.336, 0.344, 0.352, 0.359, 0.367, 0.375, 0.383, 0.391, 0.398, 0.406, 0.414, 0.422, 0.430, 0.438, 0.445, 0.453, 0.461, 0.469, 0.477, 0.484, 0.492, 0.500, 0.508, 0.516, 0.523, 0.531, 0.539, 0.547, 0.555, 0.563, 0.570, 0.578, 0.586, 0.594, 0.602, 0.609, 0.617, 0.625, 0.633, 0.641, 0.648, 0.656, 0.664, 0.672, 0.680, 0.688, 0.695, 0.703, 0.711, 0.719, 0.727, 0.734, 0.742, 0.750, 0.758, 0.766, 0.773, 0.781, 0.789, 0.797, 0.805, 0.813, 0.820, 0.828, 0.836, 0.844, 0.852, 0.859, 0.867, 0.875, 0.883, 0.891, 0.898, 0.906, 0.914, 0.922, 0.930, 0.938, 0.945, 0.953, 0.961, 0.969, 0.977, 0.984, 0.992, 1.000};
 
 
@@ -52,10 +53,12 @@ extern int sem_new_note; // 0 - 128
 float sinusek[N];
 float kwadracik[N];
 float przefiltrowany[N];
+
 float mySin(int counter, float freq)
 {
 	return sinusek[(int)((float)counter*freq*(0.02083333333))%2000]; //2000/96000
 }
+
 float mySqr(int counter, float freq)
 {
 	if(sinusek[(int)((float)counter*freq*(0.02083333333))%N] >= 0) {
@@ -64,6 +67,7 @@ float mySqr(int counter, float freq)
 		return -1*sig_amp;
 	}
 }
+
 float myWav(int counter, float freq)
 {
 	if(sinusek[(int)((float)counter*freq*(0.02083333333))%N] >= 0) {
@@ -82,17 +86,16 @@ int main( int argc, char *argv[] ) {
 	// INITIALIZE VARIABLES
 	int i = 0, j = 0;
 	int freq_wav = 0;
-	int mono = 1;
+	int mono = 1; // 0 - mono, 1 - poly
+	int mode = 0; // 0 - subtractive, 1 - additive
+	int k = 0; // phase shift variable
 	sem_dac = 1;
 	sig_amp = 1;
-	overlap = 8;
 	whichwaveform = 1;
-	int mode = 0; // 0 - subtractivem, 1 - additive
+
 	for(i = 0; i < MIDI_TONE_RANGE; i++)
 		freqs[i] = 0;
 
-	sin_wave(440, sig_amp);
-	// HANNING TIME WINDOW
 	for(i = 0; i < 2*N; i+=2) {
 		waveform0[i] = 0;
 		waveform0[i+1] = 0;
@@ -100,6 +103,7 @@ int main( int argc, char *argv[] ) {
 		waveform1[i+1] = 0;
 	}
 
+	sin_wave(440, sig_amp);
 	// FFT
 	fft_full();
 
@@ -126,7 +130,6 @@ int main( int argc, char *argv[] ) {
 	/*---------------------------------------------------------------*/
 	/*							 MAIN LOOP 		                     */
 	/*---------------------------------------------------------------*/
-	int k = 0;
     while(1)  {
     	///// ADDITIVE MONO /////
     	/*
@@ -152,35 +155,34 @@ int main( int argc, char *argv[] ) {
     		}
     		for(i = 0; i < 6; i++) {
 				if(freqs[i] > 0) {
-
-
 					square_wave(freqs[i], sig_amp, k);
 					fft_full();
-					lowPassFilter(2000);
+					lowPassFilter(5000);
 					ifft_full();
 					while(sem_dac == 0);
 					for(j = 0; j < N; j++) {
-						if (j < 128){
+						if (j < OVERLAP) {
 							if (whichwaveform == 1) {
 								waveform0[j] = overlaptable[j]*1000000*v[j*2]; // tu by bylo przepisywanie z myWav
 							} else {
 								waveform1[j] = overlaptable[j]*1000000*v[j*2];
 							}
-						}else if (j >= N-128){
-							if (whichwaveform)
+						} else if (j >= N - OVERLAP) {
+							if (whichwaveform) {
 								waveform0[j] = overlaptable[N-j-1]*1000000*v[j*2];
-							else
+							} else {
 								waveform1[j] = overlaptable[N-j-1]*1000000*v[j*2];
-						}else{
-							if (whichwaveform)
+							}
+						} else {
+							if (whichwaveform) {
 								waveform0[j] = 1000000*v[j*2];
-							else
+							} else {
 								waveform1[j] = 1000000*v[j*2];
+							}
 						}
 					}
 					sem_dac = 0;
-					k += N - 128;
-
+					k += N - OVERLAP;
 				}
     		}
     	// POLYPHONIC KEYBOARD

@@ -85,7 +85,7 @@ int we[STEREO][NUM_CHANNEL];
 int wy[STEREO][NUM_CHANNEL];
 //int wl1, wp1, wl2, wp2, wl3, wp3, wl4, wp4;
 
-#define N 2048 // musi byc 2x tablica wystawiana na przerwanie (??)
+#define N 1024 // musi byc 2x tablica wystawiana na przerwanie (??)
 int Buf_1[N];  // bufor pomocniczy do "obserwacji" danych wejsciowych
 int Buf[N];  // bufor pomocniczy do "obserwacji" danych wyjœciowych
 int k = 0;
@@ -93,8 +93,8 @@ extern int waveform0[1024];
 extern int waveform1[1024];
 int plot[2048];
 extern volatile int whichwaveform;
-extern int overlap;
-
+#define OVERLAP 128
+#define MIDI_TONE_RANGE 128
 
 int wav_iterator = 0;
 volatile unsigned PP;
@@ -103,7 +103,7 @@ volatile unsigned sem_dac = 0;
 
 #define Fs 96000
 #define M_PI 3.1416
-extern float freqs[128];
+extern float freqs[MIDI_TONE_RANGE];
 extern int pressedkeys;
 int generator_interator = 0;
 int sound = 0;
@@ -142,8 +142,8 @@ interrupt void midi_isr( void )
 				float freq_wav = 261*pow(1.059463,note - 48);
 				int i = 0;
 
-				for (i = 0; i< 6; i++){
-					if (freqs[i] == 0){
+				for (i = 0; i < 6; i++) {
+					if (freqs[i] == 0) {
 						freqs[i] = freq_wav;
 						break;
 					}
@@ -155,8 +155,8 @@ interrupt void midi_isr( void )
 				float freq_wav = 261*pow(1.059463,note - 48);
 				int i = 0;
 
-				for (i = 0; i< 6; i++){
-					if (freqs[i] >= freq_wav-0.5 && freqs[i] <= freq_wav+0.5){
+				for (i = 0; i< 6; i++) {
+					if (freqs[i] >= freq_wav-0.5 && freqs[i] <= freq_wav+0.5) {
 						freqs[i] = 0;
 						break;
 					}
@@ -201,24 +201,23 @@ interrupt void dmax_isr( void )
 		hDmaxDac->regs->DTCR0 = (1<<DAC_TCC);
 
 		// Save the pointer of the audio buffer that has just been transmitted
-	    GPTransferEntry  = (unsigned *)&hDmaxDac->regs->HiPriorityEventTable;
-		GPTransferEntry += ((*(hDmaxDac->hiTableEventEntryPtr)>>8)&0x07F);
-	    PP = GPTransferEntry[2] >> 31;
+		GPTransferEntry  = (unsigned *)&hDmaxDac->regs->HiPriorityEventTable;
+	    GPTransferEntry += ((*(hDmaxDac->hiTableEventEntryPtr)>>8)&0x07F);
+		PP = GPTransferEntry[2] >> 31;
 		pDac = (int *)dmaxDacBuffer[!PP];
-	    //pDac = (int *)waveform[licz*128];
+		//pDac = (int *)waveform[licz*128];
 
 		OBuf3.pBuf = pDac;
-		//memcpy(pDac, (int *)waveform[licz*FRAME_SIZE], FRAME_SIZE*4);
 		int i = 0;
 		if (licz == 0){
-			licz = 128/FRAME_SIZE;
-			i = 128%FRAME_SIZE;
+			licz = OVERLAP/FRAME_SIZE;
+			i = OVERLAP%FRAME_SIZE;
 		}
 		int index = 0;
 		//if(sem_dac == 0) {
 			for(i = 0; i < FRAME_SIZE; i++) {
 				index = licz*FRAME_SIZE + i;
-				if (index < 1024-128) {
+				if (index < 1024 - OVERLAP) {
 					if (whichwaveform){
 						dmaxDacBuffer[!PP][0][0][i] = waveform1[index];
 						dmaxDacBuffer[!PP][1][0][i] = waveform1[index];
@@ -226,10 +225,10 @@ interrupt void dmax_isr( void )
 					} else {
 						dmaxDacBuffer[!PP][0][0][i] = waveform0[index];
 						dmaxDacBuffer[!PP][1][0][i] = waveform0[index];
-						plot[index + 1024 - 128] = waveform0[index];
+						plot[index + 1024 - OVERLAP] = waveform0[index];
 					}
 				} else {
-					int wsp = -1024+128 + index;
+					int wsp = -1024 + OVERLAP + index;
 					if (whichwaveform){
 						dmaxDacBuffer[!PP][0][0][i] = waveform1[index] + waveform0[wsp];
 						dmaxDacBuffer[!PP][1][0][i] = waveform1[index] + waveform0[wsp];
@@ -237,7 +236,7 @@ interrupt void dmax_isr( void )
 					} else {
 						dmaxDacBuffer[!PP][0][0][i] = waveform0[index] + waveform1[wsp];
 						dmaxDacBuffer[!PP][1][0][i] = waveform0[index] + waveform1[wsp];
-						plot[index + 1024 - 128] = waveform0[index] + waveform1[wsp];
+						plot[index + 1024 - OVERLAP] = waveform0[index] + waveform1[wsp];
 					}
 					if (index >= 1024-1){
 						if(whichwaveform == 1) {
