@@ -91,7 +91,8 @@ int Buf[N];  // bufor pomocniczy do "obserwacji" danych wyjœciowych
 int k = 0;
 extern int waveform0[1024];
 extern int waveform1[1024];
-extern int whichwaveform;
+int plot[2048];
+extern volatile int whichwaveform;
 extern int overlap;
 
 
@@ -210,32 +211,40 @@ interrupt void dmax_isr( void )
 		//memcpy(pDac, (int *)waveform[licz*FRAME_SIZE], FRAME_SIZE*4);
 		int i = 0;
 		if (licz == 0){
-			licz = overlap/FRAME_SIZE;
-			i = overlap%FRAME_SIZE;
+			licz = 128/FRAME_SIZE;
+			i = 128%FRAME_SIZE;
 		}
 		int index = 0;
 		//if(sem_dac == 0) {
 			for(i = 0; i < FRAME_SIZE; i++) {
 				index = licz*FRAME_SIZE + i;
-				if (index < 1024-overlap) {
+				if (index < 1024-128) {
 					if (whichwaveform){
 						dmaxDacBuffer[!PP][0][0][i] = waveform1[index];
 						dmaxDacBuffer[!PP][1][0][i] = waveform1[index];
+						plot[index] = waveform1[index];
 					} else {
 						dmaxDacBuffer[!PP][0][0][i] = waveform0[index];
 						dmaxDacBuffer[!PP][1][0][i] = waveform0[index];
+						plot[index + 1024 - 128] = waveform0[index];
 					}
 				} else {
-					int wsp = -1024+overlap + index;
+					int wsp = -1024+128 + index;
 					if (whichwaveform){
 						dmaxDacBuffer[!PP][0][0][i] = waveform1[index] + waveform0[wsp];
 						dmaxDacBuffer[!PP][1][0][i] = waveform1[index] + waveform0[wsp];
+						plot[index] = waveform1[index] + waveform0[wsp];
 					} else {
 						dmaxDacBuffer[!PP][0][0][i] = waveform0[index] + waveform1[wsp];
 						dmaxDacBuffer[!PP][1][0][i] = waveform0[index] + waveform1[wsp];
+						plot[index + 1024 - 128] = waveform0[index] + waveform1[wsp];
 					}
 					if (index >= 1024-1){
-						whichwaveform = !whichwaveform;
+						if(whichwaveform == 1) {
+							whichwaveform = 0;
+						} else if(whichwaveform == 0) {
+							whichwaveform = 1;
+						}
 						sem_dac = 1;
 					}
 				}

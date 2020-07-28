@@ -452,7 +452,7 @@
     {
         fprintf( stderr, "Failed to setup the McASP MIDI\n" );
 	    return -1;
-    }
+    }*/
 
     /*---------------------------------------------------------------*/
     /* McASP0 Setup - (Default PADK values)                          */
