@@ -28,6 +28,9 @@ workspPADK_MIDI_CCS6_original/workspPADK_MIDI_CCS6/MIDI/.settings/
 *.log
 *.pdf
 *.gz
+*.lot
+*.lof
+*.out
 
 # Files:
 workspPADK_MIDI_CCS6_original/workspPADK_MIDI_CCS6/MIDI/.csproject

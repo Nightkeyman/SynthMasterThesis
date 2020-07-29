@@ -10,7 +10,7 @@ Dźwięk można rozpatrywać na dwa sposoby: fizyczny oraz muzyczny. Z fizyczneg
 
 W muzyce, dźwięk rozpatrywany jest jako zjawisko, które wydobywane jest z instrumentów muzycznych lub głosu ludzkiego. Główne właściwości dźwięku w muzyce, to:
 
-\begin{enumerate}
+\begin{itemize}
 	\item wysokość dźwięku, która jest zależna od wartości częstotliwości podstawowej dźwięku,
 	
 	\item czas trwania - zależny od czasu produkowanego dźwięku na danym instrumencie,
@@ -19,7 +19,7 @@ W muzyce, dźwięk rozpatrywany jest jako zjawisko, które wydobywane jest z ins
 	
 	\item barwa dźwięku, zależna od ilości, częstotliwości składowych harmonicznych dźwięku oraz zmian ich występowania w czasie. Jako składowa harmoniczna, rozumiana jest składowa sinusoidalna dźwięku, która jest całkowitą wielkrotnością częstotliwości podstawowej danego dźwięku.
 	% (źródło: https://pl.wikipedia.org/wiki/D%C5%BAwi%C4%99k_(muzyka))
-\end{enumerate}
+\end{itemize}
 
 Jako pewne ustandardyzowanie dźwięków w utworach muzycznych, wprowadzono skalę dźwięków. Tradycyjną skalę tworzy osiem dźwięków. Odległości między tymi dźwiękami nazywane są interwałami, które wyraża się w jednostkach półtonów. Istnieje zależność między kolejnymi półtonami i może być ona wyrażona wzorem:
 \begin{equation} \label{equ:idft}
@@ -55,13 +55,13 @@ Jednym z głównych zadań niniejszego projektu magisterskiego jest implementacj
 \section{Przegląd metod syntezy dźwięku}
 % http://legacy.spa.aalto.fi/publications/reports/sound_synth_report.pdf
 Podział metod syntezy dźwięku w literaturze jest bardzo zróżnicowany. Najczęściej spotykany podział występuje pod względem różnych podejść do syntezy:
-\begin{enumerate}
+\begin{itemize}
 	\item metody widmowe,
 	\item algorytmy abstrakcyjne,
 	\item metody fizyczne,
 	\item metody przetwarzania sygnału,
 	% https://ieeexplore.ieee.org/document/4412805
-\end{enumerate}
+\end{itemize}
 
 W poniższych podrozdziałach scharakteryzowano poszczególne rodzaje metod syntezy dźwięku.
 
@@ -123,20 +123,20 @@ Akronim, który jest tytułem tego podrozdziału, oznacza cztero-etapowy generat
 
 Na rysunku \ref{rys:ADSR} przedstawiono przykładową obwiednie dźwięku po naciśnięciu klawisza. Poniżej wytłumaczone zostały kolejne etapy ADSR:
 \begin{enumerate}
-	\item Attack - czas narastania amplitudy od zera to maksimum, rozpoczyna się, gdy klawisz zostaje naciśnięty,
+	\item Attack - czas narastania amplitudy od zera to maksimum, rozpoczyna się, gdy klawisz zostaje naciśnięty.
 	
-	\item Decay - czas opadania amplitudy od maksymalnej wartości do poziomu podtrzymania,
+	\item Decay - czas opadania amplitudy od maksymalnej wartości do poziomu podtrzymania.
 	
-	\item Sustain - poziom amplitudy przy podtrzymaniu dźwięku, trwa dopóki klawisz nie zostanie puszczony,
+	\item Sustain - poziom amplitudy przy podtrzymaniu dźwięku, trwa dopóki klawisz nie zostanie puszczony.
 	
 	\item Release - czas opadania amplitudy dźwięku od poziomu wyznaczonego przez Sustain do zera.
 \end{enumerate}
 
 
 \section{Analogowa i cyfrowa synteza dźwięku}
-% Porownanie: https://www.synthtopia.com/content/2019/01/11/analog-vs-digital-synthesizer-blind-test/  W opisie na YT sa wyniki
-Debata na temat tego, który rodzaj syntezatorów jest lepszy, trwa już od samego wprowadzenia syntezatorów cyfrowych na rynek. Argumenty za i przeciw obu stron tego konfliku zazwyczaj odnoszą się do charakteru brzmienia obu rodzajów syntezatorów. 
+Debata na temat tego, który rodzaj syntezatorów jest lepszy, trwa już od samego wprowadzenia syntezatorów cyfrowych na rynek. Argumenty za i przeciw obu stron tego konfliku zazwyczaj odnoszą się do charakteru brzmienia obu rodzajów syntezatorów. Nie jest to jednak jedyna właściwość syntezatorów poróżniająca obie strony.
 
+% Porownanie: https://www.synthtopia.com/content/2019/01/11/analog-vs-digital-synthesizer-blind-test/  W opisie na YT sa wyniki
 Lorenzo Furlanetto w ramach swojej pracy magisterskiej dokonał ślepego porównania klasycznego syntezatora analogowego oraz jego cyfrowej emulacji. Wyniki ślepego testu pokazały, iż 51 procent ankietowanych rozpoznało, który z syntezatorów był analogowy, natomiast aż 57 procent osób orzekło, iż dźwięk syntezatorów cyfrowych jest przyjemniejszy. Oznacza to, że ciężkim jest dokonanie odróżnienia syntezatorów cyfrowych od analogowych, oraz że większość ludzi preferuje brzmienie syntezatorów cyfrowych.
 
 % https://blog.andertons.co.uk/labs/hardware-synths-vs-software-synths
@@ -180,34 +180,109 @@ Jednym z najważniejszych narzędzi w dziedzinie cyfrowego przetwarzania sygnał
 %Technika cyfrowego przetwarzania sygnałów 262 strona - A. Leśnicki
 Dyskretne przekształcenie Fouriera oraz odwrócone dyskretne przekształcenie Fouriera są kolejno przedstawione następującymi wzorami:
 \begin{equation} \label{equ:dft}
-X[k] = \sum_{n=0}^{N-1} x[n]e^{-j\frac{2\pi k}{N}n}
+\openup\jot
+\begin{aligned}[t]
+X[k] = \sum_{n=0}^{N-1} x[n]e^{-j\frac{2\pi k}{N}n} \\ 
+\end{aligned}
+\qquad\qquad % adjust to suit
+\begin{aligned}[t]
+k = 0, 1, 2, ..., N - 1 \\
+\end{aligned}
 \end{equation}
 \begin{equation} \label{equ:idft}
-x[n] = \frac{1}{N}\sum_{k=0}^{N-1} X[k]e^{j\frac{2\pi n}{N}k}
+\openup\jot
+\begin{aligned}[t]
+x[n] = \frac{1}{N}\sum_{k=0}^{N-1} X[k]e^{j\frac{2\pi n}{N}k}  \\  
+\end{aligned}
+\qquad\qquad % adjust to suit
+\begin{aligned}[t]
+ n = 0, 1, 2, ..., N - 1 \\
+ \end{aligned}
 \end{equation}
 \begin{tabular}{ l l l l}
 	gdzie: & $X[k]$ &  - & k-ta próbka widma dyskretnego sygnału, \\
 	&	$x[n]$ & - &  n-ta próbka dyskretnego sygnału w dziedzinie czasu, \\
 	&	$N$ & - &  ilość próbek sygnału poddanego przekształceniu Fouriera,\\
-	&	$n$ & = &  próbki dyskretnego sygnału, n = 0, 1, 2, ..., N - 1 \\
+	&	$n$ & - &  próbki dyskretnego sygnału w dziedzinie czasu, \\
+	&	$k$ & - &  próbki dyskretnego widma sygnału, \\
 \end{tabular}
 
-We wzorach \ref{equ:dft} i \ref{equ:idft} przyjęto indeksowanie asymetryczne.
+We wzorach \ref{equ:dft} i \ref{equ:idft} przyjęto indeksowanie asymetryczne. Zapis taki wybrano z uwagi na bardziej czytelną postać. W celu uproszczenia zapisu definicji DFT stosuje się współczynniki obrotu (ang. twiddle factors):
+\begin{equation} \label{equ:twid_fact}
+\openup\jot
+\begin{aligned}[t]
+	W_{N}^{kn} = e^{-j\frac{2\pi}{N}nk}  \\
+\end{aligned}
+\qquad\qquad % adjust to suit
+\begin{aligned}[t]
+   k, n = 0, 1, 2, ..., N - 1 \\
+\end{aligned}
+\end{equation}
+
+Współczynniki obrotu ułatwiają obliczenia dzięki ich prostej interpretacji graficznej. Interpretowane są one jako wskazy na wykresie kołowym. Każdy ze współczynników należy rozumieć jako liczbę $e^{-j\frac{2\pi}{N}nk}$ podniesioną do potęgi $k$ razy $n$. W celu uzyskania uproszczonego zapisu definicji należy również zapisać próbki widma i sygnału w postaci wektorowej:
+
+\begin{equation} \label{equ:dft_wekt}
+\openup\jot
+\begin{aligned}[t]
+\mathbf{X} = 
+\begin{bmatrix} 
+X[0] \\ X[1] \\ ... \\ X[N-1]
+\end{bmatrix}
+\end{aligned}
+\qquad\qquad % adjust to suit
+\begin{aligned}[t]
+\mathbf{x} =  
+\begin{bmatrix} 
+x[0] \\ x[1] \\ ... \\ x[N-1]
+\end{bmatrix}
+\end{aligned}
+\end{equation}
+
+Ze wzorów \ref{equ:twid_fact} i \ref{equ:dft_wekt} uzyskuje się uproszczony zapis definicji DFT:
+\begin{equation} \label{equ:dft_upr}
+	\mathbf{X} = [W_{N}^{kn}]\mathbf{x}
+\end{equation}
+\begin{equation} \label{equ:idft_upr}
+\mathbf{X} = \frac{1}{N}[W_{N}^{-kn}]\mathbf{x}
+\end{equation}
+
+\subsection{Właściwości przekształcenia DFT}
+%Technika cyfrowego przetwarzania sygnałów 269 strona - A. Leśnicki
+Transformata DFT posiada wiele właściwości, które ułatwiają przetwarzanie sygnałów cyfrowych. W poniższej tabeli przedstawiono te, które użyte wykorzystane zostały w tej pracy.
+
+\begin{table}[H]
+	\caption{Wybrane właściwości przekształcenia DFT.}
+	\centering
+	\label{tab:dft_wlasc}
+	\begin{tabular}{|c|c|c|}
+		\hline 
+		\textbf{Nazwa właściwości} & \textbf{N-punktowy sygnał z okresem N} & \textbf{N-punktowe widmo DFT z okresem N} 	\\
+		\hline
+		Okresowość					& $x[n] = x[n + N]$ 				& $X[k] = X[k + N]$ 				\\	\hline
+		Superpozycja			& $a_{1}x_{1}[n] + a_{2}x_{2}[n]$			& $a_{1}X_{1}[k] + a_{2}X_{2}[k]$			\\	\hline
+		Przesunięcie cykliczne w czasie			& $x[n-K]$			& $ W_{N}^{kK}X[k]$			\\	\hline
+		Korelacja cykliczna 		 				& $x[n]*y^{*}[n]$			& $X[k]Y^{*}[k]$			\\ 	\hline
+	\end{tabular}
+\end{table}
+W środkowej kolumnie tabeli \ref{tab:dft_wlasc} przedstawiono sygnał w dziedzinie czasu, a w prawej kolumnie przedstawiono odpowiednik tego sygnału w dziedzinie czestotliwości dla różnych operacji matematycznych stosowanych często w dziedzinie cyfrowego przetwarzania sygnałów.
 
 \subsection{Algorytm FFT}
 %Technika cyfrowego przetwarzania sygnałów 292 strona - A. Leśnicki
 Wyznaczenie widma dyskretnego bezpośrednio z definicji \ref{equ:dft} jest bardzo wymagające obliczeniowo. Przy założeniu, że próbki sygnału poddanego przekształceniu są liczbami zespolonymi, do obliczenia DFT wymagane jest $N^{2}$ mnożeń zespolonych oraz $N(N-1)$ dodawań zespolonych.
 
-W praktyce obliczenia DFT sygnału wykonuje się z wykorzystaniem bardzo efektywnego algorytmu szybkiej transformacji Fouriera (FFT, ang. Fast Fourier Transform). Algorytm został przedstawiony w 1965 roku i zapoczątkował nowy rozdział w dziedzinie cyfrowego przetwarzania sygnałów. Złożoność obliczeniowa tego algorytmu wynosi $\frac{N}{2}log_{2}N$. Algorytm FFT można stosować również do obliczenia transformacji odwrotnej IDFT.
+W praktyce obliczenia DFT sygnału wykonuje się z wykorzystaniem bardzo efektywnego algorytmu szybkiej transformacji Fouriera (FFT, ang. Fast Fourier Transform). Algorytm został przedstawiony w 1965 roku przez Cooleya-Tukeya i zapoczątkował nowy rozdział w dziedzinie cyfrowego przetwarzania sygnałów. Algorytm FFT można stosować również do obliczenia transformacji odwrotnej IDFT.
 
 %https://en.wikipedia.org/wiki/File:DIT-FFT-butterfly.png
 %https://pl.qwe.wiki/wiki/Butterfly_diagram
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=10cm]{./grafiki/fft_motylki}
+	\includegraphics[width=8cm]{./grafiki/fft_motylki}
 	\captionsetup{justification=centering}
 	\caption{Algorytm FFT - schemat motylkowy.}
 	\label{rys:fft_motyl}
 \end{figure}
 
-Działanie algorytmu dla sygnału 8-próbkowego przedstawione zostało na schemacie \ref{rys:fft_motyl}.
+Algorytm FFT bazuje na metodzie dziel i zwyciężaj, dzieląc N-punktową transformację DFT na mniejsze transformacje N/2-punktowe, a następnie dokonując transformacji wyników poprzednich transformacji. Najbardziej popularną wersją algorytmu FFT jest FFT o podstawie 2, który wymaga $2^{k}$ próbek, gdzie k to liczba naturalna. Działanie algorytmu FFT o podstawie 2 opiera się na strukturach motylkowych i zostało przedstawione na rysunku \ref{rys:fft_motyl}.
+
+%http://home.agh.edu.pl/~kkowal/DSP/FFT_wyklad.pdf
+Dla liczby próbek $N$ równej $2^{k}$, występuje $lg_{2}N$ poziomów algorytmu, a na każdym z nich jest $N/2$ operacji motylkowych. Ostatecznie złożoność obliczeniowa algorytmu FFT wynosi $\frac{N}{2}log_{2}N$. Pokazuje to, iż algorytm Cooleya-Tukeya jest zdecydowanie bardziej wydajny od obliczania DFT sygnału z definicji.
