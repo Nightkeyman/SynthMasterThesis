@@ -214,44 +214,43 @@ interrupt void dmax_isr( void )
 			i = OVERLAP%FRAME_SIZE;
 		}
 		int index = 0;
-		//if(sem_dac == 0) {
-			for(i = 0; i < FRAME_SIZE; i++) {
-				index = licz*FRAME_SIZE + i;
-				if (index < 1024 - OVERLAP) {
-					if (whichwaveform){
-						dmaxDacBuffer[!PP][0][0][i] = waveform1[index];
-						dmaxDacBuffer[!PP][1][0][i] = waveform1[index];
-						plot[index] = waveform1[index];
-					} else {
-						dmaxDacBuffer[!PP][0][0][i] = waveform0[index];
-						dmaxDacBuffer[!PP][1][0][i] = waveform0[index];
-						plot[index + 1024 - OVERLAP] = waveform0[index];
-					}
+		for(i = 0; i < FRAME_SIZE; i++) {
+			index = licz*FRAME_SIZE + i;
+			if (index < 1024 - OVERLAP) {
+				if (whichwaveform){
+					dmaxDacBuffer[!PP][0][0][i] = waveform1[index];
+					dmaxDacBuffer[!PP][1][0][i] = waveform1[index];
+					plot[index] = waveform1[index];
 				} else {
-					int wsp = -1024 + OVERLAP + index;
-					if (whichwaveform){
-						dmaxDacBuffer[!PP][0][0][i] = waveform1[index] + waveform0[wsp];
-						dmaxDacBuffer[!PP][1][0][i] = waveform1[index] + waveform0[wsp];
-						plot[index] = waveform1[index] + waveform0[wsp];
-					} else {
-						dmaxDacBuffer[!PP][0][0][i] = waveform0[index] + waveform1[wsp];
-						dmaxDacBuffer[!PP][1][0][i] = waveform0[index] + waveform1[wsp];
-						plot[index + 1024 - OVERLAP] = waveform0[index] + waveform1[wsp];
+					dmaxDacBuffer[!PP][0][0][i] = waveform0[index];
+					dmaxDacBuffer[!PP][1][0][i] = waveform0[index];
+					plot[index + 1024 - OVERLAP] = waveform0[index];
+				}
+			} else {
+				int wsp = -1024 + OVERLAP + index;
+				if (whichwaveform){
+					dmaxDacBuffer[!PP][0][0][i] = waveform1[index] + waveform0[wsp];
+					dmaxDacBuffer[!PP][1][0][i] = waveform1[index] + waveform0[wsp];
+					plot[index] = waveform1[index] + waveform0[wsp];
+				} else {
+					dmaxDacBuffer[!PP][0][0][i] = waveform0[index] + waveform1[wsp];
+					dmaxDacBuffer[!PP][1][0][i] = waveform0[index] + waveform1[wsp];
+					plot[index + 1024 - OVERLAP] = waveform0[index] + waveform1[wsp];
+				}
+				if (index >= 1024-1){
+					if(whichwaveform == 1) {
+						whichwaveform = 0;
+					} else if(whichwaveform == 0) {
+						whichwaveform = 1;
 					}
-					if (index >= 1024-1){
-						if(whichwaveform == 1) {
-							whichwaveform = 0;
-						} else if(whichwaveform == 0) {
-							whichwaveform = 1;
-						}
-						sem_dac = 1;
-					}
+					sem_dac = 1;
 				}
 			}
-		//}
-		//OBuf2.ptab[LEFT][CH_0] = (int)waveform[wav_iterator];
-		//OBuf2.ptab[RIGHT][CH_0] = (int)waveform[wav_iterator];
-/*
+		}
+		/*
+		OBuf2.ptab[LEFT][CH_0] = (int)waveform[wav_iterator];
+		OBuf2.ptab[RIGHT][CH_0] = (int)waveform[wav_iterator];
+
 		wav_iterator = wav_iterator + 1;
 		if(wav_iterator >= N)
 			wav_iterator = 0;
@@ -259,11 +258,11 @@ interrupt void dmax_isr( void )
         Buf[k] = OBuf3.ptab[LEFT][CH_0][20];  //Zapamiêtanie próbki wyjœciowej
         k++;							  //w buforze pomocniczym
         if (k == N) { k = 0; }
-*/
+		 */
+
         licz++;
         if(licz >= 8) {
         	licz = 0;
-        	//sem_dac = 1;
         }
 	}
 }
