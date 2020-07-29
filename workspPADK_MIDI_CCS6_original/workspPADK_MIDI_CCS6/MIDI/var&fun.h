@@ -166,7 +166,7 @@ IOBufType3 OBuf3;
 //  Audio Buffers
 //
 int dmaxDacBuffer[PINGPONG][STEREO][NUM_CHANNEL][FRAME_SIZE];
-int dmaxAdcBuffer[PINGPONG][STEREO][NUM_CHANNEL][FRAME_SIZE];
+int dmaxAdcBuffer[PINGPONG][STEREO][NUM_CHANNEL][1];
 
 int gain = 1;
 int opcja = 1;

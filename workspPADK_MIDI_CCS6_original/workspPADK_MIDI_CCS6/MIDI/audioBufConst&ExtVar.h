@@ -24,8 +24,8 @@ extern CSL_IntcEventEnableState eventStat_midi;
 //
 //  Audio Buffers const
 //
-//#define FRAME_SIZE  80
-#define FRAME_SIZE  1
+//#define FRAME_SIZE  217
+#define FRAME_SIZE 128
 #define NUM_CHANNEL 4
 #define STEREO      2
 #define PINGPONG    2
@@ -72,7 +72,7 @@ extern IOBufType3 IBuf3;
 extern IOBufType3 OBuf3;
 
 extern int dmaxDacBuffer[PINGPONG][STEREO][NUM_CHANNEL][FRAME_SIZE];
-extern int dmaxAdcBuffer[PINGPONG][STEREO][NUM_CHANNEL][FRAME_SIZE];
+extern int dmaxAdcBuffer[PINGPONG][STEREO][NUM_CHANNEL][1];
 
 extern int gain;
 extern int opcja;

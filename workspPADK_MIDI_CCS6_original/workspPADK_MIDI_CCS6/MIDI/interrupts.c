@@ -4,7 +4,9 @@
 #include <csl_dmax.h>
 #include <csl_mcasp.h>
 #include <stdint.h>
-
+#include <stdio.h>
+#include <string.h>
+#include <math.h>
 
 interrupt void dmax_isr( void );
 interrupt void nmi_isr( void );
@@ -83,18 +85,29 @@ int we[STEREO][NUM_CHANNEL];
 int wy[STEREO][NUM_CHANNEL];
 //int wl1, wp1, wl2, wp2, wl3, wp3, wl4, wp4;
 
-#define N 4096 // musi byc 2x tablica wystawiana na przerwanie (??)
+#define N 1024 // musi byc 2x tablica wystawiana na przerwanie (??)
 int Buf_1[N];  // bufor pomocniczy do "obserwacji" danych wejsciowych
 int Buf[N];  // bufor pomocniczy do "obserwacji" danych wyjœciowych
-int k=0;
-extern float waveform[N];
+int k = 0;
+extern int waveform0[1024];
+extern int waveform1[1024];
+int plot[2048];
+extern volatile int whichwaveform;
+#define OVERLAP 128
+#define MIDI_TONE_RANGE 128
+
 int wav_iterator = 0;
+volatile unsigned PP;
+volatile unsigned sem_dac = 0;
+
 
 #define Fs 96000
 #define M_PI 3.1416
-extern int notes[128];
+extern float freqs[MIDI_TONE_RANGE];
+extern int pressedkeys;
 int generator_interator = 0;
 int sound = 0;
+int licz = 0;
 double sound_double = 0;
 // ################## DAC/ADC end ##################
 
@@ -105,6 +118,10 @@ double sound_double = 0;
 unsigned char uartdata[1];
 extern unsigned char data_midi[1];
 // ################## UART end #####################
+
+// ################## MIDI RELATED VARs ############
+int sem_new_note = 0; // 0 - 128
+// ################## MIDI end #####################
 
 interrupt void nmi_isr( void )
 {
@@ -122,16 +139,33 @@ interrupt void midi_isr( void )
 			unsigned char status = (MIDI_pull(-2)>>4)&0x0F;
 			if (status == 0x09) { // note on
 				unsigned char note = MIDI_pull(-1)&0x7f;
-				notes[note] = 1;
+				float freq_wav = 261*pow(1.059463,note - 48);
+				int i = 0;
+
+				for (i = 0; i < 6; i++) {
+					if (freqs[i] == 0) {
+						freqs[i] = freq_wav;
+						break;
+					}
+				}
+				pressedkeys++;
 				MIDI_clear();
 			} else if (status == 0x08) { // note off
 				unsigned char note = MIDI_pull(-1)&0x7f;
-				notes[note] = 0;
+				float freq_wav = 261*pow(1.059463,note - 48);
+				int i = 0;
+
+				for (i = 0; i< 6; i++) {
+					if (freqs[i] >= freq_wav-0.5 && freqs[i] <= freq_wav+0.5) {
+						freqs[i] = 0;
+						break;
+					}
+				}
+				pressedkeys--;
 				MIDI_clear();
 			}
 		}
 	}
-	UART_Write(data_midi, 1, UART_NO_WAIT);
 }
 
 interrupt void uart_isr( void )
@@ -158,12 +192,8 @@ interrupt void uart_isr( void )
 
 interrupt void dmax_isr( void )
 {
-	unsigned PP;
     volatile unsigned *GPTransferEntry;
     static int *pDac = (int *)dmaxDacBuffer[0];
-    static int *pAdc = (int *)dmaxAdcBuffer[0];
-    //sound = generator_interator - Fs/200;
-    //sound_double = (sin((double)(generator_interator)*2.0*M_PI*(1*100.0)*(1.0/Fs)));
 
 	// Verify if a DAC transfer completed
 	if( hDmaxDac->regs->DTCR0 & (1<<DAC_TCC) )
@@ -171,67 +201,69 @@ interrupt void dmax_isr( void )
 		hDmaxDac->regs->DTCR0 = (1<<DAC_TCC);
 
 		// Save the pointer of the audio buffer that has just been transmitted
-	    GPTransferEntry  = (unsigned *)&hDmaxDac->regs->HiPriorityEventTable;
-		GPTransferEntry += ((*(hDmaxDac->hiTableEventEntryPtr)>>8)&0x07F);
-	    PP = GPTransferEntry[2] >> 31;     	
-		pDac = (int *)dmaxDacBuffer[!PP]; 
-	}
-	// Verify if a ADC transfer completed
-	if( hDmaxAdc->regs->DTCR0 & (1<<ADC_TCC) )
-	{
-		hDmaxAdc->regs->DTCR0 = (1<<ADC_TCC);
+		GPTransferEntry  = (unsigned *)&hDmaxDac->regs->HiPriorityEventTable;
+	    GPTransferEntry += ((*(hDmaxDac->hiTableEventEntryPtr)>>8)&0x07F);
+		PP = GPTransferEntry[2] >> 31;
+		pDac = (int *)dmaxDacBuffer[!PP];
+		//pDac = (int *)waveform[licz*128];
 
-		// Save the pointer of the audio buffer that has just been filled
-		GPTransferEntry  = (unsigned *)&hDmaxAdc->regs->HiPriorityEventTable;
-		GPTransferEntry += ((*(hDmaxAdc->hiTableEventEntryPtr)>>8)&0x07F);
-	    PP = GPTransferEntry[2] >> 31;     	
-		pAdc = (int *)dmaxAdcBuffer[!PP];
-		IBuf2.pBuf = pAdc;
-		we[LEFT][CH_0] = IBuf2.ptab[LEFT][CH_0];
-		we[RIGHT][CH_0] = IBuf2.ptab[RIGHT][CH_0];
-		we[LEFT][CH_1] = IBuf2.ptab[LEFT][CH_1];
-		we[RIGHT][CH_1] = IBuf2.ptab[RIGHT][CH_1];
-		we[LEFT][CH_2] = IBuf2.ptab[LEFT][CH_2];
-		we[RIGHT][CH_2] = IBuf2.ptab[RIGHT][CH_2];
-		we[LEFT][CH_3] = IBuf2.ptab[LEFT][CH_3];
-		we[RIGHT][CH_3] = IBuf2.ptab[RIGHT][CH_3];
-
-
-		wy[LEFT][CH_0] = gain * we[LEFT][CH_0];
-		wy[RIGHT][CH_0] = gain * we[RIGHT][CH_0];
-		wy[LEFT][CH_1] = gain * we[LEFT][CH_1];
-		wy[RIGHT][CH_1] = gain * we[RIGHT][CH_1];
-		wy[LEFT][CH_2] = gain * we[LEFT][CH_2];
-		wy[RIGHT][CH_2] = gain * we[RIGHT][CH_2];
-		wy[LEFT][CH_3] = gain * we[LEFT][CH_3];
-		wy[RIGHT][CH_3] = gain * we[RIGHT][CH_3];
-
-		OBuf2.pBuf = pDac;
+		OBuf3.pBuf = pDac;
+		int i = 0;
+		if (licz == 0){
+			licz = OVERLAP/FRAME_SIZE;
+			i = OVERLAP%FRAME_SIZE;
+		}
+		int index = 0;
+		for(i = 0; i < FRAME_SIZE; i++) {
+			index = licz*FRAME_SIZE + i;
+			if (index < 1024 - OVERLAP) {
+				if (whichwaveform){
+					dmaxDacBuffer[!PP][0][0][i] = waveform1[index];
+					dmaxDacBuffer[!PP][1][0][i] = waveform1[index];
+					plot[index] = waveform1[index];
+				} else {
+					dmaxDacBuffer[!PP][0][0][i] = waveform0[index];
+					dmaxDacBuffer[!PP][1][0][i] = waveform0[index];
+					plot[index + 1024 - OVERLAP] = waveform0[index];
+				}
+			} else {
+				int wsp = -1024 + OVERLAP + index;
+				if (whichwaveform){
+					dmaxDacBuffer[!PP][0][0][i] = waveform1[index] + waveform0[wsp];
+					dmaxDacBuffer[!PP][1][0][i] = waveform1[index] + waveform0[wsp];
+					plot[index] = waveform1[index] + waveform0[wsp];
+				} else {
+					dmaxDacBuffer[!PP][0][0][i] = waveform0[index] + waveform1[wsp];
+					dmaxDacBuffer[!PP][1][0][i] = waveform0[index] + waveform1[wsp];
+					plot[index + 1024 - OVERLAP] = waveform0[index] + waveform1[wsp];
+				}
+				if (index >= 1024-1){
+					if(whichwaveform == 1) {
+						whichwaveform = 0;
+					} else if(whichwaveform == 0) {
+						whichwaveform = 1;
+					}
+					sem_dac = 1;
+				}
+			}
+		}
+		/*
 		OBuf2.ptab[LEFT][CH_0] = (int)waveform[wav_iterator];
 		OBuf2.ptab[RIGHT][CH_0] = (int)waveform[wav_iterator];
-		OBuf2.ptab[LEFT][CH_1] = wy[LEFT][CH_1];
-		OBuf2.ptab[RIGHT][CH_1] = wy[RIGHT][CH_1];
-		OBuf2.ptab[LEFT][CH_2] = wy[LEFT][CH_2];
-		OBuf2.ptab[RIGHT][CH_2] = wy[RIGHT][CH_2];
-		OBuf2.ptab[LEFT][CH_3] = wy[LEFT][CH_3];
-		OBuf2.ptab[RIGHT][CH_3] = wy[RIGHT][CH_3];
 
-//		OBuf2.ptab[LEFT_o][CH_0] = wy[LEFT][CH_0];  // zamiana kanalów: Left <-> Right
-//		OBuf2.ptab[RIGHT_o][CH_0] = wy[RIGHT][CH_0];
-//		OBuf2.ptab[LEFT_o][CH_1] = wy[LEFT][CH_1];
-//		OBuf2.ptab[RIGHT_o][CH_1] = wy[RIGHT][CH_1];
-//		OBuf2.ptab[LEFT_o][CH_2] = wy[LEFT][CH_2];
-//		OBuf2.ptab[RIGHT_o][CH_2] = wy[RIGHT][CH_2];
-//		OBuf2.ptab[LEFT_o][CH_3] = wy[LEFT][CH_3];
-//		OBuf2.ptab[RIGHT_o][CH_3] = wy[RIGHT][CH_3];
-
-		wav_iterator++;
+		wav_iterator = wav_iterator + 1;
 		if(wav_iterator >= N)
 			wav_iterator = 0;
 
-        Buf[k] = OBuf2.ptab[LEFT][CH_0];  //Zapamiêtanie próbki wyjœciowej
+        Buf[k] = OBuf3.ptab[LEFT][CH_0][20];  //Zapamiêtanie próbki wyjœciowej
         k++;							  //w buforze pomocniczym
         if (k == N) { k = 0; }
+		 */
+
+        licz++;
+        if(licz >= 8) {
+        	licz = 0;
+        }
 	}
 }
 
