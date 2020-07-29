@@ -9,6 +9,7 @@
 \usepackage{float}
 \usepackage{siunitx}
 \usepackage{caption}
+\raggedbottom
 \usepackage[singlelinecheck=false % <-- important
 ]{caption}
 \newcommand{\desctotoc}[1]{%
@@ -22,9 +23,9 @@
 	\let\cleardoublepage\clearpage
 	\include{streszczenie}
 	\include{abstract}
-%	\tableofcontents    % spis treci
+	\tableofcontents    % spis treci
 	
-	\include{spis}
+%	\include{spis}
 	\include{skroty}
 	\include{chapter1}
 	\include{chapter2}
