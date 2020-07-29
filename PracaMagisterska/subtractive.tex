@@ -18,7 +18,62 @@ Przykładowy wynik takiego działania przedstawiony jest na rysunku \ref{rys:sub
 	\caption{Zasada działania metody subtraktywnej.}
 	\label{rys:sub_wykres1}
 \end{figure}
-Jak widać na \ref{rys:sub_wykres1}, na początku generowane jest 1024 próbek przbiegu prostokątnego. Następnie obliczane jest widmo tego sygnału. Z widma usuwane są wyższe składowe harmoniczne. Działanie to odpowiada filtracji idealnym filtrem dolnoprzepustowym. Z takiego widma, za pomocą odwrotnej transformacji Fouriera, obliczany jest przebieg czasowy. W wyniku otrzymuje się sygnał prostokątny po filtracji dolnoprzepustowej.
+Jak widać na \ref{rys:sub_wykres1}, na początku generowane jest 1024 próbek przebiegu prostokątnego. Następnie obliczane jest widmo tego sygnału. Z widma usuwane są wyższe składowe harmoniczne. Osiągnąć to można za pomocą filtracji idealnym filtrem dolnoprzepustowym. Przykład idealnego filtra dolnoprzepustowego opisanego w dziedzinie częstotliwości jako
+\begin{equation} \label{equ:sub_lowpass}
+H(\omega)=\left \{\begin{array}{ r l }
+1, & \quad \text{$dla$ } \omega \leqslant \omega_{gr}\\
+0, & \quad  \text{$dla$ } \omega > \omega_{gr}
+\end{array}
+\right.
+\end{equation}
+\begin{tabular}{ l l l l}
+	gdzie: & $\omega$ &  - & pulsacja, \\
+	&	$\omega_{gr}$ & - &  pulsacja graniczna filtru,\\
+\end{tabular} \\ \\
+przedstawiono na rysunku \ref{rys:sub_lowpass}. Pulsacja graniczna filtru to taka pulsacja, powyżej której wzmocnienie jest mniejsze niż 3 dB w stosunku do pasma przepustowego tego filtru. W przypadku idealnym wzmocnienie zmienia się skokowo z 1 na 0 dokładnie na pulsacji granicznej. W pokazanym przykładzie pulsacja graniczna wynosi 1000 Hz.
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=8cm]{grafiki/sub_lowpass}
+	\captionsetup{justification=centering}
+	\caption{Idealny filtr dolnoprzepustowy.}
+	\label{rys:sub_lowpass}
+\end{figure}
+
+Aby zadany sygnał przefiltrować pożądanym filtrem, należy wykonać operację splotu:
+\begin{equation} \label{equ:sub_splot}
+y(t)= h(t)*x(t) = \int_{0}^{t} h(\tau)x(t-\tau)d\tau
+\end{equation}
+\begin{tabular}{ l l l l}
+	gdzie: & $y(t)$ &  - & wynik splotu, \\
+	&	$h(t)$ & - &  odpowiedź impulsowa filtru,\\
+	&	$x(t)$ & - &  filtrowany sygnał,\\
+	
+\end{tabular} \\ \\
+który w przypadku dyskretnym jest zdefiniowany jako:
+\begin{equation} \label{equ:sub_splot_dyskretny}
+y[n]= h[n]*x[n] = \sum_{k=-\infty}^{\infty} h[k]x[n-k]
+\end{equation}
+
+Jedną z własności przekształcenia Fouriera jest to, że operacji splotu w dziedzinie czasu odpowiada operacja mnożenia w dziedzinie częstotliwości
+\begin{equation} \label{equ:sub_splot_twierdzenie}
+\mathcal{F}\{y(t)\} = \mathcal{F}\{h(t)*x(t)\} = H(\omega) X(\omega)
+\end{equation}
+\begin{tabular}{ l l l l}
+	gdzie: & $\mathcal{F}\{y(t)\}$ &  - & transformata Fouriera wyniku splotu, \\
+	&	$ H(\omega)$ & - &  transformata Fouriera odpowiedzi impulsowej filtru,\\
+	&	$X(\omega)$ & - &  transformata Fouriera filtrowanego sygnału.\\
+	
+\end{tabular} \\ \\
+Analogicznie, dla przypadku dyskretnego:
+\begin{equation} \label{equ:sub_splot_twierdzenie_dyskretne}
+\mathcal{F}\{y[n]\} = \mathcal{F}\{h[n]*x[n]\} = H(k) X(k).
+\end{equation}
+Oznacza to, że równoważnym do działania opisanego w \ref{equ:sub_splot_dyskretny} jest:
+\begin{equation} \label{equ:sub_splot_dyskretny2}
+y[n] = \mathcal{F}^{-1}\{ H(k) X(k)\} 
+\end{equation}
+
+Zatem z przefiltrowanego widma, za pomocą odwrotnej transformacji Fouriera, obliczany jest przebieg czasowy. W pokazanym przykładzie na \ref{rys:sub_wykres1}, w wyniku otrzymuje się sygnał prostokątny po filtracji dolnoprzepustowej.
 \section{Implementacja syntezy subtraktywnej}
 W przypadku syntezatorów analogowych, poszczególne bloki są realizowane za pomocą elementów elektronicznych takich jak oscylatory (VCO) oraz przestrajalne filtry. W syntezatorach cyfrowych implementacje mogą być różne, jednak muszą być na tyle wydajne obliczeniowo, aby dana platforma sprzętowa poradziła sobie z syntezą dźwięku w czasie rzeczywistym bez artefaktów dźwiękowych. W tym podrozdziale opisana zostanie obrana droga implementacji metody subtraktywnej na procesorze sygnałowym. 
 Próbki sygnału są syntezowane w sposób blokowy. Blok danych składa się z $N=1024$ próbek.
