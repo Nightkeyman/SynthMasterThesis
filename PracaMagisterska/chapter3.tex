@@ -6,17 +6,32 @@ Cały kod programu na procesor DSP napisany został w języku C. Program pisano 
 
 % zdjęcie PADK z debuggerem
 
-\section{Parametry procesora TMS320C6727}
-%https://www.ti.com/lit/ds/symlink/tms320c6727.pdf?ts=1595978326019&ref_url=https%253A%252F%252Fwww.google.com%252F --> strona 13 wypisane w myslnikach np busy
+\section{Układ instrumentu}
+% Zdjęcie i opis co z czym łączymy
+
+\section{Płyta PADK}
+
+\subsection{Procesor TMS320C6727}
+%https://www.ti.com/lit/ds/symlink/tms320c6727.pdf?ts=1595978326019&ref_url=https%253A%252F%252Fwww.google.com%252F 
+%--> glowne feature'y
+%--> strona 13 wypisane w myslnikach np busy
+
+\subsection{Peryferia komunikacyjne}
+
+\subsection{Przetworniki DAC}
+
+
 
 \section{Mechanizmy szybkiego przetwarzania danych}
 Procesor sygnałowy TMS320C6727 jest przeznaczony między innymi do szybkiego przetwarzania danych i sygnałów. Poza wysoką szybkością taktowania procesora, firma Texas Instruments zawiera dodatkowe mechanizmy akceleracji przepływu danych i sygnałów. Zostały one opisane w poniższych podpunktach.
 
 \subsection{McASP}
 % https://www.ti.com/lit/an/sprack0/sprack0.pdf?ts=1595842361762&ref_url=https%253A%252F%252Fwww.google.com%252F
-McASP to akronim od Multichannel Audio Serial Port. Jest to komunikacyjne urządzenie peryferyjne dedykowane do przetwarzania danych audio lub wideo. Został zaprojektowany w celu przypadków wymagających wielokanałowego przetwarzania dźwięku.
+McASP to akronim od Multichannel Audio Serial Port. Jest to komunikacyjne urządzenie peryferyjne dedykowane do przetwarzania danych audio lub wideo. Został zaprojektowany w celu przypadków wymagających wielokanałowego przetwarzania dźwięku. Jedną z najbardziej przydatnych właściwości narzędzia McASP jest schemat wielozegarowy. Pozwala on na niezależność pomiędzy portami odbierającymi i nadającymi. Komunikacja, którą zarządza McASP może odbywać się poprzez interfejs I2S (ang. Inter-IC Sound), I2C (ang. Inter-Integrated Circuit) lub SPI (ang. Serial Peripheral Interface).
 
-Jedną z najbardziej przydatnych rzeczy w odniesieniu do narzędzia McASP jest schemat wielozegarowy. Pozwala on na niezależność pomiędzy portami odbierającymi i nadającymi
+Kiedy dane przepływają przez McASP, mogą zostać dostosowane tak, aby reprezentacja stałoprzecinkowa używana przez kod aplikacji była niezależna od reprezentacji używanej przez urządzenia zewnętrzne, bez wymagania dodatkowej konwersji przez procesor.
+
+W niniejszej pracy narzędzie McASP stosowane jest do przepływu danych między DAC a procesorem. W ramach inicjalizacji McASP ustawia odpowiednią szybkość próbkowania dla modułu DAC.
 
 \subsection{dMAX}
 %https://www.ti.com/lit/ug/spru795d/spru795d.pdf?ts=1595843361787&ref_url=https%253A%252F%252Fwww.google.com%252F, strona 14, Overview
@@ -27,23 +42,18 @@ Zasada działania dMAX opiera się na sygnałach zdarzeń (ang. event signals). 
 Częścią mechanizmu dMAX jest również bufor cyrkulacyjny FIFO. Pozwala on na równoczesny, asynchroniczny odczyt i zapis danych do jednego bufora dwustronnego. Narzędzie dMAX wykrywa kiedy dane zostają zapisane do bufora i natychmiastowo wywołuje odwrócenie go. Po odwróceniu, zapisane chwilę wcześniej dane mogą zostać odczytane z drugiej strony bufora, natomiast równocześnie kolejne dane zapisywane są po pierwszej stronie.
 
 
-\section{Komunikacja z klawiaturą muzyczną  (MIDI)}
+\section{Komunikacja z płytą PADK}
+Do płyty PADK dołączone zostały dodatkowe biblioteki firmy Lyrtech, które ułatwiają obsługę komunikacji z płytą. Przykładem interfejsów, do których zostały utworzone nadmienione biblioteki to UART oraz MIDI.
+
+\subsection{Komunikacja z klawiaturą muzyczną  (MIDI)}
 
 
-
-
-\section{Komunikacja z interfejsem użytkownika (UART)}
-
-
-
-
-\section{Interfejs użytkownika}
-
+\subsection{Komunikacja z interfejsem użytkownika (UART)}
 
 
 
 \section{Wydobycie dźwięku (DAC)}
-
+% pamiętać o: odniesienie do dMAX z buforem cyrkulacyjnym
 
 
 
@@ -52,13 +62,29 @@ Częścią mechanizmu dMAX jest również bufor cyrkulacyjny FIFO. Pozwala on na
 
 
 
-\section{Implementacja FFT}
+\section{Wykorzystanie algorytmu FFT}
 % jakl linkujemy biblioteke, o bibliotece
-% bitreverse opisac to co mamy
+%http://www.secs.oakland.edu/~ganesan/old/courses/CSE671SU08/CSE%20671%20Lab%204%20ANC%20Code/Lee's%20adaptive%20wiener%20filter/DSPF_sp_cfftr2_dit.h
+%
 
+W pamięci ROM procesorów z serii TMS320C672x zostały umieszczone specjalnie zoptymalizowane biblioteki, dedykowane do szybkiego przetwarzania sygnałów cyfrowych. Skompilowane biblioteki zostały napisane w asemblerze w celu większej efektywności obliczeniowej. 
+
+%https://www.ti.com/lit/an/spraas8/spraas8.pdf?ts=1596035199216&ref_url=https%253A%252F%252Fwww.google.com%252F
+W naszym projekcie, użyta została biblioteka \emph{DSP Library} z procesora TMS320C6727, która posiada efektywne obliczeniowo funkcje takie jak: transformacja FFT, odwracanie macierzy lub operacja na wektorach. W celu zawarcia jej w projekcie z programem na DSP, należało zmodyfikować komende pliku linkera dodając do niej bibliotekę o nazwie \emph{c67xdsplibR.lib}. Dodatkowo zmieniono sekcje pamięci, tak aby linker został odpowiednio poinstruowany, do których obszarów pamięci powinien się odnieść.
+
+%http://software-dl.ti.com/jacinto7/esd/processor-sdk-rtos-jacinto7/latest/exports/docs/dsplib_c66x_3_4_0_0/docs/doxygen/html/dsplib_html/group___f_f_t.html
+Do pełnej transformacji FFT użyto dwóch funkcji z nadmienionej biblioteki: DSPF\_sp\_cfftr2\_dit() oraz DSPF\_sp\_bitrev\_cplx(). Pierwsza z nich odpowiada za przeprowadzenie algorytmu FFT radix-2 dla liczb zmiennoprzecinkowych. Sygnał na wejściu powinien posiadać N liczb zespolonych ułożonych w tablicy kolejno w pary liczb rzeczywistych i urojonych. Jako drugi argument wejściowy, funkcja przyjmuje tablicę współczynników obrotu dla FFT o długości N/2. Opisywana funkcja może również zostać użyta do uzyskania transformaty odwrotnej poprzez zmianę kolejności współczynników obrotu, a na końcu podzielenie wynikowej transformaty przez N, czyli według wzoru \ref{equ:idft_upr}.
+
+
+
+% bitreverse opisac to co mamy, twiddle factory itp
 
 \section{Generowanie przebiegów czasowych}
-
+% waveformy wykorzystywane w subtractive, additive oraz FM - dlatego opisywane tutaj
 
 
 \section{ADSR}
+
+
+
+\section{Interfejs użytkownika}
