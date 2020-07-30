@@ -31,7 +31,7 @@ McASP to akronim od Multichannel Audio Serial Port. Jest to komunikacyjne urząd
 
 Kiedy dane przepływają przez McASP, mogą zostać dostosowane tak, aby reprezentacja stałoprzecinkowa używana przez kod aplikacji była niezależna od reprezentacji używanej przez urządzenia zewnętrzne, bez wymagania dodatkowej konwersji przez procesor.
 
-W niniejszej pracy narzędzie McASP stosowane jest do przepływu danych między DAC a procesorem. W ramach inicjalizacji McASP ustawia odpowiednią szybkość próbkowania dla modułu DAC.
+W niniejszej pracy narzędzie McASP stosowane jest do przepływu danych między DAC a procesorem. W ramach inicjalizacji zegarów na płycie PADK, McASP ustawia odpowiednią szybkość próbkowania dla modułu DAC.
 
 \subsection{dMAX}
 %https://www.ti.com/lit/ug/spru795d/spru795d.pdf?ts=1595843361787&ref_url=https%253A%252F%252Fwww.google.com%252F, strona 14, Overview
@@ -92,7 +92,14 @@ Aby zapewnić wygodny w użyciu oraz odporny na błędy przepływ informacji, ut
 	\label{rys:real_uartframe}
 \end{figure}
 Na rysunku \ref{rys:real_uartframe} pokazana została struktura 9-bajtowej ramki danych, która jest przesyłana między DSP a komputerem. Składa się ona z dwóch bajtów identyfikujących, sześciu bajtow danych oraz jednego bajta sumy kontrolnej. Podobnie jak w przypadku MIDI, do identyfikacji i interpretacji przychodzących ramek, wykorzystywana jest kolejka FIFO. Tym razem ma ona rozmiar 9 bajtów. Bajty przychodzące są odczytywane pojedynczo przy wykorzystaniu przerwania sprzetowego i wpisywane do kolejki FIFO. W momencie gdy na pierwszym miejscu w kolejce znajdzie się odpowiedni bajt identyfikujący ramkę, a na miejscu ósmym znajdzie się wartość tego bajta powiększona o jeden, to jest domniemanie, że odebrana została jakaś ramka danych. W ramach upewnienia się, dodatkowo obliczana jest suma kontrolna z bajtów danych. Gdy ramka przejdzie taką weryfikację, zostaje następnie przetworzona w zależności od informacji, które niesie. Opisany mechanizm działa zarówno na procesorze DSP, jak i na komputerze PC.
+<<<<<<< HEAD
 Takie dziewięciobajtowe ramki pozwalają na przesyłanie na przykład całych zmiennych 4-bajtowych lub jednocześnie trzech liczb 2-bajtowych. 
+=======
+Dziewięciobajtowe ramki pozwalają na przesyłanie całych zmiennych 4-bajtowych lub jednocześnie trzech liczb 2-bajtowych. 
+
+
+
+>>>>>>> JS: McASP update
 \section{Wydobycie dźwięku (DAC)}
 % pamiętać o: odniesienie do dMAX z buforem cyrkulacyjnym
 
@@ -119,6 +126,7 @@ Opisywana funkcja może również zostać użyta do uzyskania transformaty odwro
 
 %http://software-dl.ti.com/jacinto7/esd/processor-sdk-rtos-jacinto7/latest/exports/docs/dsplib_c66x_3_4_0_0/docs/doxygen/html/dsplib_html/group___d_s_p_f__sp__bitrev__cplx.html
 Funkcja DSPF\_sp\_bitrev\_cplx() odpowiada za zamianę kolejności próbek w tablicy wynikowej otrzymanej z funkcji realizującej algorytm FFT. Zmiana kolejności elementów tablicy realizowana jest przez odczytanie indeksów tablicy jako liczb w postaci bitowej, a następnie dokonanie lustrzanego odbicia każdego indeksu z osobna (ang. bit-reverse).
+
 
 
 \section{Generowanie przebiegów czasowych}
