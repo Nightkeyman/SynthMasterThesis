@@ -1,4 +1,5 @@
 \chapter{Subtraktywna metoda syntezy dźwięku}\label{chapter_subtractive}
+Jedną z większych trudności w cyfrowej implementacji syntezy subtraktywnej jest opracowanie programu, który jest w stanie ją przeprowadzić w czasie rzeczywistym na danej platformie sprzętowej. Program taki musi uwzględniać generowanie przebiegów okresowych, ich filtrację oraz zakładkowanie w celu pozbycia się artefaktów dźwiękowych. W tym rozdziale opisano zasadę działania subtraktywnej syntezy dźwięku, jej implementację na procesorze sygnałowym oraz interfejs użytkownika.
 \section{Zasada działania syntezy subtraktywnej}
 Metoda subtraktywna polega na wygenerowaniu przebiegu okresowego bogatego pod względem składowych harmonicznych. Taki sygnał poddaje się filtracji w celu wytłumienia części składowych, co prowadzi do uzyskania interesujących dźwięków. Najczęściej wykorzystywanymi przebiegami w tej metodzie są: prostokątny, trójkątny, piłokształtny. Do usuwania składowych harmonicznych można zastosować filtry dolnoprzepustowe, górnoprzepustowego, pasmo-zaporowe czy pasmo-przepustowe. Na rysunku \ref{rys:sub_diagram} pokazano schemat blokowy opisanego postępowania.
 
@@ -30,7 +31,11 @@ H(\omega)=\left \{\begin{array}{ r l }
 	gdzie: & $\omega$ &  - & pulsacja, \\
 	&	$\omega_{gr}$ & - &  pulsacja graniczna filtru,\\
 \end{tabular} \\ \\
-przedstawiono na rysunku \ref{rys:sub_lowpass}. Pulsacja graniczna filtru to taka pulsacja, powyżej której wzmocnienie jest mniejsze niż 3 dB w stosunku do pasma przepustowego tego filtru. W przypadku idealnym wzmocnienie zmienia się skokowo z 1 na 0 dokładnie na pulsacji granicznej. W pokazanym przykładzie pulsacja graniczna wynosi 1000 Hz.
+przedstawiono na rysunku \ref{rys:sub_lowpass}. Pulsacja graniczna filtru to taka pulsacja, powyżej której wzmocnienie jest mniejsze niż 3 dB w stosunku do pasma przepustowego tego filtru. W przypadku idealnym wzmocnienie zmienia się skokowo z 1 na 0 dokładnie na pulsacji granicznej. W pokazanym przykładzie pulsacja graniczna wynosi około 6283 rad/s, co zgodnie ze wzorem
+\begin{equation} \label{equ:sub_frequency}
+f = \frac{\omega}{2 \pi}
+\end{equation}
+daje częstotliwość równą 1000 Hz.
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=8cm]{grafiki/sub_lowpass}
@@ -72,14 +77,13 @@ Oznacza to, że równoważnym do działania opisanego w \ref{equ:sub_splot_dyskr
 \begin{equation} \label{equ:sub_splot_dyskretny2}
 y[n] = \mathcal{F}^{-1}\{ H(k) X(k)\} 
 \end{equation}
-
 Zatem z przefiltrowanego widma, za pomocą odwrotnej transformacji Fouriera, obliczany jest przebieg czasowy. W pokazanym przykładzie na \ref{rys:sub_wykres1}, w wyniku otrzymuje się sygnał prostokątny po filtracji dolnoprzepustowej.
 \section{Implementacja syntezy subtraktywnej}
 W przypadku syntezatorów analogowych, poszczególne bloki są realizowane za pomocą elementów elektronicznych takich jak oscylatory (VCO) oraz przestrajalne filtry. W syntezatorach cyfrowych implementacje mogą być różne, jednak muszą być na tyle wydajne obliczeniowo, aby dana platforma sprzętowa poradziła sobie z syntezą dźwięku w czasie rzeczywistym bez artefaktów dźwiękowych. W tym podrozdziale opisana zostanie obrana droga implementacji metody subtraktywnej na procesorze sygnałowym. 
 Próbki sygnału są syntezowane w sposób blokowy. Blok danych składa się z $N=1024$ próbek.
 
 \subsection{Generowanie przebiegu}
-W tablicy o $N$ elementach przechowywane są kolejne próbki sygnału podstawowego, czyli sygnału bogatego w wyższe składowe harmoniczne. Po dokonaniu filtracji i wystawieniu tych próbek na przetwornik cyfrowo-analogowy, w tablicy tej należy wygenerować kolejne 1024 próbek sygnału. Trzeba przy tym pamiętać o odpowiednim przesunięciu fazowym, tak aby zachować ciągłość pomiędzy kolejnymi blokami próbek wystawianych na przetwornik. Równanie \ref{equ:sub_1} opisuje sposób generowania przebiegu prostokątnego.
+W dwóch tablicach o $N$ elementach przechowywane są kolejne próbki sygnału podstawowego, czyli sygnału bogatego w wyższe składowe harmoniczne. Po dokonaniu filtracji i wystawieniu próbek jednej z tablic na przetwornik cyfrowo-analogowy, wystawiane są próbki z drugiej tablicy. W tym czasie w chwilowo nieużywanej tablicy należy wygenerować kolejne 1024 próbek sygnału. Trzeba przy tym pamiętać o odpowiednim przesunięciu fazowym, tak aby zachować ciągłość pomiędzy kolejnymi blokami próbek wystawianych na przetwornik. Równanie \ref{equ:sub_1} opisuje sposób generowania przebiegu prostokątnego.
 \begin{equation} \label{equ:sub_1}
 waveform[i]=\left \{\begin{array}{ r l }
 1, & \quad \text{$dla$ } sin(2\pi f\frac{k+i}{F_s}) > 0\\
@@ -136,11 +140,11 @@ Samo przesuwanie w fazie generowanych sygnałów opisanych w \ref{equ:sub_2} nie
 	\label{rys:sub_zakladkowania_brak}
 \end{figure}
 Rozwiązaniem tego problemu jest zakładkowanie każdych dwóch sąsiednich bloków próbek. Zakładkowanie polega na nasunięciu pewnej liczby $m$ początkowych próbek następnego bloku, na $m$ końcowych próbek bieżącego. W miejscach, gdzie bloki są na siebie nałożone, wartość każdej próbki obliczana jest jako średnia ważona z dwóch nałożonych na siebie próbek. Przy czym suma wag w każdej chwili czasu jest równa 1, wagi próbek bloku bieżącego maleją wraz z czasem, natomiast wagi próbek bloku następnego narastają. Najprostszym rozwiązaniem (a zatem efektywnym obliczeniowo) są wagi liniowe. Oznacza to, że wagi dla $m$ ostatnich lub pierwszych próbek bloku odpowiednio: liniowo maleją od 1 do 0 lub liniowo rosną od 0 do 1.
-Nakładane na siebie próbki muszą odpowiadać sygnałowi w tej samej fazie, zatem należy zmodyfikować przesunięcie fazowe opisane przez \ref{equ:sub_2} do postaci \ref{equ:sub_4}:
+Nakładane na siebie próbki muszą odpowiadać sygnałowi w tej samej fazie, zatem należy zmodyfikować przesunięcie fazowe opisane przez \ref{equ:sub_2} do postaci:
 \begin{equation} \label{equ:sub_4}
 k = k_{old} + N - m.
 \end{equation}
-Porównanie zakładkowania dla różnych wartości $m$ przedstawiono na \ref{rys:sub_overlaps}.
+Porównanie zakładkowania dla różnych wartości $m$ przedstawiono na rysunku  \ref{rys:sub_overlaps}.
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=10cm]{grafiki/sub_overlaps}
@@ -172,3 +176,25 @@ Zatem w programie na DSP, zamiast obliczać ciągle DFT, filtrację oraz IDFT ty
 	\caption{Własność liniowości przekształcenia Fouriera.}
 	\label{rys:sub_linearity}
 \end{figure}
+
+\section{Interfejs użytkownika}
+Przy syntezie subtraktywnej, użytkownik powinien mieć możliwość samodzielnego wyboru przebiegów podstawowych generowanych przy naciskaniu klawiszy oraz strojenia filtrów, które ten przebieg filtrować będą. W przypadku filtrów idealnych, jedyne co musi określić użytkownik dla ich działania, to ich częstotliwości graniczne.
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=12cm]{grafiki/sub_interface}
+	\captionsetup{justification=centering}
+	\caption{Interfejs użytkownika dla syntezy subtraktywnej.}
+	\label{rys:sub_interface}
+\end{figure}
+Na rysunku \ref{rys:sub_interface} zaznaczono trzy sekcje wykonanego interfejsu dla syntezy subtraktywnej. W pierwszej z nich znajduje się przycisk, który służy do aktywacji tej metody syntezy dźwięku. Po naciśnięciu tego klawisza, DSP otrzymuje komunikat, po którym przechodzi w tryb syntezy subtraktywnej.
+
+W sekcji drugiej znajdują się rodzaje przebiegów podstawowych, spośród których użytkownik może wybrać tylko jeden w danej chwili. Zaznaczenie dowolnego z nich zmienia w programie DSP odpowiednią flagę. Gdy następnie zostanie naciśnięty klawisz, wygenerowany zostanie właśnie taki przebieg podstawowy, jaki jest w interfejsie zaznaczony.
+
+W trzeciej sekcji znajdują rodzaje filtrów oraz suwaki pozwalające na wybór częstotliwości granicznych: dolnej, górnej lub obu jednocześnie - zależnie od wybranego rodzaju filtra. Podobnie jak przy wyborze rodzaju przebiegu podstawowego - tutaj również użytkownik zaznacza jeden z rodzajów filtra. W zależności od wybranego filtra, odblokowane zostaną odpowiednie suwaki pozwalające mieniać częstotliwości graniczne. Na przykład, dla filtra dolnoprzepustowego odblokowany zostanie tylko suwak dolny, gdyż to on odpowiada za częstotliwość graniczną górną. Natomiast dla filtru pasmo-przepustowego odblokowane zostaną oba suwaki, a pasmo przepustowe zawierać się będzie pomiędzy wskazaniem suwaka górnego - częstotliwości granicznej dolnej oraz suwaka dolnego - częstotliwości granicznej górnej.
+Zmian częstotliwości można dokonywać na dwa sposoby:
+\begin{itemize}
+	\item za pomocą suwaków. W tym wypadku wartość ustawiona za pomocą suwaka zostanie automatycznie wpisana do pola tekstowego skojarzonego z tym suwakiem.
+	\item Poprzez precyzyjne wpisanie wartości do pola tekstowego obok suwaka. W tej sytuacji suwak automatycznie się przesunie na pozycję odpowiadającą wpisanej wartości.
+\end{itemize}
+\section{Wyniki}
+
