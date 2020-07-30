@@ -46,12 +46,38 @@ Częścią mechanizmu dMAX jest również bufor cyrkulacyjny FIFO. Pozwala on na
 Do płyty PADK dołączone zostały dodatkowe biblioteki firmy Lyrtech, które ułatwiają obsługę komunikacji z płytą. Przykładem interfejsów, do których zostały utworzone nadmienione biblioteki to UART oraz MIDI.
 
 \subsection{Komunikacja z klawiaturą muzyczną  (MIDI)}
-
+% Datasheet "Professional Audio Development Kit Technical Reference Guide 1.4", September 2007
+Jednym z podstawowych peryferiów klawiatury muzycznej jest wyprowadzenie interfejsu MIDI. Przeważnie jest to pięciopinowe gniazdo DIN. W płycie PADK zastosowano jednak dziewięciopinowe gniazdo typu D-sub. Zatem wymagało to stworzenia odpowiedniego kabla, aby połączyć klawiaturę muzyczną z płytą PADK.
+Do obsługi interfejsu MIDI wykorzystana została biblioteka PADK\_MIDI.c, która zawiera takie funkcje jak:
+\begin{itemize}
+	\item MIDI\_Init - inicjalizacja interfejsu MIDI,
+	\item MIDI\_EnableLed1, MIDI\_EnableLed2 - sterowanie diodami LED interfejsu MIDI,
+	\item MIDI\_Read - odczyt przychodzących bajtów. 
+\end{itemize}
+Aby w jak najmniejszym stopniu obciążać procesor, obsluga interfejsu MIDI została sprowadzona jedynie do odczytywania przychodzących bajtów poprzez przerwania sprzętowe.
+Jako że ramki MIDI składają się z trzech bajtów, odczytywać oraz interpretować należy kolejne 3 przychodzące bajty.
+%Można to osiągnąć poprzez umieszczenie funkcji MIDI_Read z parametrem 3 (odczyt 3 bajtów za jednym razem) w obsłudze przerwania. Jednak sytuację nieco komplikuje zegar MIDI, który powoduje, że DSP będzie odczytywał regularnie bajt o wartości 0xF8. Powoduje to, że w odczytanej sekwencji 3 bajtów pojawiała się niepożądana wartość 0xF8. Aby rozwiązać ten problem, funkcja osbługi przerwania wywołuje funkcję MIDI_Read z parametrem 1.
+Każdy przychodzący bajt wywołuje przerwanie. W obsłudze przerwania sprawdzana jest wartość bajta, jesli jest ona różna od 0xF8(zegar MIDI), to zostaje ona dodana do trzyelementowej kolejki FIFO. W momencie gdy kolejka FIFO się zapełnia, ramka jest identyfikowana i interpretowana, a kolejka czyszczona.
 
 \subsection{Komunikacja z interfejsem użytkownika (UART)}
-
-
-
+Do komunikacji z interfejsem użytkownika działajacym na komputerze klasy PC wykorzystany został interfejs RS-232, który znajduje się na płycie PADK. Do komunikacji z komputerem użyto przejściówki z RS-232 na USB. 
+Do obsługi interfejsu szeregowego wykorzystana została biblioteka PADK\_UART.c, która zawiera takie funkcje jak:
+\begin{itemize}
+	\item UART\_Init - inicjalizacja interfejsu UART,
+	\item UART\_EnableLed1, UART\_EnableLed2 - sterowanie diodami LED interfejsu UART,
+	\item UART\_Read - odczyt przychodzących bajtów,
+	\item UART\_Write - nadanie bajtów.
+\end{itemize}
+Aby zapewnić wygodny w użyciu oraz odporny na błędy przepływ informacji, utworzono własny protokół.
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=16cm]{./grafiki/real_uartframe}
+	\captionsetup{justification=centering}
+	\caption{Struktura ramki protokołu.}
+	\label{rys:real_uartframe}
+\end{figure}
+Na rysunku \ref{rys:real_uartframe} pokazana została struktura 9-bajtowej ramki danych, która jest przesyłana między DSP a komputerem. Składa się ona z dwóch bajtów identyfikujących, sześciu bajtow danych oraz jednego bajta sumy kontrolnej. Podobnie jak w przypadku MIDI, do identyfikacji i interpretacji przychodzących ramek, wykorzystywana jest kolejka FIFO. Tym razem ma ona rozmiar 9 bajtów. Bajty przychodzące są odczytywane pojedynczo przy wykorzystaniu przerwania sprzetowego i wpisywane do kolejki FIFO. W momencie gdy na pierwszym miejscu w kolejce znajdzie się odpowiedni bajt identyfikujący ramkę, a na miejscu ósmym znajdzie się wartość tego bajta powiększona o jeden, to jest domniemanie, że odebrana została jakaś ramka danych. W ramach upewnienia się, dodatkowo obliczana jest suma kontrolna z bajtów danych. Gdy ramka przejdzie taką weryfikację, zostaje następnie przetworzona w zależności od informacji, które niesie. Opisany mechanizm działa zarówno na procesorze DSP, jak i na komputerze PC.
+Dziewięciobajtowe ramki pozwalają na przesyłanie całych zmiennych 4-bajtowych lub jednocześnie trzech liczb 2-bajtowych. 
 \section{Wydobycie dźwięku (DAC)}
 % pamiętać o: odniesienie do dMAX z buforem cyrkulacyjnym
 
