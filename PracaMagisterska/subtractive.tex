@@ -1,7 +1,7 @@
 \chapter{Subtraktywna metoda syntezy dźwięku}\label{chapter_subtractive}
 Jedną z większych trudności w cyfrowej implementacji syntezy subtraktywnej jest opracowanie programu, który jest w stanie ją przeprowadzić w czasie rzeczywistym na danej platformie sprzętowej. Program taki musi uwzględniać generowanie przebiegów okresowych, ich filtrację oraz zakładkowanie w celu pozbycia się artefaktów dźwiękowych. W tym rozdziale opisano zasadę działania subtraktywnej syntezy dźwięku, jej implementację na procesorze sygnałowym oraz interfejs użytkownika.
 \section{Zasada działania syntezy subtraktywnej}
-Metoda subtraktywna polega na wygenerowaniu przebiegu okresowego bogatego pod względem składowych harmonicznych. Taki sygnał poddaje się filtracji w celu wytłumienia części składowych, co prowadzi do uzyskania interesujących dźwięków. Najczęściej wykorzystywanymi przebiegami w tej metodzie są: prostokątny, trójkątny, piłokształtny. Do usuwania składowych harmonicznych można zastosować filtry dolnoprzepustowe, górnoprzepustowego, pasmo-zaporowe czy pasmo-przepustowe. Na rysunku \ref{rys:sub_diagram} pokazano schemat blokowy opisanego postępowania.
+Metoda subtraktywna polega na wygenerowaniu przebiegu okresowego bogatego pod względem składowych harmonicznych. Taki sygnał poddaje się filtracji w celu wytłumienia części składowych, co prowadzi do uzyskania interesujących dźwięków \cite{alles}. Najczęściej wykorzystywanymi przebiegami w tej metodzie są: prostokątny, trójkątny, piłokształtny. Do usuwania składowych harmonicznych można zastosować filtry dolnoprzepustowe, górnoprzepustowego, pasmo-zaporowe czy pasmo-przepustowe. Na rysunku \ref{rys:sub_diagram} pokazano schemat blokowy opisanego postępowania.
 
 \begin{figure}[H]
 	\centering
@@ -156,7 +156,7 @@ Porównanie zakładkowania dla różnych wartości $m$ przedstawiono na rysunku 
 Takie podejście wymusza użycie dwóch tablic ze zmiennymi typu float, w których przechowywane są próbki sygnału do wystawienia na przetwornik cyfrowo-analogowy. Wynika to z faktu, że w pewnych chwilach na DAC należy wystawić ważoną średnią próbek z dwóch różnych sygnałów. 
 
 \subsection{Polifonia w syntezie subtraktywnej}
-Powyższe rozważania dotyczyły syntezy pojedynczych tonów. Polifonię w danym podejściu, można osiągnąć korzystając z faktu, że przekształcenie Fouriera jest przekształceniem liniowym. Oznacza to, że jeśli
+Powyższe rozważania dotyczyły syntezy pojedynczych tonów. Polifonię w danym podejściu, można osiągnąć korzystając z faktu, że przekształcenie Fouriera jest przekształceniem liniowym \cite{schafer}. Oznacza to, że jeśli
  \begin{equation} \label{equ:sub_5}
  \mathcal{F}\{x_n\} = X_k
  \end{equation}
