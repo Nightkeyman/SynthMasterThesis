@@ -4,8 +4,13 @@
 
 % https://dspguru.com/dsp/howtos/how-to-interpolate-fft-peak/ <-- rozne metody
 
+% https://mgasior.web.cern.ch/pap/FFT_resol_note.pdf <---- O TO MI CHODZILO
+
 % utworz tablice do fft 1024 przy probkowaniu 96000 --> jaka rozdzielczosc btw?
 % chciej 440 Hz rowno --> utworzyc peak tam
+
+
+% czyli najpierw robie parabole jakas taka, a potem wyliczam wartosci prazkow ??
 close all
 fs = 44100;
 length = 1024;
