@@ -1,45 +1,67 @@
 % !TeX spellcheck = pl_PL
 \chapter{Realizacja instrumentu muzycznego}
-Implementacja tworzonego syntezatora muzycznego realizowana jest na wspomnianej we wstępie płycie PADK, która opiera swoje działanie na procesorze DSP. W ramach tego implementowane jest wiele mechanizmów, które są konieczne do kompletnego działania projektu: przetwarzanie sygnałów z klawiatury muzycznej, wydobycie dźwięku z płyty PADK oraz komunikacja z interfejsem użytkownika. W niniejszym rozdziale przedstawiono podejście do realizacji wymienionych zadań. Implementacja poszczególnych algorytmów syntezy dźwięku przedstawiona zostanie w kolejnych rozdziałach.
+Implementacja tworzonego syntezatora muzycznego realizowana jest na wspomnianej we wstępie płycie PADK, która opiera swoje działanie na procesorze DSP. W ramach tego, implementowane jest wiele mechanizmów, które są konieczne do kompletnego działania projektu: przetwarzanie sygnałów z klawiatury muzycznej, wydobycie dźwięku z płyty PADK oraz komunikacja z interfejsem użytkownika. W niniejszym rozdziale przedstawiono podejście do realizacji wymienionych zadań. Implementacja poszczególnych algorytmów syntezy dźwięku przedstawiona zostanie w kolejnych rozdziałach, dedykowanych poszczególnym metodom syntezy.
 
-Cały kod programu na procesor DSP napisany został w języku C. Program pisano w środowisku Code Composer Studio v6, które jest dedykowane do procesorów firmy Texas Instruments. Wgrywanie kodu na płytę odbywało się poprzez użycie debuggera XDS510 firmy Spectrum Digital. Debugger połączony jest z płytą PADK przez taśmę, a następnie przejściówkę 8-pinową.
+Kod programu na procesor DSP napisany został w języku C. Program pisano w środowisku Code Composer Studio v6, które jest dedykowane do procesorów firmy Texas Instruments. Wgrywanie kodu na płytę odbywało się poprzez użycie debuggera XDS510 firmy Spectrum Digital.
 
 % zdjęcie PADK z debuggerem
 
 \section{Układ instrumentu}
 % Zdjęcie i opis co z czym łączymy
+% Czy to na pewno potrzebne?? Moze bez podrozdziału
 
 \section{Płyta PADK}
+Płyta Professional Audio Development Kit, która użyta została w niniejszym projekcie, posiada wiele zintegrowanych układów. Głównym elementem płyty jest procesor DSP, który łączy ze sobą wszystkie pozostałe elementy takie jak: peryferia komunikacyjne, przetworniki ADC i DAC, układy FPGA oraz interfejs JTAG. Dodatkowo płyta posiada 8MB pamięci flash, 128MB pamięci SDRAM oraz pamięć EEPROM.
 
-\subsection{Procesor TMS320C6727}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=16cm]{./grafiki/real_PADK_block}
+	\captionsetup{justification=centering}
+	\caption{Schemat blokowy płyty PADK.}
+	\label{rys:real_padk}
+\end{figure}
+
+Na rysunku \ref{rys:real_padk} przedstawiającym schemat blokowy płyty PADK widać uzalężnienie całej struktury układów od procesora DSP.
+
+\subsection{TMS320C6727}
 %https://www.ti.com/lit/ds/symlink/tms320c6727.pdf?ts=1595978326019&ref_url=https%253A%252F%252Fwww.google.com%252F 
 %--> glowne feature'y
 %--> strona 13 wypisane w myslnikach np busy
+Układ TMS320C6727 firmy Texas instrument jest zmiennoprzecinkowym procesorem sygnałowym 32-/64-bitowym. Jednostka centralna C6727 posiada szybkości taktowania 300MHz oraz 350MHz. Przy taktowaniu procesora za szybkością 300MHz posiada on maksymalną wydajność sięgającą 180 milionów operacji zmiennoprzecinkowych na sekundę.
 
-\subsection{Peryferia komunikacyjne}
+Układ TMS320C6727 jest również bardzo wydajny pod względem systemu pamięci. Posiada on 256KB pamięci RAM oraz 384KB pamięci ROM. Kontroler pamięci obsługuje jednocyklowe dostępy do pamięci z procesora do pamięci  RAM lub ROM. W jednym momencie dozwolone są trzy równoległe odczyty pamięci z różnych źródeł na przykład: CPU, pamięć programu cache oraz jedno z urządzeń peryferyjnych. Układ TMS320C6727 posiada 32KB pamięci cache.
 
-\subsection{Przetworniki DAC}
+Poza wysoką szybkością taktowania procesora, układ zawiera dodatkowe mechanizmy akceleracji przepływu danych i sygnałów. Umożliwiają one jeszcze szybszy transfer danych między układami peryferialnymi bez zabierania czasu pracy procesora. Narzędzia, z których szczególnie korzystano w naszym projekcie przedstawiono poniżej.
 
-
-
-\section{Mechanizmy szybkiego przetwarzania danych}
-Procesor sygnałowy TMS320C6727 jest przeznaczony między innymi do szybkiego przetwarzania danych i sygnałów. Poza wysoką szybkością taktowania procesora, firma Texas Instruments zawiera dodatkowe mechanizmy akceleracji przepływu danych i sygnałów. Zostały one opisane w poniższych podpunktach.
-
-\subsection{McASP}
-% https://www.ti.com/lit/an/sprack0/sprack0.pdf?ts=1595842361762&ref_url=https%253A%252F%252Fwww.google.com%252F
-McASP to akronim od Multichannel Audio Serial Port. Jest to komunikacyjne urządzenie peryferyjne dedykowane do przetwarzania danych audio lub wideo. Został zaprojektowany w celu przypadków wymagających wielokanałowego przetwarzania dźwięku. Jedną z najbardziej przydatnych właściwości narzędzia McASP jest schemat wielozegarowy. Pozwala on na niezależność pomiędzy portami odbierającymi i nadającymi. Komunikacja, którą zarządza McASP może odbywać się poprzez interfejs I2S (ang. Inter-IC Sound), I2C (ang. Inter-Integrated Circuit) lub SPI (ang. Serial Peripheral Interface).
+\subsubsection{McASP}
+%https://www.ti.com/lit/an/sprack0/sprack0.pdf?ts=1595842361762&ref_url=https%253A%252F%252Fwww.google.com%252F
+McASP to akronim od Multichannel Audio Serial Port. Jest to komunikacyjne urządzenie peryferyjne dedykowane do przetwarzania danych audio lub wideo. Zostało zaprojektowane w celu przypadków wymagających wielokanałowego przetwarzania dźwięku. Jedną z najbardziej przydatnych właściwości narzędzia McASP jest schemat wielozegarowy. Pozwala on na niezależność pomiędzy portami odbierającymi i nadającymi. Komunikacja, którą zarządza McASP może odbywać się poprzez interfejs I2S (ang. Inter-IC Sound), I2C (ang. Inter-Integrated Circuit) lub SPI (ang. Serial Peripheral Interface).
 
 Kiedy dane przepływają przez McASP, mogą zostać dostosowane tak, aby reprezentacja stałoprzecinkowa używana przez kod aplikacji była niezależna od reprezentacji używanej przez urządzenia zewnętrzne, bez wymagania dodatkowej konwersji przez procesor.
 
 W niniejszej pracy narzędzie McASP stosowane jest do przepływu danych między DAC a procesorem. W ramach inicjalizacji zegarów na płycie PADK, McASP ustawia odpowiednią szybkość próbkowania dla modułu DAC.
 
-\subsection{dMAX}
+\subsubsection{dMAX}
 %https://www.ti.com/lit/ug/spru795d/spru795d.pdf?ts=1595843361787&ref_url=https%253A%252F%252Fwww.google.com%252F, strona 14, Overview
 Kontroler dMAX (Dual Data Movement Accelerator) obsługuje transfery zaprogramowane przez użytkownika pomiędzy kontrolerem pamięci wewnętrznej i urządzeniami peryferialnymi na procesorach DSP firmy TI. Mechanizm ten jest dedykowany szczególnie dla procesorów z serii C672x.
 
 Zasada działania dMAX opiera się na sygnałach zdarzeń (ang. event signals). Zdarzenie zdefiniowane jest jako zmiana wartości logicznej odpowiadającego sygnału zdarzeń w rejestrze flag zdarzeń. Zdarzenie może być używane jako: wzbudzenie rozpoczęcia transferu danych lub spowodowanie wystąpienia przerwania dla CPU. Wszystkie zdarzenia posortowane są w dwie grupy: grupa niskiego priorytetu oraz grupa wysokiego priorytetu. Mechanizm dMAX może równolegle przetwarzać dwa żądania zdarzeń z każdej z grupy.
 
 Częścią mechanizmu dMAX jest również bufor cyrkulacyjny FIFO. Pozwala on na równoczesny, asynchroniczny odczyt i zapis danych do jednego bufora dwustronnego. Narzędzie dMAX wykrywa kiedy dane zostają zapisane do bufora i natychmiastowo wywołuje odwrócenie go. Po odwróceniu, zapisane chwilę wcześniej dane mogą zostać odczytane z drugiej strony bufora, natomiast równocześnie kolejne dane zapisywane są po pierwszej stronie.
+
+\subsection{Peryferia komunikacyjne}
+Płyta PADK ma możliwość komunikowania się z innymi urządzeniami przez trzy różne interfejsy:
+\begin{itemize}
+	\item UART,
+	\item MIDI,
+	\item USB.
+\end{itemize}
+
+
+\subsection{Przetworniki DAC}
+Na płycie PADK znajdują się dwa, czterokanałowe, 24-bitowe układy PCM4204, które posiadają możliwość próbkowania sygnału z częstotliwością do 192kHz. W tym projekcie częstotliwość próbkowania sygnału 
+
+
 
 
 \section{Komunikacja z płytą PADK}
