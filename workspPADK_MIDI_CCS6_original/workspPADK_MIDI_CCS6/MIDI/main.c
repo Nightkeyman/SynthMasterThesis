@@ -50,6 +50,12 @@ extern volatile unsigned PP;
 extern volatile unsigned sem_dac;
 extern int sem_new_note; // 0 - 128
 
+// SUBTRACTIVE GLOBALS
+enum filtertype{lowpass, highpass, bandpass, bandstop};
+enum filtertype filter = lowpass;
+int sub_lowfreq = 0;
+int sub_highfreq = 96000;
+
 float sinusek[N];
 float kwadracik[N];
 float przefiltrowany[N];
@@ -157,7 +163,15 @@ int main( int argc, char *argv[] ) {
 				if(freqs[i] > 0) {
 					square_wave(freqs[i], SIG_AMP, k);
 					fft_full();
-					lowPassFilter(5000);
+					if (filter == lowpass)
+						lowPassFilter(sub_highfreq);
+					else if (filter == highpass)
+						highPassFilter(sub_lowfreq);
+					else if (filter == bandpass)
+						bandPassFilter(sub_lowfreq, sub_highfreq);
+					else if (filter == bandstop)
+						bandStopFilter(sub_lowfreq, sub_highfreq);
+
 					ifft_full();
 					while(sem_dac == 0);
 					for(j = 0; j < N; j++) {

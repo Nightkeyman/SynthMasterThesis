@@ -109,6 +109,11 @@ int generator_interator = 0;
 int sound = 0;
 int licz = 0;
 double sound_double = 0;
+
+extern enum filtertype{lowpass, highpass, bandpass, bandstop};
+extern enum filtertype filter;
+extern int sub_lowfreq;
+extern int sub_highfreq;
 // ################## DAC/ADC end ##################
 
 
@@ -184,6 +189,17 @@ interrupt void uart_isr( void )
     			} else if (UART_pull(1) == 2){
     				UART_send(100, 2, 0,0,0,0,0);
     			}
+
+
+    			if (UART_pull(1) == 2){
+						sub_highfreq = UART_pull(3) + UART_pull(3)*256 + UART_pull(3)*256*256;
+					}
+				if (UART_pull(1) == 3){
+						sub_lowfreq = UART_pull(3) + UART_pull(3)*256 + UART_pull(3)*256*256;
+					}
+				if (UART_pull(1) == 4){
+						filter = UART_pull(3);
+					}
     		}
     	}
     	break;
