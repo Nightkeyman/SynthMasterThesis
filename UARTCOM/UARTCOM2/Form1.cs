@@ -184,6 +184,29 @@ namespace UARTCOM2
                             }
                         }
                         break;
+                    case 102:
+                        if (Buffer_pull(7) == 103)
+                        {
+                            if (Checksum() == Buffer_pull(8))
+                            {
+                                if (Buffer_pull(1) == 1)
+                                {
+                                    button_fm_en.Invoke((MethodInvoker)delegate {
+                                        button_fm_en.Text = "Enabled";
+                                        button_fm_en.ForeColor = Color.Green;
+                                    });
+                                }
+                                else if (Buffer_pull(1) == 2)
+                                {
+                                    button_fm_en.Invoke((MethodInvoker)delegate {
+                                        button_fm_en.Text = "Disabled";
+                                        button_fm_en.ForeColor = Color.Red;
+                                    });
+                                    
+                                }
+                            }
+                        }
+                        break;
                 }
             }
                 
@@ -246,11 +269,13 @@ namespace UARTCOM2
         private void trackBar_subtractive_freq1_Scroll(object sender, EventArgs e)
         {
             textBox_subtractive_freq1.Text = trackBar_subtractive_freq1.Value.ToString();
+            sendInt(100, 2, (UInt32)trackBar_subtractive_freq1.Value);
         }
 
         private void trackBar_subtractive_freq2_Scroll(object sender, EventArgs e)
         {
             textBox_subtractive_freq2.Text = trackBar_subtractive_freq2.Value.ToString();
+            sendInt(100, 3, (UInt32)trackBar_subtractive_freq2.Value);
         }
 
         private void radioButton_subtractive_lowpass_CheckedChanged(object sender, EventArgs e)
@@ -367,6 +392,59 @@ namespace UARTCOM2
             trackBar_subtractive_freq2.Value = val;
             textBox_subtractive_freq2.Text = val.ToString();
             sendInt(100, 3, (UInt32)trackBar_subtractive_freq2.Value);
+        }
+
+
+        private void button_fm_en_Click(object sender, EventArgs e)
+        {
+            if (button_fm_en.Text.Equals("Disabled"))
+            {
+                send(102, 1, 0, 0, 0, 0, 0);
+
+            }
+            else
+            {
+                send(102, 2, 0, 0, 0, 0, 0);
+
+            }
+        }
+
+        private void textBox_fm_modfreq_TextChanged(object sender, EventArgs e)
+        {
+            int val = Convert.ToInt32(textBox_fm_modfreq.Text);
+            if (val > trackBar_fm_modfreq.Maximum)
+                val = trackBar_fm_modfreq.Maximum;
+            if (val < trackBar_fm_modfreq.Minimum)
+                val = trackBar_fm_modfreq.Minimum;
+
+            trackBar_fm_modfreq.Value = val;
+            textBox_fm_modfreq.Text = val.ToString();
+            sendInt(102, 2, (UInt32)trackBar_fm_modfreq.Value);
+        }
+
+        private void trackBar_fm_modfreq_Scroll(object sender, EventArgs e)
+        {
+            textBox_fm_modfreq.Text = trackBar_fm_modfreq.Value.ToString();
+            sendInt(102, 2, (UInt32)trackBar_fm_modfreq.Value);
+        }
+
+        private void trackBar_fm_modamp_Scroll(object sender, EventArgs e)
+        {
+            textBox_fm_modamp.Text = trackBar_fm_modamp.Value.ToString();
+            sendInt(102, 3, (UInt32)trackBar_fm_modamp.Value);
+        }
+
+        private void textBox_fm_modamp_TextChanged(object sender, EventArgs e)
+        {
+            int val = Convert.ToInt32(textBox_fm_modamp.Text);
+            if (val > trackBar_fm_modamp.Maximum)
+                val = trackBar_fm_modamp.Maximum;
+            if (val < trackBar_fm_modamp.Minimum)
+                val = trackBar_fm_modamp.Minimum;
+
+            trackBar_fm_modamp.Value = val;
+            textBox_fm_modamp.Text = val.ToString();
+            sendInt(100, 3, (UInt32)trackBar_fm_modamp.Value);
         }
     }
 }
