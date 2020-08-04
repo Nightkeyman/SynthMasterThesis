@@ -164,9 +164,9 @@ int main( int argc, char *argv[] ) {
 					square_wave(freqs[i], SIG_AMP, k);
 					fft_full();
 					if (filter == lowpass)
-						lowPassFilter(sub_highfreq);
+						lowPassFilter(sub_lowfreq);
 					else if (filter == highpass)
-						highPassFilter(sub_lowfreq);
+						highPassFilter(sub_highfreq);
 					else if (filter == bandpass)
 						bandPassFilter(sub_lowfreq, sub_highfreq);
 					else if (filter == bandstop)
