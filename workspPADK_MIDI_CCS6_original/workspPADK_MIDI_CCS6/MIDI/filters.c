@@ -8,10 +8,10 @@
 #include <math.h>
 
 void lowPassFilter(int freq) {
-	freq = N - 2*freq*N/Fs - 1;
+	freq = 2*freq*N/Fs - 1;
 	int i = 0;
-	for(i = 0; i < 2*N; i+=2) {		// Liczenie modulu widma
-		if((i/2 >= (N - freq)) && (i/2 <= (N + freq))) {	// Stworzenie filtru dolnoprzepustowego idealnego
+	for(i = 0; i < 2*N; i+=2) {
+		if((i/2 >= (freq)) && (i/2 <= (N - freq))) {	// Stworzenie filtru dolnoprzepustowego idealnego
 			v[i] = 0;
 			v[i+1] = 0;
 		}
@@ -19,10 +19,10 @@ void lowPassFilter(int freq) {
 }
 
 void highPassFilter(int freq) {
-	freq = N - 2*freq*N/Fs - 1;
+	freq = 2*freq*N/Fs - 1;
 	int i = 0;
-	for(i = 0; i < 2*N; i+=2) {		// Liczenie modulu widma
-		if((i/2 >= (N + freq)) || (i/2 <= (N - freq))) {	// Stworzenie filtru górnoprzepustowego idealnego
+	for(i = 0; i < 2*N; i+=2) {
+		if((i/2 <= (freq)) || (i/2 >= (N - freq))) {	// Stworzenie filtru górnoprzepustowego idealnego
 			v[i] = 0;
 			v[i+1] = 0;
 		}
@@ -30,11 +30,11 @@ void highPassFilter(int freq) {
 }
 
 void bandPassFilter(int freqLow, int freqHigh) {
-	freqLow = N - 2*freqLow*N/Fs - 1;
-	freqHigh = N - 2*freqHigh*N/Fs - 1;
+	freqLow = 2*freqLow*N/Fs - 1;
+	freqHigh = 2*freqHigh*N/Fs - 1;
 	int i = 0;
-	for(i = 0; i < 2*N; i+=2) {		// Liczenie modulu widma
-		if( ((i/2 >= (N - freqHigh)) && (i/2 <= (N + freqHigh))) || ((i/2 >= (N + freqLow)) || (i/2 <= (N - freqLow))) ) {	// Stworzenie filtru srodkowoprzepustowego idealnego
+	for(i = 0; i < 2*N; i+=2) {
+		if( ((i/2 >= (freqHigh)) && (i/2 <= (N - freqHigh))) || ((i/2 <= (freqLow)) || (i/2 >= (N - freqLow))) ) {	// Stworzenie filtru srodkowoprzepustowego idealnego
 			v[i] = 0;
 			v[i+1] = 0;
 		}
@@ -42,11 +42,11 @@ void bandPassFilter(int freqLow, int freqHigh) {
 }
 
 void bandStopFilter(int freqLow, int freqHigh) {
-	freqLow = N - 2*freqLow*N/Fs - 1;
-	freqHigh = N - 2*freqHigh*N/Fs - 1;
+	freqLow = 2*freqLow*N/Fs - 1;
+	freqHigh = 2*freqHigh*N/Fs - 1;
 	int i = 0;
-	for(i = 0; i < 2*N; i+=2) {		// Liczenie modulu widma
-		if( !(((i/2 >= (N - freqHigh)) && (i/2 <= (N + freqHigh))) || ((i/2 >= (N + freqLow)) || (i/2 <= (N - freqLow)))) ) {	// Stworzenie filtru srodkowozaporowego idealnego
+	for(i = 0; i < 2*N; i+=2) {
+		if( !(((i/2 >= (freqHigh)) && (i/2 <= (N - freqHigh))) || ((i/2 <= (freqLow)) || (i/2 >= (N - freqLow)))) ) {	// Stworzenie filtru srodkowozaporowego idealnego
 			v[i] = 0;
 			v[i+1] = 0;
 		}

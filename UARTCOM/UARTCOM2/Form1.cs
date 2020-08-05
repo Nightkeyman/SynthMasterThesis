@@ -246,13 +246,11 @@ namespace UARTCOM2
         private void trackBar_subtractive_freq1_Scroll(object sender, EventArgs e)
         {
             textBox_subtractive_freq1.Text = trackBar_subtractive_freq1.Value.ToString();
-            //sendInt(100, 3, (UInt32)trackBar_subtractive_freq1.Value);
         }
 
         private void trackBar_subtractive_freq2_Scroll(object sender, EventArgs e)
         {
             textBox_subtractive_freq2.Text = trackBar_subtractive_freq2.Value.ToString();
-            //sendInt(100, 4, (UInt32)trackBar_subtractive_freq2.Value);
         }
 
         private void radioButton_subtractive_lowpass_CheckedChanged(object sender, EventArgs e)

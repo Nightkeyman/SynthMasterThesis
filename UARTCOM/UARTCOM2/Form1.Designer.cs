@@ -283,9 +283,9 @@
             this.label6.AutoSize = true;
             this.label6.Location = new System.Drawing.Point(6, 238);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(104, 13);
+            this.label6.Size = new System.Drawing.Size(102, 13);
             this.label6.TabIndex = 8;
-            this.label6.Text = "Highpass frequency:";
+            this.label6.Text = "Lowpass frequency:";
             // 
             // trackBar_subtractive_freq2
             // 
@@ -318,9 +318,9 @@
             this.label5.AutoSize = true;
             this.label5.Location = new System.Drawing.Point(6, 152);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(102, 13);
+            this.label5.Size = new System.Drawing.Size(104, 13);
             this.label5.TabIndex = 5;
-            this.label5.Text = "Lowpass frequency:";
+            this.label5.Text = "Highpass frequency:";
             // 
             // trackBar_subtractive_freq1
             // 
