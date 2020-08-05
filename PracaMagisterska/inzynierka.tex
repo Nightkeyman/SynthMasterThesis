@@ -9,6 +9,7 @@
 \usepackage{float}
 \usepackage{siunitx}
 \usepackage{caption}
+\raggedbottom
 \usepackage[singlelinecheck=false % <-- important
 ]{caption}
 \newcommand{\desctotoc}[1]{%
@@ -22,9 +23,9 @@
 	\let\cleardoublepage\clearpage
 	\include{streszczenie}
 	\include{abstract}
-%	\tableofcontents    % spis treci
+	\tableofcontents    % spis treci
 	
-	\include{spis}
+%	\include{spis}
 	\include{skroty}
 	\include{chapter1}
 	\include{chapter2}
@@ -33,6 +34,7 @@
 	\include{chapter4}
 %	\include{chapter6}
 	\include{chapter7}
+	\include{subtractive}
 	\include{podsumowanie}
 
 	\listoffigures      % spis obrazkÃ³w
@@ -70,6 +72,13 @@
 				
 		\bibitem{lesnicki}
 		Andrzej Le\'snicki, \emph{Technika Cyfrowego Przetwarzania Sygna\l{}\'ow }, Wydawnictwo Politechniki Gda\'nskiej, 2016.
+		
+		\bibitem{schafer}
+		A. V. Oppenheim, R. W.Schafer, \emph{Cyfrowe przetwarzanie sygnałów}, 113-114, WYD. KOMUNIKACJI I ŁĄCZNOŚCI, 1979.
+		
+		\bibitem{alles}
+		 H. G. Alles, \emph{Music Synthesis Using Real Time Digital Techniques}, Proc. IEEE, Vol. 68, No. 4, Apr. 1980, 439-440.
+
 			
 	\end{thebibliography}
 	
