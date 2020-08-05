@@ -355,7 +355,6 @@ namespace UARTCOM2
 
             trackBar_subtractive_freq1.Value = val;
             textBox_subtractive_freq1.Text = val.ToString();
-            //sendInt(100, 3, (UInt32)trackBar_subtractive_freq1.Value);
         }
 
         private void textBox_subtractive_freq2_TextChanged(object sender, EventArgs e)
@@ -368,7 +367,6 @@ namespace UARTCOM2
 
             trackBar_subtractive_freq2.Value = val;
             textBox_subtractive_freq2.Text = val.ToString();
-            //sendInt(100, 4, (UInt32)trackBar_subtractive_freq2.Value);
         }
 
         private void button1_Click(object sender, EventArgs e)

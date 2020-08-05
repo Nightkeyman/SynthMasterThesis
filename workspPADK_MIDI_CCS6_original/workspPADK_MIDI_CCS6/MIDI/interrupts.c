@@ -113,7 +113,6 @@ extern enum filtertype{lowpass, highpass, bandpass, bandstop};
 extern enum filtertype filter;
 extern int sub_lowfreq;
 extern int sub_highfreq;
-//int testfifo[9];
 // ################## DAC/ADC end ##################
 
 

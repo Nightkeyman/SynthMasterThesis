@@ -42,6 +42,8 @@
             this.tabPage_Connection = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.tabPage_subtractive = new System.Windows.Forms.TabPage();
+            this.button2 = new System.Windows.Forms.Button();
+            this.button1 = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.textBox_subtractive_freq2 = new System.Windows.Forms.TextBox();
             this.label6 = new System.Windows.Forms.Label();
@@ -69,8 +71,6 @@
             this.drawbar3 = new KnobControl.KnobControl();
             this.drawbar4 = new KnobControl.KnobControl();
             this.tabPage3 = new System.Windows.Forms.TabPage();
-            this.button1 = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
             this.tabPage_Connection.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage_subtractive.SuspendLayout();
@@ -229,6 +229,26 @@
             this.tabPage_subtractive.TabIndex = 1;
             this.tabPage_subtractive.Text = "Subtractive";
             // 
+            // button2
+            // 
+            this.button2.Location = new System.Drawing.Point(524, 345);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(75, 23);
+            this.button2.TabIndex = 11;
+            this.button2.Text = "Set";
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(524, 316);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 10;
+            this.button1.Text = "Set";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
             // groupBox2
             // 
             this.groupBox2.Controls.Add(this.textBox_subtractive_freq2);
@@ -251,7 +271,7 @@
             // textBox_subtractive_freq2
             // 
             this.textBox_subtractive_freq2.Enabled = false;
-            this.textBox_subtractive_freq2.Location = new System.Drawing.Point(81, 235);
+            this.textBox_subtractive_freq2.Location = new System.Drawing.Point(111, 235);
             this.textBox_subtractive_freq2.Name = "textBox_subtractive_freq2";
             this.textBox_subtractive_freq2.Size = new System.Drawing.Size(100, 20);
             this.textBox_subtractive_freq2.TabIndex = 9;
@@ -263,9 +283,9 @@
             this.label6.AutoSize = true;
             this.label6.Location = new System.Drawing.Point(6, 238);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(69, 13);
+            this.label6.Size = new System.Drawing.Size(104, 13);
             this.label6.TabIndex = 8;
-            this.label6.Text = "Frequency 2:";
+            this.label6.Text = "Highpass frequency:";
             // 
             // trackBar_subtractive_freq2
             // 
@@ -286,7 +306,7 @@
             // textBox_subtractive_freq1
             // 
             this.textBox_subtractive_freq1.Enabled = false;
-            this.textBox_subtractive_freq1.Location = new System.Drawing.Point(81, 149);
+            this.textBox_subtractive_freq1.Location = new System.Drawing.Point(111, 149);
             this.textBox_subtractive_freq1.Name = "textBox_subtractive_freq1";
             this.textBox_subtractive_freq1.Size = new System.Drawing.Size(100, 20);
             this.textBox_subtractive_freq1.TabIndex = 6;
@@ -298,9 +318,9 @@
             this.label5.AutoSize = true;
             this.label5.Location = new System.Drawing.Point(6, 152);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(69, 13);
+            this.label5.Size = new System.Drawing.Size(102, 13);
             this.label5.TabIndex = 5;
-            this.label5.Text = "Frequency 1:";
+            this.label5.Text = "Lowpass frequency:";
             // 
             // trackBar_subtractive_freq1
             // 
@@ -647,26 +667,6 @@
             this.tabPage3.TabIndex = 1;
             this.tabPage3.Text = "tabPage3";
             this.tabPage3.UseVisualStyleBackColor = true;
-            // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(524, 316);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 10;
-            this.button1.Text = "button1";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
-            // 
-            // button2
-            // 
-            this.button2.Location = new System.Drawing.Point(524, 345);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(75, 23);
-            this.button2.TabIndex = 11;
-            this.button2.Text = "button2";
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
             // Form1
             // 
