@@ -192,6 +192,13 @@ namespace UARTCOM2
         {
             return (byte)(Buffer_pull(1) + Buffer_pull(2) + Buffer_pull(3) + Buffer_pull(4) + Buffer_pull(5) + Buffer_pull(6));
         }
+        void sendInt(byte id, byte subid, UInt32 data)
+        {
+            byte[] intbytes = BitConverter.GetBytes(data);
+
+            send(id, subid, intbytes[0], intbytes[1], intbytes[2], intbytes[3], 0);
+
+        }
         void send(byte b0, byte b1, byte b2, byte b3, byte b4, byte b5, byte b6)
         {
             byte suma = (byte)(b1 + b2 + b3 + b4 + b5 + b6);
@@ -235,29 +242,6 @@ namespace UARTCOM2
             Console.WriteLine("siema");
         }
 
-        private void knobControl1_ValueChanged(object Sender)
-        {
-            textBox_subtractive_frequency.Text = knobControl1.Value.ToString();
-        }
-
-        private void knobControl1_Load(object sender, EventArgs e)
-        {
-
-        }
-
-        private void button_subtractive_toggle_Click(object sender, EventArgs e)
-        {
-            if (button_subtractive_toggle.Text.Equals("High"))
-            {
-                button_subtractive_toggle.Text = "Low";
-                knobControl1.Maximum = 1200;
-            } else
-            {
-                button_subtractive_toggle.Text = "High";
-                knobControl1.Maximum = 12000;
-            }
-          
-        }
 
         private void trackBar_subtractive_freq1_Scroll(object sender, EventArgs e)
         {
@@ -271,18 +255,24 @@ namespace UARTCOM2
 
         private void radioButton_subtractive_lowpass_CheckedChanged(object sender, EventArgs e)
         {
-            trackBar_subtractive_freq1.Enabled = true;
-            textBox_subtractive_freq1.Enabled = true;
-            trackBar_subtractive_freq2.Enabled = false;
-            textBox_subtractive_freq2.Enabled = false;
-        }
-
-        private void radioButton_subtractive_highpass_CheckedChanged(object sender, EventArgs e)
-        {
             trackBar_subtractive_freq2.Enabled = true;
             textBox_subtractive_freq2.Enabled = true;
             trackBar_subtractive_freq1.Enabled = false;
             textBox_subtractive_freq1.Enabled = false;
+            sendInt(100, 4, (UInt32)trackBar_subtractive_freq2.Value); // set higher frequency
+            sendInt(100, 3, 0); // zero lower frequency
+            sendInt(100, 5, 0); // set 0(lowpass) filter type
+        }
+
+        private void radioButton_subtractive_highpass_CheckedChanged(object sender, EventArgs e)
+        {
+            trackBar_subtractive_freq1.Enabled = true;
+            textBox_subtractive_freq1.Enabled = true;
+            trackBar_subtractive_freq2.Enabled = false;
+            textBox_subtractive_freq2.Enabled = false;
+            sendInt(100, 3, (UInt32)trackBar_subtractive_freq1.Value); // set lower frequency
+            sendInt(100, 4, 96000); // max higher frequency
+            sendInt(100, 5, 1); // set 1(highpass) filter type
         }
 
         private void radioButton_subtractive_bandpass_CheckedChanged(object sender, EventArgs e)
@@ -291,6 +281,9 @@ namespace UARTCOM2
             textBox_subtractive_freq1.Enabled = true;
             trackBar_subtractive_freq2.Enabled = true;
             textBox_subtractive_freq2.Enabled = true;
+            sendInt(100, 3, (UInt32)trackBar_subtractive_freq1.Value); // set lower frequency
+            sendInt(100, 4, (UInt32)trackBar_subtractive_freq2.Value); // set higher frequency
+            sendInt(100, 5, 2); // set 2(bandpass) filter type
         }
 
         private void radioButton_subtractive_bandstop_CheckedChanged(object sender, EventArgs e)
@@ -299,6 +292,9 @@ namespace UARTCOM2
             textBox_subtractive_freq1.Enabled = true;
             trackBar_subtractive_freq2.Enabled = true;
             textBox_subtractive_freq2.Enabled = true;
+            sendInt(100, 3, (UInt32)trackBar_subtractive_freq1.Value); // set lower frequency
+            sendInt(100, 4, (UInt32)trackBar_subtractive_freq2.Value); // set higher frequency
+            sendInt(100, 5, 3); // set 3(bandstop) filter type
         }
 
         private void label7_Click(object sender, EventArgs e)
@@ -345,6 +341,40 @@ namespace UARTCOM2
         private void tabPage_additive_hammond_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void textBox_subtractive_freq1_TextChanged(object sender, EventArgs e)
+        {
+            int val = Convert.ToInt32(textBox_subtractive_freq1.Text);
+            if (val > trackBar_subtractive_freq1.Maximum)
+                val = trackBar_subtractive_freq1.Maximum;
+            if (val < trackBar_subtractive_freq1.Minimum)
+                val = trackBar_subtractive_freq1.Minimum;
+
+            trackBar_subtractive_freq1.Value = val;
+            textBox_subtractive_freq1.Text = val.ToString();
+        }
+
+        private void textBox_subtractive_freq2_TextChanged(object sender, EventArgs e)
+        {
+            int val = Convert.ToInt32(textBox_subtractive_freq2.Text);
+            if (val > trackBar_subtractive_freq2.Maximum)
+                val = trackBar_subtractive_freq2.Maximum;
+            if (val < trackBar_subtractive_freq2.Minimum)
+                val = trackBar_subtractive_freq2.Minimum;
+
+            trackBar_subtractive_freq2.Value = val;
+            textBox_subtractive_freq2.Text = val.ToString();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            sendInt(100, 3, (UInt32)trackBar_subtractive_freq1.Value);
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            sendInt(100, 4, (UInt32)trackBar_subtractive_freq2.Value);
         }
     }
 }

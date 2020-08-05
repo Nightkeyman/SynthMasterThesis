@@ -12,21 +12,21 @@
 #define UART_NO_WAIT    0
 
 #define UART_buff_length 9
-volatile unsigned char UART_buff[UART_buff_length] = {{0}};
+volatile int UART_buff[UART_buff_length] = {{0}};
 unsigned char UART_buff_iterator = 0;
 
-void UART_push(unsigned char data);
-unsigned char UART_pull(  char offset);
+void UART_push(int data);
+int UART_pull(  char offset);
 void UART_clear();
 
-void UART_push(unsigned char data){
+void UART_push(int data){
 	UART_buff_iterator++;
     if (UART_buff_iterator >= UART_buff_length)
     	UART_buff_iterator = 0;
     UART_buff[UART_buff_iterator] = data;
 }
 
-unsigned char UART_pull(char offset){
+int UART_pull(char offset){
 	offset = (offset - UART_buff_length + 1);
 	int index = 0;
 	if (UART_buff_iterator + offset >= 0)
