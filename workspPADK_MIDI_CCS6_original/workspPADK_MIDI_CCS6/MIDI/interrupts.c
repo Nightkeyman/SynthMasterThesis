@@ -109,10 +109,17 @@ int sound = 0;
 int licz = 0;
 double sound_double = 0;
 
+extern enum methodtype{subtractive, additive, fm};
+extern enum methodtype method;
+
 extern enum filtertype{lowpass, highpass, bandpass, bandstop};
 extern enum filtertype filter;
 extern int sub_lowfreq;
 extern int sub_highfreq;
+
+// FM GLOBALS
+extern int fm_modfreq;
+extern int fm_modamp;
 // ################## DAC/ADC end ##################
 
 
@@ -185,6 +192,7 @@ interrupt void uart_isr( void )
     		if (UART_pull(8) == UART_checksum()){
     			if (UART_pull(1) == 1){
     				UART_send(100, 1, 0,0,0,0,0);
+    				method = subtractive;
     			} else if (UART_pull(1) == 2){
     				UART_send(100, 2, 0,0,0,0,0);
     			}
@@ -201,6 +209,27 @@ interrupt void uart_isr( void )
     		}
     	}
     	break;
+
+    case 102:
+		if (UART_pull(7) == 103){
+			if (UART_pull(8) == UART_checksum()){
+				if (UART_pull(1) == 1){
+					UART_send(102, 1, 0,0,0,0,0);
+					method = fm;
+				} else if (UART_pull(1) == 2){
+					UART_send(102, 2, 0,0,0,0,0);
+				}
+
+
+				if (UART_pull(1) == 3){
+						fm_modfreq = UART_pull(2) + UART_pull(3)*256 + UART_pull(4)*256*256 + UART_pull(5)*256*256*256;
+					}
+				if (UART_pull(1) == 4){
+						fm_modamp = UART_pull(2) + UART_pull(3)*256 + UART_pull(4)*256*256 + UART_pull(5)*256*256*256;
+					}
+			}
+		}
+		break;
     }
 }
 
