@@ -9,7 +9,7 @@
 #define FILTERS_H_
 
 #define N 1024
-#define Fs 96000
+#define Fs 48000
 extern float v[2*N];
 
 void lowPassFilter(int freq);

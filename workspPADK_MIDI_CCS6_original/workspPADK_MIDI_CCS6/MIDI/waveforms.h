@@ -9,7 +9,7 @@
 #define WAVEFORMS_H_
 
 #define N 1024
-#define Fs 96000
+#define Fs 48000
 #define M_PI 3.14159
 #define MIDI_POLY_MAX 12
 #define SIG_AMP 100000

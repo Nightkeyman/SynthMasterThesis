@@ -101,7 +101,7 @@ int wav_iterator = 0;
 volatile unsigned PP;
 volatile unsigned sem_dac = 0;
 
-#define Fs 96000
+#define Fs 48000
 #define M_PI 3.1416
 extern float freqs[MIDI_POLY_MAX];
 int generator_interator = 0;
