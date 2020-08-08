@@ -47,10 +47,9 @@ Poza wysoką szybkością taktowania procesora, układ zawiera dodatkowe mechani
 McASP to akronim od Multichannel Audio Serial Port. Jest to komunikacyjne urządzenie peryferyjne dedykowane do przetwarzania danych audio lub wideo. Zostało zaprojektowane w celu przypadków wymagających wielokanałowego przetwarzania dźwięku. Jedną z najbardziej przydatnych właściwości narzędzia McASP jest schemat wielozegarowy. Pozwala on na niezależność pomiędzy portami odbierającymi i nadającymi. Komunikacja, którą zarządza McASP może odbywać się poprzez interfejs I2S (ang. Inter-IC Sound), I2C (ang. Inter-Integrated Circuit) lub SPI (ang. Serial Peripheral Interface).
 
 Kiedy dane przepływają przez McASP, mogą zostać dostosowane tak, aby reprezentacja stałoprzecinkowa używana przez kod aplikacji była niezależna od reprezentacji używanej przez urządzenia zewnętrzne, bez wymagania dodatkowej konwersji przez procesor.
+W niniejszej pracy narzędzie McASP stosowane jest do przepływu danych między DAC a procesorem. 
 
-W niniejszej pracy narzędzie McASP stosowane jest do przepływu danych między DAC a procesorem. W ramach inicjalizacji zegarów na płycie PADK, McASP ustawia odpowiednią szybkość próbkowania dla modułu DAC.
-
-\subsubsection{dMAX}
+\subsubsection{dMAX} \label{par:dMax}
 %https://www.ti.com/lit/ug/spru795d/spru795d.pdf?ts=1595843361787&ref_url=https%253A%252F%252Fwww.google.com%252F, strona 14, Overview
 Kontroler dMAX (Dual Data Movement Accelerator) obsługuje transfery zaprogramowane przez użytkownika pomiędzy kontrolerem pamięci wewnętrznej i urządzeniami peryferialnymi na procesorach DSP firmy TI. Mechanizm ten jest dedykowany szczególnie dla procesorów z serii C672x.
 
@@ -140,16 +139,27 @@ Takie dziewięciobajtowe ramki pozwalają na przesyłanie na przykład całych z
 
 
 \section{Wydobycie dźwięku (DAC)}
-% pamiętać o: odniesienie do dMAX z buforem cyrkulacyjnym
-Inicjalizacja przetwornika cyfrowo analogowego polegała na ustawieniu między innymi identyfikatora zdarzeń dMAX oraz przerwania dedykowanego dla DAC. Priorytet przerwania został ustawiony na wysoki. Dodatkowo należało ustawić wartości rejestrów odpowiadających za prędkość próbkowania, wybór interfejsu przesyłającego dane z McASP do DAC oraz rejestr blokujący wydobywanie się sygnału na gniazdo zewnętrzne. Wszystkie wartości zostały przekazane za pomocą funkcji z bibliotek firmy Lyrtech o nazwie DAC\_Init().
+
+\subsection{Inicjalizacja programowa modułu DAC}
+Odpowiednie ustawienie przetwornika cyfrowo analogowego było najbardziej skomplikowanym elementem etapu inicjalizacji programowej spośród całego projektu. Polegało ono na ustawieniu identyfikatora zdarzeń dMAX, przerwania dedykowanego dla DAC, modułu McASP odpowiedniego obszaru pamięci oraz parametrów dla przetwornika. 
+
+%pamiętać o: odniesienie do dMAX z buforem cyrkulacyjnym
+%pamięć dla bufora
+%źródła zegarów
+%parametry
+Program dotyczący modułu DAC wykorzystuje bufor cyrkulacyjny, którego działanie omówiono w \ref{par:dMax}. Pierwszym elementem inicjalizacji było ustawienie odpowiedniego obszaru pamięci dla zmiennej z buforem cyrkulacyjnym dmaxDacBuffer][]. Następnie w programie ustawiono źródła zegarów taktujących przetwornik DAC. Kolejnym krokiem była inicjalizacja parametrów dla przetwornika. Tryb szybkości próbkowania ustawiony został na najwolniejszy, obejmujący szybkości 32kHz, 44,1kHz oraz 48kHz. Ustawiono rejestr odblokowujący wydobycie danych z przetwornika oraz format danych na 24 bitowy wyjustowany do lewej (ang. left-justified). Priorytet przerwania został ustawiony na wysoki. Wszystkie wartości zostały przekazane za pomocą funkcji z bibliotek firmy Lyrtech o nazwie DAC\_Init().
 
 % DMAX for data transfer on MCASP0TX DMA REQ - 3D Transfer
 % DMAX Parameter initialization structure
 % DMAX Event initialization structure
-Kolejnym etapem była inicjalizacja parametrów dotyczących ilości kanałów, stereo, rozmiaru ramki struktury DAC.
+Kolejnym etapem była inicjalizacja parametrów dotyczących połączenia przetwornika cyfrowo-analogowego z modułem McASP oraz ustawienia struktury zdarzenia dMAX powiązanego z przetwornikiem DAC. 
 
-Częstotliwość próbkowania została ustawiona na 96kHz.
+Ostatnią częścią inicjalizacji było ustawienie częstotliwości próbkowania na wartość 48kHz i wyłączenie przekaźnika wyciszającego przepływ sygnału analogowego z przetwornika do gniazda CINCH.
 
+\subsection{Wystawianie danych na moduł DAC}
+Obsługa danych z syntezowanym dźwiękiem oraz ich wystawienie na moduł DAC odbywa się w przerwaniu dmax\_isr(). Za każdym razem, gdy wywoływane jest przerwanie poprzez zdarzenie dMAX, sprawdzany jest warunek, czy poprzedni transfer danych na przetwornik DAC został ukończony. Jeżeli warunek jest spełniony, pozostały kod przerwania zostaje wykonany.
+
+Obsługa danych w funkcji przerwania opiera się na zainicjalizowanym wcześniej buforze cyrkulacyjnym dmaxDacBuffer. Programowo bufor jest czterowymiarową tablicą, gdzie pierwszy wymiar dokonuje synchronizacji odczytu i zapisu typu ping-pong. Następnie wykonywany jest mechanizm zakładkowania dwóch tablic przechowujących próbki zsyntezowanego dźwięku. Dane po zakładkowaniu wystawiane są na moduł DAC przez tablicę dmaxDacBuffer.
 
 \section{Klawiatura polifoniczna}
 <W trakcie implementacji>
