@@ -6,15 +6,13 @@
 
 x = 0:0.1:10;
 y = gaussmf(x, [2 5]);
-Fs = 96000;
-fft_length = 4096;
+Fs = 48000;
+fft_length = 1024;
 fft_res = Fs/fft_length;
 sigma = fft_res; %variance
 freq = fft_res*20 + fft_res/4;
-%freq = 2500;
 
 x = 0:(Fs/fft_length):Fs - (Fs/fft_length);
-%y = gaussmf(x, [sigma freq]);
 y = -exp(-2*pi*(freq/fft_res/2)*1i)*gaussmf(x, [sigma freq]) - exp(2*pi*(freq/fft_res/2)*1i)*gaussmf(x, [sigma Fs-freq]);
 y = y + exp(-2*pi*(freq/fft_res/2)*1i)*gaussmf(x, [sigma freq+fft_res]) + exp(2*pi*(freq/fft_res/2)*1i)*gaussmf(x, [sigma Fs-freq+fft_res]);
 %sztuczne odwrocenie real i imag zeby sie zgadzalo
