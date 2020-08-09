@@ -3,16 +3,11 @@
 
 % literatura do additive: https://www.dsprelated.com/freebooks/sasp/Additive_Synthesis.html
 % https://www.researchgate.net/publication/2698835_Overlap-Add_Synthesis_Of_Nonstationary_Sinusoids
-clear all;
 
 Fs = 48000;
 N = 1024;
 fft_res = Fs/N;
-freq = fft_res*20 + fft_res/4;
-x = 0:(Fs/N):Fs - (Fs/N);
-y = zeros(1, N);
-t = 1:1024;
-freq = 10000;
+freq = fft_res*40;% + fft_res/2;
 dt = 1/Fs;
 StopTime = 1;
 t = (0:dt:StopTime-dt);
@@ -20,46 +15,47 @@ t = (0:dt:StopTime-dt);
 % Utworzenie fragmentu FFT ktory bedzie powielany
 w = sin(2*pi*freq*t);
 W = fft(w(1:1024));
-W = W((214-20):(214+20)); % 214 is the highest peak for freq = 10000
+W = W(1:N/2);
+[w_mx, w_i] = max(W);
+W = W((w_i-20):(w_i+20)); % 214 is the highest peak for freq = 10000
+figure(5)
+subplot(2,1,1)
+plot(real(W))
+title('W real')
+subplot(2,1,2)
+plot(imag(W))
+title('W imag')
+
+% tutaj wypadaloby dorobic dodatkowe 3 probki co kazda (zwiekszyc
+% rozdzielczosc tego okna utworzonego czterokrotnie), a nastepnie znalezc ktora dla kazdej
+% czestotliwosci odpowiada najlepiej i wpisywac co czwarta probke do W
 
 % Utworzenie pe³nego WIDMA
-freq = 880; %docelowo tablica
+freq = fft_res*10 + fft_res/3;
+disp(freq)
 Y = zeros(1, N);
-
-
 for i = 1:length(W)
   if (i + round(freq*N/Fs) - 20) > 0
-    Y(i + round(freq*N/Fs) - 20) = W(i)*exp(2*pi*(freq*N/Fs)*1i);
-  endif
-  if ((i + round(N - freq*N/Fs) - 21) > 0 && (i + round(N - freq*N/Fs) - 20) < 1026)
-    Y(i + round(N - freq*N/Fs) - 21) = W(42 - i)*exp(2*pi*(freq*N/Fs)*1i);
-  endif
-endfor
+    Y(i + round(freq*N/Fs) - 20) = W(i)*-1*exp(2*pi*(freq/fft_res/2)*1i)*1i;
+  end
+  %if ((i + round(N - freq*N/Fs) - 21) > 0 && (i + round(N - freq*N/Fs) - 20) < 1026)
+  %  Y(i + round(N - freq*N/Fs) - 21) = W(42 - i)*-1*exp(2*pi*(freq/fft_res/2)*1i)*1i;
+  %end
+end
 
 figure(1)
-subplot(2,1,1)
+subplot(2,2,1)
 plot(real(Y))
-subplot(2,1,2)
+title('Y real')
+subplot(2,2,2)
 plot(imag(Y))
+title('Y imag')
 
+y = real(ifft(Y)) + imag(ifft(Y));
 
-%y = -exp(-2*pi*(freq/fft_res/2)*1i)*gaussmf(x, [sigma freq]) - exp(2*pi*(freq/fft_res/2)*1i)*gaussmf(x, [sigma Fs-freq]);
-y = real(ifft(Y));% + imag(ifft(Y));
-figure(2)
-plot(y)
-
-%{
-figure(1)
-subplot(2,1,1)
-plot(real(y))
-title('REAL')
-subplot(2,1,2)
-plot(imag(y))
-title('IMAG')
-%}
-sig = y;
 % wypelnic tablice do odtworzenia
 seconds = 1;
+sig = y;
 sig_out = zeros(1, (Fs/N)*seconds*N);
 for i = 1:(Fs/N)*seconds
     for j = 1:N
@@ -68,6 +64,7 @@ for i = 1:(Fs/N)*seconds
 end
 sig_out = sig_out/max(sig_out);
 sound(sig_out*0.8, Fs)
+pause(2)
 
 % Porownanie z sinusem ifft i w czasie
 dt = 1/Fs;
@@ -78,13 +75,13 @@ t = (0:dt:StopTime-dt);
 x = sin(2*pi*freq*t);
 
 x_fft = fft(x(1:N));
-figure(4)
-subplot(2,1,1);
-plot(real(x_fft)/N)
-title('REAL')
-subplot(2,1,2);
-plot(imag(x_fft)/N)
-title('IMAG')
+figure(1)
+subplot(2,2,3);
+plot(real(x_fft))
+title('x_fft REAL')
+subplot(2,2,4);
+plot(imag(x_fft))
+title('x_fft IMAG')
 
 x_time = real(ifft(x_fft));
 %figure(5)
@@ -100,6 +97,7 @@ for i = 1:(Fs/N)*seconds
         sig_out(j + i*N) = x_time(j);
     end
 end
+
 sig_out = sig_out/max(sig_out);
 sound(sig_out*0.8, Fs)
 
