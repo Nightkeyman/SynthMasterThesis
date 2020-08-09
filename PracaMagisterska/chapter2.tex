@@ -5,7 +5,7 @@ W niniejszym rozdziale przedstawiono podstawowe pojęcia związane z dziedziną 
 
 
 \section{Dźwięk}
-Dźwięk można rozpatrywać na dwa sposoby: fizyczny oraz muzyczny. Z fizycznego punktu widzenia, dźwięk jest zaburzeniem falowym w ośrodku sprężystym gazowym, ciekłym lub stałym, który wywołuje wrażenie słuchowe u człowieka. Poddziedzina fizyki, zajmująca się ściśle tematem dźwięku, nazywana jest akustyką.
+Dźwięk można rozpatrywać na dwa sposoby: fizyczny oraz muzyczny. Z fizycznego punktu widzenia, dźwięk jest zaburzeniem falowym w ośrodku sprężystym gazowym, ciekłym lub stałym, który wywołuje wrażenie słuchowe u człowieka \cite{dzwiek_pwn}. Poddziedzina fizyki, zajmująca się ściśle tematem dźwięku, nazywana jest akustyką.
 % (źródło: https://encyklopedia.pwn.pl/haslo/dzwiek;3896050.html) 
 
 W muzyce, dźwięk rozpatrywany jest jako zjawisko, które wydobywane jest z instrumentów muzycznych lub głosu ludzkiego. Główne właściwości dźwięku w muzyce, to:
@@ -17,7 +17,7 @@ W muzyce, dźwięk rozpatrywany jest jako zjawisko, które wydobywane jest z ins
 	
 	\item głośność, zależna od amplitudy drgań powietrza przenoszącego dźwięk, mierzona w decybelach,
 	
-	\item barwa dźwięku, zależna od ilości, częstotliwości składowych harmonicznych dźwięku oraz zmian ich występowania w czasie. Jako składowa harmoniczna, rozumiana jest składowa sinusoidalna dźwięku, która jest całkowitą wielkrotnością częstotliwości podstawowej danego dźwięku.
+	\item barwa dźwięku, zależna od ilości, częstotliwości składowych harmonicznych dźwięku oraz zmian ich występowania w czasie. Jako składowa harmoniczna, rozumiana jest składowa sinusoidalna dźwięku, która jest całkowitą wielkrotnością częstotliwości podstawowej danego dźwięku \cite{synth_brief_intro}.
 	% (źródło: https://pl.wikipedia.org/wiki/D%C5%BAwi%C4%99k_(muzyka))
 \end{itemize}
 
@@ -54,7 +54,7 @@ Jednym z głównych zadań niniejszego projektu magisterskiego jest implementacj
 
 \section{Przegląd metod syntezy dźwięku}
 % http://legacy.spa.aalto.fi/publications/reports/sound_synth_report.pdf
-Podział metod syntezy dźwięku w literaturze jest bardzo zróżnicowany. Najczęściej spotykany podział występuje pod względem różnych podejść do syntezy:
+Podział metod syntezy dźwięku w literaturze jest bardzo zróżnicowany. Najczęściej spotykany podział występuje pod względem różnych podejść do syntezy \cite{metody_syntezy}:
 \begin{itemize}
 	\item metody widmowe,
 	\item algorytmy abstrakcyjne,
@@ -76,7 +76,7 @@ Synteza poprzez algorytmy abstrakcyjne zazwyczaj odnosi się do zmian istniejąc
 \subsection{Metody fizyczne}
 % https://ccrma.stanford.edu/~bilbao/booktop/node12.html
 % https://edu.pjwstk.edu.pl/wyklady/mul/scb/main37.html
-Metody fizyczne skupiają się na odwzorowywaniu instrumentów muzycznych poprzez tworzenie ich modeli fizycznych na różne sposoby. Do tej grupy należy synteza poprzez modelowanie matematyczne, synteza komórkowa (ang. Cellular Sound Synthesis) oraz synteza falowodowa (ang. Digital Waveguide Modeling).
+Metody fizyczne skupiają się na odwzorowywaniu instrumentów muzycznych poprzez tworzenie ich modeli fizycznych na różne sposoby. Do tej grupy należy synteza poprzez modelowanie matematyczne, synteza komórkowa (ang. Cellular Sound Synthesis) oraz synteza falowodowa (ang. Digital Waveguide Modeling) \cite{czyzewski_dzwiek_cyfrowy}.
 
 Metody syntezy oparte na modelach fizycznych są uważane za najbardziej naukowe i poświęcone jest im wiele prac naukowych. W niniejszej pracy, z tej grupy metod syntezy, przedstawiono głównie synteze fizyczną opartą o modelowanie matematyczne.
 
@@ -86,7 +86,7 @@ Metody syntezy oparte na modelach fizycznych są uważane za najbardziej naukowe
 %https://www.youtube.com/watch?v=I64y40EIPaM
 Jako metody przetwarzania sygnału rozumiane są takie metody syntezy, które oddziaływują bezpośrednio na próbkach sygnału cyfrowego. Do tej grupy metod należą między innymi synteza tablicowa (wavetable), synteza granularna oraz synteza poprzez samplowanie.
 
-Synteza poprzez samplowanie jest najbardziej powszechną metodą syntezy dźwięku w tej grupie. Polega ona na użyciu fragmentu wcześniej dokonanego nagrania (sampla) i odtwarzanie go dla różnych wysokości dźwięków. Jest to metoda najczęściej używana przez kompozytorów w dzisiejszych czasach.
+Synteza poprzez samplowanie jest najbardziej powszechną metodą syntezy dźwięku w tej grupie. Polega ona na użyciu fragmentu wcześniej dokonanego nagrania (sampla) i odtwarzanie go dla różnych wysokości dźwięków. Jest to metoda najczęściej używana przez kompozytorów w dzisiejszych czasach \cite{misra_cook_przetw_syg}.
 
 Z uwagi na nieunaukowy charakter tego rodzaju syntezy dźwięku, żadna synteza należąca do tej grupy nie została opisana w tej pracy.
 
@@ -107,7 +107,7 @@ Syntezatory analogowe są nazywane również modularnymi ze względu na ich budo
 
 Na rysunku \ref{rys:analog_scheme} przedstawiono podstawowy schemat syntezatora modularnego. Składa się on z najbardziej powszechnych modułów, stosowanych w analogowej syntezie dźwięku. Przebieg tworzony jest przez oscylator (VCO), którego częstotliwość zostaje narzucona przez naciśnięcie klawisza o odpowiedniej wysokości dźwięku. Następnie dźwięk trafia na filtr (VCF) i zostaje pozbawiony pewnej części składowych harmonicznych. W dalszej kolejności dociera on na moduł sterujący amplitudą dźwięku (VCA), który ustawia jego amplitudę zgodnie z ustawieniami modułu ADSR. Następnie dźwięk trafia na wyjście, czyli na urządzenie nagłaśniające.
 
-W cyfrowej syntezie dźwięku, każdy z tych modułów jest realizowany jako część programu na procesorze klasy DSP. Poniżej opisano bardziej szczegółowo moduły, które będą realizowane jako część programu w ramach tej pracy.
+W cyfrowej syntezie dźwięku, każdy z tych modułów jest realizowany jako część programu na procesorze klasy DSP. Poniżej opisano bardziej szczegółowo moduł, który będzie realizowany jako część programu w ramach tej pracy.
 
 \subsection{ADSR}
 Akronim, który jest tytułem tego podrozdziału, oznacza cztero-etapowy generator obwiedni stosowany w syntezatorach. Jest on wykorzystywany zarówno w syntezatorach analogowych, jak i cyfrowych.
@@ -123,24 +123,24 @@ Akronim, który jest tytułem tego podrozdziału, oznacza cztero-etapowy generat
 
 Na rysunku \ref{rys:ADSR} przedstawiono przykładową obwiednie dźwięku po naciśnięciu klawisza. Poniżej wytłumaczone zostały etapy ADSR w kolejności ze względu na wystąpienie w czasie:
 \begin{enumerate}
-	\item Attack - czas narastania amplitudy od zera to maksimum, rozpoczyna się, gdy klawisz zostaje naciśnięty.
+	\item Attack - czas narastania amplitudy od zera do maksimum, rozpoczyna się, gdy klawisz zostaje naciśnięty.
 	
-	\item Decay - czas opadania amplitudy od maksymalnej wartości do poziomu podtrzymania.
+	\item Decay - czas opadania amplitudy od maksymalnej wartości do poziomu podtrzymania dźwięku.
 	
 	\item Sustain - poziom amplitudy przy podtrzymaniu dźwięku, trwa dopóki klawisz nie zostanie puszczony.
 	
-	\item Release - czas opadania amplitudy dźwięku od poziomu wyznaczonego przez Sustain do zera.
+	\item Release - czas opadania amplitudy dźwięku od poziomu wyznaczonego przez etap Sustain do wartości zero.
 \end{enumerate}
-
+Moduł ADSR może być używany niezależnie od metody syntezy dźwięku.
 
 \section{Analogowa i cyfrowa synteza dźwięku}
 Debata na temat tego, który rodzaj syntezatorów jest lepszy, trwa już od samego wprowadzenia syntezatorów cyfrowych na rynek. Argumenty za i przeciw obu stron tego konfliku zazwyczaj odnoszą się do charakteru brzmienia obu rodzajów syntezatorów. Nie jest to jednak jedyna właściwość syntezatorów poróżniająca obie strony.
 
 % Porownanie: https://www.synthtopia.com/content/2019/01/11/analog-vs-digital-synthesizer-blind-test/  W opisie na YT sa wyniki
-Lorenzo Furlanetto w ramach swojej pracy magisterskiej dokonał ślepego porównania klasycznego syntezatora analogowego oraz jego cyfrowej emulacji. Wyniki ślepego testu pokazały, iż 51 procent ankietowanych rozpoznało, który z syntezatorów był analogowy, natomiast aż 57 procent osób orzekło, iż dźwięk syntezatorów cyfrowych jest przyjemniejszy. Oznacza to, że ciężkim jest dokonanie odróżnienia syntezatorów cyfrowych od analogowych, oraz że większość ludzi preferuje brzmienie syntezatorów cyfrowych.
+Lorenzo Furlanetto utworzył test ślepego (ang. blind test) porównania klasycznego syntezatora analogowego oraz jego cyfrowej emulacji \cite{synthtopia}. Wyniki testu pokazały, iż 51 procent ankietowanych rozpoznało, który z syntezatorów był analogowy, natomiast aż 57 procent osób orzekło, iż dźwięk syntezatorów cyfrowych jest przyjemniejszy. Oznacza to, że ciężkim jest dokonanie odróżnienia syntezatorów cyfrowych od analogowych, oraz że większość ludzi preferuje brzmienie syntezatorów cyfrowych.
 
 % https://blog.andertons.co.uk/labs/hardware-synths-vs-software-synths
-Syntezatory cyfrowe, w stosunku do analogowych, posiadają wiele zalet. W tych pierwszych można dokonać syntezy wielu rodzajów dźwięków, w tym takich, które imitują brzmienie prawdziwych instrumentów. Syntezatory analogowe natomiast, pozwalają jedynie na uzyskanie prostych brzmień, przy pomocy filtracji i zmian podstawowych przebiegów. Dodatkowo, dzięki cyfrowemu łączeniu wielu maszyn cyfrowych, można sterować wieloma syntezatorami, za pomocą jednej klawiatury.
+Syntezatory cyfrowe, w stosunku do analogowych, posiadają wiele zalet. W tych pierwszych można dokonać syntezy wielu rodzajów dźwięków, w tym takich, które imitują brzmienie prawdziwych instrumentów. Syntezatory analogowe natomiast, pozwalają jedynie na uzyskanie prostych brzmień, przy pomocy filtracji i zmian podstawowych przebiegów. Dodatkowo, dzięki cyfrowemu łączeniu wielu maszyn cyfrowych, można sterować wieloma syntezatorami, za pomocą jednej klawiatury \cite{andertons}.
 
 Z technicznego punktu widzenia, cyfrowe syntezatory są również lepsze z uwagi na ich cyfrowe przetwarzanie sygnałów. Filtry i inne elementy ciągu przetwarzania sygnału nie ulegają degradacji z czasem, z uwagi, iż są elementami programu na procesorze. Elementy analogowe należy wymieniać lub dostrajać. Dodatkowo, dzięki dużej szybkości próbkowania oraz taktowania procesorów, można uzyskać porządane charakterystyki. Częstotliwościowe obwiednie filtrów mogą być idealne, bez zbędnego pasma przejściowego.
 % cos jeszcze?
@@ -150,7 +150,7 @@ Z technicznego punktu widzenia, cyfrowe syntezatory są również lepsze z uwagi
 Cyfrowy interfejs instrumentów muzycznych (MIDI) to standard utworzony w 1983 roku, służący do przekazywania informacji między cyfrowymi instrumentami muzycznymi. Zrewolucjonizował on sektor muzyki elektronicznej. Dzięki wdrożeniu tego protokołu, muzycy mogli na scenie używać jednej klawiatury muzycznej podłączonej do wielu modułów dźwiękowych, zamiast posiadania tak zwanej "ściany syntezatorów". MIDI zawiera zarówno standard warstwy sprzętowej jak i zestaw komend służących do komunikacji urządzeń.
 
 \subsection{Warstwa sprzętowa MIDI}
-W interfejsie MIDI, informacje przesyłane są za pomocą szeregowego połączenia dwóch urządzeń cyfrowych, w trybie półdupleks. Szybkość przesyłu informacji została ustandardyzowana i wynosi 31250 bitów na sekundę. Podobnie jak w popularnym interfejsie UART, początek transmisji ramki danych rozpoczyna bit startu o wartości 0, natomiast kończy bit stopu o wartości logicznej jedynki. Interfejs MIDI jest interfejsem prądowym, gdzie logiczne zero oznacza brak przepływu prądu, natomiast logiczna jedynka oznacza jego przepływ.
+W interfejsie MIDI, informacje przesyłane są za pomocą szeregowego połączenia dwóch urządzeń cyfrowych, w trybie półdupleks. Szybkość przesyłu informacji została ustandardyzowana i wynosi 31250 bitów na sekundę \cite{dokumentacja_midi}. Podobnie jak w popularnym interfejsie UART, początek transmisji ramki danych rozpoczyna bit startu o wartości 0, natomiast kończy bit stopu o wartości logicznej jedynki. Interfejs MIDI jest interfejsem prądowym, gdzie logiczne zero oznacza brak przepływu prądu, natomiast logiczna jedynka oznacza jego przepływ.
 
 \begin{figure}[H]
 	\centering
@@ -166,7 +166,7 @@ Schemat sprzętowy interfejsu MIDI znajdującego się po stronie instrumentu cyf
 %https://www.midi.org/specifications-old/category/midi-1-0-detailed-specifications
 %PDF: D:\Data\Studia\Magisterka\Literatura wstepna\MIDI
 Wiadomości MIDI utworzone są z jednego bajta statusu, po którym następuje zazwyczaj jeden lub dwa bajty danych. Są różne typy wiadomości MIDI. Najbardziej podstawowy podział dzieli je na wiadomości kanałowe (odnoszące się do jednego kanału) oraz systemowe (odnoszące się do wszystkich kanałów). Wiadomości kanałowe mogą dzielić się dalej na komunikaty trybu lub komunikaty głosu. Te drugie w praktyce stanowią większość przesyłanych komunikatów w transmisji MIDI.
-Komunikat głosu może nieść informację na przykład o: naciśnięciu klawisza, odciśnięciu klawisza, aftertouch (zmiana mocy nacisku klawisza po jakimś czasie od naciśnięcia), pitch bend (delikatna zmiana wysokości dźwięku). Protokół MIDI, w ramach bajta danych (komunikat głosu), może obsłużyć 128 wysokości dźwięków z jednego instrumentu. Poziom głośności, zależny od mocy naciśnięcia klawisza, również może przyjąć jedną ze 128 wartości.
+Komunikat głosu może nieść informację na przykład o: naciśnięciu klawisza, odciśnięciu klawisza, aftertouch (zmiana mocy nacisku klawisza po jakimś czasie od naciśnięcia), pitch bend (delikatna zmiana wysokości dźwięku). Protokół MIDI, w ramach transmisji bajta danych (komunikat głosu), może obsłużyć 128 wysokości dźwięków z jednego instrumentu. Poziom głośności, zależny od mocy naciśnięcia klawisza, również może przyjąć jedną ze 128 wartości.
 
 Poza całym przesyłam informacji między dwoma urządzeniami MIDI, występuje dodatkowo zegar MIDI (ang. MIDI Pulses), który pozwala na zsynchronizowanie dwóch instrumentów, aby grały w jednakowym tempie. Wiadomości występują cyklicznie i zawsze posiadają tę samą wartość bitową.
 
@@ -174,7 +174,7 @@ Poza całym przesyłam informacji między dwoma urządzeniami MIDI, występuje d
 
 \section{Dyskretna transformacja Fouriera}
 %Technika cyfrowego przetwarzania sygnałów - A. Leśnicki
-Jednym z najważniejszych narzędzi w dziedzinie cyfrowego przetwarzania sygnałów jest dyskretna transformata Fouriera (DFT). Jest to przekształcenie zdefiniowane dla skończonych sygnałów dyskretnych. Pozwala ono na transformację dyskretnego sygnału czasowego na próbki widma dyskretnego. Posiada ono również swój odpowiednik zwany IDFT, który pozwala na przekształcenie dyskretne odwrotne, z widma do sygnału czasowego.
+Jednym z najważniejszych narzędzi w dziedzinie cyfrowego przetwarzania sygnałów jest dyskretna transformata Fouriera (DFT). Jest to przekształcenie zdefiniowane dla skończonych sygnałów dyskretnych. Pozwala ono na transformację dyskretnego sygnału czasowego na próbki widma dyskretnego. Posiada ono również swój odpowiednik zwany IDFT, który pozwala na przekształcenie dyskretne odwrotne, z widma do sygnału czasowego \cite{lesnicki}.
 
 \subsection{Definicja przekształcenia DFT}
 %Technika cyfrowego przetwarzania sygnałów 262 strona - A. Leśnicki
@@ -248,7 +248,7 @@ Ze wzorów \ref{equ:twid_fact} i \ref{equ:dft_wekt} uzyskuje się uproszczony za
 
 \subsection{Właściwości przekształcenia DFT}
 %Technika cyfrowego przetwarzania sygnałów 269 strona - A. Leśnicki
-Transformata DFT posiada wiele właściwości, których zastosowanie ułatwia realizację przetwarzania sygnałów cyfrowych. W poniższej tabeli przedstawiono te, które wykorzystane zostały w tej pracy.
+Transformata DFT posiada wiele właściwości, których zastosowanie ułatwia realizację przetwarzania sygnałów cyfrowych. W poniższej tabeli przedstawiono te, które wykorzystane zostały w niniejszej pracy.
 
 \begin{table}[H]
 	\caption{Wybrane właściwości przekształcenia DFT.}
@@ -256,7 +256,7 @@ Transformata DFT posiada wiele właściwości, których zastosowanie ułatwia re
 	\label{tab:dft_wlasc}
 	\begin{tabular}{|c|c|c|}
 		\hline 
-		\textbf{Nazwa właściwości} & \textbf{N-punktowy sygnał z okresem N} & \textbf{N-punktowe widmo DFT z okresem N} 	\\
+		\textbf{Nazwa właściwości} & \textbf{sygnał z okresem N} & \textbf{widmo DFT z okresem N} 	\\
 		\hline
 		Okresowość					& $x[n] = x[n + N]$ 				& $X[k] = X[k + N]$ 				\\	\hline
 		Superpozycja			& $a_{1}x_{1}[n] + a_{2}x_{2}[n]$			& $a_{1}X_{1}[k] + a_{2}X_{2}[k]$			\\	\hline
