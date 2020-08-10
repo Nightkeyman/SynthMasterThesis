@@ -84,7 +84,7 @@ int main( int argc, char *argv[] ) {
 	#include "ALL_init.h"
 
 	// INITIALIZE VARIABLES
-	int i = 0, j = 0;
+	int i = 0, j = 0, m = 0;
 	int freq_wav = 0;
 	int mono = 1; // 0 - mono, 1 - poly
 	int mode = 0; // 0 - subtractive, 1 - additive
@@ -133,10 +133,10 @@ int main( int argc, char *argv[] ) {
 	/*---------------------------------------------------------------*/
 	/*							 MAIN LOOP 		                     */
 	/*---------------------------------------------------------------*/
+	mode = 1;
     while(1)  {
     	///// ADDITIVE MONO /////
-    	/*
-    	if((PP == 0 || PP == 1) && mode == 1) {
+		/*if((PP == 0 || PP == 1) && mode == 1) {
     		for(i = 0; i < FRAME_SIZE; i++) {
     			dmaxDacBuffer[PP][0][0][i] = 0.8*mySin(k+i, 220) + 0.9*mySin(k+i, 440) + 0.8*mySin(k+i, 660) +
     					+ 0.8*mySin(k+i, 880) + 0.8*mySin(k+i, 1320)
@@ -145,8 +145,9 @@ int main( int argc, char *argv[] ) {
     		}
     		k += FRAME_SIZE;
         	PP = 3;
-    	}
-    	*/
+    	}*/
+
+
 
     	///// SUBTRACTIVE /////
     	if (method == subtractive) {

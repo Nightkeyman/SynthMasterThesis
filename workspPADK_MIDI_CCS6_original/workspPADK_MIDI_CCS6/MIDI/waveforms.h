@@ -38,5 +38,6 @@ void ADSR(int adsr_index);
 float mySin(int counter, float freq);
 float mySqr(int counter, float freq);
 float myWav(int counter, float freq);
+void hammond_wave(int freq, int amp, int counter);
 
 #endif /* WAVEFORMS_H_ */

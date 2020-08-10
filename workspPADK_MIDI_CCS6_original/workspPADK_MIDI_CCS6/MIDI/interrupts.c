@@ -288,6 +288,7 @@ interrupt void dmax_isr( void )
 		//pDac = (int *)waveform[licz*128];
 
 		OBuf3.pBuf = pDac;
+
 		int i = 0;
 		if (licz == 0){
 			licz = OVERLAP/FRAME_SIZE;
@@ -327,6 +328,7 @@ interrupt void dmax_isr( void )
 				}
 			}
 		}
+
 		/*
 		OBuf2.ptab[LEFT][CH_0] = (int)waveform[wav_iterator];
 		OBuf2.ptab[RIGHT][CH_0] = (int)waveform[wav_iterator];

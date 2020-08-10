@@ -98,4 +98,7 @@ float myWav(int counter, float freq)
 	} else {
 		return -1*SIG_AMP;
 	}
+
+void hammond_wave(int freq, int amp, int counter) {
+
 }
