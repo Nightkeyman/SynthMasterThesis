@@ -72,15 +72,15 @@
             this.drawbar4 = new KnobControl.KnobControl();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.button_fm_en = new System.Windows.Forms.Button();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.button3 = new System.Windows.Forms.Button();
             this.textBox_fm_modfreq = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.trackBar_fm_modfreq = new System.Windows.Forms.TrackBar();
             this.textBox_fm_modamp = new System.Windows.Forms.TextBox();
             this.label7 = new System.Windows.Forms.Label();
             this.trackBar_fm_modamp = new System.Windows.Forms.TrackBar();
-            this.button_fm_en = new System.Windows.Forms.Button();
-            this.button3 = new System.Windows.Forms.Button();
             this.tabPage_Connection.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage_subtractive.SuspendLayout();
@@ -695,6 +695,17 @@
             this.tabPage2.TabIndex = 3;
             this.tabPage2.Text = "FM";
             // 
+            // button_fm_en
+            // 
+            this.button_fm_en.ForeColor = System.Drawing.Color.Red;
+            this.button_fm_en.Location = new System.Drawing.Point(6, 6);
+            this.button_fm_en.Name = "button_fm_en";
+            this.button_fm_en.Size = new System.Drawing.Size(75, 23);
+            this.button_fm_en.TabIndex = 5;
+            this.button_fm_en.Text = "Disabled";
+            this.button_fm_en.UseVisualStyleBackColor = true;
+            this.button_fm_en.Click += new System.EventHandler(this.button_fm_en_Click);
+            // 
             // groupBox3
             // 
             this.groupBox3.Controls.Add(this.button3);
@@ -710,6 +721,16 @@
             this.groupBox3.TabIndex = 4;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Modulation parameters";
+            // 
+            // button3
+            // 
+            this.button3.Location = new System.Drawing.Point(6, 161);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(75, 23);
+            this.button3.TabIndex = 11;
+            this.button3.Text = "Set";
+            this.button3.UseVisualStyleBackColor = true;
+            this.button3.Click += new System.EventHandler(this.button3_Click);
             // 
             // textBox_fm_modfreq
             // 
@@ -732,13 +753,11 @@
             // trackBar_fm_modfreq
             // 
             this.trackBar_fm_modfreq.AllowDrop = true;
-            this.trackBar_fm_modfreq.LargeChange = 50;
             this.trackBar_fm_modfreq.Location = new System.Drawing.Point(7, 78);
-            this.trackBar_fm_modfreq.Maximum = 12000;
+            this.trackBar_fm_modfreq.Maximum = 50;
             this.trackBar_fm_modfreq.Name = "trackBar_fm_modfreq";
             this.trackBar_fm_modfreq.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.trackBar_fm_modfreq.Size = new System.Drawing.Size(490, 45);
-            this.trackBar_fm_modfreq.SmallChange = 10;
             this.trackBar_fm_modfreq.TabIndex = 7;
             this.trackBar_fm_modfreq.TickFrequency = 1000;
             this.trackBar_fm_modfreq.TickStyle = System.Windows.Forms.TickStyle.TopLeft;
@@ -767,7 +786,7 @@
             this.trackBar_fm_modamp.AllowDrop = true;
             this.trackBar_fm_modamp.LargeChange = 50;
             this.trackBar_fm_modamp.Location = new System.Drawing.Point(7, 56);
-            this.trackBar_fm_modamp.Maximum = 12000;
+            this.trackBar_fm_modamp.Maximum = 300;
             this.trackBar_fm_modamp.Name = "trackBar_fm_modamp";
             this.trackBar_fm_modamp.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.trackBar_fm_modamp.Size = new System.Drawing.Size(490, 45);
@@ -775,27 +794,6 @@
             this.trackBar_fm_modamp.TabIndex = 4;
             this.trackBar_fm_modamp.TickFrequency = 1000;
             this.trackBar_fm_modamp.Scroll += new System.EventHandler(this.trackBar_fm_modamp_Scroll);
-            // 
-            // button_fm_en
-            // 
-            this.button_fm_en.ForeColor = System.Drawing.Color.Red;
-            this.button_fm_en.Location = new System.Drawing.Point(6, 6);
-            this.button_fm_en.Name = "button_fm_en";
-            this.button_fm_en.Size = new System.Drawing.Size(75, 23);
-            this.button_fm_en.TabIndex = 5;
-            this.button_fm_en.Text = "Disabled";
-            this.button_fm_en.UseVisualStyleBackColor = true;
-            this.button_fm_en.Click += new System.EventHandler(this.button_fm_en_Click);
-            // 
-            // button3
-            // 
-            this.button3.Location = new System.Drawing.Point(6, 161);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(75, 23);
-            this.button3.TabIndex = 11;
-            this.button3.Text = "Set";
-            this.button3.UseVisualStyleBackColor = true;
-            this.button3.Click += new System.EventHandler(this.button3_Click);
             // 
             // Form1
             // 

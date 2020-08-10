@@ -227,12 +227,13 @@ int main( int argc, char *argv[] ) {
 				for(j = 0; j < N; j++) {
 					waveform0[j] = 0;
 					waveform1[j] = 0;
+					k = 0;
 				}
 			}
 			for(i = 0; i < 6; i++) {
 				if(freqs[i] > 0) {
 					for(j = 0; j < N; j++) {
-						v[j*2] = mySin(j+k, freqs[i] + (float)fm_modamp*mySin(j+k, (float)fm_modfreq)/SIG_AMP)*1000;
+						v[j*2] = sinf((double)(j+k)*2.0*M_PI*freqs[i]*(1.0/Fs) + (float)fm_modamp*sinf((double)(j+k)*2.0*M_PI*(float)fm_modfreq*(1.0/Fs)))*SIG_AMP*1000;
 					}
 					while(sem_dac == 0);
 					for(j = 0; j < N; j++) {
