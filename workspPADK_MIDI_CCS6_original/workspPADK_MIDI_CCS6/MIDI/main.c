@@ -68,7 +68,7 @@ float przefiltrowany[N];
 
 float mySin(int counter, float freq)
 {
-	return sinusek[(int)((float)counter*freq*(0.02083333333))%2000]; //2000/96000
+	return sinusek[(int)((float)counter*freq*((float)N/(float)Fs))%N]; // N/Fs
 }
 
 float mySqr(int counter, float freq)
@@ -131,7 +131,7 @@ int main( int argc, char *argv[] ) {
 
 	// Prepare waveform tables
 	for (i = 0; i < N; i++) {
-		sinusek[i] = SIG_AMP*sin(2.0*M_PI*(i/2048.0));
+		sinusek[i] = SIG_AMP*sin(2.0*M_PI*(i/(N*1.0)));
 	}
 	for (i = 0; i < N; i++) { // tu moze ze dwa okresy?
 		if(i <= N/2) kwadracik[i] = 1.0;
@@ -232,8 +232,7 @@ int main( int argc, char *argv[] ) {
 			for(i = 0; i < 6; i++) {
 				if(freqs[i] > 0) {
 					for(j = 0; j < N; j++) {
-						v[j*2] = sinusek((j+k)*2.0*M_PI*freqs[i]*(1.0/Fs) + (float)fm_modamp*sinusek((j+k)*2.0*M_PI*((float)fm_modfreq)*(1.0/Fs))/SIG_AMP);
-						//v[j*2] = sinusek((j+k)*2.0*M_PI*freqs[i]*(1.0/Fs)); // czysta sinusoida jakby to powyzej nie dzialalo
+						v[j*2] = mySin(j+k, freqs[i] + (float)fm_modamp*mySin(j+k, (float)fm_modfreq)/SIG_AMP)*1000;
 					}
 					while(sem_dac == 0);
 					for(j = 0; j < N; j++) {

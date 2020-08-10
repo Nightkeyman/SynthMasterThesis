@@ -454,8 +454,8 @@ namespace UARTCOM2
 
         private void button3_Click(object sender, EventArgs e)
         {
-            sendInt(100, 4, (UInt32)trackBar_fm_modamp.Value);
-            sendInt(100, 3, (UInt32)trackBar_fm_modfreq.Value);
+            sendInt(102, 4, (UInt32)trackBar_fm_modamp.Value);
+            sendInt(102, 3, (UInt32)trackBar_fm_modfreq.Value);
         }
     }
 }

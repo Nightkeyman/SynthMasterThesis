@@ -187,7 +187,7 @@ interrupt void uart_isr( void )
     UART_Read(uartdata, 1, UART_WAIT);
     UART_push(uartdata[0]);
     switch(UART_pull(0)){
-    case 100:
+    case 100: // SUBTRACTIVE
     	if (UART_pull(7) == 101){
     		if (UART_pull(8) == UART_checksum()){
     			if (UART_pull(1) == 1){
@@ -210,7 +210,7 @@ interrupt void uart_isr( void )
     	}
     	break;
 
-    case 102:
+    case 102: // FM
 		if (UART_pull(7) == 103){
 			if (UART_pull(8) == UART_checksum()){
 				if (UART_pull(1) == 1){
