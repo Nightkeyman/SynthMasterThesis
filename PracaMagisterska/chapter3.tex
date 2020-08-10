@@ -1,62 +1,103 @@
 % !TeX spellcheck = pl_PL
 \chapter{Realizacja instrumentu muzycznego}
-Implementacja tworzonego syntezatora muzycznego realizowana jest na wspomnianej we wstępie płycie PADK, która opiera swoje działanie na procesorze DSP. W ramach tego implementowane jest wiele mechanizmów, które są konieczne do kompletnego działania projektu: przetwarzanie sygnałów z klawiatury muzycznej, wydobycie dźwięku z płyty PADK oraz komunikacja z interfejsem użytkownika. W niniejszym rozdziale przedstawiono podejście do realizacji wymienionych zadań. Implementacja poszczególnych algorytmów syntezy dźwięku przedstawiona zostanie w kolejnych rozdziałach.
+W ramach realizacji instrumentu muzycznego implementowane jest wiele mechanizmów, które są konieczne do kompletnego działania projektu: przetwarzanie sygnałów z klawiatury muzycznej, wydobycie dźwięku z płyty PADK oraz komunikacja z interfejsem użytkownika. W niniejszym rozdziale przedstawiono podejście do realizacji wymienionych zadań. Omówiono również warstwę sprzętową projektu, która odgrywa ważną rolę w jego realizacji. Implementacja poszczególnych algorytmów syntezy dźwięku przedstawiona zostanie w kolejnych rozdziałach, dedykowanych poszczególnym metodom syntezy.
 
-Cały kod programu na procesor DSP napisany został w języku C. Program pisano w środowisku Code Composer Studio v6, które jest dedykowane do procesorów firmy Texas Instruments. Wgrywanie kodu na płytę odbywało się poprzez użycie debuggera XDS510 firmy Spectrum Digital. Debugger połączony jest z płytą PADK przez taśmę, a następnie przejściówkę 8-pinową.
+Kod programu na procesor DSP napisany został w języku C. Program pisano w środowisku Code Composer Studio v6, które jest dedykowane do procesorów firmy Texas Instruments. Wgrywanie kodu na płytę odbywało się poprzez użycie debuggera XDS510 firmy Spectrum Digital.
 
 % zdjęcie PADK z debuggerem
 
-\section{Układ instrumentu}
+\section{Warstwa sprzętowa instrumentu}
 % Zdjęcie i opis co z czym łączymy
+Głównymi elementami sprzętu potrzebnymi do uzyskania pełnego instrumentu klawiszowego i spełnienia założeń projektowych są:
+\begin{itemize}
+	\item klawiatura MIDI - wysyłanie sygnałów MIDI,
+	\item komputer PC - interfejs użytkownika,
+	\item płyta uruchomieniowa z procesorem DSP - realizacja działania instrumentu,
+	\item programator DSP,
+	\item urządzenie nagłaśniające.
+\end{itemize}
 
-\section{Płyta PADK}
+Niniejszy paragraf poświęcono omówieniu poszczególnych elementów płyty uruchomieniowej, która pełni główną funkcję w tym projekcie. Po przedstawieniu najważniejszych z nich omówione zostanie ich połączenie.
 
-\subsection{Procesor TMS320C6727}
+\subsection{Płyta PADK}
+%Dokumentacja plyty PADK: file:///D:/Data/Studia/Magisterka/Z_pendrive/Szefler/Szefler/PADK_LYRTECH/PADK%20-%20Technical%20reference%20guide.pdf
+Płyta Professional Audio Development Kit, która użyta została w niniejszym projekcie, posiada wiele zintegrowanych układów. Dedykowana jest przede wszystkim do testowania aplikacji skupiających się na przetwarzaniu sygnałów dźwiękowych. Głównym elementem płyty jest procesor DSP, który łączy ze sobą wszystkie pozostałe elementy takie jak: peryferia komunikacyjne, przetworniki ADC i DAC, układy FPGA oraz interfejs JTAG \cite{dokumentacja_PADK}. Dodatkowo płyta posiada 8MB pamięci flash, 128MB pamięci SDRAM oraz pamięć EEPROM, z których może korzystać procesor DSP.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=16cm]{./grafiki/real_PADK_block}
+	\captionsetup{justification=centering}
+	\caption{Schemat blokowy płyty PADK.}
+	\label{rys:real_padk}
+\end{figure}
+
+Na rysunku \ref{rys:real_padk} przedstawiającym schemat blokowy płyty PADK widać uzależnienie całej struktury układów peryferyjnych płyty PADK od procesora DSP.
+
+\subsection{TMS320C6727}
 %https://www.ti.com/lit/ds/symlink/tms320c6727.pdf?ts=1595978326019&ref_url=https%253A%252F%252Fwww.google.com%252F 
 %--> glowne feature'y
 %--> strona 13 wypisane w myslnikach np busy
+Układ TMS320C6727 firmy Texas instrument jest zmiennoprzecinkowym procesorem sygnałowym 32-/64-bitowym umieszczonym na płycie PADK. Jednostka centralna C6727 posiada szybkości taktowania 300MHz oraz 350MHz. Przy taktowaniu procesora z szybkością 300MHz posiada on maksymalną wydajność sięgającą 180 milionów operacji zmiennoprzecinkowych na sekundę \cite{dokumentacja_ti6727}.
 
-\subsection{Peryferia komunikacyjne}
+Układ TMS320C6727 jest również bardzo wydajny pod względem systemu pamięci. Posiada on 256KB pamięci RAM oraz 384KB pamięci ROM. Kontroler pamięci obsługuje jednocyklowe dostępy z procesora do pamięci  RAM lub ROM. W jednym momencie dozwolone są trzy równoległe odczyty pamięci z różnych źródeł takich jak: CPU, pamięć programu cache oraz jedno z urządzeń peryferyjnych. Układ TMS320C6727 posiada również 32KB pamięci cache.
 
-\subsection{Przetworniki DAC}
+Poza wysoką szybkością taktowania procesora, układ zawiera dodatkowe mechanizmy akceleracji przepływu danych i sygnałów. Umożliwiają one jeszcze szybszy transfer danych między układami peryferialnymi bez zabierania czasu pracy procesora. Narzędzia, z których szczególnie korzystano w naszym projekcie przedstawiono poniżej.
 
-
-
-\section{Mechanizmy szybkiego przetwarzania danych}
-Procesor sygnałowy TMS320C6727 jest przeznaczony między innymi do szybkiego przetwarzania danych i sygnałów. Poza wysoką szybkością taktowania procesora, firma Texas Instruments zawiera dodatkowe mechanizmy akceleracji przepływu danych i sygnałów. Zostały one opisane w poniższych podpunktach.
-
-\subsection{McASP}
-% https://www.ti.com/lit/an/sprack0/sprack0.pdf?ts=1595842361762&ref_url=https%253A%252F%252Fwww.google.com%252F
-McASP to akronim od Multichannel Audio Serial Port. Jest to komunikacyjne urządzenie peryferyjne dedykowane do przetwarzania danych audio lub wideo. Został zaprojektowany w celu przypadków wymagających wielokanałowego przetwarzania dźwięku. Jedną z najbardziej przydatnych właściwości narzędzia McASP jest schemat wielozegarowy. Pozwala on na niezależność pomiędzy portami odbierającymi i nadającymi. Komunikacja, którą zarządza McASP może odbywać się poprzez interfejs I2S (ang. Inter-IC Sound), I2C (ang. Inter-Integrated Circuit) lub SPI (ang. Serial Peripheral Interface).
+\subsubsection{McASP}
+%https://www.ti.com/lit/an/sprack0/sprack0.pdf?ts=1595842361762&ref_url=https%253A%252F%252Fwww.google.com%252F
+McASP to akronim od Multichannel Audio Serial Port. Jest to komunikacyjne urządzenie peryferyjne dedykowane do przetwarzania danych audio lub wideo. Zostało zaprojektowane w celu przypadków wymagających wielokanałowego przetwarzania dźwięku. Jedną z najbardziej przydatnych właściwości narzędzia McASP jest schemat wielozegarowy. Pozwala on na niezależność pomiędzy portami odbierającymi i nadającymi. Komunikacja, którą zarządza McASP może odbywać się poprzez interfejs I2S (ang. Inter-IC Sound), I2C (ang. Inter-Integrated Circuit) lub SPI (ang. Serial Peripheral Interface) \cite{dokumentacja_mcasp}.
 
 Kiedy dane przepływają przez McASP, mogą zostać dostosowane tak, aby reprezentacja stałoprzecinkowa używana przez kod aplikacji była niezależna od reprezentacji używanej przez urządzenia zewnętrzne, bez wymagania dodatkowej konwersji przez procesor.
+W niniejszej pracy narzędzie McASP stosowane jest do przepływu danych między DAC a procesorem. 
 
-W niniejszej pracy narzędzie McASP stosowane jest do przepływu danych między DAC a procesorem. W ramach inicjalizacji McASP ustawia odpowiednią szybkość próbkowania dla modułu DAC.
-
-\subsection{dMAX}
+\subsubsection{dMAX} \label{par:dMax}
 %https://www.ti.com/lit/ug/spru795d/spru795d.pdf?ts=1595843361787&ref_url=https%253A%252F%252Fwww.google.com%252F, strona 14, Overview
-Kontroler dMAX (Dual Data Movement Accelerator) obsługuje transfery zaprogramowane przez użytkownika pomiędzy kontrolerem pamięci wewnętrznej i urządzeniami peryferialnymi na procesorach DSP firmy TI. Mechanizm ten jest dedykowany szczególnie dla procesorów z serii C672x.
+Kontroler dMAX (Dual Data Movement Accelerator) obsługuje transfery zaprogramowane przez użytkownika pomiędzy kontrolerem pamięci wewnętrznej i urządzeniami peryferialnymi na procesorach DSP firmy Texas Instruments. Mechanizm ten jest dedykowany szczególnie dla procesorów z serii C672x.
 
-Zasada działania dMAX opiera się na sygnałach zdarzeń (ang. event signals). Zdarzenie zdefiniowane jest jako zmiana wartości logicznej odpowiadającego sygnału zdarzeń w rejestrze flag zdarzeń. Zdarzenie może być używane jako: wzbudzenie rozpoczęcia transferu danych lub spowodowanie wystąpienia przerwania dla CPU. Wszystkie zdarzenia posortowane są w dwie grupy: grupa niskiego priorytetu oraz grupa wysokiego priorytetu. Mechanizm dMAX może równolegle przetwarzać dwa żądania zdarzeń z każdej z grupy.
+Zasada działania dMAX opiera się na sygnałach zdarzeń (ang. event signals). Zdarzenie zdefiniowane jest jako zmiana wartości logicznej odpowiadającego sygnału zdarzeń w rejestrze flag zdarzeń. Zdarzenie może być używane jako: wzbudzenie rozpoczęcia transferu danych lub spowodowanie wystąpienia przerwania dla CPU. Wszystkie zdarzenia posortowane są w dwie grupy: grupa niskiego priorytetu oraz grupa wysokiego priorytetu. Mechanizm dMAX może równolegle przetwarzać dwa żądania zdarzeń z każdej z grupy \cite{dokumentacja_dmax}.
 
 Częścią mechanizmu dMAX jest również bufor cyrkulacyjny FIFO. Pozwala on na równoczesny, asynchroniczny odczyt i zapis danych do jednego bufora dwustronnego. Narzędzie dMAX wykrywa kiedy dane zostają zapisane do bufora i natychmiastowo wywołuje odwrócenie go. Po odwróceniu, zapisane chwilę wcześniej dane mogą zostać odczytane z drugiej strony bufora, natomiast równocześnie kolejne dane zapisywane są po pierwszej stronie.
 
+\subsection{Peryferia komunikacyjne}
+Płyta PADK ma możliwość komunikowania się z innymi urządzeniami przez trzy różne interfejsy:
+\begin{itemize}
+	\item UART,
+	\item MIDI,
+	\item USB.
+\end{itemize}
+Za komunikację przez interfejs MIDI oraz UART odpowiadają dwa te same układy TL16C550. Pozwalają one na alternatywny tryb kolejki danych FIFO, który odciąża procesor DSP. Interfejs USB obsługiwany jest na płycie poprzez mikrokontroler CY7C68013.
+
+\subsection{Przetworniki DAC}
+Na płycie PADK znajdują się dwa, czterokanałowe, 24-bitowe układy PCM4204, które posiadają możliwość próbkowania sygnału z częstotliwością do 192kHz. Umożliwiają one wydobycie dźwięku z płyty poprzez gniazda żeńskie typu CINCH.
+
+\subsection{Pełen schemat układu instrumentu klawiszowego}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=12cm]{./grafiki/real_pelen_uklad}
+	\captionsetup{justification=centering}
+	\caption{Schemat pełnego układu realizowanego w projekcie.}
+	\label{rys:real_uklad}
+\end{figure}
+Strzałki na rysunku \ref{rys:real_uklad} przedstawiają kierunek przepływu danych między głównymi elementami układu projektowego. Klawiatura MIDI komunikuje się z płytą PADK po interfejsie MIDI. Komputer osobisty z interfejsem użytkownika przesyła i otrzymuje informacje z płyty PADK poprzez interfejs UART. Ostatecznie płyta PADK wystawia próbki dźwięków na przetwornik cyfrowo-analogowy, który połączony jest z urządzeniem nagłaśniającym. Urządzenie wydaje z siebie zsyntezowane brzmienie.
 
 \section{Komunikacja z płytą PADK}
 Do płyty PADK dołączone zostały dodatkowe biblioteki firmy Lyrtech, które ułatwiają obsługę komunikacji z płytą. Przykładem interfejsów, do których zostały utworzone nadmienione biblioteki to UART oraz MIDI.
 
+Inicjalizacja przerwań i transferu danych obu interfejsów wygląda bardzo podobnie. Każdy z nich otrzymał swój identyfikator zdarzenia dMAX oraz identyfikator przerwania. Priorytet przerwań obu interfejsów ustawiono na wysoki. Ostatnim elementem inicjalizacji było ustawienie rejestru IER obu interfejsów na wartość umożliwiającą pracę w trybie przerwań.
+
 \subsection{Komunikacja z klawiaturą muzyczną  (MIDI)}
 % Datasheet "Professional Audio Development Kit Technical Reference Guide 1.4", September 2007
-Jednym z podstawowych peryferiów klawiatury muzycznej jest wyprowadzenie interfejsu MIDI. Przeważnie jest to pięciopinowe gniazdo DIN. W płycie PADK zastosowano jednak dziewięciopinowe gniazdo typu D-sub. Zatem wymagało to stworzenia odpowiedniego kabla, aby połączyć klawiaturę muzyczną z płytą PADK.
+Jednym z podstawowych peryferiów klawiatury muzycznej jest wyprowadzenie interfejsu MIDI. Przeważnie jest to pięciopinowe gniazdo DIN. W płycie PADK zastosowano jednak dziewięciopinowe gniazdo typu D-sub. Nietypowe gniazdo wymagało użycia odpowiedniego kabla oraz wtyku, aby połączyć klawiaturę muzyczną z płytą PADK.
+
 Do obsługi interfejsu MIDI wykorzystana została biblioteka PADK\_MIDI.c, która zawiera takie funkcje jak:
 \begin{itemize}
 	\item MIDI\_Init - inicjalizacja interfejsu MIDI,
 	\item MIDI\_EnableLed1, MIDI\_EnableLed2 - sterowanie diodami LED interfejsu MIDI,
 	\item MIDI\_Read - odczyt przychodzących bajtów. 
 \end{itemize}
-Aby w jak najmniejszym stopniu obciążać procesor, obsluga interfejsu MIDI została sprowadzona jedynie do odczytywania przychodzących bajtów poprzez przerwania sprzętowe.
+W celu jak najmniejszego zużycia czasu procesora, obsługa interfejsu MIDI została sprowadzona jedynie do odczytywania przychodzących bajtów poprzez przerwania sprzętowe.
 Jako że ramki MIDI składają się z trzech bajtów, odczytywać oraz interpretować należy kolejne 3 przychodzące bajty.
-Można to osiągnąć poprzez umieszczenie funkcji MIDI\_Read z parametrem 3 (odczyt 3 bajtów za jednym razem) w obsłudze przerwania. Jednak sytuację nieco komplikuje zegar MIDI, który powoduje, że DSP będzie odczytywał regularnie bajt o wartości 0xF8. Powoduje to, że w odczytanej sekwencji 3 bajtów pojawiała się niepożądana wartość 0xF8.
+Można to osiągnąć poprzez umieszczenie funkcji MIDI\_Read z parametrem 3 (odczyt 3 bajtów za jednym razem) w obsłudze przerwania. Sytuację nieco komplikuje zegar MIDI, który powoduje, że DSP będzie odczytywał regularnie bajt o wartości 0xF8. Powoduje to, że w odczytanej sekwencji 3 bajtów pojawiała się niepożądana wartość 0xF8.
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=8cm]{./grafiki/real_nofifo}
@@ -74,9 +115,11 @@ Aby rozwiązać ten problem, funkcja osbługi przerwania wywołuje funkcję MIDI
 	\label{rys:real_fifo}
 \end{figure} 
 Dzięki sprawdzaniu każdego przychodzącego bajta w obsłudze przerwania, do kolejki FIFO dostają się tylko istotne bajty. Dyskryminowanie wartości 0xF8 nie powinno mieć skutków ubocznych, gdyż wartość ta nie pojawia się w żadnym z bajtów ramki MIDI, poza bajtem statusu komunikatu zegarowego.
+
 \subsection{Komunikacja z interfejsem użytkownika (UART)}
-Do komunikacji z interfejsem użytkownika działajacym na komputerze klasy PC wykorzystany został interfejs RS-232, który znajduje się na płycie PADK. Do komunikacji z komputerem użyto przejściówki z RS-232 na USB. 
-Do obsługi interfejsu szeregowego wykorzystana została biblioteka PADK\_UART.c, która zawiera takie funkcje jak:
+Do komunikacji z interfejsem użytkownika działajacym na komputerze klasy PC wykorzystany został interfejs RS-232, który znajduje się na płycie PADK. Komunikacja z komputerem została umożliwiona dzięki użyciu złączki z RS-232 na USB.
+
+Do obsługi interfejsu szeregowego została wykorzystana biblioteka PADK\_UART.c, która zawiera takie funkcje jak:
 \begin{itemize}
 	\item UART\_Init - inicjalizacja interfejsu UART,
 	\item UART\_EnableLed1, UART\_EnableLed2 - sterowanie diodami LED interfejsu UART,
@@ -91,41 +134,96 @@ Aby zapewnić wygodny w użyciu oraz odporny na błędy przepływ informacji, ut
 	\caption{Struktura ramki protokołu.}
 	\label{rys:real_uartframe}
 \end{figure}
-Na rysunku \ref{rys:real_uartframe} pokazana została struktura 9-bajtowej ramki danych, która jest przesyłana między DSP a komputerem. Składa się ona z dwóch bajtów identyfikujących, sześciu bajtow danych oraz jednego bajta sumy kontrolnej. Podobnie jak w przypadku MIDI, do identyfikacji i interpretacji przychodzących ramek, wykorzystywana jest kolejka FIFO. Tym razem ma ona rozmiar 9 bajtów. Bajty przychodzące są odczytywane pojedynczo przy wykorzystaniu przerwania sprzetowego i wpisywane do kolejki FIFO. W momencie gdy na pierwszym miejscu w kolejce znajdzie się odpowiedni bajt identyfikujący ramkę, a na miejscu ósmym znajdzie się wartość tego bajta powiększona o jeden, to jest domniemanie, że odebrana została jakaś ramka danych. W ramach upewnienia się, dodatkowo obliczana jest suma kontrolna z bajtów danych. Gdy ramka przejdzie taką weryfikację, zostaje następnie przetworzona w zależności od informacji, które niesie. Opisany mechanizm działa zarówno na procesorze DSP, jak i na komputerze PC.
+Na rysunku \ref{rys:real_uartframe} pokazana została struktura 9-bajtowej ramki danych, która jest przesyłana między DSP a komputerem. Składa się ona z dwóch bajtów identyfikujących, sześciu bajtow danych oraz jednego bajta sumy kontrolnej. Podobnie jak w przypadku MIDI, do identyfikacji i interpretacji przychodzących ramek, wykorzystywana jest kolejka FIFO. Tym razem ma ona rozmiar 9 bajtów. Bajty przychodzące są odczytywane pojedynczo przy wykorzystaniu przerwania sprzetowego i wpisywane do kolejki FIFO. W momencie gdy na pierwszym miejscu w kolejce znajdzie się odpowiedni bajt identyfikujący ramkę, a na miejscu ósmym znajdzie się wartość tego bajta powiększona o jeden, to jest domniemanie, że odebrana została jakaś ramka danych. W celu potwierdzenia poprawności ramki danych   obliczana jest suma kontrolna z bajtów danych. Gdy ramka przejdzie taką weryfikację, zostaje następnie przetworzona w zależności od informacji, które niesie. Opisany mechanizm działa zarówno na procesorze DSP, jak i na komputerze PC.
 Takie dziewięciobajtowe ramki pozwalają na przesyłanie na przykład całych zmiennych 4-bajtowych lub jednocześnie trzech liczb 2-bajtowych. 
+
+
+
 \section{Wydobycie dźwięku (DAC)}
-% pamiętać o: odniesienie do dMAX z buforem cyrkulacyjnym
 
+\subsection{Inicjalizacja programowa modułu DAC}
+Odpowiednie ustawienie przetwornika cyfrowo analogowego było najbardziej skomplikowanym elementem etapu inicjalizacji programowej spośród całego projektu. Polegało ono na ustawieniu identyfikatora zdarzeń dMAX, przerwania dedykowanego dla DAC, modułu McASP odpowiedniego obszaru pamięci oraz parametrów dla przetwornika. 
 
+%pamiętać o: odniesienie do dMAX z buforem cyrkulacyjnym
+%pamięć dla bufora
+%źródła zegarów
+%parametry
+Program dotyczący modułu DAC wykorzystuje bufor cyrkulacyjny, którego działanie omówiono w \ref{par:dMax}. Pierwszym elementem inicjalizacji było ustawienie odpowiedniego obszaru pamięci dla zmiennej z buforem cyrkulacyjnym dmaxDacBuffer][]. Następnie w programie ustawiono źródła zegarów taktujących przetwornik DAC. Kolejnym krokiem była inicjalizacja parametrów dla przetwornika. Tryb szybkości próbkowania ustawiony został na najwolniejszy, obejmujący szybkości 32kHz, 44,1kHz oraz 48kHz. Ustawiono rejestr odblokowujący wydobycie danych z przetwornika oraz format danych na 24 bitowy wyjustowany do lewej (ang. left-justified). Priorytet przerwania został ustawiony na wysoki. Wszystkie wartości zostały przekazane za pomocą funkcji z bibliotek firmy Lyrtech o nazwie DAC\_Init().
+
+% DMAX for data transfer on MCASP0TX DMA REQ - 3D Transfer
+% DMAX Parameter initialization structure
+% DMAX Event initialization structure
+Kolejnym etapem była inicjalizacja parametrów dotyczących połączenia przetwornika cyfrowo-analogowego z modułem McASP oraz ustawienia struktury zdarzenia dMAX powiązanego z przetwornikiem DAC. 
+
+Ostatnią częścią inicjalizacji było ustawienie częstotliwości próbkowania na wartość 48kHz i wyłączenie przekaźnika wyciszającego przepływ sygnału analogowego z przetwornika do gniazda CINCH.
+
+\subsection{Wystawianie danych na moduł DAC}
+Obsługa danych z syntezowanym dźwiękiem oraz ich wystawienie na moduł DAC odbywa się w przerwaniu dmax\_isr(). Za każdym razem, gdy wywoływane jest przerwanie poprzez zdarzenie dMAX, sprawdzany jest warunek, czy poprzedni transfer danych na przetwornik DAC został ukończony. Jeżeli warunek jest spełniony, pozostały kod przerwania zostaje wykonany.
+
+Obsługa danych w funkcji przerwania opiera się na zainicjalizowanym wcześniej buforze cyrkulacyjnym dmaxDacBuffer. Programowo bufor jest czterowymiarową tablicą, gdzie pierwszy wymiar dokonuje synchronizacji odczytu i zapisu typu ping-pong. Następnie wykonywany jest mechanizm zakładkowania dwóch tablic przechowujących próbki zsyntezowanego dźwięku. Dane po zakładkowaniu wystawiane są na moduł DAC przez tablicę dmaxDacBuffer.
 
 \section{Klawiatura polifoniczna}
-
+<W trakcie implementacji>
+% opisać ogólnie, i powiedziec, ze dla kazdej metody to bedzie wyglądało trochę inaczej
 
 
 
 \section{Wykorzystanie algorytmu FFT}
-% jakl linkujemy biblioteke, o bibliotece
 %http://www.secs.oakland.edu/~ganesan/old/courses/CSE671SU08/CSE%20671%20Lab%204%20ANC%20Code/Lee's%20adaptive%20wiener%20filter/DSPF_sp_cfftr2_dit.h
-%
+
+%https://processors.wiki.ti.com/index.php/C674x_DSPLIB <--- funkcje dsp_lib
 
 W pamięci ROM procesorów z serii TMS320C672x zostały umieszczone specjalnie zoptymalizowane biblioteki, dedykowane do szybkiego przetwarzania sygnałów cyfrowych. Skompilowane biblioteki zostały napisane w asemblerze w celu większej efektywności obliczeniowej. 
 
 %https://www.ti.com/lit/an/spraas8/spraas8.pdf?ts=1596035199216&ref_url=https%253A%252F%252Fwww.google.com%252F
-W naszym projekcie, użyta została biblioteka \emph{DSP Library} z procesora TMS320C6727, która posiada efektywne obliczeniowo funkcje takie jak: transformacja FFT, odwracanie macierzy lub operacja na wektorach. W celu zawarcia jej w projekcie z programem na DSP, należało zmodyfikować komende pliku linkera dodając do niej bibliotekę o nazwie \emph{c67xdsplibR.lib}. Dodatkowo zmieniono sekcje pamięci, tak aby linker został odpowiednio poinstruowany, do których obszarów pamięci powinien się odnieść.
+W naszym projekcie, użyta została biblioteka \emph{DSP Library} z procesora TMS320C6727, która posiada efektywne obliczeniowo funkcje takie jak: transformacja FFT, odwracanie macierzy lub operacja na wektorach. W celu zawarcia jej w projekcie z programem na DSP, należało zmodyfikować komende pliku linkera dodając do niej bibliotekę o nazwie \emph{c67xdsplibR.lib}. Dodatkowo zmieniono sekcje pamięci, tak aby linker został odpowiednio poinstruowany, do których obszarów pamięci powinien się odnieść. Do pełnej transformacji FFT użyto trzech funkcji z nadmienionej biblioteki: DSPF\_sp\_cfftr2\_dit(), DSPF\_sp\_icfftr2\_dif() oraz DSPF\_sp\_bitrev\_cplx().
 
+\subsection{Funkcje zawarte w procesorze}
 %http://software-dl.ti.com/jacinto7/esd/processor-sdk-rtos-jacinto7/latest/exports/docs/dsplib_c66x_3_4_0_0/docs/doxygen/html/dsplib_html/group___f_f_t.html
-Do pełnej transformacji FFT użyto dwóch funkcji z nadmienionej biblioteki: DSPF\_sp\_cfftr2\_dit() oraz DSPF\_sp\_bitrev\_cplx(). Pierwsza z nich odpowiada za przeprowadzenie algorytmu FFT radix-2 dla liczb zmiennoprzecinkowych. Sygnał na wejściu powinien posiadać N liczb zespolonych ułożonych w tablicy kolejno w pary liczb rzeczywistych i urojonych. Jako drugi argument wejściowy, funkcja przyjmuje tablicę współczynników obrotu dla FFT o długości N/2. Opisywana funkcja może również zostać użyta do uzyskania transformaty odwrotnej poprzez zmianę kolejności współczynników obrotu, a na końcu podzielenie wynikowej transformaty przez N, czyli według wzoru \ref{equ:idft_upr}.
+Funkcja DSPF\_sp\_cfftr2\_dit() odpowiada za przeprowadzenie algorytmu FFT radix-2 z decymacją w dziedzinie czasu dla liczb zmiennoprzecinkowych. Sygnał na wejściu powinien posiadać N liczb zespolonych ułożonych w tablicy kolejno w pary liczb rzeczywistych i urojonych. Jako drugi argument wejściowy funkcja przyjmuje tablicę współczynników obrotu dla FFT o długości N/2. Współczynniki obrotu utworzone zostają przez zestaw trzech funkcji udostępnionych na stronie producenta procesora. Funkcję zostały skopiowane do naszego projektu. %https://www.rose-hulman.edu/class/ee/yoder/ece581/TI%20library/C6700/dsplib/support/fft/tw_r2fft.c <-- twiddle factors
+Według dokumentacji, opisywana funkcja może również zostać użyta do uzyskania transformaty odwrotnej poprzez zmianę kolejności współczynników obrotu, a na końcu podzielenie wynikowej transformaty przez N, czyli według wzoru \ref{equ:idft_upr}. Wyniki zastosowania funkcji DSPF\_sp\_cfftr2\_dit() jako odwrotnej transformacji okazały się błędne. W celu poprawienia wyników, zastosowano funkcję DSPF\_sp\_icfftr2\_dif(), która dedykowana jest konkretnie do odwrotnej transformacji DFT. Wykonuje ona algorytm FFT radix-2 z decymacją w dziedzinie częstotliwości. Po użyciu tej funkcji, wyniki były poprawne.
 
+%http://software-dl.ti.com/jacinto7/esd/processor-sdk-rtos-jacinto7/latest/exports/docs/dsplib_c66x_3_4_0_0/docs/doxygen/html/dsplib_html/group___d_s_p_f__sp__bitrev__cplx.html
+Za zamianę kolejności próbek w tablicy wynikowej otrzymanej z funkcji wykonującej algorytm FFT odpowiada funkcja DSPF\_sp\_bitrev\_cplx(). Zmiana kolejności elementów tablicy realizowana jest przez odczytanie indeksów tablicy jako liczb w postaci bitowej, a następnie dokonanie lustrzanego odbicia każdego indeksu z osobna (ang. bit-reverse). Jest to niezbędny krok do zrealizowania pełnego algorytmu FFT radix-2.
 
+\subsection{Pełna realizacja algorytmu przekształcenia}
+Pełne wykorzystanie algorytmu wymaga odpowiedniego ułożenia omówionych wyżej funkcji. W tym celu utworzono bibliotekę z dodatkowymi funkcjami, które wykonują pełne przekształcenie DFT za pomocą algorytmu DFT. Funkcje dostępne dla użytkownika to fft\_full() oraz ifft\_full(). Pierwsza z nich ustawia funkcję w kolejności:
+\begin{enumerate}
+	\item bitrev\_full() - generacja współczynników obrotu, przygotowanie próbek dla algorytmu FFT,
+	\item DSPF\_sp\_cfftr2\_dit() - wykonanie algorytmu FFT radix-2 z decymacją w dziedzinie czasu,
+	\item DSPF\_sp\_bitrev\_cplx() - zmiana kolejności próbek po wykonaniu funkcji FFT,
+\end{enumerate}
+i pozwala na wykonanie pełnego przekształcenia prostego DFT. Druga natomiast, wykorzystuje funkcje:
+\begin{enumerate}
+	\item DSPF\_sp\_bitrev\_cplx() - generacja współczynników obrotu, przygotowanie próbek dla algorytmu FFT,
+	\item DSPF\_sp\_icfftr2\_dif() - wykonanie algorytmu FFT radix-2 z decymacją w dziedzinie częstotliwości,
+\end{enumerate}
+do odwrotnego przekształcenia DFT.
 
-% bitreverse opisac to co mamy, twiddle factory itp
+% o rozdzielczości
+% https://www.bitweenie.com/listings/fft-zero-padding/
+\subsection{Rozdzielczość częstotliwości}
+Jednym z wyzwań stawianych przed inżynierami zajmującymi się przetwarzaniem sygnałów za pomocą algorytmu FFT jest odpowiednie dobranie ilości próbek do pojedynczej transformacji DFT. W związku z użyciem algorytmu FFT typu radix-2, ilość próbek musi być potęgą dwójki. Muzyczny charakter naszej pracy wymaga również wysokiej dokładności w dziedzinie częstotliwości, aby móc tworzyć tony o odpowiedniej częstotliwości. Miarą dokładności jest rozdzielczość częstotliwości (ang. frequency resolution), która określana jest wzorem:
 
-\section{Generowanie przebiegów czasowych}
-% waveformy wykorzystywane w subtractive, additive oraz FM - dlatego opisywane tutaj
+\begin{equation} \label{equ:fft_resol}
+\Delta R = \frac{f_{s}}{N_{fft}}
+\end{equation}
+\begin{tabular}{ l l l l}
+	gdzie: 	&	$\Delta R$ & - &  rozdzielczość częstotliwości, \\
+	&	$f_{s}$ & - &  częstotliwość próbkowania, \\
+	&   $N_{fft}$ &  - & ilość punktów transformacji DFT. \\
+\end{tabular}
+
+% http://cds.cern.ch/record/720344/files/ab-note-2004-021.pdf
+W literaturze można znaleźć informacje, iż widmo częstotliwościowe jest dużo bardziej czytelne i dokładne przy większej rozdzielczości częstotliwości. Minusem jej zwiększenia jest jednak spowolnienie obliczenia transformaty wynikowej i tym samym negatywny wpływ na czas pracy programu na procesorze.
+
+%Potwierdzenie ze jak sie zwiekszy rozdzielczosc to jest lepiej https://ieeexplore-1ieee-1org-10000074b15d2.han.bg.pg.edu.pl/document/1604324
+Podjęto próby osiągnięcia jak najlepszej rozdzielczości w realizowanym algorytmie FFT na procesorze TMS320C672x. Dokumentacja funkcji realizującej algorytm FFT wskazywała, iż ilość próbek do jednokrotnej transformacji DFT powinna wynosić maksymalnie 2048. Niestety po wprowadzeniu takiej wartości, procesor ulegał zawieszeniu po chwili pracy. Obniżenie liczby próbek do 1024 pozwoliło na bezproblemowe działanie procesora. Jednocześnie spowodowało ono dwukrotne obniżenie dokładności
 
 
 \section{ADSR}
-
+<W trakcie implementacji>
 
 
 \section{Interfejs użytkownika}
+<TODO>
