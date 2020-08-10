@@ -31,7 +31,7 @@ extern float sinusek[N];
 extern float kwadracik[N];
 //extern int waveform[2*N];
 
-void sin_wave(int freq, int amp);
+void sin_wave(int freq, int amp, int counter);
 void square_wave(int freq, int amp, int counter, int edit, int adsr_index);
 void sawtooth_wave(int freq, int amp);
 void ADSR(int adsr_index);
