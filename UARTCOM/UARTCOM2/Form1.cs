@@ -184,6 +184,33 @@ namespace UARTCOM2
                             }
                         }
                         break;
+
+                    case 102:
+                        if (Buffer_pull(7) == 103)
+                        {
+                            if (Checksum() == Buffer_pull(8))
+                            {
+                                if (Buffer_pull(1) == 1)
+                                {
+                                    button_fm_en.Invoke((MethodInvoker)delegate {
+                                        button_fm_en.Text = "Enabled";
+                                    });
+                                    button_fm_en.Invoke((MethodInvoker)delegate {
+                                        button_fm_en.ForeColor = Color.Green;
+                                    });
+                                }
+                                else if (Buffer_pull(1) == 2)
+                                {
+                                    button_fm_en.Invoke((MethodInvoker)delegate {
+                                        button_fm_en.Text = "Disabled";
+                                    });
+                                    button_fm_en.Invoke((MethodInvoker)delegate {
+                                        button_fm_en.ForeColor = Color.Red;
+                                    });
+                                }
+                            }
+                        }
+                        break;
                 }
             }
                 
@@ -375,6 +402,60 @@ namespace UARTCOM2
         private void button2_Click(object sender, EventArgs e)
         {
             sendInt(100, 4, (UInt32)trackBar_subtractive_freq2.Value);
+        }
+
+        private void textBox_fm_modamp_TextChanged(object sender, EventArgs e)
+        {
+            int val = Convert.ToInt32(textBox_fm_modamp.Text);
+            if (val > trackBar_fm_modamp.Maximum)
+                val = trackBar_fm_modamp.Maximum;
+            if (val < trackBar_fm_modamp.Minimum)
+                val = trackBar_fm_modamp.Minimum;
+
+            trackBar_fm_modamp.Value = val;
+            textBox_fm_modamp.Text = val.ToString();
+        }
+
+        private void trackBar_fm_modamp_Scroll(object sender, EventArgs e)
+        {
+            textBox_fm_modamp.Text = trackBar_fm_modamp.Value.ToString();
+        }
+
+        private void trackBar_fm_modfreq_Scroll(object sender, EventArgs e)
+        {
+            textBox_fm_modfreq.Text = trackBar_fm_modfreq.Value.ToString();
+        }
+
+        private void textBox_fm_modfreq_TextChanged(object sender, EventArgs e)
+        {
+            int val = Convert.ToInt32(textBox_fm_modfreq.Text);
+            if (val > trackBar_fm_modfreq.Maximum)
+                val = trackBar_fm_modfreq.Maximum;
+            if (val < trackBar_fm_modfreq.Minimum)
+                val = trackBar_fm_modfreq.Minimum;
+
+            trackBar_fm_modfreq.Value = val;
+            textBox_fm_modfreq.Text = val.ToString();
+        }
+
+        private void button_fm_en_Click(object sender, EventArgs e)
+        {
+            if (button_fm_en.Text.Equals("Disabled"))
+            {
+                send(102, 1, 0, 0, 0, 0, 0);
+
+            }
+            else
+            {
+                send(102, 2, 0, 0, 0, 0, 0);
+
+            }
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            sendInt(102, 4, (UInt32)trackBar_fm_modamp.Value);
+            sendInt(102, 3, (UInt32)trackBar_fm_modfreq.Value);
         }
     }
 }

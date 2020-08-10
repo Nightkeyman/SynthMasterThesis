@@ -71,6 +71,16 @@
             this.drawbar3 = new KnobControl.KnobControl();
             this.drawbar4 = new KnobControl.KnobControl();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.button_fm_en = new System.Windows.Forms.Button();
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.button3 = new System.Windows.Forms.Button();
+            this.textBox_fm_modfreq = new System.Windows.Forms.TextBox();
+            this.label4 = new System.Windows.Forms.Label();
+            this.trackBar_fm_modfreq = new System.Windows.Forms.TrackBar();
+            this.textBox_fm_modamp = new System.Windows.Forms.TextBox();
+            this.label7 = new System.Windows.Forms.Label();
+            this.trackBar_fm_modamp = new System.Windows.Forms.TrackBar();
             this.tabPage_Connection.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage_subtractive.SuspendLayout();
@@ -81,6 +91,10 @@
             this.tabPage_additive.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage_additive_hammond.SuspendLayout();
+            this.tabPage2.SuspendLayout();
+            this.groupBox3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBar_fm_modfreq)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBar_fm_modamp)).BeginInit();
             this.SuspendLayout();
             // 
             // btnGetSerialPorts
@@ -187,6 +201,7 @@
             this.tabPage_Connection.Controls.Add(this.tabPage1);
             this.tabPage_Connection.Controls.Add(this.tabPage_subtractive);
             this.tabPage_Connection.Controls.Add(this.tabPage_additive);
+            this.tabPage_Connection.Controls.Add(this.tabPage2);
             this.tabPage_Connection.Location = new System.Drawing.Point(-1, 0);
             this.tabPage_Connection.Name = "tabPage_Connection";
             this.tabPage_Connection.SelectedIndex = 0;
@@ -263,7 +278,7 @@
             this.groupBox2.Controls.Add(this.radioButton_subtractive_lowpass);
             this.groupBox2.Location = new System.Drawing.Point(10, 148);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(518, 268);
+            this.groupBox2.Size = new System.Drawing.Size(604, 268);
             this.groupBox2.TabIndex = 3;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Filter";
@@ -668,6 +683,118 @@
             this.tabPage3.Text = "tabPage3";
             this.tabPage3.UseVisualStyleBackColor = true;
             // 
+            // tabPage2
+            // 
+            this.tabPage2.BackColor = System.Drawing.SystemColors.Menu;
+            this.tabPage2.Controls.Add(this.button_fm_en);
+            this.tabPage2.Controls.Add(this.groupBox3);
+            this.tabPage2.Location = new System.Drawing.Point(4, 22);
+            this.tabPage2.Name = "tabPage2";
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage2.Size = new System.Drawing.Size(792, 426);
+            this.tabPage2.TabIndex = 3;
+            this.tabPage2.Text = "FM";
+            // 
+            // button_fm_en
+            // 
+            this.button_fm_en.ForeColor = System.Drawing.Color.Red;
+            this.button_fm_en.Location = new System.Drawing.Point(6, 6);
+            this.button_fm_en.Name = "button_fm_en";
+            this.button_fm_en.Size = new System.Drawing.Size(75, 23);
+            this.button_fm_en.TabIndex = 5;
+            this.button_fm_en.Text = "Disabled";
+            this.button_fm_en.UseVisualStyleBackColor = true;
+            this.button_fm_en.Click += new System.EventHandler(this.button_fm_en_Click);
+            // 
+            // groupBox3
+            // 
+            this.groupBox3.Controls.Add(this.button3);
+            this.groupBox3.Controls.Add(this.textBox_fm_modfreq);
+            this.groupBox3.Controls.Add(this.label4);
+            this.groupBox3.Controls.Add(this.trackBar_fm_modfreq);
+            this.groupBox3.Controls.Add(this.textBox_fm_modamp);
+            this.groupBox3.Controls.Add(this.label7);
+            this.groupBox3.Controls.Add(this.trackBar_fm_modamp);
+            this.groupBox3.Location = new System.Drawing.Point(9, 35);
+            this.groupBox3.Name = "groupBox3";
+            this.groupBox3.Size = new System.Drawing.Size(604, 268);
+            this.groupBox3.TabIndex = 4;
+            this.groupBox3.TabStop = false;
+            this.groupBox3.Text = "Modulation parameters";
+            // 
+            // button3
+            // 
+            this.button3.Location = new System.Drawing.Point(6, 161);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(75, 23);
+            this.button3.TabIndex = 11;
+            this.button3.Text = "Set";
+            this.button3.UseVisualStyleBackColor = true;
+            this.button3.Click += new System.EventHandler(this.button3_Click);
+            // 
+            // textBox_fm_modfreq
+            // 
+            this.textBox_fm_modfreq.Location = new System.Drawing.Point(120, 123);
+            this.textBox_fm_modfreq.Name = "textBox_fm_modfreq";
+            this.textBox_fm_modfreq.Size = new System.Drawing.Size(100, 20);
+            this.textBox_fm_modfreq.TabIndex = 9;
+            this.textBox_fm_modfreq.Text = "0";
+            this.textBox_fm_modfreq.TextChanged += new System.EventHandler(this.textBox_fm_modfreq_TextChanged);
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(7, 126);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(112, 13);
+            this.label4.TabIndex = 8;
+            this.label4.Text = "Modulation frequency:";
+            // 
+            // trackBar_fm_modfreq
+            // 
+            this.trackBar_fm_modfreq.AllowDrop = true;
+            this.trackBar_fm_modfreq.Location = new System.Drawing.Point(7, 78);
+            this.trackBar_fm_modfreq.Maximum = 50;
+            this.trackBar_fm_modfreq.Name = "trackBar_fm_modfreq";
+            this.trackBar_fm_modfreq.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.trackBar_fm_modfreq.Size = new System.Drawing.Size(490, 45);
+            this.trackBar_fm_modfreq.TabIndex = 7;
+            this.trackBar_fm_modfreq.TickFrequency = 1000;
+            this.trackBar_fm_modfreq.TickStyle = System.Windows.Forms.TickStyle.TopLeft;
+            this.trackBar_fm_modfreq.Scroll += new System.EventHandler(this.trackBar_fm_modfreq_Scroll);
+            // 
+            // textBox_fm_modamp
+            // 
+            this.textBox_fm_modamp.Location = new System.Drawing.Point(120, 37);
+            this.textBox_fm_modamp.Name = "textBox_fm_modamp";
+            this.textBox_fm_modamp.Size = new System.Drawing.Size(100, 20);
+            this.textBox_fm_modamp.TabIndex = 6;
+            this.textBox_fm_modamp.Text = "0";
+            this.textBox_fm_modamp.TextChanged += new System.EventHandler(this.textBox_fm_modamp_TextChanged);
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(7, 40);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(107, 13);
+            this.label7.TabIndex = 5;
+            this.label7.Text = "Modulation amplitude";
+            // 
+            // trackBar_fm_modamp
+            // 
+            this.trackBar_fm_modamp.AllowDrop = true;
+            this.trackBar_fm_modamp.LargeChange = 50;
+            this.trackBar_fm_modamp.Location = new System.Drawing.Point(7, 56);
+            this.trackBar_fm_modamp.Maximum = 300;
+            this.trackBar_fm_modamp.Name = "trackBar_fm_modamp";
+            this.trackBar_fm_modamp.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.trackBar_fm_modamp.Size = new System.Drawing.Size(490, 45);
+            this.trackBar_fm_modamp.SmallChange = 10;
+            this.trackBar_fm_modamp.TabIndex = 4;
+            this.trackBar_fm_modamp.TickFrequency = 1000;
+            this.trackBar_fm_modamp.Scroll += new System.EventHandler(this.trackBar_fm_modamp_Scroll);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -689,6 +816,11 @@
             this.tabPage_additive.ResumeLayout(false);
             this.tabControl1.ResumeLayout(false);
             this.tabPage_additive_hammond.ResumeLayout(false);
+            this.tabPage2.ResumeLayout(false);
+            this.groupBox3.ResumeLayout(false);
+            this.groupBox3.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBar_fm_modfreq)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBar_fm_modamp)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -738,6 +870,16 @@
         private System.Windows.Forms.TabPage tabPage3;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.TabPage tabPage2;
+        private System.Windows.Forms.Button button_fm_en;
+        private System.Windows.Forms.GroupBox groupBox3;
+        private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.TextBox textBox_fm_modfreq;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.TrackBar trackBar_fm_modfreq;
+        private System.Windows.Forms.TextBox textBox_fm_modamp;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.TrackBar trackBar_fm_modamp;
     }
 }
 
