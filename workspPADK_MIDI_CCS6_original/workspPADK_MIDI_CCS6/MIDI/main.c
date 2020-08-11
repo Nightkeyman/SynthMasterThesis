@@ -24,7 +24,7 @@
 #define Fs 96000
 #define F_sq 440
 #define F_sqq 10000
-#define SIG_AMP 1000000
+#define SIG_AMP 100000
 
 #define N 1024
  short  table[64];
@@ -115,6 +115,7 @@ int main( int argc, char *argv[] ) {
 	int freq_wav = 0;
 	int mono = 1; // 0 - mono, 1 - poly
 	int mode = 0; // 0 - subtractive, 1 - additive
+	int clear_v = 1;
 	int k = 0; // phase shift variable
 	sem_dac = 1;
 	whichwaveform = 1;
@@ -184,7 +185,7 @@ int main( int argc, char *argv[] ) {
 						waveform1[j] = 0;
 					}
 				} else {
-					int clear_v = 1;
+					clear_v = 1;
 					for(i = 0; i < 6; i++) {
 						if(freqs[i] > 0 || adsr_state[i] > 0) {
 							square_wave(freqs[i], SIG_AMP, k, clear_v, i);

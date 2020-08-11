@@ -45,7 +45,7 @@ void square_wave(int freq, int amp, int counter, int edit, int adsr_index) {
 		}
 	}
 	int i = 0;
-	if (edit == 0){
+	if (edit == 1){
 		for(i = 0; i < 2*N; i++) {
 			//v[i] = sinf((float)(i/2 + counter)*2.0*M_PI*freq*(1.0/Fs));// + (float)(5*sin((double)(i/2)*2.0*M_PI*F_sqq*(1.0/Fs)));
 			if(sinf((float)(i/2 + counter)*2.0*M_PI*freq*(1.0/Fs)) >= 0)
@@ -55,7 +55,7 @@ void square_wave(int freq, int amp, int counter, int edit, int adsr_index) {
 			//waveform[i] = amp*v[i];
 			if(i%2 == 1) v[i] = 0;
 		}
-	} else if (edit == 1) {
+	} else if (edit == 0) {
 		for(i = 0; i < 2*N; i+=2) {
 			//v[i] = sinf((float)(i/2 + counter)*2.0*M_PI*freq*(1.0/Fs));// + (float)(5*sin((double)(i/2)*2.0*M_PI*F_sqq*(1.0/Fs)));
 			if(sinf((float)(i/2 + counter)*2.0*M_PI*freq*(1.0/Fs)) >= 0)
