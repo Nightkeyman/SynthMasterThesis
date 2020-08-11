@@ -156,6 +156,7 @@ interrupt void midi_isr( void )
 				for (i = 0; i < 6; i++) {
 					if (freqs[i] == 0) {
 						freqs[i] = freq_wav;
+						adsr_state[i] = 1;
 						break;
 					}
 				}
@@ -168,7 +169,8 @@ interrupt void midi_isr( void )
 
 				for (i = 0; i< 6; i++) {
 					if (freqs[i] >= freq_wav-0.5 && freqs[i] <= freq_wav+0.5) {
-						freqs[i] = 0;
+						//freqs[i] = 0;
+						adsr_state[i] = 4;
 						break;
 					}
 				}

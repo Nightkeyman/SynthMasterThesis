@@ -62,6 +62,21 @@ int sub_highfreq = 96000;
 int fm_modfreq = 1;
 int fm_modamp = 10;
 
+// ADSR GLOBALS
+float adsr[6];
+int adsr_state[6];
+
+float attack_rate = 0.001;
+float attack_level = 1.3;
+
+float decay_rate = 0.001;
+
+float sustain_level = 1.0;
+
+float release_rate = 0.001;
+
+
+
 float sinusek[N];
 float kwadracik[N];
 float przefiltrowany[N];
@@ -103,7 +118,10 @@ int main( int argc, char *argv[] ) {
 	int k = 0; // phase shift variable
 	sem_dac = 1;
 	whichwaveform = 1;
-
+	for (i = 0 ; i < 6; i++){
+		adsr[i] = 0.0;
+		adsr_state[i] = 0;
+	}
 	for(i = 0; i < MIDI_TONE_RANGE; i++)
 		freqs[i] = 0;
 
@@ -168,8 +186,8 @@ int main( int argc, char *argv[] ) {
 				} else {
 					int clear_v = 1;
 					for(i = 0; i < 6; i++) {
-						if(freqs[i] > 0) {
-							square_wave(freqs[i], SIG_AMP, k, clear_v);
+						if(freqs[i] > 0 || adsr_state[i] > 0) {
+							square_wave(freqs[i], SIG_AMP, k, clear_v, i);
 							if (clear_v == 1)
 								clear_v = 0;
 						}
