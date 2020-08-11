@@ -103,6 +103,7 @@ volatile unsigned sem_dac = 0;
 #define Fs 96000
 #define M_PI 3.1416
 extern float freqs[MIDI_TONE_RANGE];
+extern int adsr_state[6];
 extern int pressedkeys;
 int generator_interator = 0;
 int sound = 0;
