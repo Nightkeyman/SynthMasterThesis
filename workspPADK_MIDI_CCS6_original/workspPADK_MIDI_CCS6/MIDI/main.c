@@ -165,46 +165,51 @@ int main( int argc, char *argv[] ) {
 						waveform0[j] = 0;
 						waveform1[j] = 0;
 					}
-				}
-				for(i = 0; i < 6; i++) {
-					if(freqs[i] > 0) {
-						square_wave(freqs[i], SIG_AMP, k);
-						fft_full();
-						if (filter == lowpass)
-							lowPassFilter(sub_lowfreq);
-						else if (filter == highpass)
-							highPassFilter(sub_highfreq);
-						else if (filter == bandpass)
-							bandPassFilter(sub_lowfreq, sub_highfreq);
-						else if (filter == bandstop)
-							bandStopFilter(sub_lowfreq, sub_highfreq);
-
-						ifft_full();
-						while(sem_dac == 0);
-						for(j = 0; j < N; j++) {
-							if (j < OVERLAP) {
-								if (whichwaveform == 1) {
-									waveform0[j] = overlaptable[j]*SIG_AMP*v[j*2]; // tu by bylo przepisywanie z myWav
-								} else {
-									waveform1[j] = overlaptable[j]*SIG_AMP*v[j*2];
-								}
-							} else if (j >= N - OVERLAP) {
-								if (whichwaveform) {
-									waveform0[j] = overlaptable[N-j-1]*SIG_AMP*v[j*2];
-								} else {
-									waveform1[j] = overlaptable[N-j-1]*SIG_AMP*v[j*2];
-								}
+				} else {
+					int clear_v = 1;
+					for(i = 0; i < 6; i++) {
+						if(freqs[i] > 0) {
+							square_wave(freqs[i], SIG_AMP, k, clear_v);
+							if (clear_v == 1)
+								clear_v = 0;
+						}
+					}
+					fft_full();
+					if (filter == lowpass)
+						lowPassFilter(sub_lowfreq);
+					else if (filter == highpass)
+						highPassFilter(sub_highfreq);
+					else if (filter == bandpass)
+						bandPassFilter(sub_lowfreq, sub_highfreq);
+					else if (filter == bandstop)
+						bandStopFilter(sub_lowfreq, sub_highfreq);
+					ifft_full();
+					while(sem_dac == 0);
+					for(j = 0; j < N; j++) {
+						if (j < OVERLAP) {
+							if (whichwaveform == 1) {
+								waveform0[j] = overlaptable[j]*SIG_AMP*v[j*2]; // tu by bylo przepisywanie z myWav
 							} else {
-								if (whichwaveform) {
-									waveform0[j] = SIG_AMP*v[j*2];
-								} else {
-									waveform1[j] = SIG_AMP*v[j*2];
-								}
+								waveform1[j] = overlaptable[j]*SIG_AMP*v[j*2];
+							}
+						} else if (j >= N - OVERLAP) {
+							if (whichwaveform) {
+								waveform0[j] = overlaptable[N-j-1]*SIG_AMP*v[j*2];
+							} else {
+								waveform1[j] = overlaptable[N-j-1]*SIG_AMP*v[j*2];
+							}
+						} else {
+							if (whichwaveform) {
+								waveform0[j] = SIG_AMP*v[j*2];
+							} else {
+								waveform1[j] = SIG_AMP*v[j*2];
 							}
 						}
-						sem_dac = 0;
-						k += N - OVERLAP;
 					}
+					sem_dac = 0;
+					k += N - OVERLAP;
+
+
 				}
 			// POLYPHONIC KEYBOARD
 			} /*else {

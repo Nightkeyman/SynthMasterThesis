@@ -15,7 +15,7 @@ extern float v[2*N];
 //extern int waveform[2*N];
 
 void sin_wave(int freq, int amp);
-void square_wave(int freq, int amp, int counter);
+void square_wave(int freq, int amp, int counter, int edit);
 void sawtooth_wave(int freq, int amp);
 
 
