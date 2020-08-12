@@ -103,13 +103,25 @@ volatile unsigned sem_dac = 0;
 #define Fs 96000
 #define M_PI 3.1416
 extern float freqs[MIDI_TONE_RANGE];
-extern int adsr_state[6];
-extern int pressedkeys;
 int generator_interator = 0;
 int sound = 0;
 int licz = 0;
 double sound_double = 0;
 
+// ADSR
+#define ADSR_ATT_TIME 0.001
+#define ADSR_DEC_TIME 0.001
+#define ADSR_SUS_LEVEL 0.001
+#define ADSR_REL_TIME 0.001
+extern float attack_rate;
+extern float decay_rate;
+extern float sustain_level;
+extern float release_rate;
+extern int adsr_state[6];
+extern int pressedkeys;
+
+
+// SYNTHESIS METHODS
 extern enum methodtype{subtractive, additive, fm};
 extern enum methodtype method;
 
@@ -189,50 +201,64 @@ interrupt void uart_isr( void )
     UART_EnableLed2( !toggle );
     UART_Read(uartdata, 1, UART_WAIT);
     UART_push(uartdata[0]);
-    switch(UART_pull(0)){
-    case 100: // SUBTRACTIVE
-    	if (UART_pull(7) == 101){
-    		if (UART_pull(8) == UART_checksum()){
-    			if (UART_pull(1) == 1){
-    				UART_send(100, 1, 0,0,0,0,0);
-    				method = subtractive;
-    			} else if (UART_pull(1) == 2){
-    				UART_send(100, 2, 0,0,0,0,0);
-    			}
-
-    			if (UART_pull(1) == 3){
-					sub_highfreq = UART_pull(2) + UART_pull(3)*256 + UART_pull(4)*256*256;
-				}
-				if (UART_pull(1) == 4){
-					sub_lowfreq = UART_pull(2) + UART_pull(3)*256 + UART_pull(4)*256*256;
-				}
-				if (UART_pull(1) == 5){
-					filter = UART_pull(2);
-				}
-    		}
-    	}
-    	break;
-
-    case 102: // FM
-		if (UART_pull(7) == 103){
-			if (UART_pull(8) == UART_checksum()){
-				if (UART_pull(1) == 1){
-					UART_send(102, 1, 0,0,0,0,0);
-					method = fm;
-				} else if (UART_pull(1) == 2){
-					UART_send(102, 2, 0,0,0,0,0);
-				}
-
-
-				if (UART_pull(1) == 3){
-						fm_modfreq = UART_pull(2) + UART_pull(3)*256 + UART_pull(4)*256*256 + UART_pull(5)*256*256*256;
+    switch(UART_pull(0)) {
+		case 100: // SUBTRACTIVE
+			if (UART_pull(7) == 101){
+				if (UART_pull(8) == UART_checksum()){
+					if (UART_pull(1) == 1){
+						UART_send(100, 1, 0,0,0,0,0);
+						method = subtractive;
+					} else if (UART_pull(1) == 2){
+						UART_send(100, 2, 0,0,0,0,0);
 					}
-				if (UART_pull(1) == 4){
-						fm_modamp = UART_pull(2) + UART_pull(3)*256 + UART_pull(4)*256*256 + UART_pull(5)*256*256*256;
+
+					if (UART_pull(1) == 3){
+						sub_highfreq = UART_pull(2) + UART_pull(3)*256 + UART_pull(4)*256*256;
 					}
+					if (UART_pull(1) == 4){
+						sub_lowfreq = UART_pull(2) + UART_pull(3)*256 + UART_pull(4)*256*256;
+					}
+					if (UART_pull(1) == 5){
+						filter = UART_pull(2);
+					}
+				}
 			}
-		}
-		break;
+			break;
+		case 102: // FM
+			if (UART_pull(7) == 103){
+				if (UART_pull(8) == UART_checksum()){
+					if (UART_pull(1) == 1){
+						UART_send(102, 1, 0,0,0,0,0);
+						method = fm;
+					} else if (UART_pull(1) == 2){
+						UART_send(102, 2, 0,0,0,0,0);
+					}
+
+
+					if (UART_pull(1) == 3){
+							fm_modfreq = UART_pull(2) + UART_pull(3)*256 + UART_pull(4)*256*256 + UART_pull(5)*256*256*256;
+						}
+					if (UART_pull(1) == 4){
+							fm_modamp = UART_pull(2) + UART_pull(3)*256 + UART_pull(4)*256*256 + UART_pull(5)*256*256*256;
+						}
+				}
+			}
+			break;
+		case 200: // ADSR
+			if (UART_pull(7) == 201){
+				if (UART_pull(8) == UART_checksum()){
+					if (UART_pull(1) == 1) {
+						attack_rate = (UART_pull(2) + UART_pull(3)*256)*ADSR_ATT_TIME;
+					} else if (UART_pull(1) == 2) {
+						decay_rate = (UART_pull(2) + UART_pull(3)*256)*ADSR_DEC_TIME;
+					} else if (UART_pull(1) == 3) {
+						sustain_level = (UART_pull(2) + UART_pull(3)*256)*ADSR_SUS_LEVEL;
+					} else if (UART_pull(1) == 4) {
+						release_rate = (UART_pull(2) + UART_pull(3)*256)*ADSR_REL_TIME;
+					}
+				}
+			}
+			break;
     }
 }
 

@@ -457,5 +457,30 @@ namespace UARTCOM2
             sendInt(102, 4, (UInt32)trackBar_fm_modamp.Value);
             sendInt(102, 3, (UInt32)trackBar_fm_modfreq.Value);
         }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button_adsr_set_Click(object sender, EventArgs e)
+        {
+            // ADSR - signal 200
+            // attack
+            byte[] byteArray = BitConverter.GetBytes(Convert.ToInt32(textBox_adsr_attack_time.Text));
+            send(200, 1, byteArray[0], byteArray[1], 0, 0, 0);
+
+            // decay
+            byteArray = BitConverter.GetBytes(Convert.ToInt32(textBox_adsr_decay_time.Text));
+            send(200, 2, byteArray[0], byteArray[1], 0, 0, 0);
+
+            // sustain
+            byteArray = BitConverter.GetBytes(Convert.ToInt32(textBox_adsr_sustain_level.Text));
+            send(200, 3, byteArray[0], byteArray[1], 0, 0, 0);
+
+            // release
+            byteArray = BitConverter.GetBytes(Convert.ToInt32(textBox_adsr_release_time.Text));
+            send(200, 4, byteArray[0], byteArray[1], 0, 0, 0);
+        }
     }
 }

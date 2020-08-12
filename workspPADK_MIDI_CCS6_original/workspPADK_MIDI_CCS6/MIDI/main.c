@@ -66,18 +66,13 @@ int fm_modamp = 10;
 // ADSR GLOBALS
 float adsr[6];
 int adsr_state[6];
-
-float attack_rate = 0.001;
+float attack_rate = 0.5;
 float attack_level = 1.3;
-
-float decay_rate = 0.001;
-
+float decay_rate = 0.5;
 float sustain_level = 1.0;
+float release_rate = 0.5;
 
-float release_rate = 0.001;
-
-
-
+// Static waveform arrays
 float sinusek[N];
 float kwadracik[N];
 float przefiltrowany[N];

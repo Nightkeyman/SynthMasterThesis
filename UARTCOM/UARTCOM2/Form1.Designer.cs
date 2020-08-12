@@ -81,6 +81,16 @@
             this.textBox_fm_modamp = new System.Windows.Forms.TextBox();
             this.label7 = new System.Windows.Forms.Label();
             this.trackBar_fm_modamp = new System.Windows.Forms.TrackBar();
+            this.ADSR = new System.Windows.Forms.GroupBox();
+            this.button_adsr_set = new System.Windows.Forms.Button();
+            this.textBox_adsr_release_time = new System.Windows.Forms.TextBox();
+            this.label_release = new System.Windows.Forms.Label();
+            this.textBox_adsr_sustain_level = new System.Windows.Forms.TextBox();
+            this.label_sustain_level = new System.Windows.Forms.Label();
+            this.textBox_adsr_decay_time = new System.Windows.Forms.TextBox();
+            this.label_decay = new System.Windows.Forms.Label();
+            this.label_attack_time = new System.Windows.Forms.Label();
+            this.textBox_adsr_attack_time = new System.Windows.Forms.TextBox();
             this.tabPage_Connection.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage_subtractive.SuspendLayout();
@@ -95,6 +105,7 @@
             this.groupBox3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar_fm_modfreq)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar_fm_modamp)).BeginInit();
+            this.ADSR.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnGetSerialPorts
@@ -205,7 +216,7 @@
             this.tabPage_Connection.Location = new System.Drawing.Point(-1, 0);
             this.tabPage_Connection.Name = "tabPage_Connection";
             this.tabPage_Connection.SelectedIndex = 0;
-            this.tabPage_Connection.Size = new System.Drawing.Size(800, 452);
+            this.tabPage_Connection.Size = new System.Drawing.Size(629, 452);
             this.tabPage_Connection.TabIndex = 12;
             // 
             // tabPage1
@@ -225,7 +236,7 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(792, 426);
+            this.tabPage1.Size = new System.Drawing.Size(621, 426);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Connection";
             // 
@@ -240,7 +251,7 @@
             this.tabPage_subtractive.Location = new System.Drawing.Point(4, 22);
             this.tabPage_subtractive.Name = "tabPage_subtractive";
             this.tabPage_subtractive.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage_subtractive.Size = new System.Drawing.Size(792, 426);
+            this.tabPage_subtractive.Size = new System.Drawing.Size(621, 426);
             this.tabPage_subtractive.TabIndex = 1;
             this.tabPage_subtractive.Text = "Subtractive";
             // 
@@ -464,7 +475,7 @@
             this.tabPage_additive.Location = new System.Drawing.Point(4, 22);
             this.tabPage_additive.Name = "tabPage_additive";
             this.tabPage_additive.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage_additive.Size = new System.Drawing.Size(792, 426);
+            this.tabPage_additive.Size = new System.Drawing.Size(621, 426);
             this.tabPage_additive.TabIndex = 2;
             this.tabPage_additive.Text = "Additive";
             this.tabPage_additive.Click += new System.EventHandler(this.tabPage_additive_Click);
@@ -691,7 +702,7 @@
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(792, 426);
+            this.tabPage2.Size = new System.Drawing.Size(621, 426);
             this.tabPage2.TabIndex = 3;
             this.tabPage2.Text = "FM";
             // 
@@ -795,11 +806,108 @@
             this.trackBar_fm_modamp.TickFrequency = 1000;
             this.trackBar_fm_modamp.Scroll += new System.EventHandler(this.trackBar_fm_modamp_Scroll);
             // 
+            // ADSR
+            // 
+            this.ADSR.Controls.Add(this.button_adsr_set);
+            this.ADSR.Controls.Add(this.textBox_adsr_release_time);
+            this.ADSR.Controls.Add(this.label_release);
+            this.ADSR.Controls.Add(this.textBox_adsr_sustain_level);
+            this.ADSR.Controls.Add(this.label_sustain_level);
+            this.ADSR.Controls.Add(this.textBox_adsr_decay_time);
+            this.ADSR.Controls.Add(this.label_decay);
+            this.ADSR.Controls.Add(this.label_attack_time);
+            this.ADSR.Controls.Add(this.textBox_adsr_attack_time);
+            this.ADSR.Location = new System.Drawing.Point(634, 131);
+            this.ADSR.Name = "ADSR";
+            this.ADSR.Size = new System.Drawing.Size(346, 290);
+            this.ADSR.TabIndex = 13;
+            this.ADSR.TabStop = false;
+            this.ADSR.Text = "ADSR";
+            // 
+            // button_adsr_set
+            // 
+            this.button_adsr_set.Location = new System.Drawing.Point(143, 119);
+            this.button_adsr_set.Name = "button_adsr_set";
+            this.button_adsr_set.Size = new System.Drawing.Size(102, 41);
+            this.button_adsr_set.TabIndex = 15;
+            this.button_adsr_set.Text = "Set";
+            this.button_adsr_set.UseVisualStyleBackColor = true;
+            this.button_adsr_set.Click += new System.EventHandler(this.button_adsr_set_Click);
+            // 
+            // textBox_adsr_release_time
+            // 
+            this.textBox_adsr_release_time.Location = new System.Drawing.Point(6, 233);
+            this.textBox_adsr_release_time.Name = "textBox_adsr_release_time";
+            this.textBox_adsr_release_time.Size = new System.Drawing.Size(100, 20);
+            this.textBox_adsr_release_time.TabIndex = 14;
+            this.textBox_adsr_release_time.Text = "0";
+            // 
+            // label_release
+            // 
+            this.label_release.AutoSize = true;
+            this.label_release.Location = new System.Drawing.Point(6, 217);
+            this.label_release.Name = "label_release";
+            this.label_release.Size = new System.Drawing.Size(71, 13);
+            this.label_release.TabIndex = 13;
+            this.label_release.Text = "Release level";
+            // 
+            // textBox_adsr_sustain_level
+            // 
+            this.textBox_adsr_sustain_level.Location = new System.Drawing.Point(6, 172);
+            this.textBox_adsr_sustain_level.Name = "textBox_adsr_sustain_level";
+            this.textBox_adsr_sustain_level.Size = new System.Drawing.Size(100, 20);
+            this.textBox_adsr_sustain_level.TabIndex = 12;
+            this.textBox_adsr_sustain_level.Text = "0";
+            // 
+            // label_sustain_level
+            // 
+            this.label_sustain_level.AutoSize = true;
+            this.label_sustain_level.Location = new System.Drawing.Point(6, 156);
+            this.label_sustain_level.Name = "label_sustain_level";
+            this.label_sustain_level.Size = new System.Drawing.Size(67, 13);
+            this.label_sustain_level.TabIndex = 11;
+            this.label_sustain_level.Text = "Sustain level";
+            // 
+            // textBox_adsr_decay_time
+            // 
+            this.textBox_adsr_decay_time.Location = new System.Drawing.Point(6, 114);
+            this.textBox_adsr_decay_time.Name = "textBox_adsr_decay_time";
+            this.textBox_adsr_decay_time.Size = new System.Drawing.Size(100, 20);
+            this.textBox_adsr_decay_time.TabIndex = 10;
+            this.textBox_adsr_decay_time.Text = "0";
+            // 
+            // label_decay
+            // 
+            this.label_decay.AutoSize = true;
+            this.label_decay.Location = new System.Drawing.Point(6, 98);
+            this.label_decay.Name = "label_decay";
+            this.label_decay.Size = new System.Drawing.Size(60, 13);
+            this.label_decay.TabIndex = 9;
+            this.label_decay.Text = "Decay time";
+            // 
+            // label_attack_time
+            // 
+            this.label_attack_time.AutoSize = true;
+            this.label_attack_time.Location = new System.Drawing.Point(6, 39);
+            this.label_attack_time.Name = "label_attack_time";
+            this.label_attack_time.Size = new System.Drawing.Size(60, 13);
+            this.label_attack_time.TabIndex = 8;
+            this.label_attack_time.Text = "Attack time";
+            // 
+            // textBox_adsr_attack_time
+            // 
+            this.textBox_adsr_attack_time.Location = new System.Drawing.Point(6, 56);
+            this.textBox_adsr_attack_time.Name = "textBox_adsr_attack_time";
+            this.textBox_adsr_attack_time.Size = new System.Drawing.Size(100, 20);
+            this.textBox_adsr_attack_time.TabIndex = 7;
+            this.textBox_adsr_attack_time.Text = "0";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(992, 450);
+            this.Controls.Add(this.ADSR);
             this.Controls.Add(this.tabPage_Connection);
             this.Name = "Form1";
             this.Text = "Form1";
@@ -821,6 +929,8 @@
             this.groupBox3.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar_fm_modfreq)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar_fm_modamp)).EndInit();
+            this.ADSR.ResumeLayout(false);
+            this.ADSR.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -880,6 +990,16 @@
         private System.Windows.Forms.TextBox textBox_fm_modamp;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.TrackBar trackBar_fm_modamp;
+        private System.Windows.Forms.GroupBox ADSR;
+        private System.Windows.Forms.Label label_attack_time;
+        private System.Windows.Forms.TextBox textBox_adsr_attack_time;
+        private System.Windows.Forms.Label label_decay;
+        private System.Windows.Forms.TextBox textBox_adsr_decay_time;
+        private System.Windows.Forms.Label label_sustain_level;
+        private System.Windows.Forms.TextBox textBox_adsr_sustain_level;
+        private System.Windows.Forms.Button button_adsr_set;
+        private System.Windows.Forms.TextBox textBox_adsr_release_time;
+        private System.Windows.Forms.Label label_release;
     }
 }
 
