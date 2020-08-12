@@ -91,6 +91,7 @@
             this.knobControl_sustain = new KnobControl.KnobControl();
             this.knobControl_attack = new KnobControl.KnobControl();
             this.button_adsr_set = new System.Windows.Forms.Button();
+            this.button4 = new System.Windows.Forms.Button();
             this.tabPage_Connection.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage_subtractive.SuspendLayout();
@@ -494,6 +495,7 @@
             // 
             // tabPage_additive_hammond
             // 
+            this.tabPage_additive_hammond.Controls.Add(this.button4);
             this.tabPage_additive_hammond.Controls.Add(this.drawbar1);
             this.tabPage_additive_hammond.Controls.Add(this.button_additive_hammond_en);
             this.tabPage_additive_hammond.Controls.Add(this.drawbar6);
@@ -602,6 +604,7 @@
             this.drawbar2.StartAngle = 135F;
             this.drawbar2.TabIndex = 1;
             this.drawbar2.Value = 0;
+            this.drawbar2.Load += new System.EventHandler(this.drawbar2_Load);
             // 
             // drawbar5
             // 
@@ -979,6 +982,18 @@
             this.button_adsr_set.Text = "Set";
             this.button_adsr_set.UseVisualStyleBackColor = true;
             this.button_adsr_set.Click += new System.EventHandler(this.button_adsr_set_Click);
+            //
+            // button4
+            // 
+            this.button4.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.button4.Location = new System.Drawing.Point(323, 313);
+            this.button4.Name = "button4";
+            this.button4.Size = new System.Drawing.Size(101, 32);
+            this.button4.TabIndex = 7;
+            this.button4.Text = "Set";
+            this.button4.UseVisualStyleBackColor = true;
+            this.button4.Click += new System.EventHandler(this.button4_Click);
+
             // 
             // Form1
             // 
@@ -1078,6 +1093,7 @@
         private System.Windows.Forms.Label label_release_knob;
         private System.Windows.Forms.Label label_sustain_knob;
         public KnobControl.KnobControl knobControl_release;
+        private System.Windows.Forms.Button button4;
     }
 }
 

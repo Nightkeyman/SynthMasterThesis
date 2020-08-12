@@ -98,7 +98,12 @@ float myWav(int counter, float freq)
 	} else {
 		return -1*SIG_AMP;
 	}
+}
 
 void hammond_wave(int freq, int amp, int counter) {
-
+	int i = 0;
+	for(i = 0; i < 2*N; i++) {
+		v[i] = (float)(1*sin((double)(i/2 + counter)*2.0*M_PI*freq*(1.0/Fs)));
+		if(i%2 == 1) v[i] = 0;
+	}
 }

@@ -16,6 +16,7 @@ interrupt void midi_isr( void );
 #include "audioBufConst&ExtVar.h"
 #include "uart_fifo.h"
 #include "midi_fifo.h"
+#include "additive.h"
 
 int SetupInterrupts()
 {
@@ -135,6 +136,10 @@ extern int sub_highfreq;
 // FM GLOBALS
 extern int fm_modfreq;
 extern int fm_modamp;
+
+// ADDITIVE GLOBALS
+extern int add_knobAmp[HAMMOND_KNOBS];
+
 // ################## DAC/ADC end ##################
 
 
@@ -231,6 +236,27 @@ interrupt void uart_isr( void )
 				}
 			}
 			break;
+	    case 101: // ADDITIVE
+	    	if (UART_pull(7) == 102){
+	    		if (UART_pull(8) == UART_checksum()) {
+	    			if (UART_pull(1) == 1){
+	    				UART_send(101, 1, 0, 0, 0, 0, 0);
+	    				method = additive;
+	    			} else if (UART_pull(1) == 2){
+	    				UART_send(101, 2, 0, 0, 0, 0, 0);
+	    			}
+					if (UART_pull(1) == HAMMOND_KNOB1_UART){
+						add_knobAmp[HAMMOND_KNOB1] = UART_pull(2) + UART_pull(3)*256;
+					}
+					if (UART_pull(1) == HAMMOND_KNOB2_UART){
+						add_knobAmp[HAMMOND_KNOB2] = UART_pull(2) + UART_pull(3)*256;
+					}
+					if (UART_pull(1) == HAMMOND_KNOB3_UART){
+						add_knobAmp[HAMMOND_KNOB3] = UART_pull(2) + UART_pull(3)*256;
+					}
+	    		}
+	    	}
+	    	break;
 		case 102: // FM
 			if (UART_pull(7) == 103){
 				if (UART_pull(8) == UART_checksum()){

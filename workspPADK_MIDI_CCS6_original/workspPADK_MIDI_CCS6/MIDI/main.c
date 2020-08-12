@@ -5,8 +5,6 @@
 #include <csl_dmax.h>
 #include <csl_mcasp.h>
 #include <math.h>
-// PADK Library
-//#include "api/PADK.h"
 #include "PADK.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -17,6 +15,7 @@
 #include "waveforms.h"
 #include "var&fun.h"
 #include "myfft.h"
+#include "additive.h"
 
 #define OVERLAP 128
 #define MIDI_TONE_RANGE 128
@@ -26,6 +25,7 @@
 #define F_sq 440
 #define F_sqq 10000
 #define SIG_AMP 100000
+#define ADD_SIG_AMP 100000000
 
 #define N 1024
  short  table[64];
@@ -58,7 +58,7 @@ enum methodtype method = subtractive;
 enum filtertype{lowpass, highpass, bandpass, bandstop};
 enum filtertype filter = lowpass;
 int sub_lowfreq = 0;
-int sub_highfreq = 96000;
+int sub_highfreq = Fs;
 
 // FM GLOBALS
 int fm_modfreq = 1;
@@ -75,6 +75,7 @@ float release_rate = 0.5;
 
 // ADDITIVE GLOBALS
 double phase = 0;
+int add_knobAmp[HAMMOND_KNOBS];
 
 // Static waveform arrays
 float sinusek[N];
@@ -93,6 +94,7 @@ int main( int argc, char *argv[] ) {
 	int mono = 1; // 0 - mono, 1 - poly
 	int mode = 0; // 0 - subtractive, 1 - additive
 	int clear_v = 1;
+	int ph = 0; // phase shift variable
 	int k = 0; // phase shift variable
 	sem_dac = 1;
 	whichwaveform = 1;
@@ -102,6 +104,9 @@ int main( int argc, char *argv[] ) {
 	}
 	for(i = 0; i < MIDI_POLY_MAX; i++)
 		freqs[i] = 0;
+
+	for(i = 0; i < HAMMOND_KNOBS; i++)
+		add_knobAmp[i] = 0;
 
 	for(i = 0; i < 2*N; i+=2) {
 		waveform0[i] = 0;
@@ -139,8 +144,8 @@ int main( int argc, char *argv[] ) {
 	/*---------------------------------------------------------------*/
 	mode = 1;
     while(1)  {
-    	///// ADDITIVE MONO /////
-		if(mode == 1) {
+    	///// ADDITIVE /////
+		if(method == additive) {
     		if(pressedkeys < 1) {
     			for(j = 0; j < N; j++) {
 					waveform0[j] = 0;
@@ -149,39 +154,38 @@ int main( int argc, char *argv[] ) {
     		}
     		for(i = 0; i < 6; i++) {
 				if(freqs[i] > 0) {
-					// TODO additive
+					// additive time synthesis
 					for(m = 0; m < 2*N; m = m + 2) {
-						//v[m] = 0.8*mySin(k+m, freqs[i]/2) + 0.9*mySin(k+m, freqs[i]) + 0.8*mySin(k+m, freqs[i]*3/2);
-						phase = (double)(m/2 + k)*2.0*M_PI*freqs[i]*(1.0/Fs);
-						v[m] = sinf(phase/2) + sinf(phase) + sinf(phase*3/2);
-							+ sinf(phase*2) + sinf(phase*3) + sinf(phase*4);
-							//+ sinf((double)(m/2 + k)*2.0*M_PI*freqs[i]*5*(1.0/Fs))*100 + sinf((double)(m/2 + k)*2.0*M_PI*4*freqs[i]*6*(1.0/Fs))*100 + sinf((double)(m/2 + k)*2.0*M_PI*freqs[i]*8*(1.0/Fs))*100;
+						v[m] = mySin(ph + m/2, freqs[i]*0.5) + 0.9*mySin(ph + m/2, freqs[i]) + 0.8*mySin(ph + m/2, freqs[i]*1.5);
+						//phase = (double)(m/2 + k)*2.0*M_PI*freqs[i]*(1.0/Fs);
+						//v[m] = sinf(phase*0.5) + sinf(phase) + sinf(phase*1.5);
+							//+ sinf(phase*2) + sinf(phase*3) + sinf(phase*4);
 					}
-					//sin_wave(freqs[i], SIG_AMP);
 					while(sem_dac == 0);
 					for(j = 0; j < N; j++) {
 						if (j < OVERLAP) {
 							if (whichwaveform == 1) {
-								waveform0[j] = overlaptable[j]*SIG_AMP*v[j*2]; // tu by bylo przepisywanie z myWav
+								waveform0[j] = overlaptable[j]*ADD_SIG_AMP*v[j*2]; // tu by bylo przepisywanie z myWav
 							} else {
-								waveform1[j] = overlaptable[j]*SIG_AMP*v[j*2];
+								waveform1[j] = overlaptable[j]*ADD_SIG_AMP*v[j*2];
 							}
 						} else if (j >= N - OVERLAP) {
 							if (whichwaveform) {
-								waveform0[j] = overlaptable[N-j-1]*SIG_AMP*v[j*2];
+								waveform0[j] = overlaptable[N-j-1]*ADD_SIG_AMP*v[j*2];
 							} else {
-								waveform1[j] = overlaptable[N-j-1]*SIG_AMP*v[j*2];
+								waveform1[j] = overlaptable[N-j-1]*ADD_SIG_AMP*v[j*2];
 							}
 						} else {
 							if (whichwaveform) {
-								waveform0[j] = SIG_AMP*v[j*2];
+								waveform0[j] = ADD_SIG_AMP*v[j*2];
 							} else {
-								waveform1[j] = SIG_AMP*v[j*2];
+								waveform1[j] = ADD_SIG_AMP*v[j*2];
 							}
 						}
 					}
 					sem_dac = 0;
 					k += N - OVERLAP;
+					ph += N;
 				}
     		}
 		}
@@ -288,6 +292,7 @@ int main( int argc, char *argv[] ) {
 					k += N - OVERLAP;
 				}
 			}
-		}
-	}
+    	}
+    }
 }
+

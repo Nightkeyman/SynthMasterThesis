@@ -148,7 +148,7 @@ namespace UARTCOM2
                 Buffer_push(x);
                 switch (Buffer_pull(0))
                 {
-                    case 100:
+                    case 100:   // SUBTRACTIVE
                         if (Buffer_pull(7) == 101)
                         {
                             if (Checksum() == Buffer_pull(8))
@@ -173,26 +173,34 @@ namespace UARTCOM2
                             }
                         }
                         break;
-                    case 101:
-                        if (Buffer_pull(7) == 101)
+                    case 101:   // ADDITIVE
+                        if (Buffer_pull(7) == 102)
                         {
                             if (Checksum() == Buffer_pull(8))
                             {
                                 if (Buffer_pull(1) == 1)
                                 {
-                                    button_subtractive_en.Text = "Enabled";
-                                    button_subtractive_en.ForeColor = Color.Green;
+                                    button_additive_hammond_en.Invoke((MethodInvoker)delegate {
+                                        button_additive_hammond_en.Text = "Enabled";
+                                    });
+                                    button_additive_hammond_en.Invoke((MethodInvoker)delegate {
+                                        button_additive_hammond_en.ForeColor = Color.Green;
+                                    });
                                 }
                                 else if (Buffer_pull(1) == 2)
                                 {
-                                    button_subtractive_en.Text = "Disabled";
-                                    button_subtractive_en.ForeColor = Color.Red;
+                                    button_additive_hammond_en.Invoke((MethodInvoker)delegate {
+                                        button_additive_hammond_en.Text = "Disabled";
+                                    });
+                                    button_additive_hammond_en.Invoke((MethodInvoker)delegate {
+                                        button_additive_hammond_en.ForeColor = Color.Red;
+                                    });
                                 }
                             }
                         }
                         break;
 
-                    case 102:
+                    case 102:   // FM
                         if (Buffer_pull(7) == 103)
                         {
                             if (Checksum() == Buffer_pull(8))
@@ -358,14 +366,19 @@ namespace UARTCOM2
 
         private void drawbar1_Load_1(object sender, EventArgs e)
         {
-            byte[] byteArray = BitConverter.GetBytes(drawbar1.Value);
-            send(110, byteArray[0], byteArray[1], 0, 0, 0, 0);
+
+        }
+
+        private void drawbar2_Load(object sender, EventArgs e)
+        {
+
         }
 
         private void drawbar3_Load(object sender, EventArgs e)
         {
 
         }
+
 
         private void tabPage_additive_Click(object sender, EventArgs e)
         {
@@ -467,7 +480,14 @@ namespace UARTCOM2
 
         private void button4_Click(object sender, EventArgs e)
         {
+            byte[] knob1Array = BitConverter.GetBytes(drawbar1.Value);
+            send(101, 11, knob1Array[0], knob1Array[1], 0, 0, 0);
 
+            byte[] knob2Array = BitConverter.GetBytes(drawbar2.Value);
+            send(101, 12, knob2Array[0], knob2Array[1], 0, 0, 0);
+
+            byte[] knob3Array = BitConverter.GetBytes(drawbar3.Value);
+            send(101, 13, knob3Array[0], knob3Array[1], 0, 0, 0);
         }
 
         private void button_adsr_set_Click(object sender, EventArgs e)
