@@ -16,6 +16,7 @@ extern float freqs[128];
 // ADSR GLOBALS
 extern float adsr[6];
 extern int adsr_state[6];
+extern int pressedkeys;
 
 extern float attack_rate;
 extern float attack_level;

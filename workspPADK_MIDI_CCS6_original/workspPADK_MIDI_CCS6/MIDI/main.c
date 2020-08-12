@@ -25,6 +25,7 @@
 #define F_sq 440
 #define F_sqq 10000
 #define SIG_AMP 100000
+//#define SIG_AMP 100000
 
 #define N 1024
  short  table[64];

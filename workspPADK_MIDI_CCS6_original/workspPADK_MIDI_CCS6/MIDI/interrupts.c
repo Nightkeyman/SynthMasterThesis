@@ -175,7 +175,7 @@ interrupt void midi_isr( void )
 						break;
 					}
 				}
-				pressedkeys--;
+
 				MIDI_clear();
 			}
 		}
