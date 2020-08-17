@@ -180,7 +180,6 @@ interrupt void midi_isr( void )
 				unsigned char note = MIDI_pull(-1)&0x7f;
 				float freq_wav = 261*pow(1.059463,note - 48);
 				int i = 0;
-
 				for (i = 0; i< 6; i++) {
 					if (freqs[i] >= freq_wav-0.5 && freqs[i] <= freq_wav+0.5) {
 						//freqs[i] = 0;
@@ -188,7 +187,6 @@ interrupt void midi_isr( void )
 						break;
 					}
 				}
-
 				MIDI_clear();
 			}
 		}

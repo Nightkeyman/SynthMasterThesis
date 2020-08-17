@@ -25,7 +25,6 @@
 #define F_sq 440
 #define F_sqq 10000
 #define SIG_AMP 100000
-//#define SIG_AMP 100000
 
 #define N 1024
  short  table[64];
@@ -252,8 +251,9 @@ int main( int argc, char *argv[] ) {
 			}
 			for(i = 0; i < 6; i++) {
 				if(freqs[i] > 0) {
+					ADSR(i);
 					for(j = 0; j < N; j++) {
-						v[j*2] = sinf((double)(j+k)*2.0*M_PI*freqs[i]*(1.0/Fs) + (float)fm_modamp*sinf((double)(j+k)*2.0*M_PI*(float)fm_modfreq*(1.0/Fs)))*SIG_AMP*1000;
+						v[j*2] = adsr[i]*sinf((double)(j+k)*2.0*M_PI*freqs[i]*(1.0/Fs) + (float)fm_modamp*sinf((double)(j+k)*2.0*M_PI*(float)fm_modfreq*(1.0/Fs)))*SIG_AMP*1000;
 					}
 					while(sem_dac == 0);
 					for(j = 0; j < N; j++) {
