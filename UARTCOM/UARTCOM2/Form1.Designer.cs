@@ -81,6 +81,16 @@
             this.textBox_fm_modamp = new System.Windows.Forms.TextBox();
             this.label7 = new System.Windows.Forms.Label();
             this.trackBar_fm_modamp = new System.Windows.Forms.TrackBar();
+            this.ADSR = new System.Windows.Forms.GroupBox();
+            this.label_release_knob = new System.Windows.Forms.Label();
+            this.label_sustain_knob = new System.Windows.Forms.Label();
+            this.label_decay_knob = new System.Windows.Forms.Label();
+            this.label_attack_knob = new System.Windows.Forms.Label();
+            this.knobControl_release = new KnobControl.KnobControl();
+            this.knobControl_decay = new KnobControl.KnobControl();
+            this.knobControl_sustain = new KnobControl.KnobControl();
+            this.knobControl_attack = new KnobControl.KnobControl();
+            this.button_adsr_set = new System.Windows.Forms.Button();
             this.tabPage_Connection.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage_subtractive.SuspendLayout();
@@ -95,6 +105,7 @@
             this.groupBox3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar_fm_modfreq)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar_fm_modamp)).BeginInit();
+            this.ADSR.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnGetSerialPorts
@@ -205,7 +216,7 @@
             this.tabPage_Connection.Location = new System.Drawing.Point(-1, 0);
             this.tabPage_Connection.Name = "tabPage_Connection";
             this.tabPage_Connection.SelectedIndex = 0;
-            this.tabPage_Connection.Size = new System.Drawing.Size(800, 452);
+            this.tabPage_Connection.Size = new System.Drawing.Size(644, 452);
             this.tabPage_Connection.TabIndex = 12;
             // 
             // tabPage1
@@ -225,7 +236,8 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(792, 426);
+            this.tabPage1.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.tabPage1.Size = new System.Drawing.Size(636, 426);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Connection";
             // 
@@ -240,7 +252,7 @@
             this.tabPage_subtractive.Location = new System.Drawing.Point(4, 22);
             this.tabPage_subtractive.Name = "tabPage_subtractive";
             this.tabPage_subtractive.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage_subtractive.Size = new System.Drawing.Size(792, 426);
+            this.tabPage_subtractive.Size = new System.Drawing.Size(636, 426);
             this.tabPage_subtractive.TabIndex = 1;
             this.tabPage_subtractive.Text = "Subtractive";
             // 
@@ -464,7 +476,7 @@
             this.tabPage_additive.Location = new System.Drawing.Point(4, 22);
             this.tabPage_additive.Name = "tabPage_additive";
             this.tabPage_additive.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage_additive.Size = new System.Drawing.Size(792, 426);
+            this.tabPage_additive.Size = new System.Drawing.Size(636, 426);
             this.tabPage_additive.TabIndex = 2;
             this.tabPage_additive.Text = "Additive";
             this.tabPage_additive.Click += new System.EventHandler(this.tabPage_additive_Click);
@@ -691,7 +703,7 @@
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(792, 426);
+            this.tabPage2.Size = new System.Drawing.Size(636, 426);
             this.tabPage2.TabIndex = 3;
             this.tabPage2.Text = "FM";
             // 
@@ -795,11 +807,185 @@
             this.trackBar_fm_modamp.TickFrequency = 1000;
             this.trackBar_fm_modamp.Scroll += new System.EventHandler(this.trackBar_fm_modamp_Scroll);
             // 
+            // ADSR
+            // 
+            this.ADSR.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.ADSR.Controls.Add(this.label_release_knob);
+            this.ADSR.Controls.Add(this.label_sustain_knob);
+            this.ADSR.Controls.Add(this.label_decay_knob);
+            this.ADSR.Controls.Add(this.label_attack_knob);
+            this.ADSR.Controls.Add(this.knobControl_release);
+            this.ADSR.Controls.Add(this.knobControl_decay);
+            this.ADSR.Controls.Add(this.knobControl_sustain);
+            this.ADSR.Controls.Add(this.knobControl_attack);
+            this.ADSR.Controls.Add(this.button_adsr_set);
+            this.ADSR.ForeColor = System.Drawing.SystemColors.Control;
+            this.ADSR.Location = new System.Drawing.Point(649, 71);
+            this.ADSR.Name = "ADSR";
+            this.ADSR.Size = new System.Drawing.Size(331, 324);
+            this.ADSR.TabIndex = 13;
+            this.ADSR.TabStop = false;
+            this.ADSR.Text = "ADSR";
+            // 
+            // label_release_knob
+            // 
+            this.label_release_knob.AutoSize = true;
+            this.label_release_knob.ForeColor = System.Drawing.SystemColors.Control;
+            this.label_release_knob.Location = new System.Drawing.Point(208, 157);
+            this.label_release_knob.Name = "label_release_knob";
+            this.label_release_knob.Size = new System.Drawing.Size(46, 13);
+            this.label_release_knob.TabIndex = 22;
+            this.label_release_knob.Text = "Release";
+            // 
+            // label_sustain_knob
+            // 
+            this.label_sustain_knob.AutoSize = true;
+            this.label_sustain_knob.ForeColor = System.Drawing.SystemColors.Control;
+            this.label_sustain_knob.Location = new System.Drawing.Point(60, 157);
+            this.label_sustain_knob.Name = "label_sustain_knob";
+            this.label_sustain_knob.Size = new System.Drawing.Size(42, 13);
+            this.label_sustain_knob.TabIndex = 21;
+            this.label_sustain_knob.Text = "Sustain";
+            // 
+            // label_decay_knob
+            // 
+            this.label_decay_knob.AutoSize = true;
+            this.label_decay_knob.ForeColor = System.Drawing.SystemColors.Control;
+            this.label_decay_knob.Location = new System.Drawing.Point(216, 20);
+            this.label_decay_knob.Name = "label_decay_knob";
+            this.label_decay_knob.Size = new System.Drawing.Size(38, 13);
+            this.label_decay_knob.TabIndex = 20;
+            this.label_decay_knob.Text = "Decay";
+            // 
+            // label_attack_knob
+            // 
+            this.label_attack_knob.AutoSize = true;
+            this.label_attack_knob.ForeColor = System.Drawing.SystemColors.Control;
+            this.label_attack_knob.Location = new System.Drawing.Point(60, 20);
+            this.label_attack_knob.Name = "label_attack_knob";
+            this.label_attack_knob.Size = new System.Drawing.Size(38, 13);
+            this.label_attack_knob.TabIndex = 14;
+            this.label_attack_knob.Text = "Attack";
+            // 
+            // knobControl_release
+            // 
+            this.knobControl_release.EndAngle = 405F;
+            this.knobControl_release.ImeMode = System.Windows.Forms.ImeMode.On;
+            this.knobControl_release.KnobBackColor = System.Drawing.Color.Maroon;
+            this.knobControl_release.KnobPointerStyle = KnobControl.KnobControl.KnobPointerStyles.line;
+            this.knobControl_release.LargeChange = 5;
+            this.knobControl_release.Location = new System.Drawing.Point(188, 173);
+            this.knobControl_release.Maximum = 1000;
+            this.knobControl_release.Minimum = 1;
+            this.knobControl_release.Name = "knobControl_release";
+            this.knobControl_release.PointerColor = System.Drawing.Color.Lavender;
+            this.knobControl_release.ScaleColor = System.Drawing.Color.Transparent;
+            this.knobControl_release.ScaleDivisions = 11;
+            this.knobControl_release.ScaleFont = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.knobControl_release.ScaleFontAutoSize = false;
+            this.knobControl_release.ScaleSubDivisions = 4;
+            this.knobControl_release.ShowLargeScale = false;
+            this.knobControl_release.ShowSmallScale = false;
+            this.knobControl_release.Size = new System.Drawing.Size(92, 92);
+            this.knobControl_release.SmallChange = 1;
+            this.knobControl_release.StartAngle = 135F;
+            this.knobControl_release.TabIndex = 19;
+            this.knobControl_release.Value = 50;
+            // 
+            // knobControl_decay
+            // 
+            this.knobControl_decay.EndAngle = 405F;
+            this.knobControl_decay.ImeMode = System.Windows.Forms.ImeMode.On;
+            this.knobControl_decay.KnobBackColor = System.Drawing.Color.Maroon;
+            this.knobControl_decay.KnobPointerStyle = KnobControl.KnobControl.KnobPointerStyles.line;
+            this.knobControl_decay.LargeChange = 5;
+            this.knobControl_decay.Location = new System.Drawing.Point(188, 36);
+            this.knobControl_decay.Maximum = 1000;
+            this.knobControl_decay.Minimum = 1;
+            this.knobControl_decay.Name = "knobControl_decay";
+            this.knobControl_decay.PointerColor = System.Drawing.Color.Lavender;
+            this.knobControl_decay.ScaleColor = System.Drawing.Color.Transparent;
+            this.knobControl_decay.ScaleDivisions = 11;
+            this.knobControl_decay.ScaleFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.knobControl_decay.ScaleFontAutoSize = false;
+            this.knobControl_decay.ScaleSubDivisions = 4;
+            this.knobControl_decay.ShowLargeScale = false;
+            this.knobControl_decay.ShowSmallScale = false;
+            this.knobControl_decay.Size = new System.Drawing.Size(92, 92);
+            this.knobControl_decay.SmallChange = 1;
+            this.knobControl_decay.StartAngle = 135F;
+            this.knobControl_decay.TabIndex = 18;
+            this.knobControl_decay.Value = 500;
+            // 
+            // knobControl_sustain
+            // 
+            this.knobControl_sustain.EndAngle = 405F;
+            this.knobControl_sustain.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.knobControl_sustain.ImeMode = System.Windows.Forms.ImeMode.On;
+            this.knobControl_sustain.KnobBackColor = System.Drawing.Color.Maroon;
+            this.knobControl_sustain.KnobPointerStyle = KnobControl.KnobControl.KnobPointerStyles.line;
+            this.knobControl_sustain.LargeChange = 5;
+            this.knobControl_sustain.Location = new System.Drawing.Point(36, 173);
+            this.knobControl_sustain.Maximum = 1000;
+            this.knobControl_sustain.Minimum = 1;
+            this.knobControl_sustain.Name = "knobControl_sustain";
+            this.knobControl_sustain.PointerColor = System.Drawing.Color.Lavender;
+            this.knobControl_sustain.ScaleColor = System.Drawing.Color.Transparent;
+            this.knobControl_sustain.ScaleDivisions = 11;
+            this.knobControl_sustain.ScaleFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.knobControl_sustain.ScaleFontAutoSize = false;
+            this.knobControl_sustain.ScaleSubDivisions = 4;
+            this.knobControl_sustain.ShowLargeScale = false;
+            this.knobControl_sustain.ShowSmallScale = false;
+            this.knobControl_sustain.Size = new System.Drawing.Size(92, 92);
+            this.knobControl_sustain.SmallChange = 1;
+            this.knobControl_sustain.StartAngle = 135F;
+            this.knobControl_sustain.TabIndex = 17;
+            this.knobControl_sustain.Value = 800;
+            // 
+            // knobControl_attack
+            // 
+            this.knobControl_attack.EndAngle = 405F;
+            this.knobControl_attack.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.knobControl_attack.ImeMode = System.Windows.Forms.ImeMode.On;
+            this.knobControl_attack.KnobBackColor = System.Drawing.Color.Maroon;
+            this.knobControl_attack.KnobPointerStyle = KnobControl.KnobControl.KnobPointerStyles.line;
+            this.knobControl_attack.LargeChange = 5;
+            this.knobControl_attack.Location = new System.Drawing.Point(36, 36);
+            this.knobControl_attack.Maximum = 1000;
+            this.knobControl_attack.Minimum = 1;
+            this.knobControl_attack.Name = "knobControl_attack";
+            this.knobControl_attack.PointerColor = System.Drawing.Color.Lavender;
+            this.knobControl_attack.ScaleColor = System.Drawing.Color.Transparent;
+            this.knobControl_attack.ScaleDivisions = 11;
+            this.knobControl_attack.ScaleFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.knobControl_attack.ScaleFontAutoSize = false;
+            this.knobControl_attack.ScaleSubDivisions = 4;
+            this.knobControl_attack.ShowLargeScale = false;
+            this.knobControl_attack.ShowSmallScale = false;
+            this.knobControl_attack.Size = new System.Drawing.Size(92, 92);
+            this.knobControl_attack.SmallChange = 1;
+            this.knobControl_attack.StartAngle = 135F;
+            this.knobControl_attack.TabIndex = 16;
+            this.knobControl_attack.Value = 500;
+            // 
+            // button_adsr_set
+            // 
+            this.button_adsr_set.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.button_adsr_set.Location = new System.Drawing.Point(112, 277);
+            this.button_adsr_set.Name = "button_adsr_set";
+            this.button_adsr_set.Size = new System.Drawing.Size(102, 41);
+            this.button_adsr_set.TabIndex = 15;
+            this.button_adsr_set.Text = "Set";
+            this.button_adsr_set.UseVisualStyleBackColor = true;
+            this.button_adsr_set.Click += new System.EventHandler(this.button_adsr_set_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(992, 450);
+            this.Controls.Add(this.ADSR);
             this.Controls.Add(this.tabPage_Connection);
             this.Name = "Form1";
             this.Text = "Form1";
@@ -821,6 +1007,8 @@
             this.groupBox3.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar_fm_modfreq)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar_fm_modamp)).EndInit();
+            this.ADSR.ResumeLayout(false);
+            this.ADSR.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -880,6 +1068,16 @@
         private System.Windows.Forms.TextBox textBox_fm_modamp;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.TrackBar trackBar_fm_modamp;
+        private System.Windows.Forms.GroupBox ADSR;
+        private System.Windows.Forms.Button button_adsr_set;
+        private System.Windows.Forms.Label label_attack_knob;
+        private KnobControl.KnobControl knobControl_decay;
+        private KnobControl.KnobControl knobControl_sustain;
+        private KnobControl.KnobControl knobControl_attack;
+        private System.Windows.Forms.Label label_decay_knob;
+        private System.Windows.Forms.Label label_release_knob;
+        private System.Windows.Forms.Label label_sustain_knob;
+        public KnobControl.KnobControl knobControl_release;
     }
 }
 
