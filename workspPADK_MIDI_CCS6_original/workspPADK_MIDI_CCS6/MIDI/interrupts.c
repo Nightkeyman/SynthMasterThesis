@@ -95,6 +95,7 @@ int plot[2048];
 extern volatile int whichwaveform;
 #define OVERLAP 128
 #define MIDI_TONE_RANGE 128
+#define MIDI_POLY_MAX 6
 
 int wav_iterator = 0;
 volatile unsigned PP;
@@ -102,7 +103,7 @@ volatile unsigned sem_dac = 0;
 
 #define Fs 96000
 #define M_PI 3.1416
-extern float freqs[MIDI_TONE_RANGE];
+extern float freqs[MIDI_POLY_MAX];
 int generator_interator = 0;
 int sound = 0;
 int licz = 0;
@@ -118,7 +119,7 @@ extern float decay_rate;
 extern float sustain_level;
 extern float release_rate;
 extern float attack_level;
-extern int adsr_state[6];
+extern int adsr_state[MIDI_POLY_MAX];
 extern int pressedkeys;
 
 
@@ -166,7 +167,7 @@ interrupt void midi_isr( void )
 				unsigned char note = MIDI_pull(-1)&0x7f;
 				float freq_wav = 261*pow(1.059463,note - 48);
 				int i = 0, keyOccupFlag = 0;
-				for (i = 0; i< 6; i++) {
+				for (i = 0; i < MIDI_POLY_MAX; i++) {
 					if (freqs[i] >= freq_wav-0.5 && freqs[i] <= freq_wav+0.5) {
 						adsr_state[i] = 1;
 						keyOccupFlag = 1;
@@ -174,7 +175,7 @@ interrupt void midi_isr( void )
 					}
 				}
 				if(keyOccupFlag == 0) {
-					for (i = 0; i < 6; i++) {
+					for (i = 0; i < MIDI_POLY_MAX; i++) {
 						if (freqs[i] == 0) {
 							freqs[i] = freq_wav;
 							adsr_state[i] = 1;
@@ -188,9 +189,8 @@ interrupt void midi_isr( void )
 				unsigned char note = MIDI_pull(-1)&0x7f;
 				float freq_wav = 261*pow(1.059463,note - 48);
 				int i = 0;
-				for (i = 0; i< 6; i++) {
+				for (i = 0; i< MIDI_POLY_MAX; i++) {
 					if (freqs[i] >= freq_wav-0.5 && freqs[i] <= freq_wav+0.5) {
-						//freqs[i] = 0;
 						adsr_state[i] = 4;
 						break;
 					}

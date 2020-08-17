@@ -11,11 +11,13 @@
 #define N 1024
 #define Fs 96000
 #define M_PI 3.14159
+#define MIDI_POLY_MAX 6
+
 extern float v[2*N];
-extern float freqs[128];
+extern float freqs[MIDI_POLY_MAX];
 // ADSR GLOBALS
-extern float adsr[6];
-extern int adsr_state[6];
+extern float adsr[MIDI_POLY_MAX];
+extern int adsr_state[MIDI_POLY_MAX];
 extern int pressedkeys;
 
 extern float attack_rate;
