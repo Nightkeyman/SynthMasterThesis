@@ -20,7 +20,7 @@
 
 #define OVERLAP 128
 #define MIDI_TONE_RANGE 128
-#define MIDI_POLY_MAX 6
+#define MIDI_POLY_MAX 12
 #define M_PI 3.14159
 #define Fs 96000
 #define F_sq 440
@@ -75,30 +75,7 @@ float release_rate = 0.5;
 // Static waveform arrays
 float sinusek[N];
 float kwadracik[N];
-float przefiltrowany[N];
 
-float mySin(int counter, float freq)
-{
-	return sinusek[(int)((float)counter*freq*((float)N/(float)Fs))%N]; // N/Fs
-}
-
-float mySqr(int counter, float freq)
-{
-	if(sinusek[(int)((float)counter*freq*(0.02083333333))%N] >= 0) {
-		return SIG_AMP;
-	} else {
-		return -1*SIG_AMP;
-	}
-}
-
-float myWav(int counter, float freq)
-{
-	if(sinusek[(int)((float)counter*freq*(0.02083333333))%N] >= 0) {
-		return SIG_AMP;
-	} else {
-		return -1*SIG_AMP;
-	}
-}
 //
 //  Main Function
 //
@@ -144,9 +121,9 @@ int main( int argc, char *argv[] ) {
 	// Inverse FFT
 	ifft_full();
 
-	// Prepare waveform tables
+	// Prepare static waveform tables
 	for (i = 0; i < N; i++) {
-		sinusek[i] = SIG_AMP*sin(2.0*M_PI*(i/(N*1.0)));
+		sinusek[i] = SIG_AMP*sinf(2.0*M_PI*((float)i/(N*1.0)));
 	}
 	for (i = 0; i < N; i++) { // tu moze ze dwa okresy?
 		if(i <= N/2) kwadracik[i] = 1.0;

@@ -89,13 +89,13 @@ int wy[STEREO][NUM_CHANNEL];
 int Buf_1[N];  // bufor pomocniczy do "obserwacji" danych wejsciowych
 int Buf[N];  // bufor pomocniczy do "obserwacji" danych wyjœciowych
 int k = 0;
-extern int waveform0[1024];
-extern int waveform1[1024];
+extern int waveform0[N];
+extern int waveform1[N];
 int plot[2048];
 extern volatile int whichwaveform;
 #define OVERLAP 128
 #define MIDI_TONE_RANGE 128
-#define MIDI_POLY_MAX 6
+#define MIDI_POLY_MAX 12
 
 int wav_iterator = 0;
 volatile unsigned PP;

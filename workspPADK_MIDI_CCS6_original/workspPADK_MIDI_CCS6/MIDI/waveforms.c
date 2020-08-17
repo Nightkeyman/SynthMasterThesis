@@ -23,7 +23,7 @@ void square_wave(int freq, int amp, int counter, int edit, int adsr_index) {
 	int i = 0;
 	if (edit == 1){
 		for(i = 0; i < 2*N; i++) {
-			if(sinf((float)(i/2 + counter)*2.0*M_PI*freq*(1.0/Fs)) >= 0)
+			if(mySin(i/2 + counter, freq) >= 0)
 				v[i] = 1*adsr[adsr_index];
 			else
 				v[i] = -1*adsr[adsr_index];
@@ -31,7 +31,7 @@ void square_wave(int freq, int amp, int counter, int edit, int adsr_index) {
 		}
 	} else if (edit == 0) {
 		for(i = 0; i < 2*N; i+=2) {
-			if(sinf((float)(i/2 + counter)*2.0*M_PI*freq*(1.0/Fs)) >= 0)
+			if(mySin(i/2 + counter, freq) >= 0)
 				v[i] += 1*adsr[adsr_index];
 			else
 				v[i] += -1*adsr[adsr_index];
@@ -74,5 +74,28 @@ void ADSR(int adsr_index) {
 			freqs[adsr_index] = 0.0;
 			pressedkeys--;
 		}
+	}
+}
+
+float mySin(int counter, float freq)
+{
+	return sinusek[(int)((float)counter*freq*((float)N/(float)Fs))%N]; // N/Fs
+}
+
+float mySqr(int counter, float freq)
+{
+	if(sinusek[(int)((float)counter*freq*(0.02083333333))%N] >= 0) {
+		return SIG_AMP;
+	} else {
+		return -1*SIG_AMP;
+	}
+}
+
+float myWav(int counter, float freq)
+{
+	if(sinusek[(int)((float)counter*freq*(0.02083333333))%N] >= 0) {
+		return SIG_AMP;
+	} else {
+		return -1*SIG_AMP;
 	}
 }
