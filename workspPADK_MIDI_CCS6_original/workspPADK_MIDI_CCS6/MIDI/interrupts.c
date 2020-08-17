@@ -165,16 +165,24 @@ interrupt void midi_isr( void )
 			if (status == 0x09) { // note on
 				unsigned char note = MIDI_pull(-1)&0x7f;
 				float freq_wav = 261*pow(1.059463,note - 48);
-				int i = 0;
-
-				for (i = 0; i < 6; i++) {
-					if (freqs[i] == 0) {
-						freqs[i] = freq_wav;
+				int i = 0, keyOccupFlag = 0;
+				for (i = 0; i< 6; i++) {
+					if (freqs[i] >= freq_wav-0.5 && freqs[i] <= freq_wav+0.5) {
 						adsr_state[i] = 1;
+						keyOccupFlag = 1;
 						break;
 					}
 				}
-				pressedkeys++;
+				if(keyOccupFlag == 0) {
+					for (i = 0; i < 6; i++) {
+						if (freqs[i] == 0) {
+							freqs[i] = freq_wav;
+							adsr_state[i] = 1;
+							break;
+						}
+					}
+					pressedkeys++;
+				}
 				MIDI_clear();
 			} else if (status == 0x08) { // note off
 				unsigned char note = MIDI_pull(-1)&0x7f;
