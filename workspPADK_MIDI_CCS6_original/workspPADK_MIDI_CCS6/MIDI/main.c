@@ -171,76 +171,57 @@ int main( int argc, char *argv[] ) {
     	*/
 
     	///// SUBTRACTIVE /////
-    	// MONOPHONIC KEYBOARD
     	if (method == subtractive) {
-			if(mono == 1 && mode == 0) {
-				if(pressedkeys < 1) {
-					for(j = 0; j < N; j++) {
-						waveform0[j] = 0;
-						waveform1[j] = 0;
+			if(pressedkeys < 1) {
+				for(j = 0; j < N; j++) {
+					waveform0[j] = 0;
+					waveform1[j] = 0;
+				}
+			} else {
+				clear_v = 1;
+				for(i = 0; i < 6; i++) {
+					if(freqs[i] > 0 || adsr_state[i] > 0) {
+						square_wave(freqs[i], SIG_AMP, k, clear_v, i);
+						if (clear_v == 1)
+							clear_v = 0;
 					}
-				} else {
-					clear_v = 1;
-					for(i = 0; i < 6; i++) {
-						if(freqs[i] > 0 || adsr_state[i] > 0) {
-							square_wave(freqs[i], SIG_AMP, k, clear_v, i);
-							if (clear_v == 1)
-								clear_v = 0;
-						}
-					}
-					fft_full();
-					if (filter == lowpass)
-						lowPassFilter(sub_lowfreq);
-					else if (filter == highpass)
-						highPassFilter(sub_highfreq);
-					else if (filter == bandpass)
-						bandPassFilter(sub_lowfreq, sub_highfreq);
-					else if (filter == bandstop)
-						bandStopFilter(sub_lowfreq, sub_highfreq);
-					ifft_full();
-					while(sem_dac == 0);
-					for(j = 0; j < N; j++) {
-						if (j < OVERLAP) {
-							if (whichwaveform == 1) {
-								waveform0[j] = overlaptable[j]*SIG_AMP*v[j*2]; // tu by bylo przepisywanie z myWav
-							} else {
-								waveform1[j] = overlaptable[j]*SIG_AMP*v[j*2];
-							}
-						} else if (j >= N - OVERLAP) {
-							if (whichwaveform) {
-								waveform0[j] = overlaptable[N-j-1]*SIG_AMP*v[j*2];
-							} else {
-								waveform1[j] = overlaptable[N-j-1]*SIG_AMP*v[j*2];
-							}
+				}
+				fft_full();
+				if (filter == lowpass)
+					lowPassFilter(sub_lowfreq);
+				else if (filter == highpass)
+					highPassFilter(sub_highfreq);
+				else if (filter == bandpass)
+					bandPassFilter(sub_lowfreq, sub_highfreq);
+				else if (filter == bandstop)
+					bandStopFilter(sub_lowfreq, sub_highfreq);
+				ifft_full();
+				while(sem_dac == 0);
+				for(j = 0; j < N; j++) {
+					if (j < OVERLAP) {
+						if (whichwaveform == 1) {
+							waveform0[j] = overlaptable[j]*SIG_AMP*v[j*2]; // tu by bylo przepisywanie z myWav
 						} else {
-							if (whichwaveform) {
-								waveform0[j] = SIG_AMP*v[j*2];
-							} else {
-								waveform1[j] = SIG_AMP*v[j*2];
-							}
+							waveform1[j] = overlaptable[j]*SIG_AMP*v[j*2];
+						}
+					} else if (j >= N - OVERLAP) {
+						if (whichwaveform) {
+							waveform0[j] = overlaptable[N-j-1]*SIG_AMP*v[j*2];
+						} else {
+							waveform1[j] = overlaptable[N-j-1]*SIG_AMP*v[j*2];
+						}
+					} else {
+						if (whichwaveform) {
+							waveform0[j] = SIG_AMP*v[j*2];
+						} else {
+							waveform1[j] = SIG_AMP*v[j*2];
 						}
 					}
-					sem_dac = 0;
-					k += N - OVERLAP;
-
-
 				}
-			// POLYPHONIC KEYBOARD
-			} /*else {
-				for(j = 0; j < 2*N; j++)
-					waveform2[j] = 0;
-				for(i = 0; i < MIDI_TONE_RANGE; i++) {
-					if(notes[i] == 1) {
-						freq_wav = 261*pow(1.059463,i - 48);
-						for(j = 0; j < 2*N; j++) {
-							s = sig_amp*(sin((double)(j)*2.0*M_PI*freq_wav*(1.0/Fs)));
-							waveform2[j] += s*hann[j/2];
-						}
-					}
-					for(j = 0; j < 2*N; j++)
-						waveform[j] = waveform2[j];
-				}
-			}*/
+				sem_dac = 0;
+				k += N - OVERLAP;
+			}
+		// FM
     	} else if (method == fm){
     		if(pressedkeys < 1) {
 				for(j = 0; j < N; j++) {
