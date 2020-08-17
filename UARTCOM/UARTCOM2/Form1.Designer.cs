@@ -240,7 +240,6 @@
             this.tabPage1.Size = new System.Drawing.Size(636, 426);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Connection";
-            this.tabPage1.Click += new System.EventHandler(this.tabPage1_Click);
             // 
             // tabPage_subtractive
             // 
@@ -876,7 +875,7 @@
             this.knobControl_release.KnobPointerStyle = KnobControl.KnobControl.KnobPointerStyles.line;
             this.knobControl_release.LargeChange = 5;
             this.knobControl_release.Location = new System.Drawing.Point(188, 173);
-            this.knobControl_release.Maximum = 100;
+            this.knobControl_release.Maximum = 1000;
             this.knobControl_release.Minimum = 1;
             this.knobControl_release.Name = "knobControl_release";
             this.knobControl_release.PointerColor = System.Drawing.Color.Lavender;
@@ -886,12 +885,12 @@
             this.knobControl_release.ScaleFontAutoSize = false;
             this.knobControl_release.ScaleSubDivisions = 4;
             this.knobControl_release.ShowLargeScale = false;
-            this.knobControl_release.ShowSmallScale = true;
+            this.knobControl_release.ShowSmallScale = false;
             this.knobControl_release.Size = new System.Drawing.Size(92, 92);
             this.knobControl_release.SmallChange = 1;
             this.knobControl_release.StartAngle = 135F;
             this.knobControl_release.TabIndex = 19;
-            this.knobControl_release.Value = 0;
+            this.knobControl_release.Value = 50;
             // 
             // knobControl_decay
             // 
@@ -916,7 +915,7 @@
             this.knobControl_decay.SmallChange = 1;
             this.knobControl_decay.StartAngle = 135F;
             this.knobControl_decay.TabIndex = 18;
-            this.knobControl_decay.Value = 0;
+            this.knobControl_decay.Value = 500;
             // 
             // knobControl_sustain
             // 
@@ -942,8 +941,7 @@
             this.knobControl_sustain.SmallChange = 1;
             this.knobControl_sustain.StartAngle = 135F;
             this.knobControl_sustain.TabIndex = 17;
-            this.knobControl_sustain.Value = 0;
-            this.knobControl_sustain.Load += new System.EventHandler(this.knobControl_sustain_Load);
+            this.knobControl_sustain.Value = 800;
             // 
             // knobControl_attack
             // 
@@ -969,8 +967,7 @@
             this.knobControl_attack.SmallChange = 1;
             this.knobControl_attack.StartAngle = 135F;
             this.knobControl_attack.TabIndex = 16;
-            this.knobControl_attack.Value = 0;
-            this.knobControl_attack.Load += new System.EventHandler(this.knobControl_attack_Load);
+            this.knobControl_attack.Value = 500;
             // 
             // button_adsr_set
             // 
@@ -1074,13 +1071,13 @@
         private System.Windows.Forms.GroupBox ADSR;
         private System.Windows.Forms.Button button_adsr_set;
         private System.Windows.Forms.Label label_attack_knob;
-        private KnobControl.KnobControl knobControl_release;
         private KnobControl.KnobControl knobControl_decay;
         private KnobControl.KnobControl knobControl_sustain;
         private KnobControl.KnobControl knobControl_attack;
         private System.Windows.Forms.Label label_decay_knob;
         private System.Windows.Forms.Label label_release_knob;
         private System.Windows.Forms.Label label_sustain_knob;
+        public KnobControl.KnobControl knobControl_release;
     }
 }
 

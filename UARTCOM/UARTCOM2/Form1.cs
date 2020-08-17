@@ -49,16 +49,23 @@ namespace UARTCOM2
         {
             InitializeComponent();
             buffer = new byte[buffer_length];
+            refreshPorts();
             ComPort.DataReceived += new SerialDataReceivedEventHandler(port_DataReceived);
         }
 
         private void btnGetSerialPorts_Click(object sender, EventArgs e)
+        {
+            refreshPorts();
+        }
+
+        private void refreshPorts()
         {
             string[] ArrayComPortsNames = null;
             int index = -1;
             string ComPortName = null;
 
             ArrayComPortsNames = SerialPort.GetPortNames();
+            comboBox_port.Items.Clear();
             do
             {
                 index += 1;
@@ -468,11 +475,11 @@ namespace UARTCOM2
             // ADSR - signal 200
             byte[] byteArray;
             // attack
-            byteArray = BitConverter.GetBytes(Convert.ToInt32(knobControl_attack.Value));
+            byteArray = BitConverter.GetBytes(knobControl_attack.Maximum - Convert.ToInt32(knobControl_attack.Value) + 1);
             send(200, 1, byteArray[0], byteArray[1], 0, 0, 0);
 
             // decay
-            byteArray = BitConverter.GetBytes(Convert.ToInt32(knobControl_decay.Value));
+            byteArray = BitConverter.GetBytes(knobControl_decay.Maximum - Convert.ToInt32(knobControl_decay.Value) + 1);
             send(200, 2, byteArray[0], byteArray[1], 0, 0, 0);
 
             // sustain
@@ -480,23 +487,8 @@ namespace UARTCOM2
             send(200, 3, byteArray[0], byteArray[1], 0, 0, 0);
 
             // release
-            byteArray = BitConverter.GetBytes(Convert.ToInt32(knobControl_release.Value));
+            byteArray = BitConverter.GetBytes(knobControl_release.Maximum - Convert.ToInt32(knobControl_release.Value) + 1);
             send(200, 4, byteArray[0], byteArray[1], 0, 0, 0);
-        }
-
-        private void knobControl_attack_Load(object sender, EventArgs e)
-        {
-
-        }
-
-        private void knobControl_sustain_Load(object sender, EventArgs e)
-        {
-
-        }
-
-        private void tabPage1_Click(object sender, EventArgs e)
-        {
-
         }
     }
 }
