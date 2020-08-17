@@ -466,21 +466,37 @@ namespace UARTCOM2
         private void button_adsr_set_Click(object sender, EventArgs e)
         {
             // ADSR - signal 200
+            byte[] byteArray;
             // attack
-            byte[] byteArray = BitConverter.GetBytes(Convert.ToInt32(textBox_adsr_attack_time.Text));
+            byteArray = BitConverter.GetBytes(Convert.ToInt32(knobControl_attack.Value));
             send(200, 1, byteArray[0], byteArray[1], 0, 0, 0);
 
             // decay
-            byteArray = BitConverter.GetBytes(Convert.ToInt32(textBox_adsr_decay_time.Text));
+            byteArray = BitConverter.GetBytes(Convert.ToInt32(knobControl_decay.Value));
             send(200, 2, byteArray[0], byteArray[1], 0, 0, 0);
 
             // sustain
-            byteArray = BitConverter.GetBytes(Convert.ToInt32(textBox_adsr_sustain_level.Text));
+            byteArray = BitConverter.GetBytes(Convert.ToInt32(knobControl_sustain.Value));
             send(200, 3, byteArray[0], byteArray[1], 0, 0, 0);
 
             // release
-            byteArray = BitConverter.GetBytes(Convert.ToInt32(textBox_adsr_release_time.Text));
+            byteArray = BitConverter.GetBytes(Convert.ToInt32(knobControl_release.Value));
             send(200, 4, byteArray[0], byteArray[1], 0, 0, 0);
+        }
+
+        private void knobControl_attack_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void knobControl_sustain_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void tabPage1_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

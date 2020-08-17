@@ -117,6 +117,7 @@ extern float attack_rate;
 extern float decay_rate;
 extern float sustain_level;
 extern float release_rate;
+extern float attack_level;
 extern int adsr_state[6];
 extern int pressedkeys;
 
@@ -253,6 +254,7 @@ interrupt void uart_isr( void )
 						decay_rate = (UART_pull(2) + UART_pull(3)*256)*ADSR_DEC_TIME;
 					} else if (UART_pull(1) == 3) {
 						sustain_level = (UART_pull(2) + UART_pull(3)*256)*ADSR_SUS_LEVEL;
+						attack_level = sustain_level*1.3;
 					} else if (UART_pull(1) == 4) {
 						release_rate = (UART_pull(2) + UART_pull(3)*256)*ADSR_REL_TIME;
 					}

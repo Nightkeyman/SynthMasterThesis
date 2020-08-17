@@ -31,6 +31,6 @@ extern float release_rate;
 void sin_wave(int freq, int amp);
 void square_wave(int freq, int amp, int counter, int edit, int adsr_index);
 void sawtooth_wave(int freq, int amp);
-
+void ADSR(int adsr_index);
 
 #endif /* WAVEFORMS_H_ */
