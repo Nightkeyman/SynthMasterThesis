@@ -21,20 +21,28 @@ void sin_wave(int freq, int amp) {
 void square_wave(int freq, int amp, int counter, int edit, int adsr_index) {
 	ADSR(adsr_index);
 	int i = 0;
+	int harmonicsCount = (Fs/2)/freq;
+	int j = 0;
 	if (edit == 1){
 		for(i = 0; i < 2*N; i++) {
-			if(mySin(i/2 + counter, freq) >= 0)
-				v[i] = 1*adsr[adsr_index];
-			else
-				v[i] = -1*adsr[adsr_index];
-			if(i%2 == 1) v[i] = 0;
+			if(i%2 == 1) {
+				v[i] = 0;
+			} else {
+				v[i] = 0;
+				for(j = 1; j < harmonicsCount; j += 2) {
+					v[i] += mySin(i/2 + counter, freq*j)/j;
+				}
+				v[i] *= adsr[adsr_index];
+			}
 		}
 	} else if (edit == 0) {
 		for(i = 0; i < 2*N; i+=2) {
-			if(mySin(i/2 + counter, freq) >= 0)
-				v[i] += 1*adsr[adsr_index];
-			else
-				v[i] += -1*adsr[adsr_index];
+			float temp = 0;
+			for(j = 1; j < harmonicsCount; j += 2) {
+				temp += mySin(i/2 + counter, freq*j)/j;
+			}
+			v[i] += temp*adsr[adsr_index];
+
 		}
 	}
 }
