@@ -8,7 +8,7 @@
 #include <math.h>
 
 void lowPassFilter(int freq) {
-	freq = 2*freq*N/Fs - 1;
+	freq = freq*N/Fs - 1;
 	int i = 0;
 	for(i = 0; i < 2*N; i+=2) {
 		if((i/2 >= (freq)) && (i/2 <= (N - freq))) {	// Stworzenie filtru dolnoprzepustowego idealnego
@@ -19,7 +19,7 @@ void lowPassFilter(int freq) {
 }
 
 void highPassFilter(int freq) {
-	freq = 2*freq*N/Fs - 1;
+	freq = freq*N/Fs - 1;
 	int i = 0;
 	for(i = 0; i < 2*N; i+=2) {
 		if((i/2 <= (freq)) || (i/2 >= (N - freq))) {	// Stworzenie filtru górnoprzepustowego idealnego
@@ -30,8 +30,8 @@ void highPassFilter(int freq) {
 }
 
 void bandPassFilter(int freqLow, int freqHigh) {
-	freqLow = 2*freqLow*N/Fs - 1;
-	freqHigh = 2*freqHigh*N/Fs - 1;
+	freqLow = freqLow*N/Fs - 1;
+	freqHigh = freqHigh*N/Fs - 1;
 	int i = 0;
 	for(i = 0; i < 2*N; i+=2) {
 		if( ((i/2 >= (freqHigh)) && (i/2 <= (N - freqHigh))) || ((i/2 <= (freqLow)) || (i/2 >= (N - freqLow))) ) {	// Stworzenie filtru srodkowoprzepustowego idealnego
@@ -42,8 +42,8 @@ void bandPassFilter(int freqLow, int freqHigh) {
 }
 
 void bandStopFilter(int freqLow, int freqHigh) {
-	freqLow = 2*freqLow*N/Fs - 1;
-	freqHigh = 2*freqHigh*N/Fs - 1;
+	freqLow = freqLow*N/Fs - 1;
+	freqHigh = freqHigh*N/Fs - 1;
 	int i = 0;
 	for(i = 0; i < 2*N; i+=2) {
 		if( !(((i/2 >= (freqHigh)) && (i/2 <= (N - freqHigh))) || ((i/2 <= (freqLow)) || (i/2 >= (N - freqLow)))) ) {	// Stworzenie filtru srodkowozaporowego idealnego

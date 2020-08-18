@@ -106,7 +106,7 @@ int Buf[N];  // bufor pomocniczy do "obserwacji" danych wyjœciowych
 int k = 0;
 extern int waveform0[N];
 extern int waveform1[N];
-int plot[2048];
+int plot[2*N];
 extern volatile int whichwaveform;
 #define OVERLAP 128
 
