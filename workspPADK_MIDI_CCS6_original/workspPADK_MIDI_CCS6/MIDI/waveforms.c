@@ -81,6 +81,22 @@ float mySin(int counter, float freq)
 {
 	return sinusek[(int)((float)counter*freq*((float)N/(float)Fs))%N]; // N/Fs
 }
+float mySin_adv(int counter, float freq)
+{
+	/* KOD Z MATLABA KTORY DZIALA
+	indf = (counter*freq*(N/Fs)) - fix(  counter*freq/Fs)*N;
+	ind = fix(indf);
+	wspa = indf - ind;
+	ind2 = mod(ind+1, N);
+	x = (1.0-wsp)*sinusek( ind+1) + wsp*sinusek(ind2+1);
+	*/
+	float indf = (float)counter*freq*(float)N/(float)Fs - (float)((int)(counter*freq/Fs)*N);
+	int ind = (int)indf;
+	float wsp = indf - (float)ind;
+	int ind2 = (ind+1)%N;
+
+	return ((1.0-wsp)*sinusek[ind] + wsp*sinusek[ind2]);
+}
 
 float mySqr(int counter, float freq)
 {
