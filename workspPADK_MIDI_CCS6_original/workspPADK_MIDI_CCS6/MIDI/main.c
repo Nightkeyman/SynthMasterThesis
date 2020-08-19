@@ -74,7 +74,7 @@ float sustain_level = 1.0;
 float release_rate = 0.5;
 
 // ADDITIVE GLOBALS
-double phase = 0;
+float phase = 0;
 int add_knobAmp[HAMMOND_KNOBS];
 
 // Static waveform arrays
@@ -96,6 +96,7 @@ int main( int argc, char *argv[] ) {
 	int clear_v = 1;
 	int ph = 0; // phase shift variable
 	int k = 0; // phase shift variable
+	float *p; // pointer for additive array
 	sem_dac = 1;
 	whichwaveform = 1;
 	for (i = 0 ; i < MIDI_POLY_MAX; i++){
@@ -155,19 +156,12 @@ int main( int argc, char *argv[] ) {
     		for(i = 0; i < 6; i++) {
 				if(freqs[i] > 0) {
 					// additive time synthesis
-					ADSR(i);
-					for(j = 0; j < N; j++) {
-						//v[m] = mySin(m+k, freqs[i]*0.5);// + 0.9*mySin(ph + m/2, freqs[i]) + 0.8*mySin(ph + m/2, freqs[i]*1.5);
-						phase = (double)(j + k)*2.0*M_PI*freqs[i]*(1.0/Fs);
-						v[j*2] = adsr[i]*(add_knobAmp[HAMMOND_KNOB1]*sinf(phase*0.5) + add_knobAmp[HAMMOND_KNOB2]*sinf(phase) + add_knobAmp[HAMMOND_KNOB3]*sinf(phase*1.5)
-							+ add_knobAmp[HAMMOND_KNOB4]*sinf(phase*2) + add_knobAmp[HAMMOND_KNOB5]*sinf(phase*3) + add_knobAmp[HAMMOND_KNOB6]*sinf(phase*4)
-							+ add_knobAmp[HAMMOND_KNOB7]*sinf(phase*5) + add_knobAmp[HAMMOND_KNOB8]*sinf(phase*6) + add_knobAmp[HAMMOND_KNOB9]*sinf(phase*8));
-					}
+					hammond_wave(freqs[i], k, i);
 					while(sem_dac == 0);
 					for(j = 0; j < N; j++) {
 						if (j < OVERLAP) {
 							if (whichwaveform == 1) {
-								waveform0[j] = overlaptable[j]*ADD_SIG_AMP*v[j*2]; // tu by bylo przepisywanie z myWav
+								waveform0[j] = overlaptable[j]*ADD_SIG_AMP*v[j*2];
 							} else {
 								waveform1[j] = overlaptable[j]*ADD_SIG_AMP*v[j*2];
 							}
@@ -191,19 +185,8 @@ int main( int argc, char *argv[] ) {
 				}
     		}
 		}
-    		/*
-    		for(i = 0; i < FRAME_SIZE; i++) {
-    			dmaxDacBuffer[PP][0][0][i] = 0.8*mySin(k+i, 220) + 0.9*mySin(k+i, 440) + 0.8*mySin(k+i, 660) +
-    					+ 0.8*mySin(k+i, 880) + 0.8*mySin(k+i, 1320)
-						+ 0.8*mySin(k+i, 1760) + 0.8*mySin(k+i, 2200);
-						+ 0.8*mySin(k+i, 2640) + 0.8*mySin(k+i, 3520);
-    		}
-    		k += FRAME_SIZE;
-        	PP = 3;
-    	}*/
-
     	///// SUBTRACTIVE /////
-    	if (method == subtractive) {
+		else if (method == subtractive) {
 			if(pressedkeys < 1) {
 				for(j = 0; j < N; j++) {
 					waveform0[j] = 0;
