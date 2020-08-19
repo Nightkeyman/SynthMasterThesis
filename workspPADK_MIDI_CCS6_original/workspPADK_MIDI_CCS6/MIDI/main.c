@@ -123,7 +123,7 @@ int main( int argc, char *argv[] ) {
 
 	// Prepare static waveform tables
 	for (i = 0; i < N; i++) {
-		sinusek[i] = SIG_AMP*sinf(2.0*M_PI*((float)i/(N*1.0)));
+		sinusek[i] = sinf(2.0*M_PI*((float)i/(N*1.0)));
 	}
 	for (i = 0; i < N; i++) { // tu moze ze dwa okresy?
 		if(i <= N/2) kwadracik[i] = 1.0;

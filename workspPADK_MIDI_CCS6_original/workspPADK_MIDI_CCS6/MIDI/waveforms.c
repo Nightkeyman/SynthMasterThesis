@@ -81,11 +81,13 @@ float mySin(int counter, float freq)
 {
 	return sinusek[(int)((float)counter*freq*((float)N/(float)Fs))%N]; // N/Fs
 }
+
 float mySin_fm(int counter, float freq, int modfm, int modamp)
 {
-	freq += (float)modamp*mySin(counter, modfm);
-	return sinusek[(int)((float)counter*freq*((float)N/(float)Fs))%N]; // N/Fs
+	//return sinusek[(int)((float)counter*freq*((float)N/(float)Fs))%N]; // N/Fs
+	return sinusek[(int)((float)N*((float)counter*freq/(float)Fs +  (float)modamp*sin(M_PI*2.0*(float)modfm*(float)counter/(float)Fs)/(2*M_PI))) %N];
 }
+
 float mySin_adv(int counter, float freq)
 {
 	/* KOD Z MATLABA KTORY DZIALA
