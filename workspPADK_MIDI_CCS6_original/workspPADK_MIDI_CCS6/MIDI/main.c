@@ -155,11 +155,13 @@ int main( int argc, char *argv[] ) {
     		for(i = 0; i < 6; i++) {
 				if(freqs[i] > 0) {
 					// additive time synthesis
-					for(m = 0; m < 2*N; m = m + 2) {
-						v[m] = mySin(ph + m/2, freqs[i]*0.5) + 0.9*mySin(ph + m/2, freqs[i]) + 0.8*mySin(ph + m/2, freqs[i]*1.5);
-						//phase = (double)(m/2 + k)*2.0*M_PI*freqs[i]*(1.0/Fs);
-						//v[m] = sinf(phase*0.5) + sinf(phase) + sinf(phase*1.5);
-							//+ sinf(phase*2) + sinf(phase*3) + sinf(phase*4);
+					ADSR(i);
+					for(j = 0; j < N; j++) {
+						//v[m] = mySin(m+k, freqs[i]*0.5);// + 0.9*mySin(ph + m/2, freqs[i]) + 0.8*mySin(ph + m/2, freqs[i]*1.5);
+						phase = (double)(j + k)*2.0*M_PI*freqs[i]*(1.0/Fs);
+						v[j*2] = adsr[i]*(add_knobAmp[HAMMOND_KNOB1]*sinf(phase*0.5) + add_knobAmp[HAMMOND_KNOB2]*sinf(phase) + add_knobAmp[HAMMOND_KNOB3]*sinf(phase*1.5)
+							+ add_knobAmp[HAMMOND_KNOB4]*sinf(phase*2) + add_knobAmp[HAMMOND_KNOB5]*sinf(phase*3) + add_knobAmp[HAMMOND_KNOB6]*sinf(phase*4)
+							+ add_knobAmp[HAMMOND_KNOB7]*sinf(phase*5) + add_knobAmp[HAMMOND_KNOB8]*sinf(phase*6) + add_knobAmp[HAMMOND_KNOB9]*sinf(phase*8));
 					}
 					while(sem_dac == 0);
 					for(j = 0; j < N; j++) {

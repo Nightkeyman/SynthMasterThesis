@@ -254,6 +254,24 @@ interrupt void uart_isr( void )
 					if (UART_pull(1) == HAMMOND_KNOB3_UART){
 						add_knobAmp[HAMMOND_KNOB3] = UART_pull(2) + UART_pull(3)*256;
 					}
+					if (UART_pull(1) == HAMMOND_KNOB4_UART){
+						add_knobAmp[HAMMOND_KNOB4] = UART_pull(2) + UART_pull(3)*256;
+					}
+					if (UART_pull(1) == HAMMOND_KNOB5_UART){
+						add_knobAmp[HAMMOND_KNOB5] = UART_pull(2) + UART_pull(3)*256;
+					}
+					if (UART_pull(1) == HAMMOND_KNOB6_UART){
+						add_knobAmp[HAMMOND_KNOB6] = UART_pull(2) + UART_pull(3)*256;
+					}
+					if (UART_pull(1) == HAMMOND_KNOB7_UART){
+						add_knobAmp[HAMMOND_KNOB7] = UART_pull(2) + UART_pull(3)*256;
+					}
+					if (UART_pull(1) == HAMMOND_KNOB8_UART){
+						add_knobAmp[HAMMOND_KNOB8] = UART_pull(2) + UART_pull(3)*256;
+					}
+					if (UART_pull(1) == HAMMOND_KNOB9_UART){
+						add_knobAmp[HAMMOND_KNOB9] = UART_pull(2) + UART_pull(3)*256;
+					}
 	    		}
 	    	}
 	    	break;

@@ -474,12 +474,14 @@ namespace UARTCOM2
 
         private void button3_Click(object sender, EventArgs e)
         {
+            // FM - signal 102
             sendInt(102, 4, (UInt32)trackBar_fm_modamp.Value);
             sendInt(102, 3, (UInt32)trackBar_fm_modfreq.Value);
         }
 
         private void button4_Click(object sender, EventArgs e)
         {
+            // ADDITIVE - signal 101
             byte[] knob1Array = BitConverter.GetBytes(drawbar1.Value);
             send(101, 11, knob1Array[0], knob1Array[1], 0, 0, 0);
 
@@ -488,6 +490,24 @@ namespace UARTCOM2
 
             byte[] knob3Array = BitConverter.GetBytes(drawbar3.Value);
             send(101, 13, knob3Array[0], knob3Array[1], 0, 0, 0);
+
+            byte[] knob4Array = BitConverter.GetBytes(drawbar4.Value);
+            send(101, 14, knob4Array[0], knob4Array[1], 0, 0, 0);
+
+            byte[] knob5Array = BitConverter.GetBytes(drawbar5.Value);
+            send(101, 15, knob5Array[0], knob5Array[1], 0, 0, 0);
+
+            byte[] knob6Array = BitConverter.GetBytes(drawbar6.Value);
+            send(101, 16, knob6Array[0], knob6Array[1], 0, 0, 0);
+
+            byte[] knob7Array = BitConverter.GetBytes(drawbar7.Value);
+            send(101, 17, knob7Array[0], knob7Array[1], 0, 0, 0);
+
+            byte[] knob8Array = BitConverter.GetBytes(drawbar8.Value);
+            send(101, 18, knob8Array[0], knob8Array[1], 0, 0, 0);
+
+            byte[] knob9Array = BitConverter.GetBytes(drawbar9.Value);
+            send(101, 19, knob9Array[0], knob9Array[1], 0, 0, 0);
         }
 
         private void button_adsr_set_Click(object sender, EventArgs e)
