@@ -215,12 +215,12 @@ int main( int argc, char *argv[] ) {
 						if (clear_v == 1){
 							for(j = 0; j < N; j++) {
 								//v[j*2] = adsr[i]*sinf((double)(j+k)*2.0*M_PI*freqs[i]*(1.0/Fs) + (float)fm_modamp*sinf((double)(j+k)*2.0*M_PI*(float)fm_modfreq*(1.0/Fs)))*SIG_AMP*1000;
-								v[j*2] = adsr[i]*mySin(j+k, freqs[i] + fm_modamp*mySin(j+k, fm_modfreq)/(i*dt*2*pi));
+								v[j*2] = adsr[i]*mySin_fm(j+k, freqs[i], fm_modfreq, fm_modamp)*SIG_AMP*1000;
 							}
 							clear_v = 0;
 						} else {
 							for(j = 0; j < N; j++) {
-								v[j*2] += adsr[i]*mySin(j+k, freqs[i] + fm_modamp*mySin(j+k, fm_modfreq)/(i*dt*2*pi));
+								v[j*2] += adsr[i]*mySin_fm(j+k, freqs[i], fm_modfreq, fm_modamp)*SIG_AMP*1000;
 							}
 						}
 					}

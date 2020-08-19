@@ -81,6 +81,11 @@ float mySin(int counter, float freq)
 {
 	return sinusek[(int)((float)counter*freq*((float)N/(float)Fs))%N]; // N/Fs
 }
+float mySin_fm(int counter, float freq, int modfm, int modamp)
+{
+	freq += (float)modamp*mySin(counter, modfm);
+	return sinusek[(int)((float)counter*freq*((float)N/(float)Fs))%N]; // N/Fs
+}
 float mySin_adv(int counter, float freq)
 {
 	/* KOD Z MATLABA KTORY DZIALA
