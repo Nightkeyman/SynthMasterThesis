@@ -100,15 +100,21 @@ float myWav(int counter, float freq)
 	}
 }
 
-void hammond_wave(int freq, int counter, int adsr_index) {
+void hammond_wave(int freq, int counter, int edit, int adsr_index) {
 	float phase = 0;
 	int j = 0;
 	ADSR(adsr_index);
-	for(j = 0; j < N; j++) {
-		//v[m] = mySin(m+k, freqs[i]*0.5);// + 0.9*mySin(ph + m/2, freqs[i]) + 0.8*mySin(ph + m/2, freqs[i]*1.5);
-		phase = (float)(j + counter)*2.0*M_PI*freq*(1.0/Fs);
-		v[j*2] = adsr[adsr_index]*(add_knobAmp[HAMMOND_KNOB1]*sinf(phase*0.5) + add_knobAmp[HAMMOND_KNOB2]*sinf(phase) + add_knobAmp[HAMMOND_KNOB3]*sinf(phase*1.5)
-			+ add_knobAmp[HAMMOND_KNOB4]*sinf(phase*2) + add_knobAmp[HAMMOND_KNOB5]*sinf(phase*3) + add_knobAmp[HAMMOND_KNOB6]*sinf(phase*4)
-			+ add_knobAmp[HAMMOND_KNOB7]*sinf(phase*5) + add_knobAmp[HAMMOND_KNOB8]*sinf(phase*6) + add_knobAmp[HAMMOND_KNOB9]*sinf(phase*8));
+	if (edit == 1) {
+		for(j = 0; j < N; j++) {
+			v[j*2] = adsr[adsr_index]*(add_knobAmp[HAMMOND_KNOB1]*mySin(j+counter, freq*0.5) + add_knobAmp[HAMMOND_KNOB2]*mySin(j+counter, freq) + add_knobAmp[HAMMOND_KNOB3]*mySin(j+counter, freq*1.5)
+					+ add_knobAmp[HAMMOND_KNOB4]*mySin(j+counter, freq*2) + add_knobAmp[HAMMOND_KNOB5]*mySin(j+counter, freq*3) + add_knobAmp[HAMMOND_KNOB6]*mySin(j+counter, freq*4)
+					+ add_knobAmp[HAMMOND_KNOB7]*mySin(j+counter, freq*5) + add_knobAmp[HAMMOND_KNOB8]*mySin(j+counter, freq*6) + add_knobAmp[HAMMOND_KNOB9]*mySin(j+counter, freq*8));
+		}
+	} else if(edit == 0) {
+		for(j = 0; j < N; j++) {
+			v[j*2] += adsr[adsr_index]*(add_knobAmp[HAMMOND_KNOB1]*mySin(j+counter, freq*0.5) + add_knobAmp[HAMMOND_KNOB2]*mySin(j+counter, freq) + add_knobAmp[HAMMOND_KNOB3]*mySin(j+counter, freq*1.5)
+					+ add_knobAmp[HAMMOND_KNOB4]*mySin(j+counter, freq*2) + add_knobAmp[HAMMOND_KNOB5]*mySin(j+counter, freq*3) + add_knobAmp[HAMMOND_KNOB6]*mySin(j+counter, freq*4)
+					+ add_knobAmp[HAMMOND_KNOB7]*mySin(j+counter, freq*5) + add_knobAmp[HAMMOND_KNOB8]*mySin(j+counter, freq*6) + add_knobAmp[HAMMOND_KNOB9]*mySin(j+counter, freq*8));
+		}
 	}
 }

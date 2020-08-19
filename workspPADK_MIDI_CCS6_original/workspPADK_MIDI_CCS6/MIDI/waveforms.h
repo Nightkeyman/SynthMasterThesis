@@ -40,7 +40,7 @@ void sin_wave(int freq, int amp, int counter);
 void square_wave(int freq, int amp, int counter, int edit, int adsr_index);
 void sawtooth_wave(int freq, int amp);
 void ADSR(int adsr_index);
-void hammond_wave(int freq, int counter, int adsr_index);
+void hammond_wave(int freq, int counter, int edit, int adsr_index);
 float mySin(int counter, float freq);
 float mySqr(int counter, float freq);
 float myWav(int counter, float freq);
