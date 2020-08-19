@@ -84,8 +84,8 @@ float mySin(int counter, float freq)
 
 float mySin_fm(int counter, float freq, int modfm, int modamp)
 {
-	//return sinusek[(int)((float)counter*freq*((float)N/(float)Fs))%N]; // N/Fs
-	return sinusek[(int)((float)N*((float)counter*freq/(float)Fs +  (float)modamp*sin(M_PI*2.0*(float)modfm*(float)counter/(float)Fs)/(2*M_PI))) %N];
+	//return sinusek[(int)((float)N*((float)counter*freq/(float)Fs +  (float)modamp*mySin(counter, modfm)/(2*M_PI))) %N];
+	return sinf(2*M_PI*counter*freq/(float)Fs);// + (float)modamp*sinf(2*M_PI*counter*modfm/(float)Fs));
 }
 
 float mySin_adv(int counter, float freq)
