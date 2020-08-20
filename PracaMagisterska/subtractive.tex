@@ -1,7 +1,7 @@
 \chapter{Subtraktywna metoda syntezy dźwięku}\label{chapter_subtractive}
-Jedną z większych trudności w cyfrowej implementacji syntezy subtraktywnej jest opracowanie programu, który jest w stanie ją przeprowadzić w czasie rzeczywistym na danej platformie sprzętowej. Program taki musi uwzględniać generowanie przebiegów okresowych, ich filtrację oraz zakładkowanie w celu pozbycia się artefaktów dźwiękowych. W tym rozdziale opisano zasadę działania subtraktywnej syntezy dźwięku, jej implementację na procesorze sygnałowym oraz interfejs użytkownika.
+Synteza subtraktywna była pierwszą z metod syntezy dźwięku zastosowaną w syntezatorach. Wynika to z prostoty analogowej implementacji tejże metody. W wersji cyfrowej kluczowe jest zastosowanie algorytmów o jak najmniejszej złożoności obliczeniowej. Program syntezatora musi realizować generowanie przebiegów okresowych, ich filtrację oraz zakładkowanie w celu pozbycia się nieciągłości. W tym rozdziale opisano zasadę działania subtraktywnej syntezy dźwięku, jej implementację na procesorze sygnałowym oraz interfejs użytkownika z nią związany.
 \section{Zasada działania syntezy subtraktywnej}
-Metoda subtraktywna polega na wygenerowaniu przebiegu okresowego bogatego pod względem składowych harmonicznych. Taki sygnał poddaje się filtracji w celu wytłumienia części składowych, co prowadzi do uzyskania interesujących dźwięków \cite{alles}. Najczęściej wykorzystywanymi przebiegami w tej metodzie są: prostokątny, trójkątny, piłokształtny. Do usuwania składowych harmonicznych można zastosować filtry dolnoprzepustowe, górnoprzepustowego, pasmo-zaporowe czy pasmo-przepustowe. Na rysunku \ref{rys:sub_diagram} pokazano schemat blokowy opisanego postępowania.
+Metoda subtraktywna polega na wygenerowaniu przebiegu okresowego bogatego w składowe harmoniczne. Użytkownik syntezatora ma najczęściej do wyboru przebiegi: prostokątny, trójkątny oraz piłokształtny. Z takiego sygnału, za pomocą filtrów, usuwa się część składowych. W ten sposób uzyskuje się ciekawe brzmienia \cite{alles}. Do usuwania składowych harmonicznych można zastosować filtry dolnoprzepustowe, górnoprzepustowe, pasmo-zaporowe czy pasmo-przepustowe. Na rysunku \ref{rys:sub_diagram} pokazano schemat blokowy opisanego postępowania.
 
 \begin{figure}[H]
 	\centering
@@ -19,7 +19,7 @@ Przykładowy wynik takiego działania przedstawiony jest na rysunku \ref{rys:sub
 	\caption{Zasada działania metody subtraktywnej.}
 	\label{rys:sub_wykres1}
 \end{figure}
-Jak widać na \ref{rys:sub_wykres1}, na początku generowane jest 1024 próbek przebiegu prostokątnego. Następnie obliczane jest widmo tego sygnału. Z widma usuwane są wyższe składowe harmoniczne. Osiągnąć to można za pomocą filtracji idealnym filtrem dolnoprzepustowym. Przykład idealnego filtra dolnoprzepustowego opisanego w dziedzinie częstotliwości jako
+Jak widać na \ref{rys:sub_wykres1}, na początku generowane jest 1024 próbek przebiegu prostokątnego. Następnie obliczane jest widmo tego sygnału. Z widma usuwane są wyższe składowe harmoniczne. Osiągnąć to można za pomocą filtracji idealnym filtrem dolnoprzepustowym. Przykład takiego filtra opisanego w dziedzinie częstotliwości jako
 \begin{equation} \label{equ:sub_lowpass}
 H(\omega)=\left \{\begin{array}{ r l }
 1, & \quad \text{$dla$ } \omega \leqslant \omega_{gr}\\
@@ -31,7 +31,7 @@ H(\omega)=\left \{\begin{array}{ r l }
 	gdzie: & $\omega$ &  - & pulsacja, \\
 	&	$\omega_{gr}$ & - &  pulsacja graniczna filtru,\\
 \end{tabular} \\ \\
-przedstawiono na rysunku \ref{rys:sub_lowpass}. Pulsacja graniczna filtru to taka pulsacja, powyżej której wzmocnienie jest mniejsze niż 3 dB w stosunku do pasma przepustowego tego filtru. W przypadku idealnym wzmocnienie zmienia się skokowo z 1 na 0 dokładnie na pulsacji granicznej. W przedstawionym przykładzie pulsacja graniczna wynosi około 6283 rad/s, co zgodnie ze wzorem
+przedstawiono na rysunku \ref{rys:sub_lowpass}. Pulsacja graniczna filtra to taka pulsacja, powyżej której wzmocnienie jest mniejsze niż 3 dB w stosunku do pasma przepustowego. W przypadku idealnym wzmocnienie zmienia się skokowo z 1 na 0 dokładnie na pulsacji granicznej. W przedstawionym przykładzie pulsacja graniczna wynosi około 6283 rad/s, co zgodnie ze wzorem
 \begin{equation} \label{equ:sub_frequency}
 f = \frac{\omega}{2 \pi}
 \end{equation}
@@ -44,7 +44,7 @@ daje częstotliwość równą 1000 Hz.
 	\label{rys:sub_lowpass}
 \end{figure}
 
-Aby zadany sygnał przefiltrować pożądanym filtrem, należy wykonać operację splotu:
+Aby zadany sygnał przefiltrować za pomocą filtra, należy wykonać operację splotu:
 \begin{equation} \label{equ:sub_splot}
 y(t)= h(t)*x(t) = \int_{0}^{t} h(\tau)x(t-\tau)d\tau
 \end{equation}
@@ -82,14 +82,22 @@ Zatem z przefiltrowanego widma, za pomocą odwrotnej transformacji Fouriera, obl
 W przypadku syntezatorów analogowych, poszczególne bloki są realizowane za pomocą elementów elektronicznych takich jak oscylatory (VCO) oraz przestrajalne filtry. W syntezatorach cyfrowych implementacje mogą być różne, jednak muszą być na tyle wydajne obliczeniowo, aby dana platforma sprzętowa poradziła sobie z syntezą dźwięku w czasie rzeczywistym bez artefaktów dźwiękowych. W tym podrozdziale opisana zostanie obrana droga implementacji metody subtraktywnej na procesorze sygnałowym. 
 Próbki sygnału są syntezowane w sposób blokowy. Blok danych składa się z $N=1024$ próbek.
 
+
+
 \subsection{Generowanie przebiegu}
-W dwóch tablicach o $N$ elementach przechowywane są kolejne próbki sygnału podstawowego, czyli sygnału bogatego w wyższe składowe harmoniczne. Po dokonaniu filtracji i wystawieniu próbek jednej z tablic na przetwornik cyfrowo-analogowy, wystawiane są próbki z drugiej tablicy. W tym czasie w chwilowo nieużywanej tablicy należy wygenerować kolejne 1024 próbek sygnału. Trzeba przy tym pamiętać o odpowiednim przesunięciu fazowym, tak aby zachować ciągłość pomiędzy kolejnymi blokami próbek wystawianych na przetwornik. Równanie \ref{equ:sub_1} opisuje sposób generowania przebiegu prostokątnego.
+W dwóch tablicach o $N$ elementach przechowywane są kolejne próbki sygnału podstawowego, czyli sygnału bogatego w wyższe składowe harmoniczne. Po dokonaniu filtracji i wystawieniu próbek jednej z tablic na przetwornik cyfrowo-analogowy, do przetwornika trafiają próbki z drugiej tablicy. W tym czasie w chwilowo nieużywanej tablicy należy wygenerować kolejne 1024 próbek sygnału. Trzeba przy tym pamiętać o odpowiednim przesunięciu fazowym, tak aby zachować ciągłość pomiędzy kolejnymi blokami próbek wystawianych na przetwornik. Równanie \ref{equ:sub_1} opisuje sposób generowania przebiegu prostokątnego.
+
+	\iffalse
+	\begin{equation} \label{equ:sub_1}
+	waveform[i]=\left \{\begin{array}{ r l }
+	1, & \quad \text{$dla$ } sin(2\pi f\frac{k+i}{F_s}) > 0\\
+	-1, & \quad  \text{$dla$ } sin(2\pi f\frac{k+i}{F_s}) \leqslant 0
+	\end{array}
+	\right.
+	\end{equation}
+	\fi
 \begin{equation} \label{equ:sub_1}
-waveform[i]=\left \{\begin{array}{ r l }
-1, & \quad \text{$dla$ } sin(2\pi f\frac{k+i}{F_s}) > 0\\
--1, & \quad  \text{$dla$ } sin(2\pi f\frac{k+i}{F_s}) \leqslant 0
-\end{array}
-\right.
+waveform[i]=sgn(sin(2\pi f\frac{k+i}{F_s}))
 \end{equation}
 \begin{tabular}{ l l l l}
 	gdzie: & $waveform$ &  - & tablica zmiennych typu float, \\
@@ -100,7 +108,7 @@ waveform[i]=\left \{\begin{array}{ r l }
 \end{tabular} \\ \\
 Po wyznaczeniu każdego bloku próbek, zwiększany jest licznik bloków $k$:
 \begin{equation} \label{equ:sub_2}
-k = k_{old} + N.
+k \gets k + N.
 \end{equation}
 Na rysunku \ref{rys:sub_waveform_blocks} pokazano dwa kolejne bloki próbek wygenerowanego przebiegu prostokątnego. Dzięki odpowiedniemu przesunięciu fazowemu przebiegi te, po wystawieniu na przetwornik cyfrowo-analogowy, utworzą ciągły dźwięk - bez trzasków.
 \begin{figure}[H]
@@ -110,6 +118,44 @@ Na rysunku \ref{rys:sub_waveform_blocks} pokazano dwa kolejne bloki próbek wyge
 	\caption{Dwa kolejne bloki próbek przebiegu prostokątnego.}
 	\label{rys:sub_waveform_blocks}
 \end{figure}
+
+\subsection{Efekt Gibbsa}
+Generowanie sygnału podstawowego opisane powyżej jest mało kosztowne obliczeniowo. W wyniku otrzymuje się wizualnie doskonały przebieg prostokątny. Jednak aproksymacja takiego sygnału za pomocą skończonej liczby składowych sinusoidalnych jest niemożliwa. Oznacza to, że widmo takiego sygnału nie będzie składało się tylko i wyłącznie ze składowych o częstotliwości sygnału podstawowego i jej nieparzystych wielokrotności. W widmie takiego sygnału pojawią się dodatkowe składowe w całym zakresie częstotliwości. Zjawisko to zostało przedstawione na rysunku \ref{rys:sub_gibbs1}.
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=8cm]{grafiki/sub_gibbs1}
+	\captionsetup{justification=centering}
+	\caption{Fragment widma amplitudowego idealizowanego sygnału prostokątnego.}
+	\label{rys:sub_gibbs1}
+\end{figure}
+
+Aby wygenerować sygnał prostokątny, w którego widmie nie pojawiają się niechciane składowe, można wykorzystać wzór na aproksymację szeregiem Fouriera sygnału prostokątnego:
+\begin{equation} \label{equ:sub_gibbs}
+waveform[i] = \sum_{p=1}^{P}\frac{1}{2p-1}sin(2\pi f(2p-1)  \frac{i}{F_s}).
+\end{equation}
+Wartość $P$ zależy od częstotliwości generowanego sygnału i opisuje ją zależność 
+\begin{equation} \label{equ:sub_gibbs2}
+P = \frac{F_s}{2f}.
+\end{equation}
+Dzięki takiemu wyborowi wartości $P$, w widmie pojawią się tylko składowe spełniające twierdzenie o próbkowaniu. Sygnał powstały w ten sposób przedstawiono na rysunku \ref{rys:sub_gibbs2}.
+ \begin{figure}[H]
+ 	\centering
+ 	\includegraphics[width=8cm]{grafiki/sub_gibbs2}
+ 	\captionsetup{justification=centering}
+ 	\caption{Sygnał prostokątny aproksymowany szeregiem Fouriera.}
+ 	\label{rys:sub_gibbs2}
+ \end{figure}
+
+W pobliżu punktów nieciągłości widoczne są charakterystyczne oscylacje. Zjawisko to nazywane jest efektem Gibbsa. Pomimo gorszej prezencji w dziedzinie czasu, w widmie takiego sygnału nie pojawiają się niechciane składowe, co pokazano na rysunku \ref{rys:sub_gibbs3}.
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=8cm]{grafiki/sub_gibbs3}
+	\captionsetup{justification=centering}
+	\caption{Fragment widma amplitudowego aproksymowanego szeregiem Fouriera sygnału prostokątnego.}
+	\label{rys:sub_gibbs3}
+\end{figure}
+
+Metoda generowania sygnałów przez aproksymację szeregiem Fouriera pozwala wyeliminować lekko słyszalne niechciane składowe. Jednak nie została ona wykorzystana ze względów na zbyt dużą złożoność obliczeniową. 
 
 \subsection{DFT i filtracja sygnału}
 Na podstawie wygenerowanych próbek przebiegu oblicza się DFT za pomocą algorytmu FFT. W wyniku otrzymuje się $N$ liczb zespolonych. Przechowywane są one w tablicy o rozmiarze $2N$ w taki sposób, że każdy element o indeksie parzystym to część rzeczywista próbki, a sąsiadujący z nią element o indeksie nieparzystym to część urojona tej próbki. Filtracja dokonywana jest poprzez wyzerowanie elementów o odpowiednich indeksach. Na przykład filtracja dolnoprzepustowa z częstotliwością graniczną o wartości 1400 Hz dokonywana jest według poniżego wzoru:
@@ -139,10 +185,10 @@ Samo przesuwanie w fazie generowanych sygnałów opisanych w \ref{equ:sub_2} nie
 	\caption{Dwa kolejne bloki próbek przebiegu prostokątnego.}
 	\label{rys:sub_zakladkowania_brak}
 \end{figure}
-Rozwiązaniem tego problemu jest zakładkowanie każdych dwóch sąsiednich bloków próbek. Zakładkowanie polega na nasunięciu pewnej liczby $m$ początkowych próbek następnego bloku, na $m$ końcowych próbek bieżącego. W miejscach, gdzie bloki są na siebie nałożone, wartość każdej próbki obliczana jest jako średnia ważona z dwóch nałożonych na siebie próbek. Przy czym suma wag w każdej chwili czasu jest równa 1, wagi próbek bloku bieżącego maleją wraz z czasem, natomiast wagi próbek bloku następnego narastają. Najprostszym rozwiązaniem (a zatem efektywnym obliczeniowo) są wagi liniowe. Oznacza to, że wagi dla $m$ ostatnich lub pierwszych próbek bloku odpowiednio: liniowo maleją od 1 do 0 lub liniowo rosną od 0 do 1.
+Rozwiązaniem tego problemu jest zakładkowanie każdych dwóch sąsiednich bloków danych. Zakładkowanie polega na nasunięciu pewnej liczby $m$ początkowych próbek następnego bloku, na $m$ końcowych próbek bieżącego. W miejscach, gdzie bloki są na siebie nałożone, wartość sygnału obliczana jest jako średnia ważona z dwóch nałożonych na siebie próbek. Przy czym suma wag w każdej chwili czasu jest równa 1. Wagi $m$ ostatnich próbek bloku bieżącego maleją do zera, natomiast wagi $m$ pierwszych próbek bloku następnego narastają. Najprostszym rozwiązaniem (a zatem efektywnym obliczeniowo) są wagi liniowe. Oznacza to, że wagi dla $m$ ostatnich lub pierwszych próbek bloku odpowiednio: liniowo maleją od 1 do 0 lub liniowo rosną od 0 do 1.
 Nakładane na siebie próbki muszą odpowiadać sygnałowi w tej samej fazie, zatem należy zmodyfikować przesunięcie fazowe opisane przez \ref{equ:sub_2} do postaci:
 \begin{equation} \label{equ:sub_4}
-k = k_{old} + N - m.
+k \gets k + N - m.
 \end{equation}
 Porównanie zakładkowania dla różnych wartości $m$ przedstawiono na rysunku  \ref{rys:sub_overlaps}.
 \begin{figure}[H]
@@ -153,10 +199,10 @@ Porównanie zakładkowania dla różnych wartości $m$ przedstawiono na rysunku 
 	\label{rys:sub_overlaps}
 \end{figure}
 
-Takie podejście wymusza użycie dwóch tablic ze zmiennymi typu float, w których przechowywane są próbki sygnału do wystawienia na przetwornik cyfrowo-analogowy. Wynika to z faktu, że w pewnych chwilach na DAC należy wystawić ważoną średnią próbek z dwóch różnych sygnałów. 
+Takie podejście wymusza użycie dwóch tablic ze zmiennymi typu float, z próbkami sygnału, które będą wystawione na przetwornik cyfrowo-analogowy. Wynika to z faktu, że w pewnych chwilach na DAC należy wystawić ważoną średnią próbek z dwóch różnych sygnałów. 
 
 \subsection{Polifonia w syntezie subtraktywnej}
-Powyższe rozważania dotyczyły syntezy pojedynczych tonów. Polifonię w danym podejściu, można osiągnąć korzystając z faktu, że przekształcenie Fouriera jest przekształceniem liniowym \cite{schafer}. Oznacza to, że jeśli
+Powyższe rozważania dotyczyły syntezy pojedynczych tonów. Polifonię można osiągnąć wykonując opisane wcześniej operacje dla każdego naciśniętego klawisza instrumentu. Jednak aby zmniejszyć ilość potrzebnych operacji wykonywanych na DSP, można wykorzystać własność liniowości przekształcenia Fouriera \cite{schafer}. Oznacza ona, że jeśli
  \begin{equation} \label{equ:sub_5}
  \mathcal{F}\{x_n\} = X_k
  \end{equation}
@@ -168,7 +214,7 @@ Powyższe rozważania dotyczyły syntezy pojedynczych tonów. Polifonię w danym
   \begin{equation} \label{equ:sub_7}
 \mathcal{F}\{ax_n + by_n\} = aX_k + bY_k.
 \end{equation} 
-Zatem w programie na DSP, zamiast obliczać ciągle DFT, filtrację oraz IDFT tyle razy, ile użytkownik naciska klawiszy, można utworzyć sygnał będący sumą przebiegów podstawowych. Dopiero taki sygnał poddawany będzie dalszemu przetwarzaniu. Na rysunku \ref{rys:sub_linearity}	zobrazowana została własność liniowości przekształcenia Fouriera. Na pierwszych trzech wykresach pokazane zostały 3 przebiegi prostokątne o różnych częstotliwościach. W drugim rzędzie widnieją te przebiegi po przepuszczeniu przez filtr dolnoprzepustowy. W trzecim rzędzie znajduje się przebieg, który jest sumą początkowych przebiegów prostokątnych (przed filtracją). W ostatnim rzędzie pokazano sumę tych przefiltrowanych przebiegów oraz przebieg z rzędu trzeciego po filtracji dolnoprzepustowej takim samym filtrem. Przykład ten pokazuje, że obie drogi prowadzą do tych samych wyników.
+Dzięki temu nie trzeba przeprowadzać operacji całego toru syntezy dla każdego naciśniętego klawisza instrumentu. Można utworzyć sygnał będący sumą przebiegów podstawowych o odpowiednich częstotliwościach. Dopiero taki sygnał poddawany będzie dalszemu przetwarzaniu. Na rysunku \ref{rys:sub_linearity}	zobrazowana została własność liniowości przekształcenia Fouriera. Na pierwszych trzech wykresach pokazane zostały 3 przebiegi prostokątne o różnych częstotliwościach. W drugim rzędzie widnieją te przebiegi po przepuszczeniu przez taki sam filtr dolnoprzepustowy. W trzecim rzędzie znajduje się przebieg, który jest sumą początkowych przebiegów prostokątnych (przed filtracją). W ostatnim rzędzie pokazano sumę przefiltrowanych przebiegów oraz przefiltrowaną tym samym filtrem sumę przebiegów nieprzefiltrowanych. Przykład ten pokazuje, że obie drogi prowadzą do tych samych wyników.
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=16cm]{grafiki/sub_linearity}
@@ -178,7 +224,7 @@ Zatem w programie na DSP, zamiast obliczać ciągle DFT, filtrację oraz IDFT ty
 \end{figure}
 
 \section{Interfejs użytkownika}
-Przy syntezie subtraktywnej, użytkownik powinien mieć możliwość samodzielnego wyboru przebiegów podstawowych generowanych przy naciskaniu klawiszy oraz strojenia filtrów, które ten przebieg filtrować będą. W przypadku filtrów idealnych, jedyne co musi określić użytkownik dla ich działania, to ich częstotliwości graniczne.
+Przy syntezie subtraktywnej, użytkownik powinien mieć możliwość samodzielnego wyboru przebiegów podstawowych generowanych przy naciskaniu klawiszy syntezatora oraz strojenia filtrów, które będą usuwać składowe harmoniczne. W przypadku filtrów idealnych, jedyne co użytkownik musi określić, to ich częstotliwości graniczne.
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=12cm]{grafiki/sub_interface}
@@ -188,9 +234,9 @@ Przy syntezie subtraktywnej, użytkownik powinien mieć możliwość samodzielne
 \end{figure}
 Na rysunku \ref{rys:sub_interface} zaznaczono trzy sekcje wykonanego interfejsu dla syntezy subtraktywnej. W pierwszej z nich znajduje się przycisk, który służy do aktywacji tej metody syntezy dźwięku. Po naciśnięciu tego klawisza, DSP otrzymuje komunikat, po którym przechodzi w tryb syntezy subtraktywnej.
 
-W sekcji drugiej znajdują się rodzaje przebiegów podstawowych, spośród których użytkownik może wybrać tylko jeden w danej chwili. Zaznaczenie dowolnego z nich zmienia w programie DSP odpowiednią flagę. Gdy następnie zostanie naciśnięty klawisz, wygenerowany zostanie właśnie taki przebieg podstawowy, jaki jest w interfejsie zaznaczony.
+W sekcji drugiej znajdują się rodzaje przebiegów podstawowych, spośród których aktywny może być tylko jeden w tym samym czasie. Zaznaczenie dowolnego z nich zmienia w programie DSP odpowiednią flagę. Naciskanie klawiszy syntezatora będzie skutkowało generowaniem sygnałów podstawowych o kształcie wybranym w interfejsie użytkownika.
 
-W trzeciej sekcji znajdują rodzaje filtrów oraz suwaki pozwalające na wybór częstotliwości granicznych: dolnej, górnej lub obu jednocześnie - zależnie od wybranego rodzaju filtra. Podobnie jak przy wyborze rodzaju przebiegu podstawowego - tutaj również użytkownik zaznacza jeden z rodzajów filtra. W zależności od wybranego filtra, odblokowane zostaną odpowiednie suwaki pozwalające mieniać częstotliwości graniczne. Na przykład, dla filtra dolnoprzepustowego odblokowany zostanie tylko suwak dolny, gdyż to on odpowiada za częstotliwość graniczną górną. Natomiast dla filtru pasmo-przepustowego odblokowane zostaną oba suwaki, a pasmo przepustowe zawierać się będzie pomiędzy wskazaniem suwaka górnego - częstotliwości granicznej dolnej oraz suwaka dolnego - częstotliwości granicznej górnej.
+W trzeciej sekcji znajdują się rodzaje filtrów oraz suwaki pozwalające na wybór częstotliwości granicznych: dolnej, górnej lub obu jednocześnie - zależnie od wybranego rodzaju filtra. Podobnie jak przy wyborze rodzaju przebiegu podstawowego - tutaj również użytkownik zaznacza jeden z rodzajów filtra. W zależności od wybranego filtra, odblokowane zostaną odpowiednie suwaki pozwalające zmieniać częstotliwości graniczne. Na przykład, dla filtra dolnoprzepustowego odblokowany zostanie tylko suwak dolny, gdyż to on odpowiada za częstotliwość graniczną górną. Natomiast dla filtru pasmo-przepustowego odblokowane zostaną oba suwaki, a pasmo przepustowe zawierać się będzie pomiędzy wskazaniem suwaka górnego - częstotliwości granicznej dolnej oraz suwaka dolnego - częstotliwości granicznej górnej.
 Zmian częstotliwości można dokonywać na dwa sposoby:
 \begin{itemize}
 	\item za pomocą suwaków. W tym wypadku wartość ustawiona za pomocą suwaka zostanie automatycznie wpisana do pola tekstowego skojarzonego z tym suwakiem.
