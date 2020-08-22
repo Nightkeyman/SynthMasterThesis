@@ -22,7 +22,7 @@
 #define MIDI_TONE_RANGE 128
 #define MIDI_POLY_MAX 12
 #define M_PI 3.14159
-#define Fs 96000
+#define Fs 48000
 #define F_sq 440
 #define F_sqq 10000
 #define SIG_AMP 100000
@@ -57,7 +57,7 @@ enum methodtype method = subtractive;
 enum filtertype{lowpass, highpass, bandpass, bandstop};
 enum filtertype filter = lowpass;
 int sub_lowfreq = 0;
-int sub_highfreq = 96000;
+int sub_highfreq = 48000;
 
 // FM GLOBALS
 int fm_modfreq = 1;

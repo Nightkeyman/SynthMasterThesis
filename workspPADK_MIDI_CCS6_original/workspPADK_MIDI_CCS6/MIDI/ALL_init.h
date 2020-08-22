@@ -42,16 +42,16 @@
     /* ADC Initilization                                             */
     /*---------------------------------------------------------------*/
     adcParams.format = ADC_FMT_24B_LEFT_JUST;
-    adcParams.rate = ADC_RATE_DUAL;
+    adcParams.rate = ADC_RATE_SINGLE;
     ADC_Init( &adcParams );
 
     /*---------------------------------------------------------------*/
     /* DAC Initilization (use default values)                        */
     /*---------------------------------------------------------------*/
-    dacParams.fs = DAC_FS_DUALRATE;
+    dacParams.fs = DAC_FS_SINGLERATE;
     dacParams.mute = DAC_MUTE_OFF;
     dacParams.format = DAC_FMT_24B_LEFT_JUST;
-    dacParams.deemphasis = DAC_DEM_OFF;
+    dacParams.deemphasis = DAC_DEM_48KHZ;
     DAC_Init( &dacParams );
 
     /*---------------------------------------------------------------*/
@@ -457,9 +457,9 @@
     /*---------------------------------------------------------------*/
     /* McASP0 Setup - (Default PADK values)                          */
     /*---------------------------------------------------------------*/
-	// Set Mcasp clocks to 96K sample rate
-    mcasp0HwCfg.rx.clk.clkSetupClk |= ADC_96K_CLK;
-    mcasp0HwCfg.tx.clk.clkSetupClk |= DAC_96K_CLK;
+	// Set Mcasp clocks to 48K sample rate
+    mcasp0HwCfg.rx.clk.clkSetupClk |= ADC_48K_CLK;
+    mcasp0HwCfg.tx.clk.clkSetupClk |= DAC_48K_CLK;
 
     status = CSL_mcaspHwSetup( hMcasp0, &mcasp0HwCfg );
   	if ( status != CSL_SOK )
