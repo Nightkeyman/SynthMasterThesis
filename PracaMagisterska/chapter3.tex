@@ -17,7 +17,7 @@ Głównymi elementami sprzętu potrzebnymi do uzyskania pełnego instrumentu kla
 	\item urządzenie nagłaśniające.
 \end{itemize}
 
-Niniejszy paragraf poświęcono omówieniu poszczególnych elementów płyty uruchomieniowej, która pełni główną funkcję w tym projekcie. Po przedstawieniu najważniejszych z nich omówione zostanie ich połączenie.
+Niniejszy paragraf poświęcono omówieniu poszczególnych elementów płyty uruchomieniowej, która pełni główną funkcję w tym projekcie. Po przedstawieniu najważniejszych z nich, omówione zostanie ich połączenie.
 
 \subsection{Płyta PADK}
 %Dokumentacja plyty PADK: file:///D:/Data/Studia/Magisterka/Z_pendrive/Szefler/Szefler/PADK_LYRTECH/PADK%20-%20Technical%20reference%20guide.pdf
@@ -78,7 +78,7 @@ Na płycie PADK znajdują się dwa, czterokanałowe, 24-bitowe układy PCM4204, 
 	\caption{Schemat pełnego układu realizowanego w projekcie.}
 	\label{rys:real_uklad}
 \end{figure}
-Strzałki na rysunku \ref{rys:real_uklad} przedstawiają kierunek przepływu danych między głównymi elementami układu projektowego. Klawiatura MIDI komunikuje się z płytą PADK po interfejsie MIDI. Komputer osobisty z interfejsem użytkownika przesyła i otrzymuje informacje z płyty PADK poprzez interfejs UART. Ostatecznie płyta PADK wystawia próbki dźwięków na przetwornik cyfrowo-analogowy, który połączony jest z urządzeniem nagłaśniającym. Urządzenie wydaje z siebie zsyntezowane brzmienie.
+Strzałki na rysunku \ref{rys:real_uklad} przedstawiają kierunek przepływu danych między głównymi elementami układu projektowego. Klawiatura MIDI komunikuje się z płytą PADK po interfejsie MIDI. Komputer osobisty z interfejsem użytkownika przesyła i otrzymuje informacje z płyty PADK poprzez interfejs UART. Ostatecznie płyta PADK wystawia próbki dźwięków na przetwornik cyfrowo-analogowy, który połączony jest z urządzeniem nagłaśniającym. Urządzenie wydaje zsyntezowane brzmienie.
 
 \section{Komunikacja z płytą PADK}
 Do płyty PADK dołączone zostały dodatkowe biblioteki firmy Lyrtech, które ułatwiają obsługę komunikacji z płytą. Przykładem interfejsów, do których zostały utworzone nadmienione biblioteki to UART oraz MIDI.
@@ -203,7 +203,7 @@ do odwrotnego przekształcenia DFT.
 % o rozdzielczości
 % https://www.bitweenie.com/listings/fft-zero-padding/
 \subsection{Rozdzielczość częstotliwości}
-Jednym z wyzwań stawianych przed inżynierami zajmującymi się przetwarzaniem sygnałów za pomocą algorytmu FFT jest odpowiednie dobranie ilości próbek do pojedynczej transformacji DFT. W związku z użyciem algorytmu FFT typu radix-2, liczba próbek musi być potęgą dwójki. Muzyczny charakter naszej pracy wymaga również wysokiej dokładności w dziedzinie częstotliwości, aby móc tworzyć tony o odpowiedniej częstotliwości. Miarą dokładności jest rozdzielczość częstotliwości (ang. frequency resolution), która określana jest wzorem:
+Jednym z elementów projektowania układów cyfrowego przetwarzania sygnałów jest odpowiednie dobranie ilości próbek do pojedynczej transformacji DFT. W związku z użyciem algorytmu FFT typu radix-2, liczba próbek musi być potęgą dwójki. Muzyczny charakter naszej pracy wymaga również wysokiej dokładności w dziedzinie częstotliwości, aby móc tworzyć tony o odpowiedniej częstotliwości. Miarą dokładności jest rozdzielczość częstotliwości (ang. frequency resolution), która określana jest wzorem:
 
 \begin{equation} \label{equ:fft_resol}
 \Delta R = \frac{f_{s}}{N_{fft}}

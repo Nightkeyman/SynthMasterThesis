@@ -1,6 +1,6 @@
 \chapter{Wprowadzenie teoretyczne}\label{chapter2}
 
-W niniejszym rozdziale przedstawiono podstawowe pojęcia związane z dziedziną muzyki, syntezy dźwięku oraz przetwarzania sygnałów cyfrowych. Omówione zagadnienia odnoszą się do całości pracy, nie są one powiązane szczególnie z konkretnymi metodami syntezy. Przedstawienie ich w początkowej części pracy ma na celu ułatwienie czytelnikowi zrozumienia dalszej części pracy.
+W niniejszym rozdziale przedstawiono podstawowe pojęcia związane z dziedziną muzyki, syntezy dźwięku oraz przetwarzania sygnałów cyfrowych. Omówione zagadnienia odnoszą się do całości pracy, nie są one powiązane z poszczególnymi metodami syntezy. Przedstawienie ich w początkowej części pracy, ma na celu ułatwienie czytelnikowi zrozumienia kolejnych rozidzałów.
 
 
 
@@ -21,7 +21,7 @@ W muzyce, dźwięk rozpatrywany jest jako zjawisko, które wydobywane jest z ins
 	% (źródło: https://pl.wikipedia.org/wiki/D%C5%BAwi%C4%99k_(muzyka))
 \end{itemize}
 
-Jako pewne ustandardyzowanie dźwięków w utworach muzycznych, wprowadzono skalę dźwięków. Tradycyjną skalę tworzy osiem dźwięków. Odległości między tymi dźwiękami nazywane są interwałami, które wyraża się w jednostkach półtonów. Istnieje zależność między kolejnymi półtonami i może być ona wyrażona wzorem:
+Jako pewne ustandardyzowanie dźwięków w utworach muzycznych, wprowadzono skalę dźwięków. Tradycyjną skalę tworzy osiem dźwięków. Odległości między tymi dźwiękami nazywane są interwałami, które wyraża się w jednostkach półtonów. Istnieje zależność między kolejnymi półtonami. Może być ona wyrażona wzorem:
 \begin{equation} \label{equ:idft}
 k = f(\sqrt[12]{2})^{n}
 \end{equation}
@@ -36,13 +36,13 @@ Odstęp między pierwszym a ostatnim dźwiękiem w skali nazywany jest oktawą. 
 
 
 \section{Rodzaje klawiatur muzycznych}
-Podstawowy podział klawiatur muzycznych rozpatruje się pod względem możliwości wydawania z siebie jednego lub kilku dźwięków przy naciśnięciu kilku klawiszy na raz. Typy te nazwano klawiaturami monofonicznymi oraz polifonicznymi.
+Podstawowy podział klawiatur muzycznych rozpatruje się pod względem możliwości wydobycia jednego lub kilku dźwięków przy naciśnięciu kilku klawiszy. Rodzaje te nazwano klawiaturami monofonicznymi oraz polifonicznymi.
 
 \subsection{Klawiatura monofoniczna}
-Monofonia w muzyce to faktura muzyczna utworzona z pojedynczej linii melodycznej. W danej chwili czasu utworu, powinien występować tylko jeden dźwięk, aby był on nazwany monofonicznym. W szczególnym odniesieniu do klawiatury cyfrowej lub analogowej oznacza to, iż wydobywać się z niej może się maksymalnie jeden dźwięk w jednym momencie czasu, przy naciśnięciu kilku klawiszy. Klasycznym przykładem klawiatury monofonicznej jest syntezator analogowy Minimoog.
+Monofonia w muzyce to faktura muzyczna utworzona z pojedynczej linii melodycznej. Aby aktualnie wykonywany fragment utworu można było nazwać monofonicznym, w poszczególnych chwilach czasu powinien być grany tylko jeden dźwięk. W szczególnym odniesieniu do klawiatury cyfrowej oraz analogowej, oznacza to, iż mogą one wytwarzać tylko jeden dźwięk w jednej chwili czasu. Klasycznym przykładem klawiatury monofonicznej jest syntezator analogowy Minimoog.
 
 \subsection{Klawiatura polifoniczna}
-Polifonia w muzyce oznacza natomiast występowanie kilku linii melodycznych w tym samym czasie. Polifonia klawiatury zatem oznacza możliwość wydobycia wielu dźwięków, przy naciśnięciu kilku klawiszy w tym samym czasie. Pojęcie polifonicznej klawiatury muzycznej nie precyzuje ilości wydobywających się dźwięków jaką klawiatura powinna móc realizować. Cyfrowe instrumenty muzyczne na rynku posiadają ograniczoną maksymalną liczbę wydobywanych na raz dźwięków, przez skończoną moc obliczeniową procesorów.
+Polifonia w muzyce oznacza natomiast występowanie kilku linii melodycznych w tym samym czasie. Polifonia klawiatury zatem oznacza możliwość wydobycia wielu dźwięków, przy naciśnięciu kilku klawiszy. Pojęcie polifonicznej klawiatury muzycznej nie definiuje dokładnej liczby wydobywających się z niej dźwięków. Produkowane cyfrowe instrumenty muzyczne posiadają ograniczoną liczbę wydobywanych na raz dźwięków. Spowodowane jest to niewystarczającą mocą obliczeniową procesorów DSP.
 
 %
 % Voice allocation alghorithm - opisac jaki bedziemy uzywac
@@ -54,7 +54,7 @@ Jednym z głównych zadań niniejszego projektu magisterskiego jest implementacj
 
 \section{Przegląd metod syntezy dźwięku}
 % http://legacy.spa.aalto.fi/publications/reports/sound_synth_report.pdf
-Podział metod syntezy dźwięku w literaturze jest bardzo zróżnicowany. Najczęściej spotykany podział występuje pod względem różnych podejść do syntezy \cite{metody_syntezy}:
+Podział metod syntezy dźwięku w literaturze jest bardzo zróżnicowany. Najczęściej spotykany podział uwzględnia różne podejść do syntezy \cite{metody_syntezy}:
 \begin{itemize}
 	\item metody widmowe,
 	\item algorytmy abstrakcyjne,
@@ -66,17 +66,17 @@ Podział metod syntezy dźwięku w literaturze jest bardzo zróżnicowany. Najcz
 W poniższych podrozdziałach scharakteryzowano poszczególne rodzaje metod syntezy dźwięku.
 
 \subsection{Metody widmowe}
-Do grupy widmowych metod syntezy dźwięku zaliczana jest synteza subtraktywna oraz addytywna. Zgodnie z nazwą, skupiają się one na syntezie brzmień w dziedzinie częstotliwości. Metoda subtraktywna zajmuje się głównie wycinaniem pasm widmowych z brzmień obfitych w składowe harmoniczne. Metoda addytywna skupia się natomiast na dodawaniu kolejnych harmonicznych w dziedzinie częstotliwości. Obie metody zostały dokładnie omówione w kolejnych rozdziałach \ref{chapter_subtractive} i \ref{chapter_additive} niniejszej pracy.
+Do grupy widmowych metod syntezy dźwięku zaliczana jest synteza subtraktywna oraz addytywna. Zgodnie z nazwą, skupiają się one na syntezie brzmień w dziedzinie częstotliwości. Metoda subtraktywna zajmuje się głównie wycinaniem pasm widmowych z brzmień z wieloma składowymi harmonicznymi. Metoda addytywna skupia się natomiast na dodawaniu kolejnych harmonicznych w dziedzinie częstotliwości. Obie metody zostały dokładnie omówione w kolejnych rozdziałach \ref{chapter_subtractive} i \ref{chapter_additive} niniejszej pracy.
 
 \subsection{Algorytmy abstrakcyjne}
 % https://ccrma.stanford.edu/~bilbao/booktop/node6.html
 % http://legacy.spa.aalto.fi/publications/reports/sound_synth_report.pdf
-Synteza poprzez algorytmy abstrakcyjne zazwyczaj odnosi się do zmian istniejących już dźwięków poprzez filtry nieliniowe lub funkcje matematyczne. Do metod algorytmów abstrakcyjnych należą między innymi synteza FM, synteza AM, synteza poprzez waveshaping lub algorytm Karplus-Strong. W literaturze można również spotkać się z określaniem tej grupy metod syntezy jako Distortion synthesis (synteza poprzez zakłócanie), która odnosi się do wprowadzanych zmian w istniejącym już dźwięku (zakłóceń). W niniejszej pracy poświęcono cały rozdział dla pierwszej z wymienionych metod - syntezy FM.
+Synteza poprzez algorytmy abstrakcyjne zazwyczaj odnosi się do zmian istniejących już dźwięków za pomocą filtrów nieliniowych lub funkcji matematycznych. Do algorytmów abstrakcyjnych należą między innymi: synteza FM, synteza AM, synteza poprzez waveshaping lub algorytm Karplus-Strong. W literaturze można również spotkać się z określaniem tej grupy metod syntezy jako Distortion synthesis (synteza poprzez zakłócanie), która odnosi się do wprowadzanych zmian w istniejącym już dźwięku (zakłóceń). W niniejszej pracy poświęcono cały rozdział pierwszej z wymienionych metod - syntezy FM.
 
 \subsection{Metody fizyczne}
 % https://ccrma.stanford.edu/~bilbao/booktop/node12.html
 % https://edu.pjwstk.edu.pl/wyklady/mul/scb/main37.html
-Metody fizyczne skupiają się na odwzorowywaniu instrumentów muzycznych poprzez tworzenie ich modeli fizycznych na różne sposoby. Do tej grupy należy synteza poprzez modelowanie matematyczne, synteza komórkowa (ang. Cellular Sound Synthesis) oraz synteza falowodowa (ang. Digital Waveguide Modeling) \cite{czyzewski_dzwiek_cyfrowy}.
+Metody fizyczne skupiają się na odwzorowywaniu instrumentów muzycznych poprzez tworzenie ich modeli fizycznych. Do tej grupy należy synteza dźwięku przy użyciu modelowania matematycznego, synteza komórkowa (ang. Cellular Sound Synthesis) oraz synteza falowodowa (ang. Digital Waveguide Modeling) \cite{czyzewski_dzwiek_cyfrowy}.
 
 Metody syntezy oparte na modelach fizycznych są uważane za najbardziej naukowe i poświęcone jest im wiele prac naukowych. W niniejszej pracy, z tej grupy metod syntezy, przedstawiono głównie synteze fizyczną opartą o modelowanie matematyczne.
 
@@ -84,18 +84,18 @@ Metody syntezy oparte na modelach fizycznych są uważane za najbardziej naukowe
 %http://marcdata.hamu.cz/vyzkum/dokumenty/Lit92.pdf - additive, subtractive, FM. sampling
 %https://soundlab.cs.princeton.edu/publications/survey_icmc09.pdf - 4 strona, tabelka
 %https://www.youtube.com/watch?v=I64y40EIPaM
-Jako metody przetwarzania sygnału rozumiane są takie metody syntezy, które oddziaływują bezpośrednio na próbkach sygnału cyfrowego. Do tej grupy metod należą między innymi synteza tablicowa (wavetable), synteza granularna oraz synteza poprzez samplowanie.
+Jako metody przetwarzania sygnału rozumiane są takie metody syntezy, które oddziaływują bezpośrednio na próbki sygnału cyfrowego. Do tej grupy metod należą między innymi synteza tablicowa (wavetable), synteza granularna oraz synteza poprzez samplowanie.
 
-Synteza poprzez samplowanie jest najbardziej powszechną metodą syntezy dźwięku w tej grupie. Polega ona na użyciu fragmentu wcześniej dokonanego nagrania (sampla) i odtwarzanie go dla różnych wysokości dźwięków. Jest to metoda najczęściej używana przez kompozytorów w dzisiejszych czasach \cite{misra_cook_przetw_syg}.
+Synteza za pośrednictwem samplowania jest najbardziej powszechną syntezą dźwięku w tej grupie metod. Polega ona na użyciu fragmentu wcześniej dokonanego nagrania (sampla) i odtwarzanie go dla różnych wysokości dźwięków. Jest to metoda najczęściej używana przez kompozytorów we współczesnych czasach \cite{misra_cook_przetw_syg}.
 
-Z uwagi na nieunaukowy charakter tego rodzaju syntezy dźwięku, żadna synteza należąca do tej grupy nie została opisana w tej pracy.
+Z uwagi na nieunaukowy charakter tego rodzaju syntezy dźwięku, żadna z metod należących do tej grupy nie została opisana w niniejszej pracy.
 
 
 
 \section{Klasyczne moduły syntezatorów dźwięku}
 %https://www.dummies.com/art-center/music/piano/common-keyboard-terms-and-abbreviations/
 %https://en.wikipedia.org/wiki/Modular_synthesizer#:~:text=Modular%20synthesizers%20are%20synthesizers%20composed,user%20to%20create%20a%20patch.
-Syntezatory analogowe są nazywane również modularnymi ze względu na ich budowę. Utworzenie dźwięku przez taki syntezator wymaga przejścia drogi od źródła, którym jest zazwyczaj pewien oscylator lub generator szumu, przez odpowiednie filtry, do wyjścia.
+Syntezatory analogowe, ze względu na ich budowę, są nazywane również modularnymi. Utworzenie dźwięku przez taki syntezator wymaga przejścia sygnału przez kilka modułów. Źródłem sygnału jest zazwyczaj pewien oscylator lub generator szumu. Dźwięk jest tworzony w źródle, a następnie trafia na filtr. Końcowo dostaje się on na wyjście.
 
 \begin{figure}[H]
 	\centering
@@ -105,9 +105,9 @@ Syntezatory analogowe są nazywane również modularnymi ze względu na ich budo
 	\label{rys:analog_scheme}
 \end{figure}
 
-Na rysunku \ref{rys:analog_scheme} przedstawiono podstawowy schemat syntezatora modularnego. Składa się on z najbardziej powszechnych modułów, stosowanych w analogowej syntezie dźwięku. Przebieg tworzony jest przez oscylator (VCO), którego częstotliwość zostaje narzucona przez naciśnięcie klawisza o odpowiedniej wysokości dźwięku. Następnie dźwięk trafia na filtr (VCF) i zostaje pozbawiony pewnej części składowych harmonicznych. W dalszej kolejności dociera on na moduł sterujący amplitudą dźwięku (VCA), który ustawia jego amplitudę zgodnie z ustawieniami modułu ADSR. Następnie dźwięk trafia na wyjście, czyli na urządzenie nagłaśniające.
+Na rysunku \ref{rys:analog_scheme} przedstawiono podstawowy schemat syntezatora modularnego. Składa się on z najbardziej uniwersalnych modułów, stosowanych w analogowej syntezie dźwięku. Sygnał jest tworzony przez oscylator (VCO), którego częstotliwość zostaje ustawiona przez naciśnięcie klawisza o pewnej wysokości dźwięku. Następnie dźwięk trafia na filtr (VCF) i zostaje pozbawiony pewnej części składowych harmonicznych. W dalszej kolejności dociera on do modułu sterującego amplitudą dźwięku (VCA), który ustala jego amplitudę zgodnie z ustawieniami modułu ADSR. Następnie dźwięk trafia na wyjście, czyli na zestaw nagłośnieniowy.
 
-W cyfrowej syntezie dźwięku, każdy z tych modułów jest realizowany jako część programu na procesorze klasy DSP. Poniżej opisano bardziej szczegółowo moduł, który będzie realizowany jako część programu w ramach tej pracy.
+W cyfrowej syntezie dźwięku, każdy z tych modułów jest realizowany jako część programu na procesorze klasy DSP. Poniżej opisano bardziej szczegółowo moduł, który będzie realizowany jako część programu tego projektu dyplomowego.
 
 \subsection{ADSR}
 Akronim, który jest tytułem tego podrozdziału, oznacza cztero-etapowy generator obwiedni stosowany w syntezatorach. Jest on wykorzystywany zarówno w syntezatorach analogowych, jak i cyfrowych.
@@ -121,7 +121,7 @@ Akronim, który jest tytułem tego podrozdziału, oznacza cztero-etapowy generat
 	\label{rys:ADSR}
 \end{figure}
 
-Na rysunku \ref{rys:ADSR} przedstawiono przykładową obwiednie dźwięku po naciśnięciu klawisza. Poniżej wytłumaczone zostały etapy ADSR w kolejności ze względu na wystąpienie w czasie:
+Na rysunku \ref{rys:ADSR} przedstawiono przykładową obwiednie dźwięku. Poniżej wytłumaczone zostały etapy ADSR, w kolejności ze względu na wystąpienie w czasie:
 \begin{enumerate}
 	\item Attack - czas narastania amplitudy od zera do maksimum, rozpoczyna się, gdy klawisz zostaje naciśnięty.
 	
@@ -134,20 +134,20 @@ Na rysunku \ref{rys:ADSR} przedstawiono przykładową obwiednie dźwięku po nac
 Moduł ADSR może być używany niezależnie od metody syntezy dźwięku.
 
 \section{Analogowa i cyfrowa synteza dźwięku}
-Debata na temat tego, który rodzaj syntezatorów jest lepszy, trwa już od samego wprowadzenia syntezatorów cyfrowych na rynek. Argumenty za i przeciw obu stron tego konfliku zazwyczaj odnoszą się do charakteru brzmienia obu rodzajów syntezatorów. Nie jest to jednak jedyna właściwość syntezatorów poróżniająca obie strony.
+Debata na temat tego, który rodzaj syntezatorów jest lepszy, trwa od samego wprowadzenia syntezatorów cyfrowych do sprzedaży. Argumenty za i przeciw obu stron tego konfliku zazwyczaj odnoszą się do charakteru brzmienia obu rodzajów syntezatorów. Nie jest to jednak jedyna właściwość syntezatorów poróżniająca obie strony.
 
 % Porownanie: https://www.synthtopia.com/content/2019/01/11/analog-vs-digital-synthesizer-blind-test/  W opisie na YT sa wyniki
-Lorenzo Furlanetto utworzył test ślepego (ang. blind test) porównania klasycznego syntezatora analogowego oraz jego cyfrowej emulacji \cite{synthtopia}. Wyniki testu pokazały, iż 51 procent ankietowanych rozpoznało, który z syntezatorów był analogowy, natomiast aż 57 procent osób orzekło, iż dźwięk syntezatorów cyfrowych jest przyjemniejszy. Oznacza to, że ciężkim jest dokonanie odróżnienia syntezatorów cyfrowych od analogowych, oraz że większość ludzi preferuje brzmienie syntezatorów cyfrowych.
+Lorenzo Furlanetto utworzył test ślepego (ang. blind test) porównania klasycznego syntezatora analogowego oraz jego cyfrowej emulacji \cite{synthtopia}. Wyniki testu pokazały, iż 51 procent ankietowanych rozpoznało, który z syntezatorów był analogowy, natomiast aż 57 procent osób orzekło, iż dźwięk syntezatorów cyfrowych jest przyjemniejszy. Oznacza to, że ciężko jest dokonać odróżnienia syntezatorów cyfrowych od analogowych, oraz że większość ludzi preferuje brzmienie syntezatorów cyfrowych.
 
 % https://blog.andertons.co.uk/labs/hardware-synths-vs-software-synths
-Syntezatory cyfrowe, w stosunku do analogowych, posiadają wiele zalet. W tych pierwszych można dokonać syntezy wielu rodzajów dźwięków, w tym takich, które imitują brzmienie prawdziwych instrumentów. Syntezatory analogowe natomiast, pozwalają jedynie na uzyskanie prostych brzmień, przy pomocy filtracji i zmian podstawowych przebiegów. Dodatkowo, dzięki cyfrowemu łączeniu wielu maszyn cyfrowych, można sterować wieloma syntezatorami, za pomocą jednej klawiatury \cite{andertons}.
+Syntezatory cyfrowe, w stosunku do analogowych, posiadają wiele zalet. W pierwszych z nich można dokonać syntezy wielu rodzajów dźwięków, w tym takich, które imitują brzmienie prawdziwych instrumentów. Syntezatory analogowe natomiast, pozwalają jedynie na uzyskanie prostych brzmień, za pomocą filtracji i zmian podstawowych przebiegów. Dodatkowo, dzięki cyfrowemu łączeniu wielu maszyn cyfrowych, można sterować wieloma syntezatorami, za pomocą jednej klawiatury cyfrowej \cite{andertons}.
 
-Z technicznego punktu widzenia, cyfrowe syntezatory są również lepsze z uwagi na ich cyfrowe przetwarzanie sygnałów. Filtry i inne elementy ciągu przetwarzania sygnału nie ulegają degradacji z czasem, z uwagi, iż są elementami programu na procesorze. Elementy analogowe należy wymieniać lub dostrajać. Dodatkowo, dzięki dużej szybkości próbkowania oraz taktowania procesorów, można uzyskać porządane charakterystyki. Częstotliwościowe obwiednie filtrów mogą być idealne, bez zbędnego pasma przejściowego.
+Z technicznego punktu widzenia, cyfrowe syntezatory są również lepsze z uwagi na cyfrowe przetwarzanie sygnałów. Filtry i inne elementy przetwarzania sygnału nie ulegają degradacji, z uwagi, iż są elementami programu na procesorze. Elementy analogowe należy wymieniać lub dostrajać. Dodatkowo, dzięki dużej szybkości próbkowania oraz taktowania procesorów, można uzyskać porządane charakterystyki. Częstotliwościowe obwiednie filtrów mogą być idealne, bez zbędnego pasma przejściowego.
 % cos jeszcze?
 
 
 \section{MIDI}
-Cyfrowy interfejs instrumentów muzycznych (MIDI) to standard utworzony w 1983 roku, służący do przekazywania informacji między cyfrowymi instrumentami muzycznymi. Zrewolucjonizował on sektor muzyki elektronicznej. Dzięki wdrożeniu tego protokołu, muzycy mogli na scenie używać jednej klawiatury muzycznej podłączonej do wielu modułów dźwiękowych, zamiast posiadania tak zwanej "ściany syntezatorów". MIDI zawiera zarówno standard warstwy sprzętowej jak i zestaw komend służących do komunikacji urządzeń.
+Cyfrowy interfejs instrumentów muzycznych (MIDI) to standard utworzony w 1983 roku, służący do przekazywania informacji między cyfrowymi instrumentami muzycznymi. Zrewolucjonizował on sektor muzyki elektronicznej. Dzięki wdrożeniu tego protokołu, muzycy mogli używać na scenie jednej klawiatury muzycznej podłączonej do wielu modułów dźwiękowych, zamiast posiadania wielu syntezatorów. MIDI zawiera zarówno standard warstwy sprzętowej, jak i zestaw komend służących do komunikacji dwóch urządzeń.
 
 \subsection{Warstwa sprzętowa MIDI}
 W interfejsie MIDI, informacje przesyłane są za pomocą szeregowego połączenia dwóch urządzeń cyfrowych, w trybie półdupleks. Szybkość przesyłu informacji została ustandardyzowana i wynosi 31250 bitów na sekundę \cite{dokumentacja_midi}. Podobnie jak w popularnym interfejsie UART, początek transmisji ramki danych rozpoczyna bit startu o wartości 0, natomiast kończy bit stopu o wartości logicznej jedynki. Interfejs MIDI jest interfejsem prądowym, gdzie logiczne zero oznacza brak przepływu prądu, natomiast logiczna jedynka oznacza jego przepływ.
@@ -160,12 +160,12 @@ W interfejsie MIDI, informacje przesyłane są za pomocą szeregowego połączen
 	\label{rys:hardware_midi}
 \end{figure}
 
-Schemat sprzętowy interfejsu MIDI znajdującego się po stronie instrumentu cyfrowego przedstawiono na rysunku \ref{rys:hardware_midi}. Do połączeń z instrumentem używane są wtyki DIN pięciopinowe. Na wejściu interfejsu MIDI zawsze umieszczony zostaje transoptor, który chroni instrument dostający informację przed uszkodzeniem.
+Schemat sprzętowy interfejsu MIDI znajdującego się po stronie instrumentu cyfrowego przedstawiono na rysunku \ref{rys:hardware_midi}. Do połączeń z instrumentem używane są wtyki DIN pięciopinowe. Na wejściu interfejsu MIDI zawsze umieszczony zostaje transoptor, który chroni instrument otrzymujący informację przed uszkodzeniem.
 
 \subsection{Protokół MIDI}
 %https://www.midi.org/specifications-old/category/midi-1-0-detailed-specifications
 %PDF: D:\Data\Studia\Magisterka\Literatura wstepna\MIDI
-Wiadomości MIDI utworzone są z jednego bajta statusu, po którym następuje zazwyczaj jeden lub dwa bajty danych. Są różne typy wiadomości MIDI. Najbardziej podstawowy podział dzieli je na wiadomości kanałowe (odnoszące się do jednego kanału) oraz systemowe (odnoszące się do wszystkich kanałów). Wiadomości kanałowe mogą dzielić się dalej na komunikaty trybu lub komunikaty głosu. Te drugie w praktyce stanowią większość przesyłanych komunikatów w transmisji MIDI.
+Wiadomości MIDI składają się z jednego bajta statusu, po którym następuje zazwyczaj jeden lub dwa bajty danych. Istnieją różne typy wiadomości MIDI. Dzieli się je na wiadomości kanałowe (odnoszące się do jednego kanału) oraz systemowe (odnoszące się do wszystkich kanałów). Wiadomości kanałowe mogą dzielić się dalej na komunikaty trybu lub komunikaty głosu. Te drugie w praktyce stanowią większość przesyłanych komunikatów w transmisji MIDI.
 Komunikat głosu może nieść informację na przykład o: naciśnięciu klawisza, odciśnięciu klawisza, aftertouch (zmiana mocy nacisku klawisza po jakimś czasie od naciśnięcia), pitch bend (delikatna zmiana wysokości dźwięku). Protokół MIDI, w ramach transmisji bajta danych (komunikat głosu), może obsłużyć 128 wysokości dźwięków z jednego instrumentu. Poziom głośności, zależny od mocy naciśnięcia klawisza, również może przyjąć jedną ze 128 wartości.
 
 Poza całym przesyłam informacji między dwoma urządzeniami MIDI, występuje dodatkowo zegar MIDI (ang. MIDI Pulses), który pozwala na zsynchronizowanie dwóch instrumentów, aby grały w jednakowym tempie. Wiadomości występują cyklicznie i zawsze posiadają tę samą wartość bitową.
@@ -268,7 +268,7 @@ W środkowej kolumnie tabeli \ref{tab:dft_wlasc} przedstawiono sygnał w dziedzi
 
 \subsection{Algorytm FFT}
 %Technika cyfrowego przetwarzania sygnałów 292 strona - A. Leśnicki
-Wyznaczenie widma dyskretnego bezpośrednio z definicji \ref{equ:dft} jest bardzo wymagające obliczeniowo. Przy założeniu, że próbki sygnału poddanego przekształceniu są liczbami zespolonymi, do obliczenia DFT wymagane jest $N^{2}$ mnożeń zespolonych oraz $N(N-1)$ dodawań zespolonych.
+Wyznaczenie widma dyskretnego bezpośrednio z definicji \ref{equ:dft} jest bardzo złożone obliczeniowo. Przy założeniu, że próbki sygnału poddanego przekształceniu są liczbami zespolonymi, do obliczenia DFT wymagane jest $N^{2}$ mnożeń zespolonych oraz $N(N-1)$ dodawań zespolonych.
 
 W praktyce obliczenia DFT sygnału wykonuje się z wykorzystaniem bardzo efektywnego algorytmu szybkiej transformacji Fouriera (FFT, ang. Fast Fourier Transform). Algorytm został przedstawiony w 1965 roku przez Cooleya-Tukeya i zapoczątkował nowy rozdział w dziedzinie cyfrowego przetwarzania sygnałów. Algorytm FFT można stosować również do obliczenia transformacji odwrotnej IDFT.
 
@@ -285,4 +285,4 @@ W praktyce obliczenia DFT sygnału wykonuje się z wykorzystaniem bardzo efektyw
 Algorytm FFT bazuje na metodzie dziel i zwyciężaj, dzieląc N-punktową transformację DFT na mniejsze transformacje N/2-punktowe, a następnie dokonując transformacji wyników poprzednich transformacji. Najbardziej popularną wersją algorytmu FFT jest FFT o podstawie 2, który wymaga $2^{k}$ próbek, gdzie k to liczba naturalna. Działanie algorytmu FFT o podstawie 2 opiera się na strukturach motylkowych i zostało przedstawione na rysunku \ref{rys:fft_motyl}.
 
 %http://home.agh.edu.pl/~kkowal/DSP/FFT_wyklad.pdf
-Dla liczby próbek $N$ równej $2^{k}$, występuje $lg_{2}N$ poziomów algorytmu, a na każdym z nich jest $N/2$ operacji motylkowych. Ostatecznie złożoność obliczeniowa algorytmu FFT wynosi $\frac{N}{2}log_{2}N$. Pokazuje to, iż algorytm Cooleya-Tukeya jest zdecydowanie bardziej wydajny od obliczania DFT sygnału na podstawie definicji.
+Dla liczby próbek $N$ równej $2^{k}$, występuje $lg_{2}N$ poziomów algorytmu, a na każdym z nich jest $N/2$ operacji motylkowych. Ostatecznie złożoność obliczeniowa algorytmu FFT wynosi $\frac{N}{2}log_{2}N$. Pokazuje to, iż algorytm Cooleya-Tukeya jest zdecydowanie bardziej wydajny od obliczania DFT sygnału na podstawie definicji \ref{equ:dft}.
