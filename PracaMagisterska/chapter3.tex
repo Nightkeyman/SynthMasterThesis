@@ -17,7 +17,7 @@ Głównymi elementami sprzętu potrzebnymi do uzyskania pełnego instrumentu kla
 	\item urządzenie nagłaśniające.
 \end{itemize}
 
-Niniejszy paragraf poświęcono omówieniu poszczególnych elementów płyty uruchomieniowej, która pełni główną funkcję w tym projekcie. Po przedstawieniu najważniejszych z nich omówione zostanie ich połączenie.
+Niniejszy paragraf poświęcono omówieniu poszczególnych elementów płyty uruchomieniowej, która pełni główną funkcję w tym projekcie. Po przedstawieniu najważniejszych z nich, omówione zostanie ich połączenie.
 
 \subsection{Płyta PADK}
 %Dokumentacja plyty PADK: file:///D:/Data/Studia/Magisterka/Z_pendrive/Szefler/Szefler/PADK_LYRTECH/PADK%20-%20Technical%20reference%20guide.pdf
@@ -78,7 +78,7 @@ Na płycie PADK znajdują się dwa, czterokanałowe, 24-bitowe układy PCM4204, 
 	\caption{Schemat pełnego układu realizowanego w projekcie.}
 	\label{rys:real_uklad}
 \end{figure}
-Strzałki na rysunku \ref{rys:real_uklad} przedstawiają kierunek przepływu danych między głównymi elementami układu projektowego. Klawiatura MIDI komunikuje się z płytą PADK po interfejsie MIDI. Komputer osobisty z interfejsem użytkownika przesyła i otrzymuje informacje z płyty PADK poprzez interfejs UART. Ostatecznie płyta PADK wystawia próbki dźwięków na przetwornik cyfrowo-analogowy, który połączony jest z urządzeniem nagłaśniającym. Urządzenie wydaje z siebie zsyntezowane brzmienie.
+Strzałki na rysunku \ref{rys:real_uklad} przedstawiają kierunek przepływu danych między głównymi elementami układu projektowego. Klawiatura MIDI komunikuje się z płytą PADK po interfejsie MIDI. Komputer osobisty z interfejsem użytkownika przesyła i otrzymuje informacje z płyty PADK poprzez interfejs UART. Ostatecznie płyta PADK wystawia próbki dźwięków na przetwornik cyfrowo-analogowy, który połączony jest z urządzeniem nagłaśniającym. Urządzenie wydaje zsyntezowane brzmienie.
 
 \section{Komunikacja z płytą PADK}
 Do płyty PADK dołączone zostały dodatkowe biblioteki firmy Lyrtech, które ułatwiają obsługę komunikacji z płytą. Przykładem interfejsów, do których zostały utworzone nadmienione biblioteki to UART oraz MIDI.
@@ -187,7 +187,7 @@ Według dokumentacji, opisywana funkcja może również zostać użyta do uzyska
 Za zamianę kolejności próbek w tablicy wynikowej otrzymanej z funkcji wykonującej algorytm FFT odpowiada funkcja DSPF\_sp\_bitrev\_cplx(). Zmiana kolejności elementów tablicy realizowana jest przez odczytanie indeksów tablicy jako liczb w postaci bitowej, a następnie dokonanie lustrzanego odbicia każdego indeksu z osobna (ang. bit-reverse). Jest to niezbędny krok do zrealizowania pełnego algorytmu FFT radix-2.
 
 \subsection{Pełna realizacja algorytmu przekształcenia}
-Pełne wykorzystanie algorytmu wymaga odpowiedniego ułożenia omówionych wyżej funkcji. W tym celu utworzono bibliotekę z dodatkowymi funkcjami, które wykonują pełne przekształcenie DFT za pomocą algorytmu DFT. Funkcje dostępne dla użytkownika to fft\_full() oraz ifft\_full(). Pierwsza z nich ustawia funkcję w kolejności:
+Pełne wykorzystanie algorytmu wymaga odpowiedniego ułożenia omówionych wyżej funkcji. W tym celu utworzono bibliotekę z dodatkowymi funkcjami, które wykonują pełne przekształcenie DFT za pomocą algorytmu FFT. Funkcje dostępne dla użytkownika to fft\_full() oraz ifft\_full(). Pierwsza z nich ustawia funkcję w kolejności:
 \begin{enumerate}
 	\item bitrev\_full() - generacja współczynników obrotu, przygotowanie próbek dla algorytmu FFT,
 	\item DSPF\_sp\_cfftr2\_dit() - wykonanie algorytmu FFT radix-2 z decymacją w dziedzinie czasu,
@@ -203,7 +203,7 @@ do odwrotnego przekształcenia DFT.
 % o rozdzielczości
 % https://www.bitweenie.com/listings/fft-zero-padding/
 \subsection{Rozdzielczość częstotliwości}
-Jednym z wyzwań stawianych przed inżynierami zajmującymi się przetwarzaniem sygnałów za pomocą algorytmu FFT jest odpowiednie dobranie ilości próbek do pojedynczej transformacji DFT. W związku z użyciem algorytmu FFT typu radix-2, ilość próbek musi być potęgą dwójki. Muzyczny charakter naszej pracy wymaga również wysokiej dokładności w dziedzinie częstotliwości, aby móc tworzyć tony o odpowiedniej częstotliwości. Miarą dokładności jest rozdzielczość częstotliwości (ang. frequency resolution), która określana jest wzorem:
+Jednym z elementów projektowania układów cyfrowego przetwarzania sygnałów jest odpowiednie dobranie ilości próbek do pojedynczej transformacji DFT. W związku z użyciem algorytmu FFT typu radix-2, liczba próbek musi być potęgą dwójki. Muzyczny charakter naszej pracy wymaga również wysokiej dokładności w dziedzinie częstotliwości, aby móc tworzyć tony o odpowiedniej częstotliwości. Miarą dokładności jest rozdzielczość częstotliwości (ang. frequency resolution), która określana jest wzorem:
 
 \begin{equation} \label{equ:fft_resol}
 \Delta R = \frac{f_{s}}{N_{fft}}
@@ -215,10 +215,10 @@ Jednym z wyzwań stawianych przed inżynierami zajmującymi się przetwarzaniem 
 \end{tabular}
 
 % http://cds.cern.ch/record/720344/files/ab-note-2004-021.pdf
-W literaturze można znaleźć informacje, iż widmo częstotliwościowe jest dużo bardziej czytelne i dokładne przy większej rozdzielczości częstotliwości. Minusem jej zwiększenia jest jednak spowolnienie obliczenia transformaty wynikowej i tym samym negatywny wpływ na czas pracy programu na procesorze.
+W literaturze można znaleźć informacje, iż widmo częstotliwościowe jest dużo bardziej  dokładne przy większej rozdzielczości częstotliwości. Minusem jej zwiększenia jest jednak spowolnienie obliczenia transformaty wynikowej i tym samym negatywny wpływ na czas wykonania programu na procesorze.
 
 %Potwierdzenie ze jak sie zwiekszy rozdzielczosc to jest lepiej https://ieeexplore-1ieee-1org-10000074b15d2.han.bg.pg.edu.pl/document/1604324
-Podjęto próby osiągnięcia jak najlepszej rozdzielczości w realizowanym algorytmie FFT na procesorze TMS320C672x. Dokumentacja funkcji realizującej algorytm FFT wskazywała, iż ilość próbek do jednokrotnej transformacji DFT powinna wynosić maksymalnie 2048. Niestety po wprowadzeniu takiej wartości, procesor ulegał zawieszeniu po chwili pracy. Obniżenie liczby próbek do 1024 pozwoliło na bezproblemowe działanie procesora. Jednocześnie spowodowało ono dwukrotne obniżenie dokładności
+Podjęto próby osiągnięcia jak największej rozdzielczości DFT na wykorzystywanym procesorze TMS320C672x. Dokumentacja funkcji realizującej algorytm FFT wskazywała, iż ilość próbek do jednokrotnej transformacji DFT powinna wynosić maksymalnie 2048. Niestety po wprowadzeniu takiej wartości, procesor ulegał zawieszeniu. Obniżenie liczby próbek do 1024 pozwoliło na bezproblemowe działanie procesora. Jednocześnie spowodowało ono dwukrotne obniżenie dokładności
 
 
 \section{ADSR}
