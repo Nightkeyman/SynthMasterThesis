@@ -42,9 +42,8 @@
             this.tabPage_Connection = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.tabPage_subtractive = new System.Windows.Forms.TabPage();
-            this.button2 = new System.Windows.Forms.Button();
-            this.button1 = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.button1 = new System.Windows.Forms.Button();
             this.textBox_subtractive_freq2 = new System.Windows.Forms.TextBox();
             this.label6 = new System.Windows.Forms.Label();
             this.trackBar_subtractive_freq2 = new System.Windows.Forms.TrackBar();
@@ -244,8 +243,6 @@
             // tabPage_subtractive
             // 
             this.tabPage_subtractive.BackColor = System.Drawing.SystemColors.Menu;
-            this.tabPage_subtractive.Controls.Add(this.button2);
-            this.tabPage_subtractive.Controls.Add(this.button1);
             this.tabPage_subtractive.Controls.Add(this.groupBox2);
             this.tabPage_subtractive.Controls.Add(this.groupBox1);
             this.tabPage_subtractive.Controls.Add(this.button_subtractive_en);
@@ -256,28 +253,9 @@
             this.tabPage_subtractive.TabIndex = 1;
             this.tabPage_subtractive.Text = "Subtractive";
             // 
-            // button2
-            // 
-            this.button2.Location = new System.Drawing.Point(524, 345);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(75, 23);
-            this.button2.TabIndex = 11;
-            this.button2.Text = "Set";
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
-            // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(524, 316);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 10;
-            this.button1.Text = "Set";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
-            // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.button1);
             this.groupBox2.Controls.Add(this.textBox_subtractive_freq2);
             this.groupBox2.Controls.Add(this.label6);
             this.groupBox2.Controls.Add(this.trackBar_subtractive_freq2);
@@ -295,6 +273,16 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Filter";
             // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(502, 177);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(87, 36);
+            this.button1.TabIndex = 10;
+            this.button1.Text = "Set";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
             // textBox_subtractive_freq2
             // 
             this.textBox_subtractive_freq2.Enabled = false;
@@ -302,7 +290,7 @@
             this.textBox_subtractive_freq2.Name = "textBox_subtractive_freq2";
             this.textBox_subtractive_freq2.Size = new System.Drawing.Size(100, 20);
             this.textBox_subtractive_freq2.TabIndex = 9;
-            this.textBox_subtractive_freq2.Text = "0";
+            this.textBox_subtractive_freq2.Text = "20000";
             this.textBox_subtractive_freq2.TextChanged += new System.EventHandler(this.textBox_subtractive_freq2_TextChanged);
             // 
             // label6
@@ -320,7 +308,7 @@
             this.trackBar_subtractive_freq2.Enabled = false;
             this.trackBar_subtractive_freq2.LargeChange = 50;
             this.trackBar_subtractive_freq2.Location = new System.Drawing.Point(6, 190);
-            this.trackBar_subtractive_freq2.Maximum = 12000;
+            this.trackBar_subtractive_freq2.Maximum = 20000;
             this.trackBar_subtractive_freq2.Name = "trackBar_subtractive_freq2";
             this.trackBar_subtractive_freq2.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.trackBar_subtractive_freq2.Size = new System.Drawing.Size(490, 45);
@@ -328,6 +316,7 @@
             this.trackBar_subtractive_freq2.TabIndex = 7;
             this.trackBar_subtractive_freq2.TickFrequency = 1000;
             this.trackBar_subtractive_freq2.TickStyle = System.Windows.Forms.TickStyle.TopLeft;
+            this.trackBar_subtractive_freq2.Value = 20000;
             this.trackBar_subtractive_freq2.Scroll += new System.EventHandler(this.trackBar_subtractive_freq2_Scroll);
             // 
             // textBox_subtractive_freq1
@@ -355,7 +344,7 @@
             this.trackBar_subtractive_freq1.Enabled = false;
             this.trackBar_subtractive_freq1.LargeChange = 50;
             this.trackBar_subtractive_freq1.Location = new System.Drawing.Point(6, 168);
-            this.trackBar_subtractive_freq1.Maximum = 12000;
+            this.trackBar_subtractive_freq1.Maximum = 20000;
             this.trackBar_subtractive_freq1.Name = "trackBar_subtractive_freq1";
             this.trackBar_subtractive_freq1.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.trackBar_subtractive_freq1.Size = new System.Drawing.Size(490, 45);
@@ -456,6 +445,7 @@
             this.radioButton_subtractive_square.TabStop = true;
             this.radioButton_subtractive_square.Text = "Square";
             this.radioButton_subtractive_square.UseVisualStyleBackColor = true;
+            this.radioButton_subtractive_square.CheckedChanged += new System.EventHandler(this.radioButton_subtractive_square_CheckedChanged);
             // 
             // button_subtractive_en
             // 
@@ -1056,7 +1046,6 @@
         private System.Windows.Forms.TabPage tabPage_additive_hammond;
         private KnobControl.KnobControl drawbar1;
         private System.Windows.Forms.TabPage tabPage3;
-        private System.Windows.Forms.Button button2;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.Button button_fm_en;
