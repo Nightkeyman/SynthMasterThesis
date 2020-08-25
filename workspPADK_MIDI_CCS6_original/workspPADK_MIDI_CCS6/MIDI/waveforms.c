@@ -8,11 +8,11 @@
 #include <math.h>
 
 // AMP should be around 1000000000
-void sin_wave(int freq, int amp) {
+void sin_wave(int freq, int amp, int counter) {
 	int i = 0;
 	for(i = 0; i < 2*N; i++) {
 		//v[i] = (float)(1*sin((double)(i/2)*2.0*M_PI*F_sq*(1.0/Fs))); // + (float)(5*sin((double)(i/2)*2.0*M_PI*F_sqq*(1.0/Fs)));
-		v[i] = (float)(1*sin((double)(i)*2.0*M_PI*freq*(1.0/Fs))); // + (float)(5*sin((double)(i/2)*2.0*M_PI*F_sqq*(1.0/Fs)));
+		v[i] = (float)(1*sin((double)(i/2 + counter)*2.0*M_PI*freq*(1.0/Fs))); // + (float)(5*sin((double)(i/2)*2.0*M_PI*F_sqq*(1.0/Fs)));
 		//waveform[i] = amp*v[i];
 		if(i%2 == 1) v[i] = 0;
 	}
@@ -120,5 +120,24 @@ float myWav(int counter, float freq)
 		return SIG_AMP;
 	} else {
 		return -1*SIG_AMP;
+	}
+}
+
+void hammond_wave(int freq, int counter, int edit, int adsr_index) {
+	float phase = 0;
+	int j = 0;
+	ADSR(adsr_index);
+	if (edit == 1) {
+		for(j = 0; j < N; j++) {
+			v[j*2] = adsr[adsr_index]*(add_knobAmp[HAMMOND_KNOB1]*mySin(j+counter, freq*0.5) + add_knobAmp[HAMMOND_KNOB2]*mySin(j+counter, freq) + add_knobAmp[HAMMOND_KNOB3]*mySin(j+counter, freq*1.5)
+					+ add_knobAmp[HAMMOND_KNOB4]*mySin(j+counter, freq*2) + add_knobAmp[HAMMOND_KNOB5]*mySin(j+counter, freq*3) + add_knobAmp[HAMMOND_KNOB6]*mySin(j+counter, freq*4)
+					+ add_knobAmp[HAMMOND_KNOB7]*mySin(j+counter, freq*5) + add_knobAmp[HAMMOND_KNOB8]*mySin(j+counter, freq*6) + add_knobAmp[HAMMOND_KNOB9]*mySin(j+counter, freq*8));
+		}
+	} else if(edit == 0) {
+		for(j = 0; j < N; j++) {
+			v[j*2] += adsr[adsr_index]*(add_knobAmp[HAMMOND_KNOB1]*mySin(j+counter, freq*0.5) + add_knobAmp[HAMMOND_KNOB2]*mySin(j+counter, freq) + add_knobAmp[HAMMOND_KNOB3]*mySin(j+counter, freq*1.5)
+					+ add_knobAmp[HAMMOND_KNOB4]*mySin(j+counter, freq*2) + add_knobAmp[HAMMOND_KNOB5]*mySin(j+counter, freq*3) + add_knobAmp[HAMMOND_KNOB6]*mySin(j+counter, freq*4)
+					+ add_knobAmp[HAMMOND_KNOB7]*mySin(j+counter, freq*5) + add_knobAmp[HAMMOND_KNOB8]*mySin(j+counter, freq*6) + add_knobAmp[HAMMOND_KNOB9]*mySin(j+counter, freq*8));
+		}
 	}
 }

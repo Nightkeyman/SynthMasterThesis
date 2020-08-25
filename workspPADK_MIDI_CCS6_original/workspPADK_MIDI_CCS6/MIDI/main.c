@@ -5,8 +5,6 @@
 #include <csl_dmax.h>
 #include <csl_mcasp.h>
 #include <math.h>
-// PADK Library
-//#include "api/PADK.h"
 #include "PADK.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -17,6 +15,7 @@
 #include "waveforms.h"
 #include "var&fun.h"
 #include "myfft.h"
+#include "additive.h"
 
 #define OVERLAP 128
 #define MIDI_TONE_RANGE 128
@@ -26,6 +25,7 @@
 #define F_sq 440
 #define F_sqq 10000
 #define SIG_AMP 100000
+#define ADD_SIG_AMP 100000000
 
 #define N 1024
  short  table[64];
@@ -37,6 +37,7 @@ int waveform0[N];
 int waveform1[N];
 
 volatile int whichwaveform = 0;
+volatile int mode = 0;
 const float overlaptable[128] = {0.008, 0.016, 0.023, 0.031, 0.039, 0.047, 0.055, 0.063, 0.070, 0.078, 0.086, 0.094, 0.102, 0.109, 0.117, 0.125, 0.133, 0.141, 0.148, 0.156, 0.164, 0.172, 0.180, 0.188, 0.195, 0.203, 0.211, 0.219, 0.227, 0.234, 0.242, 0.250, 0.258, 0.266, 0.273, 0.281, 0.289, 0.297, 0.305, 0.313, 0.320, 0.328, 0.336, 0.344, 0.352, 0.359, 0.367, 0.375, 0.383, 0.391, 0.398, 0.406, 0.414, 0.422, 0.430, 0.438, 0.445, 0.453, 0.461, 0.469, 0.477, 0.484, 0.492, 0.500, 0.508, 0.516, 0.523, 0.531, 0.539, 0.547, 0.555, 0.563, 0.570, 0.578, 0.586, 0.594, 0.602, 0.609, 0.617, 0.625, 0.633, 0.641, 0.648, 0.656, 0.664, 0.672, 0.680, 0.688, 0.695, 0.703, 0.711, 0.719, 0.727, 0.734, 0.742, 0.750, 0.758, 0.766, 0.773, 0.781, 0.789, 0.797, 0.805, 0.813, 0.820, 0.828, 0.836, 0.844, 0.852, 0.859, 0.867, 0.875, 0.883, 0.891, 0.898, 0.906, 0.914, 0.922, 0.930, 0.938, 0.945, 0.953, 0.961, 0.969, 0.977, 0.984, 0.992, 1.000};
 
 
@@ -57,7 +58,7 @@ enum methodtype method = subtractive;
 enum filtertype{lowpass, highpass, bandpass, bandstop};
 enum filtertype filter = lowpass;
 int sub_lowfreq = 0;
-int sub_highfreq = 48000;
+int sub_highfreq = Fs;
 
 // FM GLOBALS
 int fm_modfreq = 1;
@@ -72,6 +73,10 @@ float decay_rate = 0.5;
 float sustain_level = 1.0;
 float release_rate = 0.5;
 
+// ADDITIVE GLOBALS
+float phase = 0;
+float add_knobAmp[HAMMOND_KNOBS];
+
 // Static waveform arrays
 float sinusek[N];
 float kwadracik[N];
@@ -84,12 +89,14 @@ int main( int argc, char *argv[] ) {
 	#include "ALL_init.h"
 
 	// INITIALIZE VARIABLES
-	int i = 0, j = 0;
+	int i = 0, j = 0, m = 0;
 	int freq_wav = 0;
 	int mono = 1; // 0 - mono, 1 - poly
 	int mode = 0; // 0 - subtractive, 1 - additive
 	int clear_v = 1;
+	int ph = 0; // phase shift variable
 	int k = 0; // phase shift variable
+	float *p; // pointer for additive array
 	sem_dac = 1;
 	whichwaveform = 1;
 	for (i = 0 ; i < MIDI_POLY_MAX; i++){
@@ -99,6 +106,9 @@ int main( int argc, char *argv[] ) {
 	for(i = 0; i < MIDI_POLY_MAX; i++)
 		freqs[i] = 0;
 
+	for(i = 0; i < HAMMOND_KNOBS; i++)
+		add_knobAmp[i] = 0;
+
 	for(i = 0; i < 2*N; i+=2) {
 		waveform0[i] = 0;
 		waveform0[i+1] = 0;
@@ -106,7 +116,7 @@ int main( int argc, char *argv[] ) {
 		waveform1[i+1] = 0;
 	}
 
-	sin_wave(440, SIG_AMP);
+	sin_wave(440, SIG_AMP, 0);
 	// FFT
 	fft_full();
 
@@ -133,23 +143,52 @@ int main( int argc, char *argv[] ) {
 	/*---------------------------------------------------------------*/
 	/*							 MAIN LOOP 		                     */
 	/*---------------------------------------------------------------*/
+	mode = 1;
     while(1)  {
-    	///// ADDITIVE MONO /////
-    	/*
-    	if((PP == 0 || PP == 1) && mode == 1) {
-    		for(i = 0; i < FRAME_SIZE; i++) {
-    			dmaxDacBuffer[PP][0][0][i] = 0.8*mySin(k+i, 220) + 0.9*mySin(k+i, 440) + 0.8*mySin(k+i, 660) +
-    					+ 0.8*mySin(k+i, 880) + 0.8*mySin(k+i, 1320)
-						+ 0.8*mySin(k+i, 1760) + 0.8*mySin(k+i, 2200);
-						+ 0.8*mySin(k+i, 2640) + 0.8*mySin(k+i, 3520);
+    	///// ADDITIVE /////
+		if(method == additive) {
+    		if(pressedkeys < 1) {
+    			for(j = 0; j < N; j++) {
+					waveform0[j] = 0;
+					waveform1[j] = 0;
+				}
+    		} else {
+				clear_v = 1;
+				for(i = 0; i < MIDI_POLY_MAX; i++) {
+					if(freqs[i] > 0 || adsr_state[i] > 0) {
+						hammond_wave(freqs[i], k, clear_v, i);
+						if (clear_v == 1)
+							clear_v = 0;
+					}
+				}
+				while(sem_dac == 0);
+				for(j = 0; j < N; j++) {
+					if (j < OVERLAP) {
+						if (whichwaveform == 1) {
+							waveform0[j] = overlaptable[j]*ADD_SIG_AMP*v[j*2];
+						} else {
+							waveform1[j] = overlaptable[j]*ADD_SIG_AMP*v[j*2];
+						}
+					} else if (j >= N - OVERLAP) {
+						if (whichwaveform) {
+							waveform0[j] = overlaptable[N-j-1]*ADD_SIG_AMP*v[j*2];
+						} else {
+							waveform1[j] = overlaptable[N-j-1]*ADD_SIG_AMP*v[j*2];
+						}
+					} else {
+						if (whichwaveform) {
+							waveform0[j] = ADD_SIG_AMP*v[j*2];
+						} else {
+							waveform1[j] = ADD_SIG_AMP*v[j*2];
+						}
+					}
+				}
+				sem_dac = 0;
+				k += N - OVERLAP;
+				ph += N;
     		}
-    		k += FRAME_SIZE;
-        	PP = 3;
-    	}
-    	*/
-
     	///// SUBTRACTIVE /////
-    	if (method == subtractive) {
+		} else if (method == subtractive) {
 			if(pressedkeys < 1) {
 				for(j = 0; j < N; j++) {
 					waveform0[j] = 0;
@@ -249,6 +288,7 @@ int main( int argc, char *argv[] ) {
 				sem_dac = 0;
 				k += N - OVERLAP;
 			}
-		}
-	}
+    	}
+    }
 }
+
