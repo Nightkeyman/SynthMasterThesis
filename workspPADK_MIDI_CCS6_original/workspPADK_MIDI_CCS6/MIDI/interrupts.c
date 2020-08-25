@@ -82,29 +82,41 @@ int SetupInterrupts()
 #define CH_2		(2)
 #define CH_3		(3)
 
+// ################## MIDI DEFINES #########
+#define MIDI_TONE_RANGE 128
+#define MIDI_A_SOUND_FREQ 440
+#define MIDI_A_SOUND_NUM 69
+#define MIDI_TONE_RANGE 128
+#define MIDI_POLY_MAX 12
+
+// ################## OTHER DEFINES #########
+#define N 1024
+#define OVERLAP 128
+#define Fs 48000
+#define M_PI 3.1416
+#define UART_WAIT       1
+#define UART_NO_WAIT    0
+// ################## END OF DEFINES #########
+
 int we[STEREO][NUM_CHANNEL];
 int wy[STEREO][NUM_CHANNEL];
 //int wl1, wp1, wl2, wp2, wl3, wp3, wl4, wp4;
 
-#define N 1024 // musi byc 2x tablica wystawiana na przerwanie (??)
 int Buf_1[N];  // bufor pomocniczy do "obserwacji" danych wejsciowych
 int Buf[N];  // bufor pomocniczy do "obserwacji" danych wyjœciowych
 int k = 0;
 extern int waveform0[N];
 extern int waveform1[N];
-int plot[2048];
+int plot[2*N];
 extern volatile int whichwaveform;
 #define OVERLAP 128
-#define MIDI_TONE_RANGE 128
-#define MIDI_POLY_MAX 12
 
 int wav_iterator = 0;
 volatile unsigned PP;
 volatile unsigned sem_dac = 0;
 
-#define Fs 96000
+#define Fs 48000
 #define M_PI 3.1416
-extern float freqs[MIDI_POLY_MAX];
 int generator_interator = 0;
 int sound = 0;
 int licz = 0;
@@ -142,16 +154,15 @@ extern float add_knobAmp[HAMMOND_KNOBS];
 
 // ################## DAC/ADC end ##################
 
-
 // ################## UART RELATED VARs ############
-#define UART_WAIT       1
-#define UART_NO_WAIT    0
 unsigned char uartdata[1];
-extern unsigned char data_midi[1];
 // ################## UART end #####################
 
 // ################## MIDI RELATED VARs ############
+extern int pressedkeys;
+extern float freqs[MIDI_POLY_MAX];
 int sem_new_note = 0; // 0 - 128
+extern unsigned char data_midi[1];
 // ################## MIDI end #####################
 
 interrupt void nmi_isr( void )
@@ -170,7 +181,7 @@ interrupt void midi_isr( void )
 			unsigned char status = (MIDI_pull(-2)>>4)&0x0F;
 			if (status == 0x09) { // note on
 				unsigned char note = MIDI_pull(-1)&0x7f;
-				float freq_wav = 261*pow(1.059463,note - 48);
+				float freq_wav = MIDI_A_SOUND_FREQ*pow(1.059463, note - MIDI_A_SOUND_NUM);
 				int i = 0, keyOccupFlag = 0;
 				for (i = 0; i < MIDI_POLY_MAX; i++) {
 					if (freqs[i] >= freq_wav-0.5 && freqs[i] <= freq_wav+0.5) {
@@ -192,7 +203,7 @@ interrupt void midi_isr( void )
 				MIDI_clear();
 			} else if (status == 0x08) { // note off
 				unsigned char note = MIDI_pull(-1)&0x7f;
-				float freq_wav = 261*pow(1.059463,note - 48);
+				float freq_wav = MIDI_A_SOUND_FREQ*pow(1.059463,note - MIDI_A_SOUND_NUM);
 				int i = 0;
 				for (i = 0; i< MIDI_POLY_MAX; i++) {
 					if (freqs[i] >= freq_wav-0.5 && freqs[i] <= freq_wav+0.5) {

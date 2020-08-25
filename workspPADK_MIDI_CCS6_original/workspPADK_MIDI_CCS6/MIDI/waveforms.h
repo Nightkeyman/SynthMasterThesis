@@ -11,7 +11,7 @@
 #include "additive.h"
 
 #define N 1024
-#define Fs 96000
+#define Fs 48000
 #define M_PI 3.14159
 #define MIDI_POLY_MAX 12
 #define SIG_AMP 100000
@@ -44,6 +44,6 @@ void hammond_wave(int freq, int counter, int edit, int adsr_index);
 float mySin(int counter, float freq);
 float mySqr(int counter, float freq);
 float myWav(int counter, float freq);
-//float * hammond_wave(int freq, int counter, int adsr_index);
+float mySin_fm(int counter, float freq, int modfm, int modamp);
 
 #endif /* WAVEFORMS_H_ */

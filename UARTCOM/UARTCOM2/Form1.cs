@@ -20,6 +20,8 @@ namespace UARTCOM2
         byte buffer_iterator = 0;
         byte buffer_length = 9;
         byte[] buffer;
+        uint currFilter = 0;
+
         void Buffer_push(byte data)
         {
             buffer_iterator++;
@@ -270,12 +272,10 @@ namespace UARTCOM2
             if (button_subtractive_en.Text.Equals("Disabled"))
             {
                 send(100, 1, 0, 0, 0, 0, 0);
-                
             }
             else
             {
                 send(100, 2, 0, 0, 0, 0, 0);
-               
             }
         }
 
@@ -304,6 +304,7 @@ namespace UARTCOM2
             sendInt(100, 4, (UInt32)trackBar_subtractive_freq2.Value); // set higher frequency
             sendInt(100, 3, 0); // zero lower frequency
             sendInt(100, 5, 0); // set 0(lowpass) filter type
+            currFilter = 0;
         }
 
         private void radioButton_subtractive_highpass_CheckedChanged(object sender, EventArgs e)
@@ -315,6 +316,7 @@ namespace UARTCOM2
             sendInt(100, 3, (UInt32)trackBar_subtractive_freq1.Value); // set lower frequency
             sendInt(100, 4, 96000); // max higher frequency
             sendInt(100, 5, 1); // set 1(highpass) filter type
+            currFilter = 1;
         }
 
         private void radioButton_subtractive_bandpass_CheckedChanged(object sender, EventArgs e)
@@ -326,6 +328,7 @@ namespace UARTCOM2
             sendInt(100, 3, (UInt32)trackBar_subtractive_freq1.Value); // set lower frequency
             sendInt(100, 4, (UInt32)trackBar_subtractive_freq2.Value); // set higher frequency
             sendInt(100, 5, 2); // set 2(bandpass) filter type
+            currFilter = 2;
         }
 
         private void radioButton_subtractive_bandstop_CheckedChanged(object sender, EventArgs e)
@@ -337,6 +340,7 @@ namespace UARTCOM2
             sendInt(100, 3, (UInt32)trackBar_subtractive_freq1.Value); // set lower frequency
             sendInt(100, 4, (UInt32)trackBar_subtractive_freq2.Value); // set higher frequency
             sendInt(100, 5, 3); // set 3(bandstop) filter type
+            currFilter = 3;
         }
 
         private void label7_Click(object sender, EventArgs e)
@@ -355,12 +359,13 @@ namespace UARTCOM2
             if (button_additive_hammond_en.Text.Equals("Disabled"))
             {
                 send(101, 1, 0, 0, 0, 0, 0);
-
+                sendInt(100, 5, currFilter);
+                sendInt(100, 3, (UInt32)trackBar_subtractive_freq1.Value);
+                sendInt(100, 4, (UInt32)trackBar_subtractive_freq2.Value);
             }
             else
             {
                 send(101, 2, 0, 0, 0, 0, 0);
-
             }
         }
 
@@ -416,7 +421,10 @@ namespace UARTCOM2
 
         private void button1_Click(object sender, EventArgs e)
         {
+            // SEND VALUES
             sendInt(100, 3, (UInt32)trackBar_subtractive_freq1.Value);
+            sendInt(100, 4, (UInt32)trackBar_subtractive_freq2.Value);
+            sendInt(100, 5, currFilter);
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -463,12 +471,10 @@ namespace UARTCOM2
             if (button_fm_en.Text.Equals("Disabled"))
             {
                 send(102, 1, 0, 0, 0, 0, 0);
-
             }
             else
             {
                 send(102, 2, 0, 0, 0, 0, 0);
-
             }
         }
 
@@ -515,11 +521,15 @@ namespace UARTCOM2
             // ADSR - signal 200
             byte[] byteArray;
             // attack
-            byteArray = BitConverter.GetBytes(knobControl_attack.Maximum - Convert.ToInt32(knobControl_attack.Value) + 1);
+            double att_log = Math.Pow(knobControl_attack.Maximum - Convert.ToInt32(knobControl_attack.Value) + 1, 2); // logarithm, base 2
+            int att_val = knobControl_attack.Maximum - Convert.ToInt32(knobControl_attack.Value) + 1;
+            byteArray = BitConverter.GetBytes((int)(att_val*0.75) + 1);
             send(200, 1, byteArray[0], byteArray[1], 0, 0, 0);
 
             // decay
-            byteArray = BitConverter.GetBytes(knobControl_decay.Maximum - Convert.ToInt32(knobControl_decay.Value) + 1);
+            double dec_log = Math.Log(knobControl_decay.Maximum - Convert.ToInt32(knobControl_decay.Value) + 1, 2);
+            int dec_val = knobControl_decay.Maximum - Convert.ToInt32(knobControl_decay.Value) + 1;
+            byteArray = BitConverter.GetBytes((int)(dec_val*0.75) + 1);
             send(200, 2, byteArray[0], byteArray[1], 0, 0, 0);
 
             // sustain
@@ -527,8 +537,15 @@ namespace UARTCOM2
             send(200, 3, byteArray[0], byteArray[1], 0, 0, 0);
 
             // release
-            byteArray = BitConverter.GetBytes(knobControl_release.Maximum - Convert.ToInt32(knobControl_release.Value) + 1);
+            double rel_log = Math.Log(knobControl_release.Maximum - Convert.ToInt32(knobControl_release.Value) + 1, 2); // logarithm, base 2
+            int rel_val = knobControl_release.Maximum - Convert.ToInt32(knobControl_release.Value) + 1;
+            byteArray = BitConverter.GetBytes((int)(rel_val*0.5) + 1);
             send(200, 4, byteArray[0], byteArray[1], 0, 0, 0);
+        }
+
+        private void radioButton_subtractive_square_CheckedChanged(object sender, EventArgs e)
+        {
+            
         }
     }
 }
