@@ -359,9 +359,6 @@ namespace UARTCOM2
             if (button_additive_hammond_en.Text.Equals("Disabled"))
             {
                 send(101, 1, 0, 0, 0, 0, 0);
-                sendInt(100, 5, currFilter);
-                sendInt(100, 3, (UInt32)trackBar_subtractive_freq1.Value);
-                sendInt(100, 4, (UInt32)trackBar_subtractive_freq2.Value);
             }
             else
             {
