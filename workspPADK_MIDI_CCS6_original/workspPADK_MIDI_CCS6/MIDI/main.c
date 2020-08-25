@@ -123,7 +123,7 @@ int main( int argc, char *argv[] ) {
 
 	// Prepare static waveform tables
 	for (i = 0; i < N; i++) {
-		sinusek[i] = SIG_AMP*sinf(2.0*M_PI*((float)i/(N*1.0)));
+		sinusek[i] = sinf(2.0*M_PI*((float)i/(N*1.0)));
 	}
 	for (i = 0; i < N; i++) { // tu moze ze dwa okresy?
 		if(i <= N/2) kwadracik[i] = 1.0;
@@ -207,38 +207,47 @@ int main( int argc, char *argv[] ) {
 					waveform1[j] = 0;
 					k = 0;
 				}
-			}
-			for(i = 0; i < MIDI_POLY_MAX; i++) {
-				if(freqs[i] > 0) {
-					ADSR(i);
-					for(j = 0; j < N; j++) {
-						v[j*2] = adsr[i]*sinf((double)(j+k)*2.0*M_PI*freqs[i]*(1.0/Fs) + (float)fm_modamp*sinf((double)(j+k)*2.0*M_PI*(float)fm_modfreq*(1.0/Fs)))*SIG_AMP*1000;
-					}
-					while(sem_dac == 0);
-					for(j = 0; j < N; j++) {
-						if (j < OVERLAP) {
-							if (whichwaveform == 1) {
-								waveform0[j] = overlaptable[j]*v[j*2];
-							} else {
-								waveform1[j] = overlaptable[j]*v[j*2];
+			} else {
+				clear_v = 1;
+				for(i = 0; i < MIDI_POLY_MAX; i++) {
+					if(freqs[i] > 0 || adsr_state[i] > 0) {
+						ADSR(i);
+						if (clear_v == 1){
+							for(j = 0; j < N; j++) {
+								v[j*2] = adsr[i]*sinf((float)(j+k)*2.0*M_PI*freqs[i]*(1.0/Fs) + (float)fm_modamp*sinf((float)(j+k)*2.0*M_PI*(float)fm_modfreq*(1.0/Fs)));
 							}
-						} else if (j >= N - OVERLAP) {
-							if (whichwaveform) {
-								waveform0[j] = overlaptable[N-j-1]*v[j*2];
-							} else {
-								waveform1[j] = overlaptable[N-j-1]*v[j*2];
-							}
+							clear_v = 0;
 						} else {
-							if (whichwaveform) {
-								waveform0[j] = v[j*2];
-							} else {
-								waveform1[j] = v[j*2];
+							for(j = 0; j < N; j++) {
+								v[j*2] += adsr[i]*sinf((float)(j+k)*2.0*M_PI*freqs[i]*(1.0/Fs) + (float)fm_modamp*sinf((float)(j+k)*2.0*M_PI*(float)fm_modfreq*(1.0/Fs)));
 							}
 						}
 					}
-					sem_dac = 0;
-					k += N - OVERLAP;
 				}
+				while(sem_dac == 0);
+				for(j = 0; j < N; j++) {
+					if (j < OVERLAP) {
+						if (whichwaveform == 1) {
+							waveform0[j] = overlaptable[j]*v[j*2]*SIG_AMP*1000;
+						} else {
+							waveform1[j] = overlaptable[j]*v[j*2]*SIG_AMP*1000;
+						}
+					} else if (j >= N - OVERLAP) {
+						if (whichwaveform) {
+							waveform0[j] = overlaptable[N-j-1]*v[j*2]*SIG_AMP*1000;
+						} else {
+							waveform1[j] = overlaptable[N-j-1]*v[j*2]*SIG_AMP*1000;
+						}
+					} else {
+						if (whichwaveform) {
+							waveform0[j] = v[j*2]*SIG_AMP*1000;
+						} else {
+							waveform1[j] = v[j*2]*SIG_AMP*1000;
+						}
+					}
+				}
+				sem_dac = 0;
+				k += N - OVERLAP;
 			}
 		}
 	}
