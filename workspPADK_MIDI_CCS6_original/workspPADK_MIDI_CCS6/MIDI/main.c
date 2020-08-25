@@ -228,21 +228,21 @@ int main( int argc, char *argv[] ) {
 				for(j = 0; j < N; j++) {
 					if (j < OVERLAP) {
 						if (whichwaveform == 1) {
-							waveform0[j] = overlaptable[j]*v[j*2]*SIG_AMP*100;
+							waveform0[j] = overlaptable[j]*v[j*2]*SIG_AMP*1000;
 						} else {
-							waveform1[j] = overlaptable[j]*v[j*2]*SIG_AMP*100;
+							waveform1[j] = overlaptable[j]*v[j*2]*SIG_AMP*1000;
 						}
 					} else if (j >= N - OVERLAP) {
 						if (whichwaveform) {
-							waveform0[j] = overlaptable[N-j-1]*v[j*2]*SIG_AMP*100;
+							waveform0[j] = overlaptable[N-j-1]*v[j*2]*SIG_AMP*1000;
 						} else {
-							waveform1[j] = overlaptable[N-j-1]*v[j*2]*SIG_AMP*100;
+							waveform1[j] = overlaptable[N-j-1]*v[j*2]*SIG_AMP*1000;
 						}
 					} else {
 						if (whichwaveform) {
-							waveform0[j] = v[j*2]*SIG_AMP*100;
+							waveform0[j] = v[j*2]*SIG_AMP*1000;
 						} else {
-							waveform1[j] = v[j*2]*SIG_AMP*100;
+							waveform1[j] = v[j*2]*SIG_AMP*1000;
 						}
 					}
 				}
