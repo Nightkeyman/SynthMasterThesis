@@ -30,7 +30,7 @@ extern float sustain_level;
 extern float release_rate;
 
 // ADDITIVE GLOBALS
-extern int add_knobAmp[HAMMOND_KNOBS];
+extern float add_knobAmp[HAMMOND_KNOBS];
 
 extern float sinusek[N];
 extern float kwadracik[N];

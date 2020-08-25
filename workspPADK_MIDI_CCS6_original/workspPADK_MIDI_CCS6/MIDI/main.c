@@ -75,7 +75,7 @@ float release_rate = 0.5;
 
 // ADDITIVE GLOBALS
 float phase = 0;
-int add_knobAmp[HAMMOND_KNOBS];
+float add_knobAmp[HAMMOND_KNOBS];
 
 // Static waveform arrays
 float sinusek[N];

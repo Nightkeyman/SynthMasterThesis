@@ -138,7 +138,7 @@ extern int fm_modfreq;
 extern int fm_modamp;
 
 // ADDITIVE GLOBALS
-extern int add_knobAmp[HAMMOND_KNOBS];
+extern float add_knobAmp[HAMMOND_KNOBS];
 
 // ################## DAC/ADC end ##################
 
@@ -246,31 +246,31 @@ interrupt void uart_isr( void )
 	    				UART_send(101, 2, 0, 0, 0, 0, 0);
 	    			}
 					if (UART_pull(1) == HAMMOND_KNOB1_UART){
-						add_knobAmp[HAMMOND_KNOB1] = UART_pull(2) + UART_pull(3)*256;
+						add_knobAmp[HAMMOND_KNOB1] = (UART_pull(2) + UART_pull(3)*256)*0.125;
 					}
 					if (UART_pull(1) == HAMMOND_KNOB2_UART){
-						add_knobAmp[HAMMOND_KNOB2] = UART_pull(2) + UART_pull(3)*256;
+						add_knobAmp[HAMMOND_KNOB2] = (UART_pull(2) + UART_pull(3)*256)*0.125;;
 					}
 					if (UART_pull(1) == HAMMOND_KNOB3_UART){
-						add_knobAmp[HAMMOND_KNOB3] = UART_pull(2) + UART_pull(3)*256;
+						add_knobAmp[HAMMOND_KNOB3] = (UART_pull(2) + UART_pull(3)*256)*0.125;;
 					}
 					if (UART_pull(1) == HAMMOND_KNOB4_UART){
-						add_knobAmp[HAMMOND_KNOB4] = UART_pull(2) + UART_pull(3)*256;
+						add_knobAmp[HAMMOND_KNOB4] = (UART_pull(2) + UART_pull(3)*256)*0.125;;
 					}
 					if (UART_pull(1) == HAMMOND_KNOB5_UART){
-						add_knobAmp[HAMMOND_KNOB5] = UART_pull(2) + UART_pull(3)*256;
+						add_knobAmp[HAMMOND_KNOB5] = (UART_pull(2) + UART_pull(3)*256)*0.125;;
 					}
 					if (UART_pull(1) == HAMMOND_KNOB6_UART){
-						add_knobAmp[HAMMOND_KNOB6] = UART_pull(2) + UART_pull(3)*256;
+						add_knobAmp[HAMMOND_KNOB6] = (UART_pull(2) + UART_pull(3)*256)*0.125;;
 					}
 					if (UART_pull(1) == HAMMOND_KNOB7_UART){
-						add_knobAmp[HAMMOND_KNOB7] = UART_pull(2) + UART_pull(3)*256;
+						add_knobAmp[HAMMOND_KNOB7] = (UART_pull(2) + UART_pull(3)*256)*0.125;;
 					}
 					if (UART_pull(1) == HAMMOND_KNOB8_UART){
-						add_knobAmp[HAMMOND_KNOB8] = UART_pull(2) + UART_pull(3)*256;
+						add_knobAmp[HAMMOND_KNOB8] = (UART_pull(2) + UART_pull(3)*256)*0.125;;
 					}
 					if (UART_pull(1) == HAMMOND_KNOB9_UART){
-						add_knobAmp[HAMMOND_KNOB9] = UART_pull(2) + UART_pull(3)*256;
+						add_knobAmp[HAMMOND_KNOB9] = (UART_pull(2) + UART_pull(3)*256)*0.125;;
 					}
 	    		}
 	    	}
