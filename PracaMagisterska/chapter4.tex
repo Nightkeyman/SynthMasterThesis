@@ -1,3 +1,45 @@
 \chapter{Addytywna synteza dźwięku}\label{chapter_additive}
-\section{Lorem ipsum } \label{lorem_ipsum}
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+Jak wspomniano w podrozdziale \ref{dzwiek}, brzmienie dźwięku jest zależne od ilości składowych harmonicznych. Dźwięki słyszane na codzień
+Synteza addytywna polega na sumowaniu wielu fal sinusoidalnych w jedną. Każda ze składowych może mieć inną częstotliwość oraz amplitudę.
+%https://en.wikipedia.org/wiki/Additive_synthesis#History
+Opisywana metoda dźwięku znajduje zastosowanie w muzyce oraz syntezie mowy. Używana jest do generacji dźwięku różnego rodzaju organów. 
+
+\section{Zasada działania syntezy addytywnej}
+Istnieją różne podejścia do addytywnej syntezy dźwięku. Ten sam dźwięk może być uzyskany różnymi sposobami. Obecnie znane metody realizacji syntezy addytywnej to:
+\begin{itemize}
+	\item metoda czasowa - bank oscylatorów,
+	\item synteza falowodowa,
+	\item synteza IFFT.
+	% https://ieeexplore.ieee.org/document/4412805
+\end{itemize}
+
+\subsection{Synteza addytywna czasowa}
+
+%https://en.wikipedia.org/wiki/Additive_synthesis#:~:text=Additive%20synthesis%20is%20a%20sound,or%20inharmonic%20partials%20or%20overtones.
+\begin{equation} \label{equ:addit_time}
+y(t) = \sum_{k=1}^{K} r_{k}cos(2\pi kf_{0}t + \phi_{k})  \\  
+\end{equation}
+\begin{tabular}{ l l l l}
+	gdzie: & $y(t)$ &  - & wyjście addytywnej syntezy dźwięku, \\
+	&	$k$ & - &  numer składowej harmonicznej sygnału, \\
+	&	$r_{k}$ & - &  amplituda składowej harmonicznej k, \\
+	&	$kf_{0}$ & - &  częstotliwość składowej harmonicznej k,\\
+	&	$\phi_{k}i$ & - &  faza składowej harmonicznej k, \\
+\end{tabular}
+
+\subsection{Synteza addytywna widmowa}
+
+
+
+\section{Implementacja syntezy addytywnej}
+
+\subsection{Synteza addytywna czasowa}
+
+\subsection{Synteza addytywna widmowa}
+
+
+
+\section{Interfejs użytkownika}
+
+
+\section{Wyniki}
