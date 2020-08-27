@@ -38,7 +38,42 @@ void square_wave(int freq, int amp, int counter, int edit, int adsr_index) {
 		}
 	}
 }
-
+void triangle_wave(int freq, int amp, int counter, int edit, int adsr_index) {
+	ADSR(adsr_index);
+	int i = 0;
+	float p = (float)Fs/(float)freq;
+	float p1 = 4.0/p;
+	float p2 = p/2.0;
+	if (edit == 1){
+		for(i = 0; i < 2*N; i++) {
+			v[i] = ((p1)*((float)abs( (float)((i/2 +counter)%((int)(p+1))) - p2)) - 1.0)*adsr[adsr_index];
+			if(i%2 == 1) v[i] = 0;
+		}
+	} else if (edit == 0) {
+		for(i = 0; i < 2*N; i+=2) {
+			v[i] += ((p1)*((float)abs( (float)((i/2 +counter)%((int)(p+1))) - p2)) - 1.0)*adsr[adsr_index];
+		}
+	}
+}
+void sawtooth_wave(int freq, int amp, int counter, int edit, int adsr_index) {
+	ADSR(adsr_index);
+	int i = 0;
+	float p = (float)Fs/(float)freq;
+	float p1 = 2.0/p;
+	float p2 = p/2.0;
+	if (edit == 1){
+		for(i = 0; i < 2*N; i++) {
+			v[i] = ((p1)*((float)( (float)((i/2 +counter)%((int)(p+1))) - p2)) )*adsr[adsr_index];
+			if(i%2 == 1) v[i] = 0;
+		}
+	} else if (edit == 0) {
+		for(i = 0; i < 2*N; i+=2) {
+			v[i] += ((p1)*((float)( (float)((i/2 +counter)%((int)(p+1))) - p2)) )*adsr[adsr_index];
+		}
+	}
+}
+/*
+ * nie bylem pewny czy mozna to usunac
 void sawtooth_wave(int freq, int amp) {
 	int i = 0;
 	for(i = 0; i < 2*N; i++) {
@@ -47,6 +82,7 @@ void sawtooth_wave(int freq, int amp) {
 		if(i%2 == 1) v[i] = 0;
 	}
 }
+*/
 
 void ADSR(int adsr_index) {
 	if (adsr_state[adsr_index] == 1){ // attack

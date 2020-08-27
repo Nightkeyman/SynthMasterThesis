@@ -140,8 +140,10 @@ extern int pressedkeys;
 extern enum methodtype{subtractive, additive, fm};
 extern enum methodtype method;
 
+extern enum waveformtype{square, triangle, sawtooth};
+extern enum waveformtype waveformSet;
 extern enum filtertype{lowpass, highpass, bandpass, bandstop};
-extern enum filtertype filter;
+extern enum filtertype filterSet;
 extern int sub_lowfreq;
 extern int sub_highfreq;
 
@@ -242,7 +244,10 @@ interrupt void uart_isr( void )
 						sub_lowfreq = UART_pull(2) + UART_pull(3)*256 + UART_pull(4)*256*256;
 					}
 					if (UART_pull(1) == 5){
-						filter = UART_pull(2);
+						filterSet = UART_pull(2);
+					}
+					if (UART_pull(1) == 6){
+						waveformSet = UART_pull(2);
 					}
 				}
 			}

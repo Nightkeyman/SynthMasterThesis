@@ -55,8 +55,10 @@ extern int sem_new_note; // 0 - 128
 enum methodtype{subtractive, additive, fm};
 enum methodtype method = subtractive;
 // SUBTRACTIVE GLOBALS
+enum waveformtype{square, triangle, sawtooth};
+enum waveformtype waveformSet = square;
 enum filtertype{lowpass, highpass, bandpass, bandstop};
-enum filtertype filter = lowpass;
+enum filtertype filterSet = lowpass;
 int sub_lowfreq = 0;
 int sub_highfreq = Fs;
 
@@ -139,7 +141,7 @@ int main( int argc, char *argv[] ) {
 		if(i <= N/2) kwadracik[i] = 1.0;
 		else kwadracik[i] = -1.0;
 	}
-
+	UART_send(170, 1,0,0,0,0,0);
 	/*---------------------------------------------------------------*/
 	/*							 MAIN LOOP 		                     */
 	/*---------------------------------------------------------------*/
@@ -198,19 +200,25 @@ int main( int argc, char *argv[] ) {
 				clear_v = 1;
 				for(i = 0; i < MIDI_POLY_MAX; i++) {
 					if(freqs[i] > 0 || adsr_state[i] > 0) {
-						square_wave(freqs[i], SIG_AMP, k, clear_v, i);
+						if (waveformSet == 1)
+							square_wave(freqs[i], SIG_AMP, k, clear_v, i);
+						else if (waveformSet == 2)
+							triangle_wave(freqs[i], SIG_AMP, k, clear_v, i);
+						else if (waveformSet == 3)
+							sawtooth_wave(freqs[i], SIG_AMP, k, clear_v, i);
+
 						if (clear_v == 1)
 							clear_v = 0;
 					}
 				}
 				fft_full();
-				if (filter == lowpass)
+				if (filterSet == lowpass)
 					lowPassFilter(sub_lowfreq);
-				else if (filter == highpass)
+				else if (filterSet == highpass)
 					highPassFilter(sub_highfreq);
-				else if (filter == bandpass)
+				else if (filterSet == bandpass)
 					bandPassFilter(sub_lowfreq, sub_highfreq);
-				else if (filter == bandstop)
+				else if (filterSet == bandstop)
 					bandStopFilter(sub_lowfreq, sub_highfreq);
 				ifft_full();
 				while(sem_dac == 0);
