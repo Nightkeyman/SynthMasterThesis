@@ -138,7 +138,7 @@ extern int pressedkeys;
 extern float adsr[MIDI_POLY_MAX];
 
 // SYNTHESIS METHODS
-extern enum methodtype{subtractive, additive, fm, fm_bell, flute};
+extern enum methodtype{subtractive, additive, fm, fm_bell, flute, violin};
 extern enum methodtype method;
 
 extern enum waveformtype{square, triangle, sawtooth};
