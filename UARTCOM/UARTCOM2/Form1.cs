@@ -9,6 +9,7 @@ using System.IO.Ports;
 using System.Windows.Forms;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Threading;
 
 namespace UARTCOM2
 {
@@ -275,6 +276,7 @@ namespace UARTCOM2
             {
                 ComPort.Write(bytes, 0, bytes.Length);
             }
+            Thread.Sleep(10);
         }
         private void button_clear_Click(object sender, EventArgs e)
         {
