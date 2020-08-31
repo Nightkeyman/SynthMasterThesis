@@ -9,6 +9,7 @@ using System.IO.Ports;
 using System.Windows.Forms;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Threading;
 
 namespace UARTCOM2
 {
@@ -21,6 +22,12 @@ namespace UARTCOM2
         byte buffer_length = 9;
         byte[] buffer;
         uint currFilter = 0;
+
+        //SUBTRACTIVE GLOBALS
+        int filtertype = 1;
+        int waveformtype = 1;
+        int highfreq = 1;
+        int lowfreq = 1;
 
         void Buffer_push(byte data)
         {
@@ -228,6 +235,24 @@ namespace UARTCOM2
                             }
                         }
                         break;
+                    case 170:
+                        if (Buffer_pull(7) == 171)
+                        {
+                            if (Checksum() == Buffer_pull(8))
+                            {
+                                if (Buffer_pull(1) == 1)
+                                {
+                                    button_fm_en.Invoke((MethodInvoker)delegate {
+                                        //disableAllMethods();
+                                    });
+                                }
+                                else if (Buffer_pull(1) == 2)
+                                {
+
+                                }
+                            }
+                        }
+                        break;
                 }
             }
                 
@@ -251,6 +276,7 @@ namespace UARTCOM2
             {
                 ComPort.Write(bytes, 0, bytes.Length);
             }
+            Thread.Sleep(10);
         }
         private void button_clear_Click(object sender, EventArgs e)
         {
@@ -265,7 +291,17 @@ namespace UARTCOM2
                 ComPort.Write(bytes, 0, bytes.Length);
             }
         }
+        private void disableAllMethods()
+        {
+            button_subtractive_en.Text = "Disabled";
+            button_subtractive_en.ForeColor = Color.Red;
 
+            button_additive_hammond_en.Text = "Disabled";
+            button_additive_hammond_en.ForeColor = Color.Red;
+
+            button_fm_en.Text = "Disabled";
+            button_fm_en.ForeColor = Color.Red;
+        }
         private void button_subtractive_en_Click(object sender, EventArgs e)
         {
             Console.WriteLine("siemsa");
@@ -301,10 +337,9 @@ namespace UARTCOM2
             textBox_subtractive_freq2.Enabled = true;
             trackBar_subtractive_freq1.Enabled = false;
             textBox_subtractive_freq1.Enabled = false;
-            sendInt(100, 4, (UInt32)trackBar_subtractive_freq2.Value); // set higher frequency
-            sendInt(100, 3, 0); // zero lower frequency
-            sendInt(100, 5, 0); // set 0(lowpass) filter type
-            currFilter = 0;
+            highfreq = trackBar_subtractive_freq2.Value;
+            filtertype = 0;
+            sendSubtractiveParameters();
         }
 
         private void radioButton_subtractive_highpass_CheckedChanged(object sender, EventArgs e)
@@ -313,10 +348,11 @@ namespace UARTCOM2
             textBox_subtractive_freq1.Enabled = true;
             trackBar_subtractive_freq2.Enabled = false;
             textBox_subtractive_freq2.Enabled = false;
-            sendInt(100, 3, (UInt32)trackBar_subtractive_freq1.Value); // set lower frequency
-            sendInt(100, 4, 96000); // max higher frequency
-            sendInt(100, 5, 1); // set 1(highpass) filter type
-            currFilter = 1;
+           
+            filtertype = 1;
+            lowfreq = trackBar_subtractive_freq1.Value;
+            highfreq = 96000;
+            sendSubtractiveParameters();
         }
 
         private void radioButton_subtractive_bandpass_CheckedChanged(object sender, EventArgs e)
@@ -325,10 +361,11 @@ namespace UARTCOM2
             textBox_subtractive_freq1.Enabled = true;
             trackBar_subtractive_freq2.Enabled = true;
             textBox_subtractive_freq2.Enabled = true;
-            sendInt(100, 3, (UInt32)trackBar_subtractive_freq1.Value); // set lower frequency
-            sendInt(100, 4, (UInt32)trackBar_subtractive_freq2.Value); // set higher frequency
-            sendInt(100, 5, 2); // set 2(bandpass) filter type
-            currFilter = 2;
+
+            filtertype = 2;
+            lowfreq = trackBar_subtractive_freq1.Value;
+            highfreq = trackBar_subtractive_freq2.Value;
+            sendSubtractiveParameters();
         }
 
         private void radioButton_subtractive_bandstop_CheckedChanged(object sender, EventArgs e)
@@ -337,10 +374,11 @@ namespace UARTCOM2
             textBox_subtractive_freq1.Enabled = true;
             trackBar_subtractive_freq2.Enabled = true;
             textBox_subtractive_freq2.Enabled = true;
-            sendInt(100, 3, (UInt32)trackBar_subtractive_freq1.Value); // set lower frequency
-            sendInt(100, 4, (UInt32)trackBar_subtractive_freq2.Value); // set higher frequency
-            sendInt(100, 5, 3); // set 3(bandstop) filter type
-            currFilter = 3;
+            
+            filtertype = 3;
+            lowfreq = trackBar_subtractive_freq1.Value;
+            highfreq = trackBar_subtractive_freq2.Value;
+            sendSubtractiveParameters();
         }
 
         private void label7_Click(object sender, EventArgs e)
@@ -419,14 +457,10 @@ namespace UARTCOM2
         private void button1_Click(object sender, EventArgs e)
         {
             // SEND VALUES
-            sendInt(100, 3, (UInt32)trackBar_subtractive_freq1.Value);
-            sendInt(100, 4, (UInt32)trackBar_subtractive_freq2.Value);
-            sendInt(100, 5, currFilter);
-        }
+            highfreq = trackBar_subtractive_freq2.Value;
+            lowfreq = trackBar_subtractive_freq1.Value;
 
-        private void button2_Click(object sender, EventArgs e)
-        {
-            sendInt(100, 4, (UInt32)trackBar_subtractive_freq2.Value);
+            sendSubtractiveParameters();
         }
 
         private void textBox_fm_modamp_TextChanged(object sender, EventArgs e)
@@ -542,7 +576,27 @@ namespace UARTCOM2
 
         private void radioButton_subtractive_square_CheckedChanged(object sender, EventArgs e)
         {
-            
+            waveformtype = 1;
+            sendSubtractiveParameters();
+        }
+        private void sendSubtractiveParameters()
+        {
+            sendInt(100, 4, (UInt32)highfreq); // set higher frequency
+            sendInt(100, 3, (UInt32)lowfreq); // zero lower frequency
+            sendInt(100, 5, (UInt32)filtertype); // set 0(lowpass) filter type
+            sendInt(100, 6, (UInt32)waveformtype); // set 0(lowpass) filter type
+        }
+
+        private void radioButton_subtractive_triangle_CheckedChanged(object sender, EventArgs e)
+        {
+            waveformtype = 2;
+            sendSubtractiveParameters();
+        }
+
+        private void radioButton_subtractive_sawtooth_CheckedChanged(object sender, EventArgs e)
+        {
+            waveformtype = 3;
+            sendSubtractiveParameters();
         }
     }
 }

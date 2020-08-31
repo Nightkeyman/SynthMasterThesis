@@ -436,6 +436,7 @@
             this.radioButton_subtractive_sawtooth.TabStop = true;
             this.radioButton_subtractive_sawtooth.Text = "Sawtooth";
             this.radioButton_subtractive_sawtooth.UseVisualStyleBackColor = true;
+            this.radioButton_subtractive_sawtooth.CheckedChanged += new System.EventHandler(this.radioButton_subtractive_sawtooth_CheckedChanged);
             // 
             // radioButton_subtractive_triangle
             // 
@@ -447,6 +448,7 @@
             this.radioButton_subtractive_triangle.TabStop = true;
             this.radioButton_subtractive_triangle.Text = "Triangle";
             this.radioButton_subtractive_triangle.UseVisualStyleBackColor = true;
+            this.radioButton_subtractive_triangle.CheckedChanged += new System.EventHandler(this.radioButton_subtractive_triangle_CheckedChanged);
             // 
             // radioButton_subtractive_square
             // 
