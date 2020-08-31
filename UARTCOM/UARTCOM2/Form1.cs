@@ -457,14 +457,10 @@ namespace UARTCOM2
         private void button1_Click(object sender, EventArgs e)
         {
             // SEND VALUES
-            sendInt(100, 3, (UInt32)trackBar_subtractive_freq1.Value);
-            sendInt(100, 4, (UInt32)trackBar_subtractive_freq2.Value);
-            sendInt(100, 5, currFilter);
-        }
+            highfreq = trackBar_subtractive_freq2.Value;
+            lowfreq = trackBar_subtractive_freq1.Value;
 
-        private void button2_Click(object sender, EventArgs e)
-        {
-            sendInt(100, 4, (UInt32)trackBar_subtractive_freq2.Value);
+            sendSubtractiveParameters();
         }
 
         private void textBox_fm_modamp_TextChanged(object sender, EventArgs e)
