@@ -1,8 +1,8 @@
 % !TeX spellcheck = pl_PL
-\chapter{Realizacja instrumentu muzycznego}
-W ramach realizacji instrumentu muzycznego implementowane jest wiele mechanizmów, które są konieczne do kompletnego działania projektu: przetwarzanie sygnałów z klawiatury muzycznej, wydobycie dźwięku z płyty PADK oraz komunikacja z interfejsem użytkownika. W niniejszym rozdziale przedstawiono podejście do realizacji wymienionych zadań. Omówiono również warstwę sprzętową projektu, która odgrywa ważną rolę w jego realizacji. Implementacja poszczególnych algorytmów syntezy dźwięku przedstawiona zostanie w kolejnych rozdziałach, dedykowanych poszczególnym metodom syntezy.
+\chapter{Projekt instrumentu muzycznego}
+W ramach realizacji projektu konieczne jest zaimplementowanie wielu różnych etapów przetwarzania i sterowania procesem generowania dźwięku: akwizycja sygnałów z klawiatury muzycznej, generowanie dźwięku z procesora DSP oraz komunikacja z interfejsem użytkownika. W niniejszym rozdziale przedstawiono sposób realizacji wymienionych zadań. Omówiono również warstwę sprzętową projektu, odgrywającą podstawową rolę w realizacji syntezatora. Implementacja poszczególnych algorytmów syntezy dźwięku przedstawiona zostanie w kolejnych rozdziałach im dedykowanych.
 
-Kod programu na procesor DSP napisany został w języku C. Program pisano w środowisku Code Composer Studio v6, które jest dedykowane do procesorów firmy Texas Instruments. Wgrywanie kodu na płytę odbywało się poprzez użycie debuggera XDS510 firmy Spectrum Digital.
+Kod programu na procesor DSP napisany został w języku C. Program uruchamiano w środowisku Code Composer Studio v6, które jest dedykowane dla procesorów firmy Texas Instruments. Wgrywanie kodu na płytę ewaluacyjną PADK odbywało się poprzez użycie debuggera XDS510 firmy Spectrum Digital.
 
 % zdjęcie PADK z debuggerem
 
