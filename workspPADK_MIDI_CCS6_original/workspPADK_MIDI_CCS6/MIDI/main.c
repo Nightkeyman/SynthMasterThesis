@@ -103,10 +103,10 @@ double aflute1;
 // VIOLIN GLOBALS
 float maxVelocity = 0.25;
 float lowestFrequency = 140;
-int nDelays = Fs/lowestFrequency;
+int nDelays;
 int bowDown = 1;
 float betaRatio = 0.127236;
-float baseDelay = Fs/f - 4.0;
+float baseDelay;
 // vibrato
 float vibrato_gain = 0.005;
 float vibrato_freq = 6.12723;
@@ -114,23 +114,23 @@ float vibrato_freq = 6.12723;
 float vibrato_time = 0.0;
 float vibrato_alpha = 0.0;
 float vibrato_table[vibrato_TABLE_SIZE];
-float vibrato_rate = vibrato_TABLE_SIZE*vibrato_freq/(float)Fs;
+float vibrato_rate;
 // neck delay line
-float neckDelay[nDelays+1];
-float neck_delay = baseDelay*(1.0-betaRatio);
+float neckDelay[343];
+float neck_delay;
 int neck_inPoint = 0;
 float neck_gain = 1;
-float neck_outPointer = (float)neck_inPoint - neck_delay;
+float neck_outPointer;
 int neck_outPoint;
 float neck_alpha;
 float neck_omAlpha;
 int neck_doNextOut = 1;
 // bridge delay line
-float bridgeDelay[nDelays+1];
-float bridge_delay = baseDelay*betaRatio;
+float bridgeDelay[343];
+float bridge_delay;
 int bridge_inPoint = 0;
 float bridge_gain = 1;
-float bridge_outPointer = (float)bridge_inPoint - bridge_delay;
+float bridge_outPointer;
 int bridge_outPoint;
 float bridge_alpha;
 float bridge_omAlpha;
@@ -225,6 +225,7 @@ int main( int argc, char *argv[] ) {
 	nDelays = Fs/lowestFrequency;
 	bowDown = 1;
 	betaRatio = 0.127236;
+	float f = 240;
 	baseDelay = Fs/f - 4.0;
 	if (baseDelay <= 0.0) baseDelay = 0.3;
 	//vibrato
@@ -265,6 +266,10 @@ int main( int argc, char *argv[] ) {
 	bridge_omAlpha = 1.0 - bridge_alpha;
 	if (bridge_outPoint == nDelays+1)
 		bridge_outPoint = 0;
+	for(i = 0; i < 343; i++) {
+		bridgeDelay[i] = 0.0;
+		neckDelay[i] = 0.0;
+	}
 
 	bridge_doNextOut = 1;
 
@@ -278,7 +283,7 @@ int main( int argc, char *argv[] ) {
 	stringfilter_gain = 0.95;
 	stringfilter_b;
 	stringfilter_a;
-	if (stringfiler_pole > 0.0)
+	if (stringfilter_pole > 0.0)
 		stringfilter_b = 1.0 - stringfilter_pole;
 	else
 		stringfilter_b = 1.0 + stringfilter_pole;
@@ -619,7 +624,7 @@ int main( int argc, char *argv[] ) {
 						if (clear_v == 1){
 							for(j = 0; j < N; j++) {
 								float bowVelocity = maxVelocity*adsr[i];
-								float stringfilter = stringfilter_b*stringfilter_gain*bridgeDelay[0] - stringfilter_a*stringfilter[0];
+								stringfilter = stringfilter_b*stringfilter_gain*bridgeDelay[0] - stringfilter_a*stringfilter;
 
 								float bridgeReflection = -stringfilter;
 								float nutReflection = -neckDelay[0];
@@ -630,12 +635,28 @@ int main( int argc, char *argv[] ) {
 								float newVelocity = 0.0;
 								if (bowDown){
 									float sample = deltaV + bowtable_offset;
-									sample = pow(abs(sample*bowtable_Slope) + 0.75, -4);
+									sample = pow(fabs(sample*bowtable_slope) + 0.75, -4);
 									if (sample < bowtable_minOutput) sample = bowtable_minOutput;
 									if (sample > bowtable_maxOutput) sample = bowtable_maxOutput;
-									newVelocity = detlaV*sample;
+									newVelocity = deltaV*sample;
 								}
-
+								/*
+								int p = 0;
+								for (p = 0; p < 1024; p++){
+									float tempa = (float)(p-512)*0.001;
+									float sample = tempa + bowtable_offset;
+									float pomoc = 1.0/(fabs(sample*bowtable_slope) + 0.75);
+									sample = pow(1.0/(fabs(sample*bowtable_slope) + 0.75), 4.0);
+									if (sample < bowtable_minOutput) {
+										sample = bowtable_minOutput;
+									}
+									if (sample > bowtable_maxOutput) {
+										sample = bowtable_maxOutput;
+									}
+									newVelocity = deltaV*sample;
+									v[2*p] = newVelocity;
+								}
+								*/
 								// neck delay line tick
 								float input = bridgeReflection + newVelocity;
 								neckDelay[neck_inPoint] = input*neck_gain;
@@ -719,21 +740,21 @@ int main( int argc, char *argv[] ) {
 				for(j = 0; j < N; j++) {
 					if (j < OVERLAP) {
 						if (whichwaveform == 1) {
-							waveform0[j] = overlaptable[j]*v[j*2]*SIG_AMP*1000;
+							waveform0[j] = overlaptable[j]*v[j*2]*SIG_AMP*10000;
 						} else {
-							waveform1[j] = overlaptable[j]*v[j*2]*SIG_AMP*1000;
+							waveform1[j] = overlaptable[j]*v[j*2]*SIG_AMP*10000;
 						}
 					} else if (j >= N - OVERLAP) {
 						if (whichwaveform) {
-							waveform0[j] = overlaptable[N-j-1]*v[j*2]*SIG_AMP*1000;
+							waveform0[j] = overlaptable[N-j-1]*v[j*2]*SIG_AMP*10000;
 						} else {
-							waveform1[j] = overlaptable[N-j-1]*v[j*2]*SIG_AMP*1000;
+							waveform1[j] = overlaptable[N-j-1]*v[j*2]*SIG_AMP*10000;
 						}
 					} else {
 						if (whichwaveform) {
-							waveform0[j] = v[j*2]*SIG_AMP*1000;
+							waveform0[j] = v[j*2]*SIG_AMP*10000;
 						} else {
-							waveform1[j] = v[j*2]*SIG_AMP*1000;
+							waveform1[j] = v[j*2]*SIG_AMP*10000;
 						}
 					}
 				}
