@@ -54,7 +54,7 @@ Jednym z głównych zadań niniejszego projektu magisterskiego jest implementacj
 
 \section{Przegląd metod syntezy dźwięku}
 % http://legacy.spa.aalto.fi/publications/reports/sound_synth_report.pdf
-Podział metod syntezy dźwięku w literaturze jest bardzo zróżnicowany. Najczęściej wykorzystuje się różnice w metodach syntezy: \cite{metody_syntezy}:
+Podział metod syntezy dźwięku w literaturze jest bardzo zróżnicowany. Najczęściej wykorzystuje się różnice w metodach syntezy \cite{metody_syntezy}:
 \begin{itemize}
 	\item metody widmowe,
 	\item algorytmy abstrakcyjne,
@@ -140,12 +140,12 @@ Debata na temat tego, który rodzaj syntezatorów jest lepszy, trwa od samego wp
 Lorenzo Furlanetto utworzył test ślepego (ang. blind test) porównania klasycznego syntezatora analogowego oraz jego cyfrowej emulacji \cite{synthtopia}. Wyniki testu pokazały, iż 51 procent ankietowanych rozpoznało, który z syntezatorów był analogowy, natomiast aż 57 procent osób orzekło, iż dźwięk syntezatorów cyfrowych jest przyjemniejszy. Oznacza to, że trudno jest odróżnić dźwięk obu typów syntezatorów, oraz że większość słuchaczy preferuje brzmienia cyfrowe.
 
 % https://blog.andertons.co.uk/labs/hardware-synths-vs-software-synths
-Syntezatory cyfrowe, w stosunku do analogowych, posiadają wiele zalet. Za pomocą tych pierwszych można dokonać syntezy wielu rodzajów dźwięków, w tym również takich, które imitują brzmienia prawdziwych instrumentów. Syntezatory analogowe natomiast, pozwalają jedynie na uzyskanie prostych brzmień, za pomocą filtracji i zmian podstawowej grupy przebiegów (trójkątnych, prostokątnych, sinusoidalnych). 
+Syntezatory cyfrowe, w stosunku do analogowych, posiadają wiele zalet. Za pomocą tych pierwszych można dokonać syntezy wielu rodzajów dźwięków, w tym również takich, które imitują brzmienia prawdziwych instrumentów. Syntezatory analogowe natomiast, pozwalają jedynie na uzyskanie prostych brzmień, za pomocą filtracji i zmian podstawowej grupy przebiegów (trójkątnych, prostokątnych, sinusoidalnych i piłokształtnych). 
 Przewaga syntezatorów cyfrowych uwydatnia się szczególnie w przypadku łączenia wielu instrumentów cyfrowych i jednoczesnym wykonywaniu dźwieków za pomocą jednej klawiatury \cite{andertons}.
 
 % zrobić skróty CS (cyfrowy syntezator) i AS (analogowy syntezator)
 
-Z technicznego punktu widzenia, cyfrowe syntezatory pozwalają również na wykorzystanie w procesie generacji dźwięku cyfrowych metod przetwarzania sygnałów. Jak wiadomo parametry na przykład filtrów cyfrowych lub innych algorytmów nie ulegają degradacji z czasem, jak również można uzyskiwać ich charakterystyki o dowolonych kształach. Natomiast elementy składowe analogowych syntezatorów należy wymieniać lub dostrajać.
+Z technicznego punktu widzenia, cyfrowe syntezatory pozwalają również na wykorzystanie w procesie generacji dźwięku cyfrowych metod przetwarzania sygnałów. Parametry na przykład filtrów cyfrowych lub innych algorytmów nie ulegają degradacji z czasem, jak również można uzyskiwać ich charakterystyki o dowolonych kształach. Natomiast elementy składowe analogowych syntezatorów należy wymieniać lub dostrajać.
 
 % +pamięć ustawien - łatwa konfiguracja
 % pamięć RAM - nowe mozliwosci generowania sygnałów
@@ -157,8 +157,7 @@ Cyfrowy interfejs instrumentów muzycznych (MIDI) to standard utworzony w 1983 r
 
 \subsection{Warstwa sprzętowa MIDI}
 W interfejsie MIDI, informacje przesyłane są za pomocą szeregowego połączenia dwóch urządzeń cyfrowych, w trybie półdupleks. Szybkość przesyłu informacji została ustandardyzowana i wynosi 31250 bitów na sekundę \cite{dokumentacja_midi}. 
-% SPRAWDZIC CZY FAKTYCZNIE JEST JEDYNKA CAŁY CZAS - CAŁY CZAS PRĄD PŁYNIE??
-Podobnie jak w popularnym interfejsie UART, początek transmisji ramki danych rozpoczyna bit startu o wartości 0, natomiast kończy bit stopu o wartości logicznej jedynki. Interfejs MIDI jest interfejsem prądowym, gdzie logiczne zero oznacza brak przepływu prądu, natomiast logiczna jedynka oznacza jego przepływ.
+Podobnie jak w popularnym interfejsie UART, początek transmisji ramki danych rozpoczyna bit startu o wartości 0, natomiast kończy bit stopu o wartości logicznej jedynki. Interfejs MIDI jest interfejsem prądowym, gdzie logiczne zero oznacza przepływ prądu, natomiast logiczna jedynka oznacza brak jego przepływu.
 
 \begin{figure}[H]
 	\centering
@@ -174,7 +173,7 @@ Schemat sprzętowy interfejsu MIDI znajdującego się po stronie instrumentu cyf
 %https://www.midi.org/specifications-old/category/midi-1-0-detailed-specifications
 %PDF: D:\Data\Studia\Magisterka\Literatura wstepna\MIDI
 Wiadomości MIDI składają się z jednego bajta statusu, po którym następuje zazwyczaj jeden lub dwa bajty danych. Istnieją różne typy wiadomości MIDI. Dzieli się je na wiadomości kanałowe (odnoszące się do jednego kanału) oraz systemowe (odnoszące się do wszystkich kanałów). Wiadomości kanałowe mogą dzielić się dalej na komunikaty trybu lub komunikaty głosu. Te drugie w praktyce stanowią większość przesyłanych komunikatów w transmisji MIDI.
-Komunikat głosu może nieść informację na przykład o: naciśnięciu klawisza, zwolnieniu klawisza, aftertouch (zmiana siły nacisku na klawisz odnotowana po pewnym czasie od jego naciśnięcia), pitch bend (delikatna zmiana wysokości dźwięku). Protokół MIDI, w ramach transmisji bajta danych (komunikat głosu), może obsłużyć 128 wysokości dźwięków z jednego instrumentu. Poziom głośności, zależny od siły nacisku na klawisz, również może przyjąć jedną ze 128 wartości.
+Komunikat głosu może nieść informację na przykład o: naciśnięciu klawisza, zwolnieniu klawisza, aftertouch (zmiana siły nacisku na klawisz, odnotowana po pewnym czasie od jego naciśnięcia), pitch bend (delikatna zmiana wysokości dźwięku). Protokół MIDI, w ramach transmisji bajta danych (komunikat głosu), może obsłużyć 128 wysokości dźwięków z jednego instrumentu. Poziom głośności, zależny od siły nacisku na klawisz, również może przyjąć jedną ze 128 wartości.
 
 Oprócz przesyłu informacji między urządzeniami MIDI, występuje dodatkowo sygnał zegarowy MIDI (ang. MIDI Pulses), który pozwala na zsynchronizowanie kilku instrumentów, do wykonywania utworu w jednakowym tempie. Informacje zegarowe występują cyklicznie i zawsze posiadają tę samą wartość bitową.
 
