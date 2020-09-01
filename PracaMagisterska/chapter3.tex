@@ -171,8 +171,8 @@ Obsługa danych zawierających zsyntezowane dźwięki oraz ich przesłanie na mo
 
 Obsługa danych tej funkcji opiera się na zainicjalizowanym wcześniej buforze cyrkulacyjnym dmaxDacBuffer. Programowo bufor jest czterowymiarową tablicą, gdzie pierwszy wymiar dokonuje synchronizacji odczytu i zapisu typu ping-pong. Następnie wykonywany jest mechanizm zakładkowania dwóch tablic przechowujących próbki zsyntezowanego dźwięku. Dane po zakładkowaniu przekazywane są do modułu DAC przez tablicę dmaxDacBuffer[PING/PONG][FRAME][L/R][.].
 
-\section{Klawiatura polifoniczna}
-<W trakcie implementacji>
+\section{Klawiatura polifoniczna}\label{section:real_polifonia}
+Generowanie więcej niż jednego tonu jednocześnie wymusza na DSP odczytywanie wciśnięć i zwalniania klawiszy instrumentu oraz przechowywanie informacji o klawiszach wciśniętych w danej chwili. Rozwiązano to poprzez utworzenie tablicy o 12 elementach typu float (zakłada się obsługę nie więcej niż 12 klawiszy jednocześnie). Odebranie ramki MIDI z informacją o wciśnięciu klawisza instrumentu, powoduje wpisanie odczytanej wartości częstotliwości do niezajętej komórki tablicy. Gdy dźwięk związany z danym klawiszem kończy wybrzmiewanie, odpowiedni element tablicy jest zerowany. W każdej z metod syntezy odczytywane są częstotliwości z tej tablicy i generowane odpowiednie dźwięki. Rozwiązania polifonii różnią się pomiedzy metodami syntezy, z tego powodu zostaną one indywidualnie opisane w odpowiednich rozdziałach.
 % opisać ogólnie, i powiedziec, ze dla kazdej metody to bedzie wyglądało trochę inaczej
 
 
@@ -231,8 +231,22 @@ Podjęto próby osiągnięcia jak największej rozdzielczości DFT na wykorzysty
 
 
 \section{ADSR}
-<W trakcie implementacji>
+Kształtowanie obwiedni generowanych dźwięków związane jest z naciskaniem i zwalnianiem klawiszy syntezatora. Realizacja ADSR'a musi uwzględniać założenie, że klawisze nie muszą być naciskane równocześnie. Fakt ten wyklucza zastosowanie jednego globalnego systemu kształtowania obwiedni. Zastosowanym rozwiązaniem jest kształtowanie obwiedni dla każdego klawisza indywidualnie. Doprowadziło to do powstania dwóch 12 elementowych tablic:
+\begin{itemize}
+	\item tablica typu float, która przechowuje aktualną wartość obwiedni dla wybrzmiewających dźwięków,
+	\item tablica typu int, która przechowuje stan ADSR dla wybrzmiewających dźwięków.
+\end{itemize}
+Poszczególne stany ADSR zaznaczone zostały na rysunku \ref{rys:real_adsr}.
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=8cm]{./grafiki/real_adsr}
+	\captionsetup{justification=centering}
+	\caption{Stany ADSR.}
+	\label{rys:real_adsr}
+\end{figure}
+Gdy wciśnięty zostanie klawisz, w tablicy stanów ADSR elementowi o indeksie zgodnym z tablicą opisaną w \ref{section:real_polifonia} przypisana zostanie wartość oznaczająca stan "attack". Gdy syntezowany dźwięk jest w tym stanie, wartość obwiedni w tablicy o odpowiednim indeksie jest zwiększana wraz z upływem czasu. Gdy osiągnięta zostanie wartość maksymalna, stan ADSR tego dźwięku zostanie zmieniony na "decay". Wartość obwiedni maleje aż do osiagnięcia ustalonego poziomu dla stanu "sustain". Gdy to nastąpi, stan zostanie zmieniony na "sustain" i będzie on trwał aż do zwolnienia klawisza instrumentu. Zwolnienie klawisza spowoduje przejście do stanu "release" i stopniowe wyzerowanie wartości obwiedni. Po osiągnięciu zera przez wartość obwiedni danego dźwięku, jego stan jest czyszczony, a odpowiedni element tablicy opisanej w \ref{section:real_polifonia} zostaje wyzerowany, co kończy syntezę danego dźwięku.
 
+Użytkownik ma możliwosć ustawiania, za pomocą interfejsu użytkownika, czasu trwania stanów "attack", "decay" i "release" oraz poziomu dla stanu "sustain".
 
 \section{Interfejs użytkownika}
 <TODO>
