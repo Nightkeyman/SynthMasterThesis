@@ -45,7 +45,7 @@ y_{Sawtooth}(t) = \sum_{k=1}^{K} \frac{(-1)^k}{k} sin(2\pi kf_{0}t) \\
 \end{equation}
 % O tym że na tym polegały organy Hammonda
 
-Postać harmoniczna syntezy addytywnej pozwala również na uzyskanie podstawowych przebiegów używanych w syntezie subtraktywnej. Każdy z nich można wygenerowac za pomocą sumowania odpowiednich składowych harmonicznych z odpowiednimi amplitudami. Przykłady takich przebiegów przedstawiono we wzorach \ref{equ:addit_sqr}, \ref{equ:addit_trng} oraz \ref{equ:addit_sawth}.
+Postać harmoniczna syntezy addytywnej pozwala również na uzyskanie podstawowych przebiegów używanych w syntezie subtraktywnej. Każdy z nich można wygenerować za pomocą sumowania odpowiednich składowych harmonicznych z odpowiednimi amplitudami. Przykłady takich przebiegów przedstawiono we wzorach \ref{equ:addit_sqr}, \ref{equ:addit_trng} oraz \ref{equ:addit_sawth}.
 
 \subsection{Postać nieharmoniczna} \label{pos_nieharm}
 Dobieranie składowych dźwięku w syntezie addytywnej nie musi jednak zależeć od konkretnej częstotliwości. Niektóre instrumenty wydają dźwięk składający się ze składowych harmonicznych i nieharmonicznych (czyli takich, które nie są całkowitą wielokrotnością pewnej częstotliwości $f_{0}$). Dla takiej postaci metody addytywnej, zsyntezowany dźwięk można opisać wzorem:
@@ -86,15 +86,10 @@ B(\omega) = F(\omega)*e^{j\phi(\omega_{k})} \\
 \end{tabular}
 
 Synteza części stochastycznej polega na wymnożeniu losowej fazy do obwiedni widma filtra. Takie działanie zostało zaprezentowane we wzorze \ref{equ:addit_szum}.
-Dodanie szumu do sygnału deterministycznego syntezy addytywnej pozwala na uzyskanie dźwięków instrumentów dętych.
+Dodanie szumu do sygnału deterministycznego w syntezie addytywnej pozwala na uzyskanie dźwięków na przykład instrumentów dętych.
 
 \section{Metody implementacji syntezy addytywnej}
-%https://en.wikipedia.org/wiki/Additive_synthesis#History
-Synteza addytywna w instrumentach klawiszowych używana jest między innymi do generacji dźwięku organów, których barwa upraszczana jest do kilku SH. W przypadku próby uzyskania dźwięku o większej ilości składowych harmonicznych, złożoność obliczeniowa metody wzrasta.
-%https://ccrma.stanford.edu/~jos/pasp/Additive_Synthesis.html
-Przykładowo, dla uzyskania pojedynczego dźwięku pianina w jakości CD-Audio,
-%https://en.wikipedia.org/wiki/Compact_Disc_Digital_Audio
-wymagane byłoby obliczenie około 400 fal sinusoidalnych na każdą próbkę zsyntezowanego dźwięku. Oznacza to, iż dla polifonicznej klawiatury takiego pianina, byłyby to tysiące SH. Obecne ograniczenia sprzętowe nie pozwalają na szybki rozwój addytywnej metody syntezy dźwięku, gdyż jest ona bardzo złożona obliczeniowo.
+
 
 Istnieją różne metody implementacji addytywnej syntezy dźwięku. Ten sam dźwięk może być uzyskany różnymi sposobami. Popularne metody realizacji syntezy addytywnej to:
 \begin{itemize}
@@ -103,13 +98,27 @@ Istnieją różne metody implementacji addytywnej syntezy dźwięku. Ten sam dź
 	\item synteza IFFT.
 	% https://ieeexplore.ieee.org/document/4412805 86zł
 \end{itemize}
-W kolejnych punktach opisano wymienione metody implementacji syntezy addytywnej dźwięku.
+
+\subsection{Ograniczenia syntezy addytywnej} \label{addit_ograniczenia}
+%https://en.wikipedia.org/wiki/Additive_synthesis#History
+Synteza addytywna w instrumentach klawiszowych jest używana między innymi do generacji dźwięku organów, których barwa upraszczana jest zazwyczaj do kilku SH. W przypadku próby uzyskania dźwięku o większej ilości składowych harmonicznych, złożoność obliczeniowa metody wzrasta.
+%https://ccrma.stanford.edu/~jos/pasp/Additive_Synthesis.html
+Przykładowo, dla uzyskania pojedynczego dźwięku pianina w jakości CD-Audio,
+%https://en.wikipedia.org/wiki/Compact_Disc_Digital_Audio
+wymagane byłoby obliczenie około 400 fal sinusoidalnych na każdą próbkę zsyntezowanego dźwięku. Oznacza to, iż dla polifonicznej klawiatury takiego pianina, byłyby to tysiące składowych. Obecne ograniczenia sprzętowe nie pozwalają na szybki rozwój addytywnej metody syntezy dźwięku, gdyż jest ona bardzo złożona obliczeniowo.
 
 \subsection{Bank oscylatorów}
 %analogowe hammondy i zwykłe, ale ze są wolne
+Synteza przez bank oscylatorów jest najstarszą metodą implementacji addytywnej syntezy dźwięku. Opiera się ona bezpośrednio na równaniu \ref{equ:addit_time_harm}.
+Ta metoda implementacji realizowana była nawet na instrumentach analogowych. Instrumenty takie jak organy Hammonda posiadały kilka dyskowych wirników, które były nacięte w kilku miejscach na ich powierzchni. Obracające wirniki generowały prąd elektryczny o charakterystycze zawierającej pewne składowe harmoniczne tonu podstawowego.
+
+Implementacja na procesorach DSP, odpowiadająca dyskowym wirnikom, opiera się na realizowaniu wielu funkcji sin() o różnych częstotliwościach i amplitudach. Każda taka funkcja generuje jedną składową harmoniczną syntezowanego dźwięku. Wszystkie razem traktowane są jako bank oscylatorów. Problem z realizacją skomplikowanego brzmienia takim sposobem, przedstawiony został w punkcie \ref{addit_ograniczenia}.
 
 \subsection{Synteza wavetable}
 %opisac tą która została zaimplementowana
+Synteza wavetable (nazywana również syntezą tablicową lub lookup-table) polega na na zapisaniu jednego okresu fali dźwiękowej do tablicy. W każdej kolejnej chwili czasu działania programu, odczytywany jest odpowiedni element tablicy. Okres fali zapisanej w tablicy powinien mieć wystarczającą ilość próbek, aby móc odtworzyć go w niskich częstotliwościach.
+
+W syntezie addytywnej użycie takiej metody implementacji może znacznie przyspieszyć generowanie kolejnych próbek składowych sygnału. Do tablicy zapisuje się jeden przebieg sinusoidalny. Odczyt jednego indeksu zabiera mniej czasu pracy procesora niż wygenerowanie próbki z funkcji sin().
 %https://en.wikipedia.org/wiki/Lookup_table
 
 \subsection{Synteza IFFT}
