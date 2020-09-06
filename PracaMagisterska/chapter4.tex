@@ -1,12 +1,12 @@
 \chapter{Addytywna synteza dźwięku}\label{chapter_additive}
 Synteza addytywna pozwala na utworzenie barwy dźwięku poprzez zbudowanie pełnego widma częstotliwościowego za pomocą odpowiednich składowych. Słowo 'addytywna' odnosi się do sumowania wielu przebiegów w jeden złożony sygnał dźwiękowy. Historycznie jest ona drugą najstarszą metodą syntezy, zaraz po subtraktywnej, opisanej w rozdziale \ref{chapter_subtractive}.
-Zazwyczaj synteza addytywna polega na dodawaniu wielu fal sinusoidalnych o różnych częstotliwościach oraz amplitudach. Metoda ta pozwala na dużą dowolność. Dodawanymi składowywmi sygnału nie muszą być jedynie fale sinusoidalne.
-Synteza addytywna uznawana jest za odwrotność syntezy subtraktywnej. Znajduje ona zastosowanie w syntezie dźwięku oraz mowy.
+Zazwyczaj synteza addytywna polega na dodawaniu wielu fal sinusoidalnych o różnych częstotliwościach oraz amplitudach. Metoda ta pozwala jednak na dużą dowolność. Dodawanymi składowywmi sygnału nie muszą być jedynie fale sinusoidalne.
+Synteza addytywna uznawana jest za odwrotność syntezy subtraktywnej. Znajduje zastosowanie w syntezie dźwięku oraz mowy.
 
-W niniejszym rozdziale przedstawiono zasadę działania syntezy addytywnej. Zaprezentowano wzory matematyczne, za pomocą których można uzyskać zsyntezowane brzmienie. Przedstawiono również kilka metod implementacji tego rodzaju syntezy. Na końcu rozdziału zaprezentowano interfejs użytkownika oraz wyniki zaimplementowania syntezy addytywnej na procesorze DSP.
+W niniejszym rozdziale przedstawiono zasadę działania syntezy addytywnej. Zaprezentowano wzory matematyczne, za pomocą których można uzyskać zsyntezowane brzmienie. Przedstawiono również kilka metod implementacji tego rodzaju syntezy. Na końcu rozdziału zaprezentowano autorski interfejs użytkownika oraz wyniki zaimplementowania syntezy addytywnej na procesorze DSP.
 
 \section{Zasada działania syntezy addytywnej}
-Synteza addytywna jest zbliżona do analizy częstotliwościowej Fouriera. Z tego powodu jest ona zaliczana do widmowych metod syntezy. Jej postać matematyczną można jednak przedstawić w dziedzinie czasu. Zależnie od doboru składowych dźwięku, przedstawienie syntezy addytywnej może różnie wyglądać.
+Synteza addytywna jest zbliżona pod niektórymi względami do analizy częstotliwościowej Fouriera. Z tego powodu jest ona zaliczana do widmowych metod syntezy. Jej postać matematyczną można jednak przedstawić w dziedzinie czasu. Zależnie od doboru składowych dźwięku, przedstawienie syntezy addytywnej może różnie wyglądać.
 % Okresowosc sygnalu y(t)
 %https://ccrma.stanford.edu/~jos/sasp/Additive_Synthesis_Early_Sinusoidal.html
 
@@ -25,7 +25,7 @@ y(t) = \sum_{k=1}^{K} a_{k}sin(2\pi kf_{0}t + \phi_{k})  \\
 	&	$\phi_{k}$ & - &  faza składowej harmonicznej k. \\
 \end{tabular}
 
-Każda składowa dźwięku uzyskanego z tej postaci metody addytywnej jest wielokrotnością częstototliwości podstawowej $f_{0}$. Wykorzystanie takiej postaci syntezy addytywnej, pozwala na utworzenie dźwięku na przykład organów.
+Każda składowa dźwięku uzyskanego z tej postaci syntezy addytywnej jest wielokrotnością częstototliwości podstawowej $f_{0}$. Wykorzystanie takiej postaci pozwala na utworzenie dźwięku na przykład organów. Jest to najbardziej podstawowy rodzaj syntezy addytywnej.
 
 %https://en.wikibooks.org/wiki/Sound_Synthesis_Theory/Additive_Synthesis <<---- SCHEMAT 
 
@@ -47,8 +47,18 @@ y_{Sawtooth}(t) = \sum_{k=1}^{K} \frac{(-1)^k}{k} sin(2\pi kf_{0}t) \\
 
 Postać harmoniczna syntezy addytywnej pozwala również na uzyskanie podstawowych przebiegów używanych w syntezie subtraktywnej. Każdy z nich można wygenerować za pomocą sumowania odpowiednich składowych harmonicznych z odpowiednimi amplitudami. Przykłady takich przebiegów przedstawiono we wzorach \ref{equ:addit_sqr}, \ref{equ:addit_trng} oraz \ref{equ:addit_sawth}.
 
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=12cm]{grafiki/add_sawtooth}
+	\captionsetup{justification=centering}
+	\caption{Generacja przebiegu piłokształtnego za pomocą syntezy addytywnej.}
+	\label{rys:add_sawtooth}
+\end{figure}
+
+Na rysunku \ref{rys:add_sawtooth} przedstawiono generowanie przebiegu piłokształtnego, jako przykład addytywnej syntezy dźwięku w postaci harmonicznej. Na pierwszym z wykresów przedstawiono przebieg uzyskany z dwóch składowych harmonicznych, a na kolejnym z 10. Na ostatnim wykresie widać przebieg składający się z 50 SH, który jest dobrą aproksymacją idealnego przebiegu piłokształtnego. Amplitudy kolejnych składowych tego sygnału obliczone zostały na podstawie wzoru \ref{equ:addit_sawth}
+
 \subsection{Postać nieharmoniczna} \label{pos_nieharm}
-Dobieranie składowych dźwięku w syntezie addytywnej nie musi jednak zależeć od konkretnej częstotliwości. Niektóre instrumenty wydają dźwięk składający się ze składowych harmonicznych i nieharmonicznych (czyli takich, które nie są całkowitą wielokrotnością pewnej częstotliwości $f_{0}$). Dla takiej postaci metody addytywnej, zsyntezowany dźwięk można opisać wzorem:
+Dobieranie składowych dźwięku w syntezie addytywnej nie musi zależeć od konkretnej częstotliwości. Niektóre instrumenty wydają dźwięk składający się ze składowych harmonicznych i nieharmonicznych (czyli takich, które nie są całkowitą wielokrotnością pewnej częstotliwości $f_{0}$). Zsyntezowany dźwięk w takiej postaci można opisać wzorem:
 \begin{equation} \label{equ:addit_time_nieharm}
 y(t) = \sum_{k=1}^{K} a_{k}sin(2\pi f_{k}t + \phi_{k})  \\  
 \end{equation}
@@ -85,11 +95,10 @@ B(\omega) = F(\omega)*e^{j\phi(\omega_{k})} \\
 	&	$B(\omega)$ & - & zmienna w czasie częstotliwość składowej k, \\
 \end{tabular}
 
-Synteza części stochastycznej polega na wymnożeniu losowej fazy do obwiedni widma filtra. Takie działanie zostało zaprezentowane we wzorze \ref{equ:addit_szum}.
+Synteza części stochastycznej polega na przepuszczeniu białego szumu (bazującego na losowej fazie) przez filtr FIR. Takie działanie zostało zaprezentowane we wzorze \ref{equ:addit_szum}.
 Dodanie szumu do sygnału deterministycznego w syntezie addytywnej pozwala na uzyskanie dźwięków na przykład instrumentów dętych.
 
 \section{Metody implementacji syntezy addytywnej}
-
 
 Istnieją różne metody implementacji addytywnej syntezy dźwięku. Ten sam dźwięk może być uzyskany różnymi sposobami. Popularne metody realizacji syntezy addytywnej to:
 \begin{itemize}
@@ -110,22 +119,63 @@ wymagane byłoby obliczenie około 400 fal sinusoidalnych na każdą próbkę zs
 \subsection{Bank oscylatorów}
 %analogowe hammondy i zwykłe, ale ze są wolne
 Synteza przez bank oscylatorów jest najstarszą metodą implementacji addytywnej syntezy dźwięku. Opiera się ona bezpośrednio na równaniu \ref{equ:addit_time_harm}.
-Ta metoda implementacji realizowana była nawet na instrumentach analogowych. Instrumenty takie jak organy Hammonda posiadały kilka dyskowych wirników, które były nacięte w kilku miejscach na ich powierzchni. Obracające wirniki generowały prąd elektryczny o charakterystycze zawierającej pewne składowe harmoniczne tonu podstawowego.
+Ta metoda implementacji realizowana była nawet na instrumentach analogowych. Instrumenty takie jak organy Hammonda posiadały kilka dyskowych wirników, które były nacięte w kilku miejscach na ich powierzchni. Obracające wirniki generowały prąd elektryczny o charakterystyce zawierającej pewne składowe harmoniczne tonu podstawowego.
 
-Implementacja na procesorach DSP, odpowiadająca dyskowym wirnikom, opiera się na realizowaniu wielu funkcji sin() o różnych częstotliwościach i amplitudach. Każda taka funkcja generuje jedną składową harmoniczną syntezowanego dźwięku. Wszystkie razem traktowane są jako bank oscylatorów. Problem z realizacją skomplikowanego brzmienia takim sposobem, przedstawiony został w punkcie \ref{addit_ograniczenia}.
+Implementacja na procesorach DSP, odpowiadająca dyskowym wirnikom, opiera się na realizowaniu wielu funkcji sin() o różnych częstotliwościach i amplitudach. Każda taka funkcja generuje jedną składową harmoniczną syntezowanego dźwięku. Wszystkie razem traktowane są jako bank oscylatorów. Problem realizacji skomplikowanego brzmienia takim sposobem został przedstawiony w punkcie \ref{addit_ograniczenia}.
 
-\subsection{Synteza wavetable}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=15cm]{grafiki/add_hammond_matlab}
+	\captionsetup{justification=centering}
+	\caption{Barwa dźwięku organów Hammonda dla różnych ilości składowych harmonicznych.}
+	\label{rys:add_hammond_matlab}
+\end{figure}
+
+Na rysunku \ref{rys:add_hammond_matlab} przedstawiono wygenerowaną barwę organów Hammonda dla trzech różnych ustawień amplitud składowych harmonicznych.
+
+
+\subsection{Synteza wavetable} \label{add_wavetable}
 %opisac tą która została zaimplementowana
-Synteza wavetable (nazywana również syntezą tablicową lub lookup-table) polega na na zapisaniu jednego okresu fali dźwiękowej do tablicy. W każdej kolejnej chwili czasu działania programu, odczytywany jest odpowiedni element tablicy. Okres fali zapisanej w tablicy powinien mieć wystarczającą ilość próbek, aby móc odtworzyć go w niskich częstotliwościach.
+Synteza wavetable (nazywana również syntezą tablicową lub lookup-table) polega na zapisaniu jednego okresu fali dźwiękowej do tablicy zdefiniowanej w programie komputerowym. W każdej kolejnej chwili czasu działania programu, odczytywany jest odpowiedni element tablicy. Okres fali zapisanej w tablicy powinien zawierać nadmierną liczbę próbek (ang. over-sampled), aby móc odczytać go dla niskich częstotliwościach. Niewystarczające spróbkowanie może doprowadzić do znacznych skoków wartości generowanej fali za pomocą metody wavetable.
 
-W syntezie addytywnej użycie takiej metody implementacji może znacznie przyspieszyć generowanie kolejnych próbek składowych sygnału. Do tablicy zapisuje się jeden przebieg sinusoidalny. Odczyt jednego indeksu zabiera mniej czasu pracy procesora niż wygenerowanie próbki z funkcji sin().
+W syntezie addytywnej użycie takiej metody implementacji może znacznie przyspieszyć generowanie kolejnych próbek składowych sygnału. Do tablicy zapisuje się jeden przebieg sinusoidalny. Odczyt jednego indeksu zabiera mniej czasu pracy procesora niż wygenerowanie próbki z funkcji sin(). Działanie takiej metody jest podobne do banku oscylatorów, ze względu na to, iż również realizowana jest w dziedzinie czasu. Znaczna różnica jest taka, że tablicę w syntezie wavetable można traktować jako jeden oscylator, z którego należy jedynie odczytać wartości tj. znaleźć odpowiedni indeks tablicy. Nie trzeba w każdej chwili czasu obliczać na nowo próbki dla każdej składowej dźwięku.
 %https://en.wikipedia.org/wiki/Lookup_table
 
 \subsection{Synteza IFFT}
 %Rysunki z matlaba
+W 1990 roku P. Depalle oraz X. Rodet przedstawili przełomową metodę implementacji syntezy addytywnej. W ich podejściu obliczanie składowych nie opiera się na zestawie oscylatorów, lecz na algorytmie IFFT (ang. Inverse Fast Fourier Transform) stosowanym dla krótkiego okna widma (STS, ang. short term spectrum). Wyniki ich pracy dowiodły, iż zmniejszyli koszt obliczeń syntezy addytywnej piętnastokrotnie, w stosunku do oscylatorów sinusoidalnych (w ich indywidualnym przypadku, gdzie obliczali 9 istotnych punktów widma w 256 próbkowym STS).
 
+Konstrukcja pojedynczej ramki STS została przedstawiona poniżej. Niech $f_{j}$, $a_{j}$ oraz $\phi_{j}$ będą średnimi wartościami częstotliwości, amplitudy i fazy ramki czasowej pożądanego sygnału $w[n]$. $W$ niech będzie Transformatą Fouriera okna sygnału $w[n]$. Wtedy dodanie pojedynczej składowej do STS może być zapisana jako:
+
+\begin{equation} \label{equ:addit_IFFT}
+S[k] = a_{j}e^{i\phi_{j}}W[f_{j} - k] \\  
+\end{equation}
+\begin{tabular}{ l l l l}
+	gdzie: & $S[k]$ &  - & STS syntezowanego sygnału, \\
+	& $W[f_{j} - k]$ &  - & przesunięte widmo sygnału $w[n]$, \\
+	& $a_{j}e^{i\phi_{j}}$ & - & zespolona amplituda. \\
+\end{tabular}
+
+Wzór \ref{equ:addit_IFFT} oznacza, iż okno widmowe $W[f_{j} - k]$ zostanie wycentrowane na częstotliwości $f_{j}$ oraz przemnożonę przez amplitudę $a_{j}e^{i\phi_{j}}$. Po takim działaniu w dziedzinie częstotliwości, okno STS poddane jest algorytmowi IFFT, którego rezultatem jest okno czasowe $s[n]$. Kolejne okna czasowe zakładkowane są metodą overlap-add.
+
+Dodanie szumu do sygnału w przypadku syntezy addytywnej za pomocą metody IFFT jest również bardziej efektywne obliczeniowo. Szum biały może zostać dodany już na etapie tworzenia STS, a następnie poddany algorytmowi IFFT. Ostatecznie uzyskiwane jest okno sygnału zawierającego część deterministyczną, jak i stochastyczną.
 
 \section{Interfejs użytkownika}
+W autorskim projekcie, w ramach realizacji instrumentu klawiszowego z syntezą addytywną, zaimplementowano program generujący dźwięk organów Hammonda. 
+%https://www.soundonsound.com/techniques/synthesizing-tonewheel-organs-part-1
+Laurens Hammond, twórca tychże organów, zaprojektował je tak, aby użytkownik miał możliwość doboru amplitudy dziewięciu składowych harmonicznych generowanego dźwięku. Każda z nich była regulowana gałką na 8 poziomach. Gałki oznaczały kolejno wartości amplitudy pierwszej, drugiej, trzeciej, czwartej, szóstej, ósmej, dziesiątej, dwunastej oraz szesnastej składowej harmonicznej dźwięku. Przykładowe różnice w generowanej barwie organów przedstawione zostały na rysunku \ref{rys:add_hammond_matlab}.
 
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=15cm]{grafiki/add_interface}
+	\captionsetup{justification=centering}
+	\caption{Interfejs użytkownika dla syntezy addytywnej.}
+	\label{rys:add_interface}
+\end{figure}
 
-\section{Wyniki}
+Interfejs użytkownika opiera się na oryginalnym instrumencie Laurensa Hammonda. Umożliwia on użytkownikowi regulację dziewięciu SH za pomocą gałek przedstawionych na rysunku \ref{rys:add_interface}. Można zauważyć, iż gałki posiadają również 8 poziomów wartości, które odpowiadają wartościom amplitud składowych harmonicznych. Po ustawieniu pożądanej barwy, użytkownik musi kliknąć w panelu przycisk "Set", aby parametry syntezy addytywnej zostały wysłane do procesora DSP.
+
+Gałki w panelu zostały zrealizowane za pomocą obiektów klasy KnobControl. Naciśnięcie przycisku "Set" wywołuje funkcję, która odczytuje wartość elementu panelu syntezy addytywnej w formie tablicy bajtów. Następnie wysyła odpowiedni identyfikator gałki, a po nim jej wartość.
+
+\section{Implementacja na procesorze DSP}
+W autorskim programie komputerowym na procesor DSP wykorzystano metodę implementacji z użyciem tablicy wavetable, która została omówiona w \ref{add_wavetable}. 
