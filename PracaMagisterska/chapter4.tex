@@ -55,7 +55,7 @@ Postać harmoniczna syntezy addytywnej pozwala również na uzyskanie podstawowy
 	\label{rys:add_sawtooth}
 \end{figure}
 
-Na rysunku \ref{rys:add_sawtooth} przedstawiono generowanie przebiegu piłokształtnego, jako przykład addytywnej syntezy dźwięku w postaci harmonicznej. Na pierwszym z wykresów przedstawiono przebieg uzyskany z dwóch składowych harmonicznych, a na kolejnym z 10. Na ostatnim wykresie widać przebieg składający się z 50 SH, który jest dobrą aproksymacją idealnego przebiegu piłokształtnego. Amplitudy kolejnych składowych tego sygnału obliczone zostały na podstawie wzoru \ref{equ:addit_sawth}
+Na rysunku \ref{rys:add_sawtooth} przedstawiono wygenerowany przebieg piłokształtny, jako przykład addytywnej syntezy dźwięku w postaci harmonicznej. Na pierwszym z wykresów przedstawiono przebieg uzyskany z dwóch składowych harmonicznych, a na kolejnym z 10. Na ostatnim wykresie widać przebieg składający się z 50 SH, który jest dobrą aproksymacją idealnego przebiegu piłokształtnego. Amplitudy kolejnych składowych tego sygnału obliczone zostały na podstawie wzoru \ref{equ:addit_sawth}
 
 \subsection{Postać nieharmoniczna} \label{pos_nieharm}
 Dobieranie składowych dźwięku w syntezie addytywnej nie musi zależeć od konkretnej częstotliwości. Niektóre instrumenty wydają dźwięk składający się ze składowych harmonicznych i nieharmonicznych (czyli takich, które nie są całkowitą wielokrotnością pewnej częstotliwości $f_{0}$). Zsyntezowany dźwięk w takiej postaci można opisać wzorem:
@@ -72,7 +72,7 @@ Dźwięk opisany powyższym wzorem jest generowany przez instrumenty takie jak d
 %https://books.google.pl/books/about/The_Computer_Music_Tutorial.html?id=nZ-TetwzVcIC&printsec=frontcover&source=kp_read_button&redir_esc=y#v=onepage&q&f=false
 Wzory matematyczne \ref{equ:addit_time_harm} i \ref{equ:addit_time_nieharm} pozwalają na uzyskanie jedynie stanu ustalonego zsyntezowanego brzmienia. Powtarzany jest jeden okres sygnału, co daje wrażenie słuchaczowi, iż barwa dźwięku jest bardzo prosta.
 
-Składowe dźwięku mogą jednak zmieniać się w czasie. Zmiany te mogą dotyczyć zarówno ich amplitudy, jak i częstotliwości. Synteza addytywna ze zmi
+Składowe dźwięku mogą jednak zmieniać się w czasie. Zmiany te mogą dotyczyć ich amplitudy, jak i częstotliwości.
 Taką postać syntezy addytywnej zapisuje się:
 \begin{equation} \label{equ:addit_time_zmienne}
 y(t) = \sum_{k=1}^{K} a_{k}(t)sin(2\pi f_{k}(t)t + \phi_{k})  \\  
@@ -84,7 +84,7 @@ y(t) = \sum_{k=1}^{K} a_{k}(t)sin(2\pi f_{k}(t)t + \phi_{k})  \\
 
 \subsection{Szum w syntezie addytywnej}
 %https://ccrma.stanford.edu/~jos/sasp/S_N_Synthesis.html
-Tworzenie sygnału zsyntezowanego metodą addytywną za pomocą wzorów przedstawionych powyżej jest deterministyczne. Do takiego sygnału można dodać jednak część stochastyczną. Uzyskuje się to z wykorzystaniem zmiennego w czasie filtra FIR oraz białego szumu.
+Tworzenie dźwięku zsyntezowanego metodą addytywną za pomocą wzorów przedstawionych powyżej jest deterministyczne. Do takiego sygnału można dodać jednak część stochastyczną. Uzyskuje się to z wykorzystaniem zmiennego w czasie filtra FIR oraz białego szumu.
 
 \begin{equation} \label{equ:addit_szum}
 B(\omega) = F(\omega)*e^{j\phi(\omega_{k})} \\  
@@ -175,7 +175,7 @@ Laurens Hammond, twórca tychże organów, zaprojektował je tak, aby użytkowni
 
 Interfejs użytkownika opiera się na oryginalnym instrumencie Laurensa Hammonda. Umożliwia on użytkownikowi regulację dziewięciu SH za pomocą gałek przedstawionych na rysunku \ref{rys:add_interface}. Można zauważyć, iż gałki posiadają również 8 poziomów wartości, które odpowiadają wartościom amplitud składowych harmonicznych. Po ustawieniu pożądanej barwy, użytkownik musi kliknąć w panelu przycisk "Set", aby parametry syntezy addytywnej zostały wysłane do procesora DSP.
 
-Gałki w panelu zostały zrealizowane za pomocą obiektów klasy KnobControl. Naciśnięcie przycisku "Set" wywołuje funkcję, która odczytuje wartość elementu panelu syntezy addytywnej w formie tablicy bajtów. Następnie wysyła odpowiedni identyfikator gałki, a po nim jej wartość.
+Gałki w panelu zostały zrealizowane za pomocą obiektów klasy KnobControl. Naciśnięcie przycisku "Set" wywołuje funkcję, która odczytuje wartość elementu panelu syntezy addytywnej w formie tablicy bajtów. Następnie wysyła odpowiedni identyfikator gałki do procesora DSP, a po nim jej wartość odczytaną z tablicy.
 
 \section{Implementacja na procesorze DSP}
-W autorskim programie komputerowym na procesor DSP wykorzystano metodę implementacji z użyciem tablicy wavetable, która została omówiona w \ref{add_wavetable}. 
+W autorskim programie komputerowym na procesor DSP wykorzystano metodę implementacji z użyciem tablicy wavetable, która została omówiona w punkcie \ref{add_wavetable}. 
