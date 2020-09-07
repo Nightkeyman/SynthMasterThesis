@@ -39,8 +39,7 @@ Na rysunku \ref{rys:real_padk} przedstawiającym schemat blokowy płyty PADK mo�
 %--> strona 13 wypisane w myslnikach np busy
 Układ TMS320C6727 firmy Texas instrument jest zmiennoprzecinkowym procesorem sygnałowym 32-/64-bitowym umieszczonym na płycie PADK. Jednostka centralna C6727 posiada możliwość taktowania zegara z szybkością 300MHz oraz 350MHz. Gdy ustawiona jest częstotliwość 300MHz, procesor posiada maksymalną wydajność sięgającą 180 milionów operacji zmiennoprzecinkowych na sekundę \cite{dokumentacja_ti6727}.
 
-Układ TMS320C6727 jest również bardzo wydajny pod względem systemu pamięci. Posiada on 256KB pamięci RAM oraz 384KB pamięci ROM. Kontroler pamięci obsługuje jednocyklowe dostępy z procesora do pamięci  RAM lub ROM. W jednym momencie dozwolone są trzy równoległe odczyty pamięci z różnych źródeł takich jak: CPU, pamięć programu cache oraz jedno z urządzeń peryferyjnych. Układ TMS320C6727 posiada również 32KB pamięci cache.
-%Sprawdzic czy to jest 32KB tylko dla programu czy dla danych jest osobny
+Układ TMS320C6727 jest również bardzo wydajny pod względem systemu pamięci. Posiada on 256KB pamięci RAM oraz 384KB pamięci ROM. Kontroler pamięci obsługuje jednocyklowe dostępy z procesora do pamięci  RAM lub ROM. W jednym momencie dozwolone są trzy równoległe odczyty pamięci z różnych źródeł takich jak: CPU, pamięć programu cache oraz jedno z urządzeń peryferyjnych. Układ TMS320C6727 posiada również 32KB pamięci cache programu.
 
 Poza wysoką szybkością taktowania procesora, układ zawiera dodatkowe mechanizmy akceleracji przepływu danych i sygnałów. Umożliwiają one jeszcze szybszy transfer danych między układami peryferialnymi bez zabierania czasu pracy procesora. Narzędzia, z których szczególnie korzystano w naszym projekcie przedstawiono poniżej.
 
@@ -143,18 +142,20 @@ Takie dziewięciobajtowe ramki pozwalają na przesyłanie na przykład całych z
 \section{Generowanie sygnału analogowego (DAC)}
 
 \subsection{Inicjalizacja programowa modułu DAC}
-Odpowiednie zainicjowanie pracy przetwornika cyfrowo analogowego było najbardziej skomplikowanym elementem etapu uruchomienia całego projektu. Polegało ono na ustawieniu:
-- ustawienie identyfikatora zdarzeń dMAX, 
-- zdefiniowanie przerwania dedykowanego dla DAC, 
-- ustawienie rejestrów modułu McASP
-- przydzielenia odpowiedniego obszaru pamięci,
-- ustawienie parametrów dla przetwornika.
-
+Odpowiednie zainicjowanie pracy przetwornika cyfrowo analogowego było najbardziej skomplikowanym elementem etapu uruchomienia całego projektu. Polegało ono na:
+\begin{itemize}
+\item ustawieniu identyfikatora zdarzeń dMAX, 
+\item zdefiniowaniu przerwania dedykowanego dla DAC, 
+\item ustawieniu bitów rejestrów modułu McASP
+\item przydzieleniu odpowiedniego obszaru pamięci,
+\item dobraniu parametrów dla przetwornika DAC.
+\end{itemize}
 %pamiętać o: odniesienie do dMAX z buforem cyrkulacyjnym
 %pamięć dla bufora
 %źródła zegarów
 %parametry
-Program dotyczący modułu DAC wykorzystuje bufor cyrkulacyjny, którego działanie omówiono w \ref{par:dMax}. Pierwszym elementem inicjalizacji było ustawienie odpowiedniego obszaru pamięci dla zmiennej z buforem cyrkulacyjnym dmaxDacBuffer[]. Następnie w programie ustawiono źródła zegarów taktujących przetwornik DAC. Kolejnym krokiem była inicjalizacja parametrów dla przetwornika. Tryb szybkości próbkowania ustawiony został na najwolniejszy, obejmujący szybkości 32kHz, 44,1kHz oraz 48kHz. Ustawiono rejestr odblokowujący generowanie sygnału z przetwornika oraz format danych na 24 bitowy wyjustowany do lewej (ang. left-justified). 
+
+Program dotyczący modułu DAC wykorzystuje bufor cyrkulacyjny, którego działanie omówiono w \ref{par:dMax}. Pierwszym elementem inicjalizacji było ustawienie odpowiedniego obszaru pamięci dla zmiennej z buforem cyrkulacyjnym dmaxDacBuffer[PING/PONG][FRAME][L/R][.]. Następnie w programie ustawiono źródła zegarów taktujących przetwornik DAC. Kolejnym krokiem była inicjalizacja parametrów dla przetwornika. Tryb szybkości próbkowania ustawiony został na najwolniejszy, obejmujący szybkości 32kHz, 44,1kHz oraz 48kHz. Ustawiono rejestr odblokowujący generowanie sygnału z przetwornika oraz format danych na 24 bitowy wyjustowany do lewej (ang. left-justified). 
 % Wytlumaczyc to left-justified - ze w liczbie 32 bitowej traci sie 8 bitów
 Priorytet przerwania został ustawiony na wysoki. Wszystkie wartości zostały przekazane za pomocą funkcji z bibliotek firmy Lyrtech o nazwie DAC\_Init().
 
@@ -169,7 +170,7 @@ Ostatnią częścią inicjalizacji było ustawienie częstotliwości próbkowani
 \subsection{Komunikacja między procesorem a przetwornikiem DAC}
 Obsługa danych zawierających zsyntezowane dźwięki oraz ich przesłanie na moduł DAC odbywa się za pomocą przerwania dmax\_isr(). Za każdym razem, gdy wywoływane jest przerwanie z wykorzystaniem zdarzenia dMAX, sprawdzany jest warunek, czy poprzedni transfer danych na przetwornik DAC został ukończony. Jeżeli warunek jest spełniony, pozostały kod funkcji obsługi przerwania zostaje wykonany.
 
-Obsługa danych tej funkcji opiera się na zainicjalizowanym wcześniej buforze cyrkulacyjnym dmaxDacBuffer. Programowo bufor jest czterowymiarową tablicą, gdzie pierwszy wymiar dokonuje synchronizacji odczytu i zapisu typu ping-pong. Następnie wykonywany jest mechanizm zakładkowania dwóch tablic przechowujących próbki zsyntezowanego dźwięku. Dane po zakładkowaniu przekazywane są do modułu DAC przez tablicę dmaxDacBuffer[PING/PONG][FRAME][L/R][.].
+Obsługa danych tej funkcji opiera się na zainicjalizowanym wcześniej buforze cyrkulacyjnym dmaxDacBuffer[PING/PONG][FRAME][L/R][.]. Programowo bufor jest czterowymiarową tablicą, gdzie pierwszy wymiar dokonuje synchronizacji odczytu i zapisu typu ping-pong. Następnie wykonywany jest mechanizm zakładkowania dwóch tablic przechowujących próbki zsyntezowanego dźwięku. Dane po zakładkowaniu przekazywane są do modułu DAC przez tablicę dmaxDacBuffer[PING/PONG][FRAME][L/R][.].
 
 \section{Klawiatura polifoniczna}
 <W trakcie implementacji>
@@ -185,7 +186,7 @@ Obsługa danych tej funkcji opiera się na zainicjalizowanym wcześniej buforze 
 W pamięci ROM procesorów z serii TMS320C672x zostały umieszczone specjalnie zoptymalizowane biblioteki, dedykowane do szybkiego przetwarzania sygnałów cyfrowych. Skompilowane biblioteki zostały napisane w asemblerze w celu większej efektywności obliczeniowej. 
 
 %https://www.ti.com/lit/an/spraas8/spraas8.pdf?ts=1596035199216&ref_url=https%253A%252F%252Fwww.google.com%252F
-W projekcie autorskim, użyta została biblioteka \emph{DSP Library} z procesora TMS320C6727, która posiada efektywne obliczeniowo funkcje takie jak: transformacja FFT, odwracanie macierzy lub operacje na wektorach. W celu wykorzystania jej w programie dla DSP, należało zmodyfikować komende pliku linkera, dodając bibliotekę o nazwie \emph{c67xdsplibR.lib}. Dodatkowo zmieniono sekcję pamięci tak, aby linker został odpowiednio poinstruowany, do których obszarów pamięci powinien się odnieść. Do pełnej transformacji FFT użyto trzech funkcji: DSPF\_sp\_cfftr2\_dit(), DSPF\_sp\_icfftr2\_dif() oraz DSPF\_sp\_bitrev\_cplx().
+W autorskim projekcie została użyta biblioteka \emph{DSP Library} z procesora TMS320C6727, która posiada efektywne obliczeniowo funkcje takie jak: transformacja FFT, odwracanie macierzy lub operacje na wektorach. W celu wykorzystania jej w programie dla DSP, należało zmodyfikować komende pliku linkera, dodając bibliotekę o nazwie \emph{c67xdsplibR.lib}. Dodatkowo zmieniono sekcję pamięci tak, aby linker został odpowiednio poinstruowany, do których obszarów pamięci powinien się odnieść. Do pełnej transformacji FFT użyto trzech funkcji: DSPF\_sp\_cfftr2\_dit(), DSPF\_sp\_icfftr2\_dif() oraz DSPF\_sp\_bitrev\_cplx().
 
 \subsection{Funkcje zawarte w pamięci ROM procesora}
 %http://software-dl.ti.com/jacinto7/esd/processor-sdk-rtos-jacinto7/latest/exports/docs/dsplib_c66x_3_4_0_0/docs/doxygen/html/dsplib_html/group___f_f_t.html
