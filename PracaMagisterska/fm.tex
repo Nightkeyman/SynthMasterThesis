@@ -1,7 +1,7 @@
 \chapter{Synteza dźwięku - modulacja częstotliwościowa}\label{chapter_fm}
 Modulacja częstotliwościowa jest powszechnie kojarzona z radiem analogowym. W tym zastosowaniu, w chwilowej częstotliwości sygnału sinusoidalnego zaszyta jest informacja, która ma drogą radiową dotrzeć do odbiorcy. W przypadku syntezy dźwięku, modulowane są dowolne sygnały okresowe. Nie niosą one żadnej informacji, a dewiacje częstotliwości chwilowej wprowadza się w celu uzyskania wrażeń dźwiękowych.
 \section{Zasada działania modulacji częstotliwościowej}
-Modulacja częstotliwościowa polega na zmienianiu częstotliwości chwilowej przebiegu okresowego. Sygnał, którego częstotliwość ulega tym zmianom nazywany jest sygnałem modulowanym czy też nośnym. Zmiany wprowadzane w częstotliwości sygnału modulowanego, to odchylenia od jego własnej częstotliwości. Mogą one być dokonywane za pomocą innego sygnału okresowego, który nazywany jest sygnałem modulującym. Przykładem sygnału modulującego może być sinusoida. Prosty przykład przebiegu zmodulowanego opisuje wyrażenie:
+Modulacja częstotliwościowa polega na zmienianiu częstotliwości chwilowej przebiegu okresowego. Sygnał, którego częstotliwość ulega tym zmianom nazywany jest sygnałem modulowanym czy też nośnym. Zmiany wprowadzane w częstotliwości sygnału modulowanego, to odchylenia od jego własnej częstotliwości. Mogą one być dokonywane za pomocą innego sygnału okresowego, który nazywany jest sygnałem modulującym. Przykładem sygnału modulującego może być sinusoida. Przebieg zmodulowany częstotliwościowo, z pominięciem fazy sygnału modulującego \cite{oland}, opisuje wyrażenie:
 \begin{equation} \label{equ:fm_wzor1}
 S(t)= sin(2 \pi f_c t + \beta sin(2 \pi f_m t))
 \end{equation}
@@ -26,9 +26,10 @@ Wartość $\beta$ jest także określana mianem indeksu modulacji \cite{chowning
 	\centering
 	\includegraphics[width=10cm]{grafiki/fm_widmo}
 	\captionsetup{justification=centering}
-	\caption{Moduł widma sygnału zmodulowanego.}
+	\caption{Moduł widma sygnału zmodulowanego (wartość indeksu 1201 należy pomniejszyć o 1 ze względu na sposób indeksowania w Matlabie).}
 	\label{rys:fm_widmo}
 \end{figure}
+Wraz ze wzrostem wartości $\beta$, wzrasta liczba znaczących prążków bocznych oraz poszerza się pasmo częstotliwościowe sygnału zmodulowanego.
 Wartości poszczególnych prążków odpowiadają wartościom funkcji Bessela typu pierwszego $J_n(x)$, gdzie $n$ jest rzędem. Wykresy tych funkcji dla trzech pierwszych rzędów przedstawione są na rysunku \ref{rys:fm_bessel}.
 \begin{figure}[H]
 	\centering
@@ -38,4 +39,48 @@ Wartości poszczególnych prążków odpowiadają wartościom funkcji Bessela ty
 	\label{rys:fm_bessel}
 \end{figure}
 
-Moduł funkcji Bessela rzędu 0 w punkcie $\beta$ jest równy modułowi prążka na częstotliwości $f_c$. Moduł pierwszych prążków bocznych, tj. na częstotliwościach $f_c \pm f_m$ jest równy funkcji Bessela rzędu 1 w punkcie $\beta$. Postępując analogicznie można wyznaczyć moduły wszystkich prążków.
+Moduł funkcji Bessela rzędu 0 w punkcie $\beta$ jest równy modułowi prążka na częstotliwości $f_c$. Moduł pierwszych prążków bocznych, tj. na częstotliwościach $f_c \pm f_m$ jest równy funkcji Bessela rzędu 1 w punkcie $\beta$. Postępując analogicznie można wyznaczyć moduły wszystkich znaczących prążków.
+
+\section{Implementacja syntezy FM}
+W celu nie naruszania struktury pętli głównej programu wykonywanego na DSP, algortym syntezy dla metody FM został dostosowany do istniejącego kodu. Stąd generowanie dźwięku będzie realizowane w sposób blokowy. Blok ma rozmiar $N = 1024$ próbek. 
+\subsection{Generowanie przebiegu}
+W programie wykorzystywane są dwie tablice o $N$ próbkach, które naprzemiennie wysyłane są do przetwornika cyfrowo-analogowego. W czasie, gdy jedna z nich jest przetwarzana na sygnał analogowy, druga jest wypełniana nowymi próbkami przebiegu. W celu zachowania ciągłości pomiędzy blokami, wprowadzony został licznik bloków $k$, który odpowiada za odpowiednie przesuniecię w fazie generowanych sygnałów. Za generowanie pojedynczego tonu zmodulowanego częstotliwościowo odpowiada kod:
+\begin{equation} \label{equ:fm_wzor2}
+\text{waveform[i]} = \text{sinf}(2\pi f_c(i+kN)\frac{1}{F_s} + \beta \text{sinf}(2 \pi f_m(i+kN)\frac{1}{F_s}))
+\end{equation}
+\begin{tabular}{ l l l l}
+	gdzie: & waveform &  - & tablica zmiennych typu float, \\
+	&	$F_s$ & - & częstotliwość próbkowania,\\
+	&	$i$ & - &  licznik iteracji, $i$ = 0, 1, 2, ..., N-1,\\
+	&	$k$ & - &  licznik bloków.\\
+\end{tabular} \\ \\
+W (\ref{equ:fm_wzor2}) zastosowano funkcję "sinf" zamiast zwykłego "sin". Obie te funkcję należą do biblioteki math.h w języku C. Wybór "sinf" wynika z faktu, że funkcja "sin" operuje na zmiennych typu double (podwójna precyzja), a "sinf" na zmiennych typu float. Działania na zmiennych typu float są wykonywane szybciej. Kosztem jest mniejsza precyzja wykonywanych obliczeń.
+
+Po wypełnieniu próbkami danej tablicy waveform, jest ona wysyłana do DAC. Licznik bloków jest modyfikowany w następujący sposób:
+\begin{equation} \label{equ:fm_wzor3}
+k \gets k + N - m.
+\end{equation}
+\begin{tabular}{ l l l l}
+	gdzie: & $m$  &  - & liczba zakładkowanych próbek. \\
+\end{tabular} \\ \\
+Mechanizm zakładkowania, opisany w metodzie subtraktywnej, nie jest wyłączany przy aktywacji innych metod syntezy. Z tego powodu, licznik bloków jest pomniejszany o wartość $m$.
+\subsection{Polifonia w syntezie FM}
+Do generowanie wielu tonów jednocześnie, wykorzystywana jest tablica wciśniętych klawiszy instrumentu, opisana w REALIZACJA->POLIFONIA. Jest ona przeglądana w pętli głównej programu i dla każdej częstotliwości, która się w niej znajduje, generowane jest $N$ próbek przebiegu do jednej z tablic waveform.
+
+\section{Interfejs użytkownika}
+W projekcie autorskim, w przypadku syntezy FM, użytkownik może poprzez interfejs użytkownika określać parametry modulacji: amplitudę sygnału modulującego oraz jego częstotliwość.
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=12cm]{grafiki/sub_interface}
+	\captionsetup{justification=centering}
+	\caption{Interfejs użytkownika dla modulacji częstotliwościowej.}
+	\label{rys:fm_interface}
+\end{figure}
+Na rysunku \ref{rys:fm_interface} zaznaczono dwie sekcje wykonanego interfejsu dla syntezy FM. W pierwszej z nich znajduje się przycisk, który służy do aktywacji tej metody syntezy dźwięku. Po naciśnięciu tego klawisza, DSP otrzymuje komunikat, po którym przechodzi w tryb syntezy FM.
+
+W drugiej sekcji znajdują się suwaki pozwalające na wybór amplitudy oraz częstotliwości sygnału modulującego. Zmian tych wielkości można dokonywać na dwa sposoby:
+\begin{itemize}
+	\item za pomocą suwaków. W tym wypadku wartość ustawiona za pomocą suwaka zostanie automatycznie wpisana do pola tekstowego skojarzonego z tym suwakiem.
+	\item Poprzez precyzyjne wpisanie wartości do pola tekstowego obok suwaka. W tej sytuacji suwak automatycznie się przesunie na pozycję odpowiadającą wpisanej wartości.
+\end{itemize}
+Zmianę parametrów należy zatwierdzić klawiszem "Set". Po jego naciśnięciu, odpowiednie komunikaty zostają przesłane do DSP.
