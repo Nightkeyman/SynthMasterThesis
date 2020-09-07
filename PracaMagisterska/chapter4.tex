@@ -202,6 +202,14 @@ Procesor DSP otrzymuje nastawy gałek syntezy addytywnej z interfejsu użytkowni
 \subsection{Wyniki}
 Wykorzystana metoda implementacji za pomocą tablicy wavetable umożliwiła naciśnięcie nawet kilkunastu klawiszy bez pojawienia się niepożądanych artefaktów w dźwięku. Zmiany amplitud poszczególnych składowych harmonicznych wpływają na generowane w brzmienie w bardzo wyraźny sposób.
 
-% Rysunek
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=15cm]{grafiki/add_hammond_dsp}
+	\captionsetup{justification=centering}
+	\caption{Wizualizacja sygnału dźwiękowego organów Hammonda z procesora DSP.}
+	\label{rys:add_hammond_dsp}
+\end{figure}
 
-Na rysunku BLABLA przedstawiono wizualizację sygnału organów dla różnych ustawień gałek w interfejsie użytkownika.
+Na rysunku \ref{rys:add_hammond_dsp} przedstawiono wizualizację sygnału organów dla różnych ustawień gałek w interfejsie użytkownika. Na wykresie pierwszym od góry wszystkie SH mają maksymalną amplitudę (konfiguracja "8888 88888"). Tak wygenerowany dźwięk bardzo przypomina brzmienie katedralnych organów piszczałkowych. Na kolejnym wykresie przedstawiono sygnał utworzony przy konfiguracji gałek na wartościach "8880 00000". Brzmienie dźwięku przy takim ustawieniu gałek jest dużo bardziej delikatne niż w pierwszej konfiguracji. Na najniższym wykresie ustawienie amplitud to "0800 30200". Można zauważyć, iż wizualnie bardzo przypomina przebieg prostokątny. Brzmienie tak wygenerowanego dźwięku również jest zbliżone do dźwięku przebiegu prostokątnego.
+
+Przedstawione barwy organów brzmiały by lepiej po dodaniu takich efektów jak Chorus lub Vibrato. Do uzyskania pełni brzmienia takich organów, często również stosuje się efekt pogłosu (ang. reverb).
