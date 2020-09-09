@@ -2,49 +2,81 @@
 close all
 clear
 
+f_sin = 440;
+% UNCHANGABLE PARAMS
 Fs = 44100;
 f = 0:0.1:round(Fs/2);
-f_sin = 440;
-T = 3;
+dt = 1/Fs;
+time = 1/f_sin;
+period = floor(Fs/f_sin);
 
-% Parameters (changable)
+% CHANGABLE PARAMS
+T = 2;
 att_time = 1/2;
-amp_noise = 0.05;
+amp_noise = 0.03; %0.035
+emb_delay = period/2;
+bore_delay = period;
+fbk_scl1 = 0.2; %0.5
+fbk_scl2 = 0.33; %0.55
+filt_b = -0.1; %-0.3
+filt_a = [1 0.7]; %1 0.7
 
 % AFLOW1 creation
-kenv1 = zeros(length(0:1/Fs:T-1/Fs), 1);
-kenv1((att_time*length(0:1/Fs:T-1/Fs)/3):length(0:1/Fs:T-1/Fs), 1) = 1;
-for i = 1:(length(0:1/Fs:T-1/Fs)/6)
-  kenv1(i, 1) = i/(length(0:1/Fs:T-1/Fs)/6);
+kenv1 = zeros(length(0:dt:T-dt), 1);
+kenv1((att_time*length(0:dt:T-dt)/3):length(0:dt:T-dt), 1) = 1;
+for i = 1:(length(0:dt:T-dt)/6)
+  kenv1(i, 1) = i/(length(0:dt:T-dt)/6);
 end
-plot(kenv1)
 
-aflow1 = kenv1.*randn(length(0:1/Fs:T-1/Fs), 1);
+aflow1 = kenv1.*randn(length(0:dt:T-dt), 1);
 aflow1 = aflow1/max(aflow1);
 aflow1 = aflow1/5;
 
 
 % KVIBR creation
-wave = zeros(length(0:1/Fs:T-1/Fs), 1);
-for i = 1:length(0:1/Fs:T-1/Fs)
+wave = zeros(length(0:dt:T-dt), 1);
+for i = 1:length(0:dt:T-dt)
   wave(i) = sin(2*pi*i*f_sin/Fs);
 end
 
-kenvibr = zeros(length(0:1/Fs:T-1/Fs), 1);
-kenvibr((2*length(0:1/Fs:T-1/Fs)/3):length(0:1/Fs:T-1/Fs), 1) = 1;
-for i = 1:(length(0:1/Fs:T-1/Fs)/3)
-  kenvibr(i+(length(0:1/Fs:T-1/Fs)/3), 1) = i/(length(0:1/Fs:T-1/Fs)/3);
+kenvibr = zeros(length(0:dt:T-dt), 1);
+kenvibr((2*length(0:dt:T-dt)/3):length(0:dt:T-dt), 1) = 1;
+for i = 1:(length(0:dt:T-dt)/3)
+  kenvibr(i+(length(0:dt:T-dt)/3), 1) = i/(length(0:dt:T-dt)/3);
 end
 
 kvibr = wave.*kenvibr;
 
-
+% AFLOW2 & ASUM1
 aflow2 = aflow1.*kvibr;
-%aflow2 = conv(aflow1, kvibr);
+figure(2)
 plot(aflow2)
 asum1 = amp_noise*aflow2 + kvibr;
 
+% prepare signals for feedback loop
+asum2 = zeros(length(0:dt:T-dt), 1);
+ax = zeros(length(0:dt:T-dt), 1);
+apoly = zeros(length(0:dt:T-dt), 1);
+asum3 = zeros(length(0:dt:T-dt), 1);
+avalue = zeros(length(0:dt:T-dt), 1);
+aflute1 = zeros(length(0:dt:T-dt), 1);
+
+% FEEDBACK LOOP
+for i = (1+emb_delay+bore_delay):length(0:dt:T-dt)
+  asum2(i+1) = asum1(i) + aflute1(i);
+  ax(i+1) = asum2(i+1-emb_delay);
+  apoly(i+1) = ax(i+1) - ax(i+1)^3;
+  asum3(i+1) = aflute1(i) + apoly(i+1);
+  %filter step
+  avalue(i+1) = filter(filt_b, filt_a, asum3(i+1));
+  aflute1(i+1) = avalue(i-bore_delay);
+end
+
+% OUTPUT SIGNAL
 Y = asum1;
+%Y = avalue;
 Y = Y/max(Y);
 sound(Y, Fs);
+
+figure(3)
 plot(Y)
