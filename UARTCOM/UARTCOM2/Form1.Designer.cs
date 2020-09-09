@@ -60,17 +60,6 @@
             this.radioButton_subtractive_square = new System.Windows.Forms.RadioButton();
             this.button_subtractive_en = new System.Windows.Forms.Button();
             this.tabPage_additive = new System.Windows.Forms.TabPage();
-            this.tabControl1 = new System.Windows.Forms.TabControl();
-            this.tabPage_additive_hammond = new System.Windows.Forms.TabPage();
-            this.button4 = new System.Windows.Forms.Button();
-            this.drawbar1 = new KnobControl.KnobControl();
-            this.button_additive_hammond_en = new System.Windows.Forms.Button();
-            this.drawbar6 = new KnobControl.KnobControl();
-            this.drawbar2 = new KnobControl.KnobControl();
-            this.drawbar5 = new KnobControl.KnobControl();
-            this.drawbar3 = new KnobControl.KnobControl();
-            this.drawbar4 = new KnobControl.KnobControl();
-            this.tabPage3 = new System.Windows.Forms.TabPage();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.button_fm_en = new System.Windows.Forms.Button();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
@@ -91,6 +80,15 @@
             this.knobControl_sustain = new KnobControl.KnobControl();
             this.knobControl_attack = new KnobControl.KnobControl();
             this.button_adsr_set = new System.Windows.Forms.Button();
+            this.tabPage_additive_hammond = new System.Windows.Forms.TabPage();
+            this.drawbar4 = new KnobControl.KnobControl();
+            this.drawbar3 = new KnobControl.KnobControl();
+            this.drawbar5 = new KnobControl.KnobControl();
+            this.drawbar2 = new KnobControl.KnobControl();
+            this.drawbar6 = new KnobControl.KnobControl();
+            this.button_additive_hammond_en = new System.Windows.Forms.Button();
+            this.drawbar1 = new KnobControl.KnobControl();
+            this.button4 = new System.Windows.Forms.Button();
             this.drawbar7 = new KnobControl.KnobControl();
             this.drawbar8 = new KnobControl.KnobControl();
             this.drawbar9 = new KnobControl.KnobControl();
@@ -103,6 +101,7 @@
             this.label14 = new System.Windows.Forms.Label();
             this.label15 = new System.Windows.Forms.Label();
             this.label16 = new System.Windows.Forms.Label();
+            this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage_Connection.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage_subtractive.SuspendLayout();
@@ -111,17 +110,18 @@
             ((System.ComponentModel.ISupportInitialize)(this.trackBar_subtractive_freq1)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.tabPage_additive.SuspendLayout();
-            this.tabControl1.SuspendLayout();
-            this.tabPage_additive_hammond.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.groupBox3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar_fm_modfreq)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar_fm_modamp)).BeginInit();
             this.ADSR.SuspendLayout();
+            this.tabPage_additive_hammond.SuspendLayout();
+            this.tabControl1.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnGetSerialPorts
             // 
+            this.btnGetSerialPorts.ForeColor = System.Drawing.SystemColors.ControlText;
             this.btnGetSerialPorts.Location = new System.Drawing.Point(171, 66);
             this.btnGetSerialPorts.Name = "btnGetSerialPorts";
             this.btnGetSerialPorts.Size = new System.Drawing.Size(75, 23);
@@ -166,6 +166,7 @@
             // 
             // button_open
             // 
+            this.button_open.ForeColor = System.Drawing.SystemColors.ControlText;
             this.button_open.Location = new System.Drawing.Point(65, 122);
             this.button_open.Name = "button_open";
             this.button_open.Size = new System.Drawing.Size(181, 23);
@@ -194,6 +195,7 @@
             // 
             // button_clear
             // 
+            this.button_clear.ForeColor = System.Drawing.SystemColors.ControlText;
             this.button_clear.Location = new System.Drawing.Point(159, 189);
             this.button_clear.Name = "button_clear";
             this.button_clear.Size = new System.Drawing.Size(75, 23);
@@ -204,6 +206,7 @@
             // 
             // textBox_send
             // 
+            this.textBox_send.ForeColor = System.Drawing.SystemColors.ControlText;
             this.textBox_send.Location = new System.Drawing.Point(9, 396);
             this.textBox_send.Name = "textBox_send";
             this.textBox_send.Size = new System.Drawing.Size(144, 20);
@@ -211,6 +214,7 @@
             // 
             // button_send
             // 
+            this.button_send.ForeColor = System.Drawing.SystemColors.ControlText;
             this.button_send.Location = new System.Drawing.Point(159, 396);
             this.button_send.Name = "button_send";
             this.button_send.Size = new System.Drawing.Size(75, 23);
@@ -233,7 +237,7 @@
             // 
             // tabPage1
             // 
-            this.tabPage1.BackColor = System.Drawing.SystemColors.Menu;
+            this.tabPage1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.tabPage1.Controls.Add(this.btnGetSerialPorts);
             this.tabPage1.Controls.Add(this.button_send);
             this.tabPage1.Controls.Add(this.comboBox_port);
@@ -245,24 +249,25 @@
             this.tabPage1.Controls.Add(this.label2);
             this.tabPage1.Controls.Add(this.richTextBox_received);
             this.tabPage1.Controls.Add(this.button_open);
+            this.tabPage1.ForeColor = System.Drawing.SystemColors.Control;
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage1.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.tabPage1.Size = new System.Drawing.Size(904, 426);
+            this.tabPage1.Size = new System.Drawing.Size(692, 426);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Connection";
             // 
             // tabPage_subtractive
             // 
-            this.tabPage_subtractive.BackColor = System.Drawing.SystemColors.Menu;
+            this.tabPage_subtractive.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.tabPage_subtractive.Controls.Add(this.groupBox2);
             this.tabPage_subtractive.Controls.Add(this.groupBox1);
             this.tabPage_subtractive.Controls.Add(this.button_subtractive_en);
             this.tabPage_subtractive.Location = new System.Drawing.Point(4, 22);
             this.tabPage_subtractive.Name = "tabPage_subtractive";
             this.tabPage_subtractive.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage_subtractive.Size = new System.Drawing.Size(654, 426);
+            this.tabPage_subtractive.Size = new System.Drawing.Size(692, 426);
             this.tabPage_subtractive.TabIndex = 1;
             this.tabPage_subtractive.Text = "Subtractive";
             // 
@@ -279,6 +284,7 @@
             this.groupBox2.Controls.Add(this.radioButton_subtractive_bandpass);
             this.groupBox2.Controls.Add(this.radioButton_subtractive_highpass);
             this.groupBox2.Controls.Add(this.radioButton_subtractive_lowpass);
+            this.groupBox2.ForeColor = System.Drawing.SystemColors.Control;
             this.groupBox2.Location = new System.Drawing.Point(10, 148);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(604, 268);
@@ -288,9 +294,10 @@
             // 
             // button1
             // 
+            this.button1.ForeColor = System.Drawing.SystemColors.ControlText;
             this.button1.Location = new System.Drawing.Point(502, 177);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(87, 36);
+            this.button1.Size = new System.Drawing.Size(96, 42);
             this.button1.TabIndex = 10;
             this.button1.Text = "Set";
             this.button1.UseVisualStyleBackColor = true;
@@ -309,6 +316,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
+            this.label6.ForeColor = System.Drawing.SystemColors.Control;
             this.label6.Location = new System.Drawing.Point(6, 238);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(102, 13);
@@ -345,6 +353,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
+            this.label5.ForeColor = System.Drawing.SystemColors.Control;
             this.label5.Location = new System.Drawing.Point(6, 152);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(104, 13);
@@ -369,6 +378,7 @@
             // radioButton_subtractive_bandstop
             // 
             this.radioButton_subtractive_bandstop.AutoSize = true;
+            this.radioButton_subtractive_bandstop.ForeColor = System.Drawing.SystemColors.Control;
             this.radioButton_subtractive_bandstop.Location = new System.Drawing.Point(7, 92);
             this.radioButton_subtractive_bandstop.Name = "radioButton_subtractive_bandstop";
             this.radioButton_subtractive_bandstop.Size = new System.Drawing.Size(73, 17);
@@ -381,6 +391,7 @@
             // radioButton_subtractive_bandpass
             // 
             this.radioButton_subtractive_bandpass.AutoSize = true;
+            this.radioButton_subtractive_bandpass.ForeColor = System.Drawing.SystemColors.Control;
             this.radioButton_subtractive_bandpass.Location = new System.Drawing.Point(7, 68);
             this.radioButton_subtractive_bandpass.Name = "radioButton_subtractive_bandpass";
             this.radioButton_subtractive_bandpass.Size = new System.Drawing.Size(75, 17);
@@ -393,6 +404,7 @@
             // radioButton_subtractive_highpass
             // 
             this.radioButton_subtractive_highpass.AutoSize = true;
+            this.radioButton_subtractive_highpass.ForeColor = System.Drawing.SystemColors.Control;
             this.radioButton_subtractive_highpass.Location = new System.Drawing.Point(7, 44);
             this.radioButton_subtractive_highpass.Name = "radioButton_subtractive_highpass";
             this.radioButton_subtractive_highpass.Size = new System.Drawing.Size(72, 17);
@@ -405,6 +417,7 @@
             // radioButton_subtractive_lowpass
             // 
             this.radioButton_subtractive_lowpass.AutoSize = true;
+            this.radioButton_subtractive_lowpass.ForeColor = System.Drawing.SystemColors.Control;
             this.radioButton_subtractive_lowpass.Location = new System.Drawing.Point(7, 20);
             this.radioButton_subtractive_lowpass.Name = "radioButton_subtractive_lowpass";
             this.radioButton_subtractive_lowpass.Size = new System.Drawing.Size(70, 17);
@@ -419,6 +432,7 @@
             this.groupBox1.Controls.Add(this.radioButton_subtractive_sawtooth);
             this.groupBox1.Controls.Add(this.radioButton_subtractive_triangle);
             this.groupBox1.Controls.Add(this.radioButton_subtractive_square);
+            this.groupBox1.ForeColor = System.Drawing.SystemColors.Control;
             this.groupBox1.Location = new System.Drawing.Point(10, 36);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(182, 109);
@@ -429,6 +443,7 @@
             // radioButton_subtractive_sawtooth
             // 
             this.radioButton_subtractive_sawtooth.AutoSize = true;
+            this.radioButton_subtractive_sawtooth.ForeColor = System.Drawing.SystemColors.Control;
             this.radioButton_subtractive_sawtooth.Location = new System.Drawing.Point(6, 68);
             this.radioButton_subtractive_sawtooth.Name = "radioButton_subtractive_sawtooth";
             this.radioButton_subtractive_sawtooth.Size = new System.Drawing.Size(70, 17);
@@ -441,6 +456,7 @@
             // radioButton_subtractive_triangle
             // 
             this.radioButton_subtractive_triangle.AutoSize = true;
+            this.radioButton_subtractive_triangle.ForeColor = System.Drawing.SystemColors.Control;
             this.radioButton_subtractive_triangle.Location = new System.Drawing.Point(6, 44);
             this.radioButton_subtractive_triangle.Name = "radioButton_subtractive_triangle";
             this.radioButton_subtractive_triangle.Size = new System.Drawing.Size(63, 17);
@@ -453,6 +469,7 @@
             // radioButton_subtractive_square
             // 
             this.radioButton_subtractive_square.AutoSize = true;
+            this.radioButton_subtractive_square.ForeColor = System.Drawing.SystemColors.Control;
             this.radioButton_subtractive_square.Location = new System.Drawing.Point(7, 20);
             this.radioButton_subtractive_square.Name = "radioButton_subtractive_square";
             this.radioButton_subtractive_square.Size = new System.Drawing.Size(59, 17);
@@ -475,7 +492,7 @@
             // 
             // tabPage_additive
             // 
-            this.tabPage_additive.BackColor = System.Drawing.Color.Brown;
+            this.tabPage_additive.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.tabPage_additive.CausesValidation = false;
             this.tabPage_additive.Controls.Add(this.tabControl1);
             this.tabPage_additive.Location = new System.Drawing.Point(4, 22);
@@ -486,254 +503,15 @@
             this.tabPage_additive.Text = "Additive";
             this.tabPage_additive.Click += new System.EventHandler(this.tabPage_additive_Click);
             // 
-            // tabControl1
-            // 
-            this.tabControl1.Controls.Add(this.tabPage_additive_hammond);
-            this.tabControl1.Controls.Add(this.tabPage3);
-            this.tabControl1.ItemSize = new System.Drawing.Size(97, 18);
-            this.tabControl1.Location = new System.Drawing.Point(0, 6);
-            this.tabControl1.Name = "tabControl1";
-            this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(689, 420);
-            this.tabControl1.TabIndex = 7;
-            // 
-            // tabPage_additive_hammond
-            // 
-            this.tabPage_additive_hammond.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.tabPage_additive_hammond.Controls.Add(this.label16);
-            this.tabPage_additive_hammond.Controls.Add(this.label15);
-            this.tabPage_additive_hammond.Controls.Add(this.label14);
-            this.tabPage_additive_hammond.Controls.Add(this.label13);
-            this.tabPage_additive_hammond.Controls.Add(this.label12);
-            this.tabPage_additive_hammond.Controls.Add(this.label11);
-            this.tabPage_additive_hammond.Controls.Add(this.label10);
-            this.tabPage_additive_hammond.Controls.Add(this.label9);
-            this.tabPage_additive_hammond.Controls.Add(this.label8);
-            this.tabPage_additive_hammond.Controls.Add(this.drawbar9);
-            this.tabPage_additive_hammond.Controls.Add(this.drawbar8);
-            this.tabPage_additive_hammond.Controls.Add(this.drawbar7);
-            this.tabPage_additive_hammond.Controls.Add(this.button4);
-            this.tabPage_additive_hammond.Controls.Add(this.drawbar1);
-            this.tabPage_additive_hammond.Controls.Add(this.button_additive_hammond_en);
-            this.tabPage_additive_hammond.Controls.Add(this.drawbar6);
-            this.tabPage_additive_hammond.Controls.Add(this.drawbar2);
-            this.tabPage_additive_hammond.Controls.Add(this.drawbar5);
-            this.tabPage_additive_hammond.Controls.Add(this.drawbar3);
-            this.tabPage_additive_hammond.Controls.Add(this.drawbar4);
-            this.tabPage_additive_hammond.Location = new System.Drawing.Point(4, 22);
-            this.tabPage_additive_hammond.Name = "tabPage_additive_hammond";
-            this.tabPage_additive_hammond.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage_additive_hammond.Size = new System.Drawing.Size(681, 394);
-            this.tabPage_additive_hammond.TabIndex = 0;
-            this.tabPage_additive_hammond.Text = "Hammond Organs";
-            this.tabPage_additive_hammond.Click += new System.EventHandler(this.tabPage_additive_hammond_Click);
-            // 
-            // button4
-            // 
-            this.button4.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.button4.Location = new System.Drawing.Point(274, 338);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(101, 32);
-            this.button4.TabIndex = 7;
-            this.button4.Text = "Set";
-            this.button4.UseVisualStyleBackColor = true;
-            this.button4.Click += new System.EventHandler(this.button4_Click);
-            // 
-            // drawbar1
-            // 
-            this.drawbar1.BackColor = System.Drawing.Color.DimGray;
-            this.drawbar1.EndAngle = 405F;
-            this.drawbar1.ImeMode = System.Windows.Forms.ImeMode.On;
-            this.drawbar1.KnobBackColor = System.Drawing.Color.Transparent;
-            this.drawbar1.KnobPointerStyle = KnobControl.KnobControl.KnobPointerStyles.circle;
-            this.drawbar1.LargeChange = 1;
-            this.drawbar1.Location = new System.Drawing.Point(59, 57);
-            this.drawbar1.Maximum = 8;
-            this.drawbar1.Minimum = 0;
-            this.drawbar1.MouseWheelBarPartitions = 1;
-            this.drawbar1.Name = "drawbar1";
-            this.drawbar1.PointerColor = System.Drawing.Color.MidnightBlue;
-            this.drawbar1.ScaleColor = System.Drawing.Color.Black;
-            this.drawbar1.ScaleDivisions = 9;
-            this.drawbar1.ScaleFont = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.drawbar1.ScaleFontAutoSize = false;
-            this.drawbar1.ScaleSubDivisions = 4;
-            this.drawbar1.ShowLargeScale = true;
-            this.drawbar1.ShowSmallScale = false;
-            this.drawbar1.Size = new System.Drawing.Size(122, 122);
-            this.drawbar1.SmallChange = 1;
-            this.drawbar1.StartAngle = 135F;
-            this.drawbar1.TabIndex = 1;
-            this.drawbar1.Value = 0;
-            this.drawbar1.Load += new System.EventHandler(this.drawbar1_Load_1);
-            // 
-            // button_additive_hammond_en
-            // 
-            this.button_additive_hammond_en.ForeColor = System.Drawing.Color.Red;
-            this.button_additive_hammond_en.Location = new System.Drawing.Point(6, 3);
-            this.button_additive_hammond_en.Name = "button_additive_hammond_en";
-            this.button_additive_hammond_en.Size = new System.Drawing.Size(75, 23);
-            this.button_additive_hammond_en.TabIndex = 3;
-            this.button_additive_hammond_en.Text = "Disabled";
-            this.button_additive_hammond_en.UseVisualStyleBackColor = true;
-            this.button_additive_hammond_en.Click += new System.EventHandler(this.button_additive_en_Click);
-            // 
-            // drawbar6
-            // 
-            this.drawbar6.BackColor = System.Drawing.Color.DimGray;
-            this.drawbar6.EndAngle = 405F;
-            this.drawbar6.ImeMode = System.Windows.Forms.ImeMode.On;
-            this.drawbar6.KnobBackColor = System.Drawing.Color.White;
-            this.drawbar6.KnobPointerStyle = KnobControl.KnobControl.KnobPointerStyles.circle;
-            this.drawbar6.LargeChange = 1;
-            this.drawbar6.Location = new System.Drawing.Point(134, 210);
-            this.drawbar6.Maximum = 8;
-            this.drawbar6.Minimum = 0;
-            this.drawbar6.MouseWheelBarPartitions = 1;
-            this.drawbar6.Name = "drawbar6";
-            this.drawbar6.PointerColor = System.Drawing.Color.MidnightBlue;
-            this.drawbar6.ScaleColor = System.Drawing.Color.Black;
-            this.drawbar6.ScaleDivisions = 9;
-            this.drawbar6.ScaleFont = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.drawbar6.ScaleFontAutoSize = false;
-            this.drawbar6.ScaleSubDivisions = 4;
-            this.drawbar6.ShowLargeScale = true;
-            this.drawbar6.ShowSmallScale = false;
-            this.drawbar6.Size = new System.Drawing.Size(122, 122);
-            this.drawbar6.SmallChange = 1;
-            this.drawbar6.StartAngle = 135F;
-            this.drawbar6.TabIndex = 6;
-            this.drawbar6.Value = 0;
-            // 
-            // drawbar2
-            // 
-            this.drawbar2.BackColor = System.Drawing.Color.DimGray;
-            this.drawbar2.EndAngle = 405F;
-            this.drawbar2.ImeMode = System.Windows.Forms.ImeMode.On;
-            this.drawbar2.KnobBackColor = System.Drawing.Color.White;
-            this.drawbar2.KnobPointerStyle = KnobControl.KnobControl.KnobPointerStyles.circle;
-            this.drawbar2.LargeChange = 1;
-            this.drawbar2.Location = new System.Drawing.Point(187, 57);
-            this.drawbar2.Maximum = 8;
-            this.drawbar2.Minimum = 0;
-            this.drawbar2.MouseWheelBarPartitions = 1;
-            this.drawbar2.Name = "drawbar2";
-            this.drawbar2.PointerColor = System.Drawing.Color.MidnightBlue;
-            this.drawbar2.ScaleColor = System.Drawing.Color.Black;
-            this.drawbar2.ScaleDivisions = 9;
-            this.drawbar2.ScaleFont = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.drawbar2.ScaleFontAutoSize = false;
-            this.drawbar2.ScaleSubDivisions = 4;
-            this.drawbar2.ShowLargeScale = true;
-            this.drawbar2.ShowSmallScale = false;
-            this.drawbar2.Size = new System.Drawing.Size(122, 122);
-            this.drawbar2.SmallChange = 1;
-            this.drawbar2.StartAngle = 135F;
-            this.drawbar2.TabIndex = 1;
-            this.drawbar2.Value = 0;
-            this.drawbar2.Load += new System.EventHandler(this.drawbar2_Load);
-            // 
-            // drawbar5
-            // 
-            this.drawbar5.BackColor = System.Drawing.Color.DimGray;
-            this.drawbar5.EndAngle = 405F;
-            this.drawbar5.ImeMode = System.Windows.Forms.ImeMode.On;
-            this.drawbar5.KnobBackColor = System.Drawing.Color.White;
-            this.drawbar5.KnobPointerStyle = KnobControl.KnobControl.KnobPointerStyles.circle;
-            this.drawbar5.LargeChange = 1;
-            this.drawbar5.Location = new System.Drawing.Point(6, 210);
-            this.drawbar5.Maximum = 8;
-            this.drawbar5.Minimum = 0;
-            this.drawbar5.MouseWheelBarPartitions = 1;
-            this.drawbar5.Name = "drawbar5";
-            this.drawbar5.PointerColor = System.Drawing.Color.MidnightBlue;
-            this.drawbar5.ScaleColor = System.Drawing.Color.Black;
-            this.drawbar5.ScaleDivisions = 9;
-            this.drawbar5.ScaleFont = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.drawbar5.ScaleFontAutoSize = false;
-            this.drawbar5.ScaleSubDivisions = 4;
-            this.drawbar5.ShowLargeScale = true;
-            this.drawbar5.ShowSmallScale = false;
-            this.drawbar5.Size = new System.Drawing.Size(122, 122);
-            this.drawbar5.SmallChange = 1;
-            this.drawbar5.StartAngle = 135F;
-            this.drawbar5.TabIndex = 5;
-            this.drawbar5.Value = 0;
-            // 
-            // drawbar3
-            // 
-            this.drawbar3.BackColor = System.Drawing.Color.DimGray;
-            this.drawbar3.EndAngle = 405F;
-            this.drawbar3.ImeMode = System.Windows.Forms.ImeMode.On;
-            this.drawbar3.KnobBackColor = System.Drawing.Color.White;
-            this.drawbar3.KnobPointerStyle = KnobControl.KnobControl.KnobPointerStyles.circle;
-            this.drawbar3.LargeChange = 1;
-            this.drawbar3.Location = new System.Drawing.Point(315, 57);
-            this.drawbar3.Maximum = 8;
-            this.drawbar3.Minimum = 0;
-            this.drawbar3.MouseWheelBarPartitions = 1;
-            this.drawbar3.Name = "drawbar3";
-            this.drawbar3.PointerColor = System.Drawing.Color.MidnightBlue;
-            this.drawbar3.ScaleColor = System.Drawing.Color.Black;
-            this.drawbar3.ScaleDivisions = 9;
-            this.drawbar3.ScaleFont = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.drawbar3.ScaleFontAutoSize = false;
-            this.drawbar3.ScaleSubDivisions = 4;
-            this.drawbar3.ShowLargeScale = true;
-            this.drawbar3.ShowSmallScale = false;
-            this.drawbar3.Size = new System.Drawing.Size(122, 122);
-            this.drawbar3.SmallChange = 1;
-            this.drawbar3.StartAngle = 135F;
-            this.drawbar3.TabIndex = 2;
-            this.drawbar3.Value = 0;
-            this.drawbar3.Load += new System.EventHandler(this.drawbar3_Load);
-            // 
-            // drawbar4
-            // 
-            this.drawbar4.BackColor = System.Drawing.Color.DimGray;
-            this.drawbar4.EndAngle = 405F;
-            this.drawbar4.ImeMode = System.Windows.Forms.ImeMode.On;
-            this.drawbar4.KnobBackColor = System.Drawing.Color.White;
-            this.drawbar4.KnobPointerStyle = KnobControl.KnobControl.KnobPointerStyles.circle;
-            this.drawbar4.LargeChange = 1;
-            this.drawbar4.Location = new System.Drawing.Point(443, 57);
-            this.drawbar4.Maximum = 8;
-            this.drawbar4.Minimum = 0;
-            this.drawbar4.MouseWheelBarPartitions = 1;
-            this.drawbar4.Name = "drawbar4";
-            this.drawbar4.PointerColor = System.Drawing.Color.MidnightBlue;
-            this.drawbar4.ScaleColor = System.Drawing.Color.Black;
-            this.drawbar4.ScaleDivisions = 9;
-            this.drawbar4.ScaleFont = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.drawbar4.ScaleFontAutoSize = false;
-            this.drawbar4.ScaleSubDivisions = 4;
-            this.drawbar4.ShowLargeScale = true;
-            this.drawbar4.ShowSmallScale = false;
-            this.drawbar4.Size = new System.Drawing.Size(122, 122);
-            this.drawbar4.SmallChange = 1;
-            this.drawbar4.StartAngle = 135F;
-            this.drawbar4.TabIndex = 4;
-            this.drawbar4.Value = 0;
-            // 
-            // tabPage3
-            // 
-            this.tabPage3.Location = new System.Drawing.Point(4, 22);
-            this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage3.Size = new System.Drawing.Size(681, 394);
-            this.tabPage3.TabIndex = 1;
-            this.tabPage3.Text = "tabPage3";
-            this.tabPage3.UseVisualStyleBackColor = true;
-            // 
             // tabPage2
             // 
-            this.tabPage2.BackColor = System.Drawing.SystemColors.Menu;
+            this.tabPage2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.tabPage2.Controls.Add(this.button_fm_en);
             this.tabPage2.Controls.Add(this.groupBox3);
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(636, 426);
+            this.tabPage2.Size = new System.Drawing.Size(692, 426);
             this.tabPage2.TabIndex = 3;
             this.tabPage2.Text = "FM";
             // 
@@ -757,18 +535,20 @@
             this.groupBox3.Controls.Add(this.textBox_fm_modamp);
             this.groupBox3.Controls.Add(this.label7);
             this.groupBox3.Controls.Add(this.trackBar_fm_modamp);
+            this.groupBox3.ForeColor = System.Drawing.SystemColors.Control;
             this.groupBox3.Location = new System.Drawing.Point(9, 35);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(604, 268);
+            this.groupBox3.Size = new System.Drawing.Size(604, 236);
             this.groupBox3.TabIndex = 4;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Modulation parameters";
             // 
             // button3
             // 
-            this.button3.Location = new System.Drawing.Point(6, 161);
+            this.button3.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.button3.Location = new System.Drawing.Point(20, 171);
             this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(75, 23);
+            this.button3.Size = new System.Drawing.Size(99, 33);
             this.button3.TabIndex = 11;
             this.button3.Text = "Set";
             this.button3.UseVisualStyleBackColor = true;
@@ -1010,6 +790,224 @@
             this.button_adsr_set.UseVisualStyleBackColor = true;
             this.button_adsr_set.Click += new System.EventHandler(this.button_adsr_set_Click);
             // 
+            // tabPage_additive_hammond
+            // 
+            this.tabPage_additive_hammond.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.tabPage_additive_hammond.Controls.Add(this.label16);
+            this.tabPage_additive_hammond.Controls.Add(this.label15);
+            this.tabPage_additive_hammond.Controls.Add(this.label14);
+            this.tabPage_additive_hammond.Controls.Add(this.label13);
+            this.tabPage_additive_hammond.Controls.Add(this.label12);
+            this.tabPage_additive_hammond.Controls.Add(this.label11);
+            this.tabPage_additive_hammond.Controls.Add(this.label10);
+            this.tabPage_additive_hammond.Controls.Add(this.label9);
+            this.tabPage_additive_hammond.Controls.Add(this.label8);
+            this.tabPage_additive_hammond.Controls.Add(this.drawbar9);
+            this.tabPage_additive_hammond.Controls.Add(this.drawbar8);
+            this.tabPage_additive_hammond.Controls.Add(this.drawbar7);
+            this.tabPage_additive_hammond.Controls.Add(this.drawbar1);
+            this.tabPage_additive_hammond.Controls.Add(this.drawbar6);
+            this.tabPage_additive_hammond.Controls.Add(this.drawbar2);
+            this.tabPage_additive_hammond.Controls.Add(this.drawbar5);
+            this.tabPage_additive_hammond.Controls.Add(this.drawbar3);
+            this.tabPage_additive_hammond.Controls.Add(this.drawbar4);
+            this.tabPage_additive_hammond.Controls.Add(this.button4);
+            this.tabPage_additive_hammond.Controls.Add(this.button_additive_hammond_en);
+            this.tabPage_additive_hammond.Location = new System.Drawing.Point(4, 22);
+            this.tabPage_additive_hammond.Name = "tabPage_additive_hammond";
+            this.tabPage_additive_hammond.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage_additive_hammond.Size = new System.Drawing.Size(688, 397);
+            this.tabPage_additive_hammond.TabIndex = 0;
+            this.tabPage_additive_hammond.Text = "Hammond Organs";
+            this.tabPage_additive_hammond.Click += new System.EventHandler(this.tabPage_additive_hammond_Click);
+            // 
+            // drawbar4
+            // 
+            this.drawbar4.BackColor = System.Drawing.Color.DimGray;
+            this.drawbar4.EndAngle = 405F;
+            this.drawbar4.ImeMode = System.Windows.Forms.ImeMode.On;
+            this.drawbar4.KnobBackColor = System.Drawing.Color.White;
+            this.drawbar4.KnobPointerStyle = KnobControl.KnobControl.KnobPointerStyles.circle;
+            this.drawbar4.LargeChange = 1;
+            this.drawbar4.Location = new System.Drawing.Point(443, 57);
+            this.drawbar4.Maximum = 8;
+            this.drawbar4.Minimum = 0;
+            this.drawbar4.MouseWheelBarPartitions = 1;
+            this.drawbar4.Name = "drawbar4";
+            this.drawbar4.PointerColor = System.Drawing.Color.MidnightBlue;
+            this.drawbar4.ScaleColor = System.Drawing.Color.Black;
+            this.drawbar4.ScaleDivisions = 9;
+            this.drawbar4.ScaleFont = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.drawbar4.ScaleFontAutoSize = false;
+            this.drawbar4.ScaleSubDivisions = 4;
+            this.drawbar4.ShowLargeScale = true;
+            this.drawbar4.ShowSmallScale = false;
+            this.drawbar4.Size = new System.Drawing.Size(122, 122);
+            this.drawbar4.SmallChange = 1;
+            this.drawbar4.StartAngle = 135F;
+            this.drawbar4.TabIndex = 4;
+            this.drawbar4.Value = 0;
+            // 
+            // drawbar3
+            // 
+            this.drawbar3.BackColor = System.Drawing.Color.DimGray;
+            this.drawbar3.EndAngle = 405F;
+            this.drawbar3.ImeMode = System.Windows.Forms.ImeMode.On;
+            this.drawbar3.KnobBackColor = System.Drawing.Color.White;
+            this.drawbar3.KnobPointerStyle = KnobControl.KnobControl.KnobPointerStyles.circle;
+            this.drawbar3.LargeChange = 1;
+            this.drawbar3.Location = new System.Drawing.Point(315, 57);
+            this.drawbar3.Maximum = 8;
+            this.drawbar3.Minimum = 0;
+            this.drawbar3.MouseWheelBarPartitions = 1;
+            this.drawbar3.Name = "drawbar3";
+            this.drawbar3.PointerColor = System.Drawing.Color.MidnightBlue;
+            this.drawbar3.ScaleColor = System.Drawing.Color.Black;
+            this.drawbar3.ScaleDivisions = 9;
+            this.drawbar3.ScaleFont = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.drawbar3.ScaleFontAutoSize = false;
+            this.drawbar3.ScaleSubDivisions = 4;
+            this.drawbar3.ShowLargeScale = true;
+            this.drawbar3.ShowSmallScale = false;
+            this.drawbar3.Size = new System.Drawing.Size(122, 122);
+            this.drawbar3.SmallChange = 1;
+            this.drawbar3.StartAngle = 135F;
+            this.drawbar3.TabIndex = 2;
+            this.drawbar3.Value = 0;
+            this.drawbar3.Load += new System.EventHandler(this.drawbar3_Load);
+            // 
+            // drawbar5
+            // 
+            this.drawbar5.BackColor = System.Drawing.Color.DimGray;
+            this.drawbar5.EndAngle = 405F;
+            this.drawbar5.ImeMode = System.Windows.Forms.ImeMode.On;
+            this.drawbar5.KnobBackColor = System.Drawing.Color.White;
+            this.drawbar5.KnobPointerStyle = KnobControl.KnobControl.KnobPointerStyles.circle;
+            this.drawbar5.LargeChange = 1;
+            this.drawbar5.Location = new System.Drawing.Point(6, 210);
+            this.drawbar5.Maximum = 8;
+            this.drawbar5.Minimum = 0;
+            this.drawbar5.MouseWheelBarPartitions = 1;
+            this.drawbar5.Name = "drawbar5";
+            this.drawbar5.PointerColor = System.Drawing.Color.MidnightBlue;
+            this.drawbar5.ScaleColor = System.Drawing.Color.Black;
+            this.drawbar5.ScaleDivisions = 9;
+            this.drawbar5.ScaleFont = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.drawbar5.ScaleFontAutoSize = false;
+            this.drawbar5.ScaleSubDivisions = 4;
+            this.drawbar5.ShowLargeScale = true;
+            this.drawbar5.ShowSmallScale = false;
+            this.drawbar5.Size = new System.Drawing.Size(122, 122);
+            this.drawbar5.SmallChange = 1;
+            this.drawbar5.StartAngle = 135F;
+            this.drawbar5.TabIndex = 5;
+            this.drawbar5.Value = 0;
+            // 
+            // drawbar2
+            // 
+            this.drawbar2.BackColor = System.Drawing.Color.DimGray;
+            this.drawbar2.EndAngle = 405F;
+            this.drawbar2.ImeMode = System.Windows.Forms.ImeMode.On;
+            this.drawbar2.KnobBackColor = System.Drawing.Color.White;
+            this.drawbar2.KnobPointerStyle = KnobControl.KnobControl.KnobPointerStyles.circle;
+            this.drawbar2.LargeChange = 1;
+            this.drawbar2.Location = new System.Drawing.Point(187, 57);
+            this.drawbar2.Maximum = 8;
+            this.drawbar2.Minimum = 0;
+            this.drawbar2.MouseWheelBarPartitions = 1;
+            this.drawbar2.Name = "drawbar2";
+            this.drawbar2.PointerColor = System.Drawing.Color.MidnightBlue;
+            this.drawbar2.ScaleColor = System.Drawing.Color.Black;
+            this.drawbar2.ScaleDivisions = 9;
+            this.drawbar2.ScaleFont = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.drawbar2.ScaleFontAutoSize = false;
+            this.drawbar2.ScaleSubDivisions = 4;
+            this.drawbar2.ShowLargeScale = true;
+            this.drawbar2.ShowSmallScale = false;
+            this.drawbar2.Size = new System.Drawing.Size(122, 122);
+            this.drawbar2.SmallChange = 1;
+            this.drawbar2.StartAngle = 135F;
+            this.drawbar2.TabIndex = 1;
+            this.drawbar2.Value = 0;
+            this.drawbar2.Load += new System.EventHandler(this.drawbar2_Load);
+            // 
+            // drawbar6
+            // 
+            this.drawbar6.BackColor = System.Drawing.Color.DimGray;
+            this.drawbar6.EndAngle = 405F;
+            this.drawbar6.ImeMode = System.Windows.Forms.ImeMode.On;
+            this.drawbar6.KnobBackColor = System.Drawing.Color.White;
+            this.drawbar6.KnobPointerStyle = KnobControl.KnobControl.KnobPointerStyles.circle;
+            this.drawbar6.LargeChange = 1;
+            this.drawbar6.Location = new System.Drawing.Point(134, 210);
+            this.drawbar6.Maximum = 8;
+            this.drawbar6.Minimum = 0;
+            this.drawbar6.MouseWheelBarPartitions = 1;
+            this.drawbar6.Name = "drawbar6";
+            this.drawbar6.PointerColor = System.Drawing.Color.MidnightBlue;
+            this.drawbar6.ScaleColor = System.Drawing.Color.Black;
+            this.drawbar6.ScaleDivisions = 9;
+            this.drawbar6.ScaleFont = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.drawbar6.ScaleFontAutoSize = false;
+            this.drawbar6.ScaleSubDivisions = 4;
+            this.drawbar6.ShowLargeScale = true;
+            this.drawbar6.ShowSmallScale = false;
+            this.drawbar6.Size = new System.Drawing.Size(122, 122);
+            this.drawbar6.SmallChange = 1;
+            this.drawbar6.StartAngle = 135F;
+            this.drawbar6.TabIndex = 6;
+            this.drawbar6.Value = 0;
+            // 
+            // button_additive_hammond_en
+            // 
+            this.button_additive_hammond_en.ForeColor = System.Drawing.Color.Red;
+            this.button_additive_hammond_en.Location = new System.Drawing.Point(6, 3);
+            this.button_additive_hammond_en.Name = "button_additive_hammond_en";
+            this.button_additive_hammond_en.Size = new System.Drawing.Size(75, 23);
+            this.button_additive_hammond_en.TabIndex = 3;
+            this.button_additive_hammond_en.Text = "Disabled";
+            this.button_additive_hammond_en.UseVisualStyleBackColor = true;
+            this.button_additive_hammond_en.Click += new System.EventHandler(this.button_additive_en_Click);
+            // 
+            // drawbar1
+            // 
+            this.drawbar1.BackColor = System.Drawing.Color.DimGray;
+            this.drawbar1.EndAngle = 405F;
+            this.drawbar1.ImeMode = System.Windows.Forms.ImeMode.On;
+            this.drawbar1.KnobBackColor = System.Drawing.Color.Transparent;
+            this.drawbar1.KnobPointerStyle = KnobControl.KnobControl.KnobPointerStyles.circle;
+            this.drawbar1.LargeChange = 1;
+            this.drawbar1.Location = new System.Drawing.Point(59, 57);
+            this.drawbar1.Maximum = 8;
+            this.drawbar1.Minimum = 0;
+            this.drawbar1.MouseWheelBarPartitions = 1;
+            this.drawbar1.Name = "drawbar1";
+            this.drawbar1.PointerColor = System.Drawing.Color.MidnightBlue;
+            this.drawbar1.ScaleColor = System.Drawing.Color.Black;
+            this.drawbar1.ScaleDivisions = 9;
+            this.drawbar1.ScaleFont = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.drawbar1.ScaleFontAutoSize = false;
+            this.drawbar1.ScaleSubDivisions = 4;
+            this.drawbar1.ShowLargeScale = true;
+            this.drawbar1.ShowSmallScale = false;
+            this.drawbar1.Size = new System.Drawing.Size(122, 122);
+            this.drawbar1.SmallChange = 1;
+            this.drawbar1.StartAngle = 135F;
+            this.drawbar1.TabIndex = 1;
+            this.drawbar1.Value = 0;
+            this.drawbar1.Load += new System.EventHandler(this.drawbar1_Load_1);
+            // 
+            // button4
+            // 
+            this.button4.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.button4.Location = new System.Drawing.Point(262, 338);
+            this.button4.Name = "button4";
+            this.button4.Size = new System.Drawing.Size(122, 40);
+            this.button4.TabIndex = 7;
+            this.button4.Text = "Set";
+            this.button4.UseVisualStyleBackColor = true;
+            this.button4.Click += new System.EventHandler(this.button4_Click);
+            // 
             // drawbar7
             // 
             this.drawbar7.BackColor = System.Drawing.Color.DimGray;
@@ -1181,10 +1179,21 @@
             this.label16.TabIndex = 19;
             this.label16.Text = "Drawbar 9";
             // 
+            // tabControl1
+            // 
+            this.tabControl1.Controls.Add(this.tabPage_additive_hammond);
+            this.tabControl1.ItemSize = new System.Drawing.Size(97, 18);
+            this.tabControl1.Location = new System.Drawing.Point(0, 3);
+            this.tabControl1.Name = "tabControl1";
+            this.tabControl1.SelectedIndex = 0;
+            this.tabControl1.Size = new System.Drawing.Size(696, 423);
+            this.tabControl1.TabIndex = 7;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.ClientSize = new System.Drawing.Size(1055, 449);
             this.Controls.Add(this.ADSR);
             this.Controls.Add(this.tabPage_Connection);
@@ -1201,9 +1210,6 @@
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.tabPage_additive.ResumeLayout(false);
-            this.tabControl1.ResumeLayout(false);
-            this.tabPage_additive_hammond.ResumeLayout(false);
-            this.tabPage_additive_hammond.PerformLayout();
             this.tabPage2.ResumeLayout(false);
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
@@ -1211,6 +1217,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.trackBar_fm_modamp)).EndInit();
             this.ADSR.ResumeLayout(false);
             this.ADSR.PerformLayout();
+            this.tabPage_additive_hammond.ResumeLayout(false);
+            this.tabPage_additive_hammond.PerformLayout();
+            this.tabControl1.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -1248,16 +1257,6 @@
         private System.Windows.Forms.TrackBar trackBar_subtractive_freq2;
         private System.Windows.Forms.TextBox textBox_subtractive_freq1;
         private System.Windows.Forms.TabPage tabPage_additive;
-        private System.Windows.Forms.Button button_additive_hammond_en;
-        private KnobControl.KnobControl drawbar3;
-        private KnobControl.KnobControl drawbar2;
-        private KnobControl.KnobControl drawbar4;
-        private KnobControl.KnobControl drawbar6;
-        private KnobControl.KnobControl drawbar5;
-        private System.Windows.Forms.TabControl tabControl1;
-        private System.Windows.Forms.TabPage tabPage_additive_hammond;
-        private KnobControl.KnobControl drawbar1;
-        private System.Windows.Forms.TabPage tabPage3;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.Button button_fm_en;
@@ -1279,11 +1278,8 @@
         private System.Windows.Forms.Label label_release_knob;
         private System.Windows.Forms.Label label_sustain_knob;
         public KnobControl.KnobControl knobControl_release;
-        private System.Windows.Forms.Button button4;
-        private KnobControl.KnobControl drawbar9;
-        private KnobControl.KnobControl drawbar8;
-        private KnobControl.KnobControl drawbar7;
-        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.TabControl tabControl1;
+        private System.Windows.Forms.TabPage tabPage_additive_hammond;
         private System.Windows.Forms.Label label16;
         private System.Windows.Forms.Label label15;
         private System.Windows.Forms.Label label14;
@@ -1292,6 +1288,18 @@
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.Label label8;
+        private KnobControl.KnobControl drawbar9;
+        private KnobControl.KnobControl drawbar8;
+        private KnobControl.KnobControl drawbar7;
+        private KnobControl.KnobControl drawbar1;
+        private KnobControl.KnobControl drawbar6;
+        private KnobControl.KnobControl drawbar2;
+        private KnobControl.KnobControl drawbar5;
+        private KnobControl.KnobControl drawbar3;
+        private KnobControl.KnobControl drawbar4;
+        private System.Windows.Forms.Button button4;
+        private System.Windows.Forms.Button button_additive_hammond_en;
     }
 }
 
