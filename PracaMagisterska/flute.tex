@@ -1,22 +1,43 @@
 \section{Synteza dźwięku fletu}
 
-W tym rozdziale omówiona zostanie synteza dźwięku poprzez zidentyfikowany model fletu. Obrane cele to:
-\begin{enumerate}
+W literaturze 
+
+W niniejszym rozdziale przedstawiono dwa podejścia do implementacji syntezy dźwięku drewnianego instrumentu dętego:
+\begin{itemize}
 	\setlength\itemsep{-3pt}
-	\item[--] osiągnięcie najlepszej jakości zsyntezowanego dźwięku, to znaczy najbliższego rzeczywistemu dźwiękowi instrumentu,
-	\item[--] znalezienie modelu odpowiedniego do zaimplementowania na DSP.
-\end{enumerate}
+	\item za pomocą falowodu cyfrowego,
+	\item za pomocą zidentyfikowanego modelu ARMA fletu.
+\end{itemize}
 
-
-W celu identyfikacji użyte zostaną trzy podejścia: identyfikacja modelu poprzez ręczne dopasowanie zer i biegunów, identyfikacja metodą Yule-Walkera oraz identyfikacja za pomocą narzędzi wbudowanych w środowisko symulacyjne Matlab.
 
 \subsection{Synteza falowodowa dźwięku fletu}
 %https://ccrma.stanford.edu/~jos/pasp/Digital_Waveguide_Models.html
+%https://quod.lib.umich.edu/cache//b/b/p/bbp2372.1992.072/bbp2372.1992.072.pdf#page=1;zoom=75
+Synteza falowodowa instrumentów dętych drewnianych opiera się głównie na cyfrowych liniach opóźniających, które symulują odbicia fali w komorze dźwiękowej (ang. bore) tego rodzaju instrumentów.
 
-\subsection{Synteza dźwięku fletu na podstawie model ARMA}
+\subsubsection{Model}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=12cm]{grafiki/flute_waveguide_mod}
+	\captionsetup{justification=centering}
+	\caption{Model falowodowy prostego instrumentu dętego drewnianego.}
+	\label{rys:plaszcz_Z}
+\end{figure}
+
+\subsubsection{Implementacja}
+W autorskim programie realizowanym na procesorze DSP implementację oparto na modelu falowodowym P. Cook'a.
+
+
+\subsection{Synteza dźwięku fletu na podstawie modelu ARMA}
 W tym podrozdziale przedstawiono znalezienie modelu fletu na podstawie manualnego doboru jego parametrów. Do identyfikacji instrumentu użyto dźwięku A razkreślnego o częstotliwości 440Hz. Dźwięk fletu zmienia swoją charakterystykę wraz z upływem czasu po chwili pobudzenia (dmuchnięcia w ustnik przez flecistę). Oznacza to, iż model zmienia się w trakcie przebiegu sygnału.
 
 \subsubsection{Identyfikacja modelu}
+Identyfikacja modelu matematycznego instrumentu została przeprowadzona dwoma sposobami: 
+\begin{itemize}
+	\item manualne dopasowanie zer i biegunów modelu, 
+	\item użycie funkcji wbudowanej w środowisko symulacyjne Matlab.
+\end{itemize}
+
 Z uwagi na zmienność modelu fletu w czasie, ze zpróbkowanego sygnału wybrano 4096 próbek z miejsca w czasie, w którym sygnał miał stosunkowo stałą charakterystykę. Na tym fragmencie sygnału przeprowadzono dyskretną transformatę Fouriera za pomocą algorytmu FFT.
 
 
@@ -122,3 +143,7 @@ Z technicznego punktu widzenia efekt vibrato to delikatna modulacja częstotliwo
 
 
 Implementację efektu vibrato przeprowadzono jako linię z opóźnieniem oraz efektem Doplera \cite{bowed_3}. Dodanie vibrato do dźwięku wydobywającego się z modelu spowodowało, iż brzmi on jest bardziej realistycznie.
+
+\subsubsection{Implementacja}
+
+\subsection{Interfejs użytkownika}
