@@ -13,6 +13,7 @@ interrupt void nmi_isr( void );
 interrupt void uart_isr( void );
 interrupt void midi_isr( void );
 
+#include "PADK.h"
 #include "audioBufConst&ExtVar.h"
 #include "uart_fifo.h"
 #include "midi_fifo.h"

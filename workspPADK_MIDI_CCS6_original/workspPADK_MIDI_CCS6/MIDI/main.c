@@ -16,6 +16,7 @@
 #include "var&fun.h"
 #include "myfft.h"
 #include "additive.h"
+#include "woodwind.h"
 
 #define OVERLAP 128
 #define MIDI_TONE_RANGE 128
@@ -52,8 +53,8 @@ extern volatile unsigned PP;
 extern volatile unsigned sem_dac;
 extern int sem_new_note; // 0 - 128
 
-enum methodtype{subtractive, additive, fm, fm_bell};
-enum methodtype method = subtractive;
+enum methodtype{subtractive, additive, fm, fm_bell, flute};
+enum methodtype method = flute;
 // SUBTRACTIVE GLOBALS
 enum waveformtype{square, triangle, sawtooth};
 enum waveformtype waveformSet = square;
@@ -79,6 +80,15 @@ float release_rate = 0.5;
 // ADDITIVE GLOBALS
 float phase = 0;
 float add_knobAmp[HAMMOND_KNOBS];
+
+// WOODWIND GLOBALS
+short r1[N];
+short r2[N];
+short x[N];
+#define nh 5
+short h2[nh];
+short h1[nh];
+short nr = N;
 
 // Static waveform arrays
 float sinusek[N];
@@ -190,6 +200,47 @@ int main( int argc, char *argv[] ) {
 				k += N - OVERLAP;
 				ph += N;
     		}
+		///// WOODWIND /////
+		} else if (method == flute) {
+			if(pressedkeys < 1) {
+				for(j = 0; j < N; j++) {
+					waveform0[j] = 0;
+					waveform1[j] = 0;
+				}
+			} else {
+				clear_v = 1;
+				for(i = 0; i < MIDI_POLY_MAX; i++) {
+					if(freqs[i] > 0 || adsr_state[i] > 0) {
+						ADSR(i);
+						genNoise();
+						filterARMA();
+					}
+				}
+				while(sem_dac == 0);
+				for(j = 0; j < N; j++) {
+					if (j < OVERLAP) {
+						if (whichwaveform == 1) {
+							waveform0[j] = overlaptable[j]*SIG_AMP*v[j*2]; // tu by bylo przepisywanie z myWav
+						} else {
+							waveform1[j] = overlaptable[j]*SIG_AMP*v[j*2];
+						}
+					} else if (j >= N - OVERLAP) {
+						if (whichwaveform) {
+							waveform0[j] = overlaptable[N-j-1]*SIG_AMP*v[j*2];
+						} else {
+							waveform1[j] = overlaptable[N-j-1]*SIG_AMP*v[j*2];
+						}
+					} else {
+						if (whichwaveform) {
+							waveform0[j] = SIG_AMP*v[j*2];
+						} else {
+							waveform1[j] = SIG_AMP*v[j*2];
+						}
+					}
+				}
+				sem_dac = 0;
+				k += N - OVERLAP;
+			}
     	///// SUBTRACTIVE /////
 		} else if (method == subtractive) {
 			if(pressedkeys < 1) {
