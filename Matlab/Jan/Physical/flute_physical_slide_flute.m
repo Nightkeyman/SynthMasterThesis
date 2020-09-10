@@ -19,7 +19,7 @@ bore_delay = period;
 fbk_scl1 = 0.2; %0.5
 fbk_scl2 = 0.33; %0.55
 filt_b = -0.1; %-0.3
-filt_a = [1 0.7]; %1 0.7
+filt_a = 0.7; %0.7
 
 % AFLOW1 creation
 kenv1 = zeros(length(0:dt:T-dt), 1);
@@ -68,13 +68,14 @@ for i = (1+emb_delay+bore_delay):length(0:dt:T-dt)
   apoly(i+1) = ax(i+1) - ax(i+1)^3;
   asum3(i+1) = aflute1(i) + apoly(i+1);
   %filter step
-  avalue(i+1) = filter(filt_b, filt_a, asum3(i+1));
+  %avalue(i+1) = filter(filt_b, filt_a, asum3(i+1));
+  avalue(i+1) = filt_b*asum3(i+1) - filt_a*avalue(i);
   aflute1(i+1) = avalue(i-bore_delay);
 end
 
 % OUTPUT SIGNAL
-Y = asum1;
-%Y = avalue;
+%Y = asum1;
+Y = avalue;
 Y = Y/max(Y);
 sound(Y, Fs);
 
