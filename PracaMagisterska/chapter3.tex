@@ -116,7 +116,7 @@ Aby rozwiązać ten problem, ISR wywołuje funkcję MIDI\_Read z parametrem 1. W
 \end{figure} 
 Dzięki sprawdzaniu każdego przychodzącego bajta w obsłudze przerwania, do kolejki FIFO dostają się tylko istotne bajty. Dyskryminowanie wartości 0xF8 nie powinno mieć skutków ubocznych, gdyż wartość ta nie pojawia się w żadnym z bajtów ramki MIDI, poza bajtem statusu komunikatu zegarowego.
 
-\subsection{Komunikacja z interfejsem użytkownika (UART)}
+\subsection{Komunikacja z interfejsem użytkownika (UART)}\label{sec:real_komunikacja}
 Do komunikacji płyty PADK z panelem sterującym użytkownika działajacym na komputerze klasy PC wykorzystany został interfejs RS-232. Aby umożliwić komunikację komputera nie posiadającego wyżej wymienionego interfejsu wykorzystano układ konwertujący RS-232 na USB.
 
 Do obsługi protokołu szeregowego została wykorzystana biblioteka PADK\_UART.c, która zawiera takie funkcje jak:
@@ -231,9 +231,47 @@ W literaturze można znaleźć informacje, iż widmo częstotliwościowe jest du
 Podjęto próby osiągnięcia jak największej rozdzielczości DFT na wykorzystywanym procesorze TMS320C672x. Dokumentacja funkcji realizującej algorytm FFT wskazywała, iż liczba próbek do jednokrotnej transformacji DFT powinna wynosić maksymalnie 2048. Po wprowadzeniu takiej wartości, procesor ulegał zawieszeniu. Obniżenie liczby próbek do 1024 pozwoliło na bezproblemowe działanie procesora. Jednocześnie spowodowało ono dwukrotne obniżenie dokładności. Ze wzoru \ref{equ:fft_resol} można wyliczyć, iż rozdzielczość częstotliwości w autorskim projekcie wyniosła 46,875Hz.
 
 
-\section{ADSR}
+\section{ADSR}\label{sec:real_adsr}
 <W trakcie implementacji>
 
 
 \section{Interfejs użytkownika}
-<TODO>
+Użytkownik może sterować pracą instrumentu za pomocą specjalnie przygotowanego graficznego interfejsu użytkownika (GUI). GUI stanowi okienkowy program komputerowy napisany w języku C\#. Komunikacja pomiędzy GUI a DSP została opisana w części \ref{sec:real_komunikacja}. Okno programu składa się z:
+\begin{itemize}
+	\item paska zakładek,
+	\item okna głównego,
+	\item modułu ADSR.
+\end{itemize}
+W pasie zakładek opcjami do wyboru są poszczególne metody syntezy dźwięku oraz zakładka połączenia.
+W oknie głównym wyświetlane są kontrolki związane z aktualnie wybraną zakładką. 
+
+Okno zakładki połączenia jest przedstawione na rysunku \ref{rys:real_gui}, po lewej stronie. 
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=16cm]{./grafiki/real_gui}
+	\captionsetup{justification=centering}
+	\caption{Okno graficznego interfejsu użytkownika.}
+	\label{rys:real_gui}
+\end{figure}
+Zawiera ono z pola pozwalające na ustanowienie i konfigurację połączenia pomiędzy GUI a DSP:
+\begin{itemize}
+	\item Rozwijane pole "Port", w którym wybiera się port szeregowy, do którego podłączona jest płyta uruchomieniowa z DSP.
+	\item Przycisk "Refresh" służący do odświeżenia listy dostępnych portów szeregowych.
+	\item Pole "Baudrate", w którym określa się prędkość transmisji bitów. 
+	\item Przycisk "Open", który otwiera połączenie pomiędzy interfejsem użytkownika a DSP. Po pomyślnym nawiązaniu połączenia, tekst tego przycisku zmienia się na "Close". Wówczas przycisk ten służy do zamknięcia połączenia.
+\end{itemize} 
+
+
+
+Ponadto, poniżej tych pól znajduje się konsola serwisowa. Składa się ona z pola "Received", w którym wyświetlane są wszystkie odbierane bajty, oraz pola edycyjnego z przyciskiem "Send", które pozwalają na wysyłanie bajtów do DSP. Konsola ta pełni funkcję diagnostyczną podczas pracy z interfejsem użytkownika.
+
+Moduł ADSR to stały element okna GUI - widoczny niezależnie od wybranej zakładki z paska zakładek. W jego skład wchodzą cztery kontrolki w postaci gałek, które służą do określania stanów ADSR opisanych w podrodziale \ref{sec:real_adsr}:
+\begin{itemize}
+	\item Gałką "Attack" ustawia się czas trwania stanu "attack".
+	\item Gałką "Decay" ustawia się czas trwania stanu "decay".
+	\item Gałką "Sustain" ustawia się poziom stanu "sustain".
+	\item Gałką "Release" ustawia się czas trwania stanu "release".
+\end{itemize}
+W gałkach określających czasy trwania zaimplementowane zostały funkcje logarytmiczne. Oznacza to, że ustawiana wartość nie zmienia się proporcjonalnie do kąta obrotu danej gałki. Dzięki temu kształtowanie obwiedni jest wygodniejsze z punktu widzenia użytkownika. Nastawy zatwierdza się przyciskiem "Set". Wówczas wysyłane są odpowiednie komunikaty z wartościami do DSP.
+
+Zakładki poszczególnych metod syntezy dźwięku są opisane w rozdziałach dotyczących tych metod.
