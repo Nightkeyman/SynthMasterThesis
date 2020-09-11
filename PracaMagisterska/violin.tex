@@ -1,12 +1,46 @@
 \chapter{Modelowanie fizyczne}
-\section{Synteza dźwięku skrzypiec}
+W instrumentach muzycznych w wydawaniu dźwięków biorą udział fale bieżące. Wykorzystując ich fizyczny opis, można zasymulować ich działanie. Na tej zasadzie działa metoda cyfrowych falowodów (ang. digital waveguide). Pozwala ona na symulowanie  rozchodzenia się fal bieżących w elementach instrumentów takich jak struna gitary czy tuba instrumentu dętego. Metoda ta została zaproponowana przez Juliusa O. Smitha z Uniwersytetu Stanfordzkiego w 1973 roku. Od tego czasu, metoda cyfrowych falowodów służy do syntezy brzmień takich instrumentów jak gitary, instrumenty smyczkowe czy instrumenty dęte.
 
+%\section{Linia opóźniająca}
+Do opisu cyfrowego falowodu potrzebna jest znajmość linii opóźniającej (ang. delay line). Jest to element wprowadzający opóźnienie czasowe pomiędzy próbkami, które do niego wchodzą, a próbkami, które z niego wychodzą. 
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=5cm]{grafiki/linia}
+	\captionsetup{justification=centering}
+	\caption{Linia opóźniająca o długości N.}
+	\label{rys:delay_line}
+\end{figure}
+Na rysunku \ref{rys:delay_line} zobrazowana została linia opóźniająca o długości $N$ próbek. Można ją przedstawić także jako $N$ bloków o jednostkowym opóźnieniu połączonych szeregowo, co pokazano na rysunku \ref{rys:model_delay_line2}.
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=10cm]{grafiki/model_linie}
+	\captionsetup{justification=centering}
+	\caption{N bloków opóźniających o jednostkowym opóżnieniu.}
+	\label{rys:model_delay_line2}
+\end{figure}
+ Implementacja linii opóźniającej sprowadza się do tablicy o $N$ elementach oraz wskaźnikach na pierwszy i ostatni element. Dzięki tym wskaźnikom, opóźnianie danych w tablicy odbywa się bez konieczności przepisywania całej tablicy w każdej chwili czasu. W celu uzyskania opóźnień czasowych o niecałkowitą liczbę próbek, stosuje się prostą interpolację liniową pomiędzy dwoma sąsiednimi próbkami.
+
+%\section{Cyfrowy falowód}
+% https://edu.pjwstk.edu.pl/wyklady/mul/scb/main37.html
+
+Cyfrowy falowód to w uproszczeniu dwukierunkowa linia opóźniająca. Implementuje się go zatem jako dwie linie opóźniające, sprzężone ze sobą na końcach za pomocą inwerterów, w których fale rozchodzą się w przeciwnych kierunkach. Cyfrowy falowód można interpretować na przykład jako strunę - dłuższa struna będzie wiązała się z dłuższym falowodem. Oznacza to, że można określić prędkość odchylania się struny w dowolnym punkcie jej długości. Dokonuje się tego poprzez sumowanie, w danym punkcie struny, prędkości fali rozchodzącej się w jednym kierunku oraz predkości fali rozchodzącej się w drugim kierunku.
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=10cm]{grafiki/model_falowod}
+	\captionsetup{justification=centering}
+	\caption{Cyfrowy falowód jako złożenie dwóch linii opóźniających.}
+	\label{rys:model_falowod}
+\end{figure}
+\section{Synteza dźwięku skrzypiec}
+Dźwięk skrzypiec można syntezować za pomocą cyfrowych falowodów. 
+
+\subsection{Zasada działania syntezy dźwięku skrzypiec}
 Syntezę dźwięku skrzypiec można podzielić na trzy obszary:
 \begin{itemize}
 	\setlength\itemsep{-3pt}
-	\item[--] symulację rozchodzenia się fal w strunie,
-	\item[--] symulację interakcji pomiędzy smyczkiem a struną,
-	\item[--] symulację przechodzenia fal ze strun do korpusu skrzypiec poprzez mostek.
+	\item symulację interakcji pomiędzy smyczkiem a struną,
+	\item symulację rozchodzenia się fal w strunie,
+	\item symulację przechodzenia fal ze strun do korpusu skrzypiec poprzez mostek.
 \end{itemize}
 Kompletny schemat blokowy modelu realizującego syntezę dźwięku instrumentu smyczkowego jest pokazany na rysunku \ref{rys:schematblokowy} pochodzącego z \cite{bowed_3}.
 \begin{figure}[H]
@@ -29,21 +63,10 @@ W następnych podrodziałach omówione zostaną kolejne obszary symulacji w opar
 
 
 \subsection{Rozchodzenie się fal w strunie}
-Rozchodzenie się fal w strunie jest symulowane przy wykorzystaniu cyfrowego falowodu (ang. digital waveguide) oraz filtrów, które mają za zadanie odwzorować odbijanie się fal na końcach struny. Fale rozchodzące się w strunie wpływają na prędkość lokalnych odchyleń tej struny. Ta prędkośc wraz z prędkością przesuwania smyczkiem po strunie stanowią podstawę do syntezy dźwięku skrzypiec.
+Rozchodzenie się fal w strunie jest symulowane przy wykorzystaniu cyfrowego falowodu oraz filtrów, które mają za zadanie odwzorować odbijanie się fal na końcach struny. Fale rozchodzące się w strunie wpływają na prędkość lokalnych odchyleń tej struny. Ta prędkośc wraz z prędkością przesuwania smyczkiem po strunie stanowią podstawę do syntezy dźwięku skrzypiec.
 
-\subsubsection{Linia opóźniająca}
-Linia opóźniająca (ang. delay line) to element wprowadzający opóźnienie czasowe pomiędzy próbkami, które otrzymuje na wejściu, a próbkami, które z niego wychodzą. 
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=5cm]{grafiki/linia}
-	\captionsetup{justification=centering}
-	\caption{Linia opóźniająca o długości N.}
-	\label{rys:delay_line}
-\end{figure}
-Na rysunku \ref{rys:delay_line} przedstawiona została linia opóźniająca o długości N próbek. Implementacja tego elementu sprowadza się do tablicy o N elementach oraz wskaźnikach na pierwszy i ostatni element. W celu uzyskania opóźnień czasowych o niecałkowitą liczbę próbek, stosuje się prostą interpolację liniową pomiędzy dwoma sąsiednimi próbkami.
-\subsubsection{Cyfrowy falowód}
-Cyfrowy falowód jest zdefiniowany jako dwukierunkowa linia opóźniająca. Implementuje się go zatem jako dwie linie opóźniające, w których fale rozchodzą się w przeciwnych kierunkach. Cyfrowy falowód można interpretować jako strunę - dłuższa struna będzie wiązała się z dłuższym falowodem. Oznacza to, że można określić prędkość odchylania się struny w dowolnym punkcie jej długości. Dokonuje się tego poprzez sumowanie, w danym punkcie struny, prędkości fali rozchodzącej się w jednym kierunku oraz predkości fali rozchodzącej się w drugim kierunku.
-\subsubsection{Odbicia na końcach struny}
+
+\subsection{Odbicia na końcach struny}
 Fale w strunie rozchodzą się w obu kierunkach, aż dotrą do końca struny - mostka, prożka lub palca skrzypka. Elementy te, oznaczone na rysunku \ref{rys:skrzypce}, uniemożliwiają strunie ruch, zatem fale się od nich odbijają. Fala, która dociera do jednego z tych elementów, zostaje częściowo odbita, więc zmienia się jej kierunek rozchodzenia. Odbijanie implementowane jest jako przepisywanie danej próbki z końca jednej linii opóźniającej do początku drugiej w obrębie jednego cyfrowego falowodu. Przy takim odbiciu następuje zmiana znaku próbki.
 Dodatkowo, aby uwzględnić straty zachodzące przy odbiciach oraz samym rozchodzeniu się fali, co najmniej jedno odbicie modeluje się za pomocą filtra dolnoprzepustowego o wzmocnieniu mniejszym od 1.
 
