@@ -11,14 +11,14 @@ time = 1/f_sin;
 period = floor(Fs/f_sin);
 
 % CHANGABLE PARAMS
-T = 2;
+T = 10;
 att_time = 1/2;
 amp_noise = 0.03; %0.035
-emb_delay = period/2;
-bore_delay = period;
+emb_delay = floor(period/6); % period/2
+bore_delay = floor(period/3); % period/1
 fbk_scl1 = 0.2; %0.5
 fbk_scl2 = 0.33; %0.55
-filt_b = -0.1; %-0.3
+filt_b = -0.05; %-0.3
 filt_a = 0.7; %0.7
 
 % AFLOW1 creation

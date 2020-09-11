@@ -1,51 +1,88 @@
 \section{Synteza dźwięku fletu}
 
-W literaturze 
+W literaturze można znaleźć wiele podejść do syntezy dźwięku instrumentów dętych drewnianych. Ich modele są przedstawione zazwyczaj za pomocą różniczkowych równań fizycznych lub w postaci falowodów cyfrowych. 
+%klarnet: https://www.researchgate.net/publication/4333455_Representation_of_solo_clarinet_music_by_physical_modeling_synthesis
+%gestures: https://www.researchgate.net/publication/5323798_Gesture_synthesis_basic_control_of_a_flute_physical_model
+%slide-flute perry cook: https://quod.lib.umich.edu/cache//b/b/p/bbp2372.1992.072/bbp2372.1992.072.pdf#page=1;zoom=75
+Przykładem takiej pracy naukowej jest artykuł na temat modelu fizycznego klarnetu, w którym autorzy opisują równaniami różniczkowymi poszczególne elementy instrumentu dętego drewnianego \cite{flute_klarnet}. Inna praca naukowa porusza temat kontroli modelu fletu, w którym autorzy skupili się na opisaniu zależnościach fizycznych związanych z grą flecisty \cite{flute_flecista}, takich jak: ciśnienie w ustach instumentalisty, odległość od fletu oraz szerokość otwarcia ust. Kolejnym przykładem artykułu opisującego model instrumentu dętego drewnianego jest praca P. Cooka przedstawiająca falowody cyfrowe fletu suwakowego (ang. slide flute) oraz klarnetu \cite{flute_cook}.
 
-W niniejszym rozdziale przedstawiono dwa podejścia do implementacji syntezy dźwięku drewnianego instrumentu dętego:
+%o tym ze trudno jest zrobić wielootworowe --> ta ksiazka computer music costam
+
+
+W niniejszym podrozdziale przedstawiono dwa podejścia do implementacji syntezy dźwięku drewnianego instrumentu dętego:
 \begin{itemize}
 	\setlength\itemsep{-3pt}
 	\item za pomocą falowodu cyfrowego,
-	\item za pomocą zidentyfikowanego modelu ARMA fletu.
+	\item za pomocą zidentyfikowanego modelu ARMA.
 \end{itemize}
-
+Na końcu podrozdziału przedstawiono wyniki porównujące oba te podejścia do syntezy na podstawie zsyntezowanych dźwięków.
 
 \subsection{Synteza falowodowa dźwięku fletu}
 %https://ccrma.stanford.edu/~jos/pasp/Digital_Waveguide_Models.html
 %https://quod.lib.umich.edu/cache//b/b/p/bbp2372.1992.072/bbp2372.1992.072.pdf#page=1;zoom=75
-Synteza falowodowa instrumentów dętych drewnianych opiera się głównie na cyfrowych liniach opóźniających, które symulują odbicia fali w komorze dźwiękowej (ang. bore) tego rodzaju instrumentów.
+
+Synteza falowodowa instrumentów dętych drewnianych opiera się głównie na cyfrowych liniach opóźniających, które symulują odbicia fali w komorze dźwiękowej (ang. bore) tego rodzaju instrumentów. Komorę dźwiękową można uprościć do cylindra, w którym rozchodzi się fala. Jest to znaczna zaleta metody falowodowej, gdyż dowolny element instrumentu może zostać zamodelowany za pomocą zestawu tub cylindrycznych.
+
+\begin{equation} \label{equ:flute_row_falowe}
+\frac{\partial^2 p}{\partial t^2} = \frac{\partial^2 p}{\partial x^2}
+\end{equation}
+\begin{tabular}{ l l l l}
+	gdzie: 	&	$p$ & - &  ciśnienie, \\
+	& $c$ &  - & prędkość propagacji dźwięku w powietrzu, \\
+	&	$x$ & - &  długość korpusu instrumentu dętego,\\
+	&	$t$ & - &  czas, \\
+\end{tabular} \\
+
+%https://sound.eti.pg.gda.pl/student/eim/synteza/macmal/
+Powyższe jednowymiarowe równanie falowe przedstawia rozchodzenie się fali płaskiej w nieskończenie długim cylindrze. Rozwiązaniem równania \ref{equ:flute_row_falowe} jest superpozycja dwóch fal ciśnienia rozchodzących się w przeciwnych kierunkach komory dźwiękowej instrumentu dętego.
+
 
 \subsubsection{Model}
+W niniejszej pracy, syntezę falowodową dźwięku instrumentu dętego drewnianego oparto o schemat blokowy przedstawiony przez P. Cooka w 1992 roku.
+
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=12cm]{grafiki/flute_waveguide_mod}
+	\includegraphics[width=14cm]{grafiki/flute_waveguide_mod}
 	\captionsetup{justification=centering}
 	\caption{Model falowodowy prostego instrumentu dętego drewnianego.}
-	\label{rys:plaszcz_Z}
+	\label{rys:flute_cook}
 \end{figure}
 
-\subsubsection{Implementacja}
-W autorskim programie realizowanym na procesorze DSP implementację oparto na modelu falowodowym P. Cook'a.
+%https://courses.cs.washington.edu/courses/cse467/05wi/pdfs/lectures/15-waveguideInstruments.pdf
+Wejściem systemu przedstawionego na rysunku \ref{rys:flute_cook} jest przepływ powietrza. Szum zostaje dodany w celu symulowania odgłosu wydechu flecisty. Interakcja między ustnikiem a komorą dźwiękową fletu przedstawiona została równaniem matematycznym $x-x^3$. Końcówka komory dźwiękowej fletu odbija niskie częstotliwości. Ta część schematu zostaje zasymulowana poprzez dodanie filtru dolnoprzepustowego. Obliczenie jednej próbki syntezowanego dźwieku na podstawie rysunku \ref{rys:flute_cook} wymaga 9 mnożeń oraz 6 operacji sumowania.
 
+\subsubsection{Implementacja}
+W autorskim programie realizowanym na procesorze DSP wzorowano się na schemacie \ref{rys:flute_cook}. Przepływ powietrza został zaimplementowany jako jedna sinusoida o odpowiedniej obwiedni \cite{flute_prezka}. Szum dochodzący do utworzonego sygnału został zasymulowany funkcją rand(), a jego ilość zostaje zeskalowana. 
+
+... TODO ...
 
 \subsection{Synteza dźwięku fletu na podstawie modelu ARMA}
-W tym podrozdziale przedstawiono znalezienie modelu fletu na podstawie manualnego doboru jego parametrów. Do identyfikacji instrumentu użyto dźwięku A razkreślnego o częstotliwości 440Hz. Dźwięk fletu zmienia swoją charakterystykę wraz z upływem czasu po chwili pobudzenia (dmuchnięcia w ustnik przez flecistę). Oznacza to, iż model zmienia się w trakcie przebiegu sygnału.
+W tym punkcie przedstawiono identyfikację modelu matematycznego fletu, na podstawie którego przeprowadzono później syntezę dźwięku. Do rozpoznania modelu instrumentu użyto tonu "A" razkreślnego o częstotliwości 440Hz. Dźwięk wygenerowany przez grę na flecie zmienia swoją charakterystykę w czasie. Oznacza to, iż jego model również zmienia się w trakcie nagranego przebiegu sygnału. 
 
 \subsubsection{Identyfikacja modelu}
 Identyfikacja modelu matematycznego instrumentu została przeprowadzona dwoma sposobami: 
 \begin{itemize}
-	\item manualne dopasowanie zer i biegunów modelu, 
-	\item użycie funkcji wbudowanej w środowisko symulacyjne Matlab.
+	\item poprzez manualne dopasowanie zer i biegunów modelu, 
+	\item za pomocą funkcji wbudowanej w środowisko symulacyjne Matlab.
 \end{itemize}
 
-Z uwagi na zmienność modelu fletu w czasie, ze zpróbkowanego sygnału wybrano 4096 próbek z miejsca w czasie, w którym sygnał miał stosunkowo stałą charakterystykę. Na tym fragmencie sygnału przeprowadzono dyskretną transformatę Fouriera za pomocą algorytmu FFT.
+Proces identyfikacji przeprowadzono w środowisku symulacyjnym Matlab. Wybrano do niego te część nagrania dźwięku fletu, w której model instrumentu jest w stanie ustalonym. Na tym fragmencie sygnału przeprowadzono dyskretną transformację Fouriera za pomocą algorytmu FFT.
 
+% WYKRESSSSS
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=12cm]{grafiki/flute_spectrum_orig}
+	\captionsetup{justification=centering}
+	\caption{Charakterystyka amplitudowa nagranego sygnału fletu.}
+	\label{rys:flute_spectrum}
+\end{figure}
+% WYKRESSSS
 
-Na wykresie przedstawiającym widmo częstotliwościowe można zauważyć wyraźne piki oraz doliny charakterystyki. Następnym krokiem w przeprowadzanej identyfikacji było określenie częstotliwości oraz amplitud widocznych pików oraz dolin. Siedem pierwszych pików charakterystyki zostało zinterpretowanych jako bieguny modelu, natomiast sześć pierwszych dolin charakterystyki częstotliwościowej zamieniona została na zera modelu. Liczba wybranych pików i dolin wziętych pod uwagę przy tworzeniu modelu, została dobrana na podstawie wzrokowej oceny ilości harmonicznych mogących mieć znaczny wpływ na ukształtowanie brzmienia zsyntezowanego instrumentu. Częstotliwości rezonansowe przetworzono według zależności:
-\begin{equation} \label{equ:wzor3}
+Na rysunku \ref{rys:flute_spectrum} można zauważyć wyraźne piki oraz doliny charakterystyki częstotliwościowej nagranego sygnału. Siedem pierwszych pików charakterystyki zostało zinterpretowanych jako bieguny modelu, natomiast sześć pierwszych dolin zostały potraktowane jako jego zera. Liczba wybranych pików i dolin wziętych pod uwagę przy tworzeniu modelu, została dobrana na podstawie wzrokowej oceny ilości harmonicznych mogących mieć znaczny wpływ na ukształtowanie brzmienia zsyntezowanego instrumentu. Częstotliwości rezonansowe przetworzono według zależności:
+\begin{equation} \label{equ:flute_bieguny}
 p = 1-\frac{0.05}{A_{p}}e^{jf_{p}2\pi/F_{s}}
 \end{equation}
-\begin{equation} \label{equ:wzor4}
+\begin{equation} \label{equ:flute_doliny}
 q = 1-\frac{0.05}{A_{q}}e^{jf_{q}2\pi/F_{s}}
 \end{equation}
 \begin{tabular}{ l l l l}
@@ -54,21 +91,11 @@ q = 1-\frac{0.05}{A_{q}}e^{jf_{q}2\pi/F_{s}}
 	&	$F_{s}$ & - &  częstotliwość próbkowania nagranego dźwięku,\\
 	&	$f_{p,q}$ & - &  częstotliwość rezonansowa biegunów i zer modelu, \\
 	&	$A_{p,q}$ & - &  amplituda rezonansu zer i biegunów, \\
-\end{tabular} 
-\vspace{6pt}
+\end{tabular} \\
 
-Każdy pik został przetworzony na dwa bieguny odbite lustrzanie względem osi realis na płaszczyźnie Z, natomiast każda dolina została przetworzona na dwa zera odbite lustrzanie względem osi Z.
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=6.5cm]{grafiki/Bieguny_na_plaszcz_Z}
-	\captionsetup{justification=centering}
-	\caption{Przedstawienie biegunów i zer modelu na płaszczyźnie Z.}
-	\label{rys:plaszcz_Z}
-\end{figure}
-Model ARMA zsyntezowanego fletu utworzono na podstawie wyznaczonych zer i biegunów widocznych \ref{rys:plaszcz_Z}. W celu wydobycia dźwięku z modelu, pobudzono go sygnałem szumu białego, a następnie znormalizowano w celu uniknięciu przesterowania sygnału. 
+Każdy pik charakterystyki został przetworzony na dwa bieguny odbite lustrzanie względem osi realis na płaszczyźnie Z, według wzoru \ref{equ:flute_bieguny}. Każda z dolin została przetworzona na dwa zera odbite lustrzanie względem osi Z, według wzoru \ref{equ:flute_doliny}.
 
-
-Wydobyty dźwięk z modelu przypomina brzmienie instrumentu z rodziny instrumentów dętych drewnianych. Wysokość dźwięku wydobytego tonu jest taka sama jak oryginalnego dźwięku (440Hz).
+Model ARMA zsyntezowanego fletu utworzono na podstawie wyznaczonych zer i biegunów. W celu wygenerowania dźwięku z modelu, pobudzono go szumem białym, Następnie znormalizowano otrzymany sygnał, aby uniknąć jego przesterowań. Dźwięk wygenerowany z modelu przypomina brzmienie instrumentu z rodziny instrumentów dętych drewnianych. Wysokość dźwięku wydobytego tonu jest taka sama jak oryginalnego dźwięku (440Hz).
 
 \subsubsection{Parametryzacja zidentyfikowanego modelu}
 Gra na instrumencie wymaga wydobywania z niego dźwięków o różnej wysokości. Zidentyfikowany w poprzednim punkcie model jest statyczny. Po pobudzeniu modelu szumem, wydobywa się z niego zawsze ten sam dźwięk (dźwięk A razkreślny, na podstawie którego, model był identyfikowany). W celu wydobycia innego dźwięku na podstawie utworzonego modelu, należy dokonać jego parametryzacji. Parametryzacja zidentyfikowanego modelu polega na uzależnieniu każdego biegunu i zera modelu od zagranego tonu.
@@ -90,13 +117,9 @@ Na rysunku \ref{rys:por_mod_flet} widać, iż wszystkie piki oraz doliny opisane
 \subsection{Synteza dźwięku fletu na podstawie zidentyfikowanego modelu AR oraz ARMA}
 W tym podrozdziale zsyntezowany dźwięk zostanie wytworzony na podstawie modelu znalezionego w sposób algorytmiczny. Poszukiwane będą modele w postaci AR oraz ARMA dla dźwięku fletu, a następnie porównane pod względem rzędu oraz brzmienia po ich pobudzeniu.
 
-
 W celu znalezienia modelu AR zaimplementowano estymator Yula-Walkera, który opiera się na wyliczeniu autokorelacji sygnału identyfikowanego procesu \cite{Y_W}. Rezultatem takiej estymacji są współczynniki procesu AR. Rząd modelu potrzebny do odnalezienia odpowiednio brzmiącego zsyntezowanego fletu wyniósł 300.
 
-
-
 W celu znalezienia modelu autoregresyjnego ze średnią ruchomą użyto gotowej funkcji "armax()" wbudowanej w środowisko symulacyjne Matlab. Funkcja "armax()" pobiera dwa argumenty - sygnał, którego model jest identyfikowany oraz rząd mianownika i licznika tego modelu \cite{armax}. Estymator ten wykorzystuje zapętloną metodę przewidywania błędu do wykrywania parametrów modelu ARMA. Rząd modelu ARMA, który dawał dobre rezultaty po pobudzeniu go szumem (brzmiał podobnie do pierwotnego sygnału fletu) wyniósł 100. Przy takim rzędzie wciąż można usłyszeć 'cyfrowość' sygnału. Sygnał zsyntezowanego fletu brzmiał bardzo dobrze przy pobudzeniu modelu o rzędzie 500.
-
 
 \begin{figure}[H]
 	\centering
@@ -107,43 +130,8 @@ W celu znalezienia modelu autoregresyjnego ze średnią ruchomą użyto gotowej 
 \end{figure}
 Na rysunku \ref{rys:por_ar_arma} dokonano porównania widm częstotliwościowych dla różnych rzędów zidentyfikowanych modeli AR i ARMA. Wrażenia słuchowe są lepsze dla modelu ARMA 100 rzędu niż modelu AR 300 rzędu.
 
-\subsection{Wzbogacenie brzmienia zsyntezowanych instrumentów dętych}
-W poprzednich podrozdziałach znaleziono model matematyczny fletu. Model pobudzany był szumem w celu wydobycia się z niego dźwięku. Uzyskany dźwięk może wydawać się ‘statyczny’. W celu przybliżenia go do prawdziwego brzmienia fletu można wykonać na sygnale kilka operacji, które pomogą go udynamicznić:
-\begin{enumerate}
-	\setlength\itemsep{-3pt}
-	\item[--] dodanie obwiedni dźwięku,
-	\item[--] dodanie efektu vibrato,
-	\item[--] zmiana charakteru pobudzenia.
-\end{enumerate}
-W kolejnych podrozdziałach omówiona zostanie obwiednia dźwięku oraz vibrato. Zmiana rodzaju pobudzenia (np. rodzaj szumu pobudzającego model) jest bardzo skomplikowanym tematem, charakterystycznym dla każdego instrumentu. Przykładem może być zamodelowanie zmiany dmuchnięcia flecisty w ustnik \cite{gest_flute}.
-\subsubsection{Obwiednia dźwięku}
-W celu ustalenia obwiedni generowanego dźwięku stosuje się klasyczny model ADSR (Attack Delay Sustain Release) \cite{adsr}, który stosowany był już w pierwszych syntezatorach analogowych.
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=9cm]{grafiki/ADSR}
-	\captionsetup{justification=centering}
-	\caption{Klasyczne podejście do obwiedni dźwięku.}
-	\label{rys:adsr}
-\end{figure}
-Nałożenie obwiedni na zsyntezowany dźwięk pozwala na uzyskanie wyższej amplitudy w pierwszym momencie wydobycia dźwięku co przypomina moment dmuchnięcia flecisty w flet. Po chwili sygnał dźwięku jest bardziej statyczny co odpowiada podtrzymaniu dźwięku przez flecistę - "Sustain".
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=9cm]{grafiki/Dzwiek_zsyntezowanego_fletu_po_ADSR}
-	\captionsetup{justification=centering}
-	\caption{Sygnał zsyntezowanego fletu po nałożeniu na niego obwiedni dźwięku}
-	\label{rys:po_adsr}
-\end{figure}
-Na rysunku \ref{rys:po_adsr} można zauważyć wyraźny wpływ obwiedni dźwięku na wydobywany sygnał. Wrażenia słuchowe również wskazują na obecność wysokiej amplitudy sygnału na jego początku.
-
-\subsubsection{Efekt vibrato}
-W trakcie grania na wielu instrumentach rzeczywistych, aby urozmaicić wydobywany z instrumentu dźwięk, muzycy stosują technikę vibrato. W różnych rodzinach instrumentów efekt vibrato wydobywany jest w inny sposób. Na instrumentach smyczkowych lub strunowych powstaje on w wyniku delikatnego ruszania palcem na gryfie, natomiast w instrumentach dętych wydobywany jest już jako zaburzenie dmuchania flecisty w ustnik.
-
-
-Z technicznego punktu widzenia efekt vibrato to delikatna modulacja częstotliwości podstawowej dźwięku, z niską częstotliwością drgań (wartość kilku lub kilkunastu Herzów). Wartość maksymalnej zmiany częstotliwości nie różni się zazwyczaj bardziej niż 1 procent wartości częstotliwości, wokół której oscyluje.
-
-
-Implementację efektu vibrato przeprowadzono jako linię z opóźnieniem oraz efektem Doplera \cite{bowed_3}. Dodanie vibrato do dźwięku wydobywającego się z modelu spowodowało, iż brzmi on jest bardziej realistycznie.
-
 \subsubsection{Implementacja}
 
 \subsection{Interfejs użytkownika}
+
+\subsection{Wyniki}

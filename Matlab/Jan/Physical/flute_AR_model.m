@@ -20,7 +20,7 @@ spect_dens = 20*log10(abs(spectrum));
 figure(4);
 f = ((f-1)/fft_size)*Fs;
 plot(f,spect_dens);
-
+grid on
 axis([0 4000 -40 40])
 title('Widmo czêstotliwoœciowe dŸwiêku fletu (A razkreœlne)');
 xlabel("Czestotliwosc [Hz]")
