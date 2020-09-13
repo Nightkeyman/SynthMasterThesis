@@ -11,11 +11,11 @@
 #define N 1024
 #define nh 13
 
-extern float r1[N];
+extern double r1[N];
 extern float r2[N];
-extern float x[N];
-extern float h2[nh];
-extern float h1[nh];
+extern double x[N];
+extern double h2[nh+1];
+extern double h1[nh+1];
 extern short nr;
 
 void filterARMA();
