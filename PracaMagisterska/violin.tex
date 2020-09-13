@@ -50,7 +50,7 @@ Kompletny schemat blokowy modelu realizującego syntezę dźwięku instrumentu s
 	\caption{Schemat blokowy modelu realizującego syntezę dźwięku.}
 	\label{rys:schematblokowy}
 \end{figure}
-
+Poszczególne elementy skrzypiec zostały oznaczone na rysunku \ref{rys:skrzypce}.
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=5cm]{grafiki/skrzypce}
@@ -59,7 +59,7 @@ Kompletny schemat blokowy modelu realizującego syntezę dźwięku instrumentu s
 	\label{rys:skrzypce}
 \end{figure}
 
-W następnych podrodziałach omówione zostaną kolejne obszary symulacji w oparciu o \cite{bowed_smith}. Należy mieć na uwadzę, że ostatecznie synteza tego typu przeprowadzana jest na DSP w czasie rzeczywistym.
+W następnych podrodziałach omówione zostaną kolejne obszary syntezy w oparciu o \cite{bowed_smith}. Należy mieć na uwadzę, że ostatecznie synteza tego typu przeprowadzana jest na DSP w czasie rzeczywistym.
 
 
 \subsection{Rozchodzenie się fal w strunie}
@@ -79,7 +79,7 @@ Wykres współczynnika tarcia w zależności od różnicy pomiędzy prędkościa
 	\centering
 	\includegraphics[width=10cm]{grafiki/tarcie2}
 	\captionsetup{justification=centering}
-	\caption{Współczynnik tarcia $\mu$ w funkcji różnicy prędkości struny i smyczka (po lewej) oraz współczynnik odbicia $\rho$ (po prawej).}
+	\caption{Współczynnik tarcia $\mu$ w funkcji różnicy prędkości struny i smyczka (po lewej) oraz współczynnik odbicia $\rho(v)$ (po prawej).}
 	\label{rys:tarcie}
 \end{figure}
 
@@ -101,7 +101,7 @@ v_{l}^{-} = v_r^{+} +  \rho(v_{diff}[t])v_{diff}[t]
 v_{r}^{-} = v_l^{+} +  \rho(v_{diff}[t])v_{diff}[t]
 \end{equation}
 \begin{tabular}{ l l l l}
-	gdzie: & $\rho$ &  - & stablicowana funkcja przedstawiona na rysunku \ref{rys:tarcie}. \\
+	gdzie: & $\rho(v)$ &  - & stablicowana funkcja przedstawiona na rysunku \ref{rys:tarcie}. \\
 	
 \end{tabular}
 \vspace{6pt}
@@ -139,3 +139,14 @@ Autorzy \cite{bowed_4} przeprowadzili podobne pomiary, z tym, że strunę pobudz
 W \cite{bowed_2} pomiarów dokonano nieco inaczej. W opisanej tam metodzie, wykorzystany został młotek wyposażony w czujnik siły. Młotkiem tym uderzano w mostek w kierunku prostopadłym do strun. Na mostku z kolei, zamontowany był akcelerometr mierzący przyspieszenie również w kierunku prostopadłym do strun.
 
 Wszystkie te działania zmierzały do zidentyfikowania modelu autoregresyjnego, który odwzorowuje szczyty rezonansowe pomierzonego widma częstotliwościowego. Model ten jest pobudzany sygnałem uzyskanym z próbkowania prędkości struny. Uzyskane w ten sposób wyjście to dźwięk skrzypiec.
+
+\subsection{Implementacja syntezy dźwięku skrzypiec}
+Schemat z rysunku \ref{rys:schematblokowy} na potrzeby implementacji można nieco uprościć. Dwie linie opóźniające rozdzielone jedynie inwerterem można połączyć w jedną, której znak jest zmieniany na końcu. Tak samo można zrobić z dwoma liniami opóźniającymi rozdzielonymi filtrem dolnoprzepustowym. Takie działania nie mają wpływu na efekt końcowy, a dzięki nim do zaimplementowania są tylko dwie linie opóźniające, zamiast czterech. Ponadto można zrezygnować z wpływu siły nacisku smyczka na symulację. Uproszczony schemat blokowy został pokazany na rysunku \ref{rys:model_violin_schemat}.
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=12cm]{grafiki/model_violin_schemat}
+	\captionsetup{justification=centering}
+	\caption{Uproszczony schemat blokowy syntezy falowodowej skrzypiec.}
+	\label{rys:model_violin_schemat}
+\end{figure}
+
