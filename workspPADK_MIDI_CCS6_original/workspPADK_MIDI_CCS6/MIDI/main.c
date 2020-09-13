@@ -82,12 +82,13 @@ float phase = 0;
 float add_knobAmp[HAMMOND_KNOBS];
 
 // WOODWIND GLOBALS
-short r1[N];
-short r2[N];
-short x[N];
-#define nh 5
-short h2[nh];
-short h1[nh];
+float r1[N]; // r1 - output data used
+float x[N]; // x - input data - noise
+float r2[N]; // r2 - output data stored --> for next cycle
+// MA filter coefficients --> numerator
+float h2[nh] = {1.00000, -11.43375, 60.31834, -194.13948, 424.59379, -664.76990, 764.03008, -649.51569, 405.37159, -181.15113, 55.02415, -10.20099, 0.87301};
+// AR filter coefficients --> denom
+float h1[nh] = {1.0, -11.598, 61.971, -201.74, 445.62, -703.64,	814.4, -696.17,	436.24,	-195.43, 59.412, -11.006, 0.93958};
 short nr = N;
 
 // Static waveform arrays
@@ -121,6 +122,11 @@ int main( int argc, char *argv[] ) {
 
 	for(i = 0; i < HAMMOND_KNOBS; i++)
 		add_knobAmp[i] = 0;
+
+	for(i = 0; i < N; i++) {
+		r1[i] = 0;
+		r2[i] = 0;
+	}
 
 	for(i = 0; i < 2*N; i+=2) {
 		waveform0[i] = 0;

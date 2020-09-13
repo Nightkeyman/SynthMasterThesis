@@ -9,13 +9,13 @@
 #define WOODWIND_H_
 
 #define N 1024
-#define nh 5
+#define nh 13
 
-extern short r1[N];
-extern short r2[N];
-extern short x[N];
-extern short h2[nh];
-extern short h1[nh];
+extern float r1[N];
+extern float r2[N];
+extern float x[N];
+extern float h2[nh];
+extern float h1[nh];
 extern short nr;
 
 void filterARMA();
