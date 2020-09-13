@@ -57,7 +57,7 @@ W autorskim programie realizowanym na procesorze DSP wzorowano się na schemacie
 ... TODO ...
 
 \subsection{Synteza dźwięku fletu na podstawie modelu ARMA}
-W tym punkcie przedstawiono identyfikację modelu matematycznego fletu, na podstawie którego przeprowadzono później syntezę dźwięku. Do rozpoznania modelu instrumentu użyto tonu "A" razkreślnego o częstotliwości 440Hz. Dźwięk wygenerowany przez grę na flecie zmienia swoją charakterystykę w czasie. Oznacza to, iż jego model również zmienia się w trakcie nagranego przebiegu sygnału. 
+W tym punkcie przedstawiono identyfikację modelu matematycznego fletu, na podstawie którego przeprowadzono później syntezę dźwięku. Do rozpoznania modelu instrumentu użyto tonu "A" razkreślnego o częstotliwości 440Hz. Dźwięk wygenerowany przez grę na flecie zmienia swoją charakterystykę w czasie. Oznacza to, iż jego model również zmienia się w trakcie nagranego przebiegu sygnału. Do identyfikacji wybrano te część nagrania dźwięku fletu, w której model instrumentu jest w stanie ustalonym.
 
 \subsubsection{Identyfikacja modelu}
 Identyfikacja modelu matematycznego instrumentu została przeprowadzona dwoma sposobami: 
@@ -66,7 +66,7 @@ Identyfikacja modelu matematycznego instrumentu została przeprowadzona dwoma sp
 	\item za pomocą funkcji wbudowanej w środowisko symulacyjne Matlab.
 \end{itemize}
 
-Proces identyfikacji przeprowadzono w środowisku symulacyjnym Matlab. Wybrano do niego te część nagrania dźwięku fletu, w której model instrumentu jest w stanie ustalonym. Na tym fragmencie sygnału przeprowadzono dyskretną transformację Fouriera za pomocą algorytmu FFT.
+Proces identyfikacji przeprowadzono w środowisku symulacyjnym Matlab. Na nagranym fragmencie sygnału przeprowadzono dyskretną transformację Fouriera za pomocą algorytmu FFT.
 
 % WYKRESSSSS
 \begin{figure}[H]
@@ -93,27 +93,26 @@ q = 1-\frac{0.05}{A_{q}}e^{jf_{q}2\pi/F_{s}}
 	&	$A_{p,q}$ & - &  amplituda rezonansu zer i biegunów, \\
 \end{tabular} \\
 
-Każdy pik charakterystyki został przetworzony na dwa bieguny odbite lustrzanie względem osi realis na płaszczyźnie Z, według wzoru \ref{equ:flute_bieguny}. Każda z dolin została przetworzona na dwa zera odbite lustrzanie względem osi Z, według wzoru \ref{equ:flute_doliny}.
+Każdy pik charakterystyki został przetworzony na dwa bieguny odbite lustrzanie względem osi rzeczywistej na płaszczyźnie Z, według wzoru \ref{equ:flute_bieguny}. Każda z dolin została odwzorowana jako dwa zera odbite lustrzanie względem osi Z, według wzoru \ref{equ:flute_doliny}.
 
-Model ARMA zsyntezowanego fletu utworzono na podstawie wyznaczonych zer i biegunów. W celu wygenerowania dźwięku z modelu, pobudzono go szumem białym, Następnie znormalizowano otrzymany sygnał, aby uniknąć jego przesterowań. Dźwięk wygenerowany z modelu przypomina brzmienie instrumentu z rodziny instrumentów dętych drewnianych. Wysokość dźwięku wydobytego tonu jest taka sama jak oryginalnego dźwięku (440Hz).
+Model ARMA zsyntezowanego fletu utworzono na podstawie wyznaczonych zer i biegunów. W celu wygenerowania dźwięku z modelu w środowisku symulacyjnym, pobudzono go szumem białym. Następnie znormalizowano otrzymany sygnał, aby uniknąć przesterowań. Dźwięk wygenerowany z modelu przypomina brzmienie instrumentu z rodziny instrumentów dętych drewnianych. Wysokość wygenerowanego dźwięku jest taka sama jak w oryginalnym nagraniu (440Hz).
 
 \subsubsection{Parametryzacja zidentyfikowanego modelu}
-Gra na instrumencie wymaga wydobywania z niego dźwięków o różnej wysokości. Zidentyfikowany w poprzednim punkcie model jest statyczny. Po pobudzeniu modelu szumem, wydobywa się z niego zawsze ten sam dźwięk (dźwięk A razkreślny, na podstawie którego, model był identyfikowany). W celu wydobycia innego dźwięku na podstawie utworzonego modelu, należy dokonać jego parametryzacji. Parametryzacja zidentyfikowanego modelu polega na uzależnieniu każdego biegunu i zera modelu od zagranego tonu.
+Gra na instrumencie wymaga wydobywania z niego dźwięków o różnej wysokości. Zidentyfikowany w poprzednim punkcie model jest statyczny - po pobudzeniu modelu szumem, wydobywa się z niego zawsze dźwięk o tej samej częstotliwości podstawowej ("A" razkreślny, na podstawie którego, model był identyfikowany). W celu wydobycia innego tonu na podstawie utworzonego modelu, należy dokonać jego parametryzacji. Parametryzacja zidentyfikowanego modelu polega na uzależnieniu każdego biegunu i zera modelu od pożądanego tonu.
 
-
-Parametryzacja modelu opierać się będzie o zasady przyjęte w protokole MIDI. W protokole tym, każda wysokość dźwięku ma przypisaną liczbę od 1 do 127. Różnica między kolejnymi liczbami oznacza różnicę półtonu pomiędzy kolejnymi dźwiękami. Przykładowo dźwięk A razkreślny (o częstotliwości 440Hz) ma przypisaną liczbę 69, natomiast dźwięk B razkreślny (częstotliwość 466,2Hz) ma przypisaną liczbę 70. Między tymi dźwiękami występuje różnica jednegu półtonu. Każdy kolejny półton jest częstotliwością poprzedniego przemnożoną przez pierwiastek dwunastego stopnia z dwóch.
-
-
-Na podstawie wymienionych zależności, każdy biegun został uzależniony od częstotliwości podstawowej zidentyfikowanego modelu (440Hz). Częstotliwość podstawowa wymnożona przez pierwiastek dwunastego stopnia podniesiony do potęgi różnicy półtonów między częstotliwością 440Hz a częstotliwością pożądanego dźwięku pozwoliła utworzyć biegun lub zero w odpowiednim miejscu.
+Parametryzacja modelu opierać się będzie o zasady przyjęte w protokole MIDI. 
+Na podstawie wzoru \ref{equ:wpr_dzwiek}, każdy biegun został uzależniony od częstotliwości podstawowej zidentyfikowanego modelu. Częstotliwość podstawowa wymnożona przez pierwiastek dwunastego stopnia podniesiony do potęgi różnicy półtonów między częstotliwością 440Hz a częstotliwością pożądanego dźwięku pozwoliła utworzyć bieguny oraz zera w odpowiednim miejscu.
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=12cm]{grafiki/Model_B_A}
 	\label{rys:por_mod_flet}
 	\captionsetup{justification=centering}
-	\caption{Porownanie modeli fletu dla dzwieku B razkreślnego (wykres przesuniety w prawo) i A razkreślnego (wykres przesunięty w lewo)}
+	\caption{Porownanie modeli fletu dla dzwieku "B" razkreślnego (wykres przesuniety w prawo) i "A" razkreślnego (wykres przesunięty w lewo)}
 	\label{rys:por_mod_flet}
 \end{figure}
 Na rysunku \ref{rys:por_mod_flet} widać, iż wszystkie piki oraz doliny opisane zidentyfikowanym modelem przesuwają się w dziedzinie częstotliwości dla różnych tonów. Oznacza to, iż pobudzony model wyda dźwięk o różnej wysokości dla różnych parametrów wejściowych.
+
+
 \subsection{Synteza dźwięku fletu na podstawie zidentyfikowanego modelu AR oraz ARMA}
 W tym podrozdziale zsyntezowany dźwięk zostanie wytworzony na podstawie modelu znalezionego w sposób algorytmiczny. Poszukiwane będą modele w postaci AR oraz ARMA dla dźwięku fletu, a następnie porównane pod względem rzędu oraz brzmienia po ich pobudzeniu.
 

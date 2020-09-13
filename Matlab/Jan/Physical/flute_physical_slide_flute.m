@@ -11,11 +11,11 @@ time = 1/f_sin;
 period = floor(Fs/f_sin);
 
 % CHANGABLE PARAMS
-T = 10;
+T = 5;
 att_time = 1/2;
 amp_noise = 0.03; %0.035
-emb_delay = floor(period/6); % period/2
-bore_delay = floor(period/3); % period/1
+emb_delay = floor(period/8); % period/2
+bore_delay = floor(period/4); % period/1
 fbk_scl1 = 0.2; %0.5
 fbk_scl2 = 0.33; %0.55
 filt_b = -0.05; %-0.3

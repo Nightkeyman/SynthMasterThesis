@@ -37,7 +37,7 @@ insig = ADSR(insig,3,4,2,2);
 note = 60
 Resonances_freq_A = [440*1.059463^(note - 60) 440*1.059463^(note - 48) 440*1.059463^(note - 41) 440*1.059463^(note - 36) 440*1.059463^(note - 33) 440*1.059463^(note - 29) 440*1.059463^(note - 24)];
 # Resonances_freq_A = [440 880 1312 1764 2194 2649 3513];
-Resonances_mag_A = [33.6 30.58 18.289 22.35 4.53 0.67 -4.06];
+Resonances_mag_A = [33.6 30.58 18.289 22.35 4.53 0.67 -4.06]*3;
 Resonances_mag_A = 200.^(Resonances_mag_A/20);
 Apoles = zeros(length(Resonances_freq_A)*2,1);
 for i=1:2:length(Apoles)
@@ -74,6 +74,8 @@ axis([0 5000 0 100]);
 abs(Apoles);
 atan(imag(Apoles)./real(Apoles))*Fs/(2*pi);
 Y = filter(B, A, insig);
+
+[a, b] = zp2tf(Bzeros, Apoles, 1)
 
 figure(3)
 y = impz(1, A);
