@@ -1,6 +1,6 @@
 %https://courses.cs.washington.edu/courses/cse467/05wi/pdfs/lectures/15-waveguideInstruments.pdf
 close all
-clear
+%clear
 
 f_sin = 440;
 % UNCHANGABLE PARAMS
@@ -11,14 +11,14 @@ time = 1/f_sin;
 period = floor(Fs/f_sin);
 
 % CHANGABLE PARAMS
-T = 5;
+T = 2;
 att_time = 1/2;
-amp_noise = 0.03; %0.035
+amp_noise = 0.035; %0.035
 emb_delay = floor(period/8); % period/2
 bore_delay = floor(period/4); % period/1
 fbk_scl1 = 0.2; %0.5
 fbk_scl2 = 0.33; %0.55
-filt_b = -0.05; %-0.3
+filt_b = -0.2; %-0.3
 filt_a = 0.7; %0.7
 
 % AFLOW1 creation
@@ -75,9 +75,19 @@ end
 
 % OUTPUT SIGNAL
 %Y = asum1;
-Y = avalue;
-Y = Y/max(Y);
-sound(Y, Fs);
-
+X = avalue;
+X = X/max(X);
+sound(X, Fs);
 figure(3)
-plot(Y)
+plot(X)
+
+% WYKRES OBU SYNTEZ
+% Najpierw odpaliæ flute_AR_model, potem ten skrypt, tylko bez cleara --> 2 sekundy dzwieku w tym skrypcie musza byc
+figure(4)
+subplot(2,1,1)
+plot(Y(64000:66000-1))
+title("Dzwiek wygenerowany za pomoc¹ syntezy falowodowej")
+subplot(2,1,2)
+plot(X(64000:66000-1))
+title("Dzwiek wygenerowany za pomoc¹ modelu ARMA")
+

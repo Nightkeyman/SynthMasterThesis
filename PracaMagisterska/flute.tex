@@ -111,9 +111,11 @@ Na rysunku \ref{rys:por_mod_flet} widać, iż wszystkie piki oraz doliny opisane
 
 
 \subsubsection{Implementacja}
-W autorskim programie na procesorze DSP, syntezę dźwięku za pomocą zidentyfikowanego modelu ARMA zaimplementowano jako przetwarzanie szumu przez filtr IIR.
+W autorskim programie na procesorze DSP, syntezę dźwięku za pomocą zidentyfikowanego modelu ARMA, zaimplementowano jako przetwarzanie szumu przez filtr IIR. Współczynniki filtru pobrano z przeprowadzonej wcześniej symulacji w środowisku Matlab. Sygnałem wyjściowym był generowany dźwięk instrumentu dętego.
+% opisac jak zaimplementowano filtr IIR ??
+Algorytm wystawiania kolejnych bloków danych z próbkami dźwięku jest taki sam, jak opisany w podrozdziale || REF IMPLEMENTACJA KUBY W FM ||.
 
-Interfejs użytkownika metody fizycznej ogranicza się jedynie do włączenia tej syntezy na procesorze DSP. Nie ma możliwości zmian parametrów modeli przez użytkownika.
+Interfejs użytkownika metody fizycznej ogranicza się jedynie do włączenia syntezy fletu na procesorze DSP. Nie ma możliwości zmian parametrów modeli przez użytkownika.
 
 \subsection{Wyniki}
 
