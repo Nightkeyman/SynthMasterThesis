@@ -6,7 +6,7 @@ Synteza addytywna uznawana jest za odwrotność syntezy subtraktywnej. Znajduje 
 W niniejszym rozdziale przedstawiono zasadę działania syntezy addytywnej. Zaprezentowano wzory matematyczne, za pomocą których można uzyskać zsyntezowane brzmienie. Przedstawiono również kilka metod implementacji tego rodzaju syntezy. Na końcu rozdziału zaprezentowano autorski interfejs użytkownika oraz wyniki zaimplementowania syntezy addytywnej na procesorze DSP.
 
 \section{Zasada działania syntezy addytywnej}
-Synteza addytywna jest zbliżona pod niektórymi względami do analizy częstotliwościowej Fouriera. Z tego powodu jest ona zaliczana do widmowych metod syntezy. Jej postać matematyczną można jednak przedstawić w również dziedzinie czasu. Zależnie od doboru składowych dźwięku, postać syntezy addytywnej może mieć różne reprezentacje \cite{add_defins}.
+Synteza addytywna jest zbliżona pod niektórymi względami do analizy częstotliwościowej Fouriera. Z tego powodu jest ona zaliczana do widmowych metod syntezy. Jej postać matematyczną można jednak przedstawić również w dziedzinie czasu. Zależnie od doboru składowych dźwięku, postać syntezy addytywnej może mieć różne reprezentacje \cite{add_defins}.
 % Okresowosc sygnalu y(t)
 %https://ccrma.stanford.edu/~jos/sasp/Additive_Synthesis_Early_Sinusoidal.html
 
@@ -45,7 +45,7 @@ y_{Sawtooth}(t) = \sum_{k=1}^{K} \frac{(-1)^k}{k} sin(2\pi kf_{0}t) \\
 \end{equation}
 % O tym że na tym polegały organy Hammonda
 
-Postać harmoniczna syntezy addytywnej pozwala również na uzyskanie podstawowych przebiegów używanych w syntezie subtraktywnej. Każdy z nich można wygenerować za pomocą sumowania odpowiednich składowych harmonicznych z odpowiednimi amplitudami. Przykłady takich przebiegów w formie ciągłoczasowej przedstawiono we wzorach \ref{equ:addit_sqr}, \ref{equ:addit_trng} oraz \ref{equ:addit_sawth}.
+Postać harmoniczna syntezy addytywnej pozwala również na uzyskanie podstawowych przebiegów używanych w syntezie subtraktywnej. Każdy z nich można wygenerować za pomocą sumowania odpowiednich składowych harmonicznych z odpowiednimi amplitudami. Przykłady takich przebiegów w formie ciągłoczasowej przedstawiono we wzorach (\ref{equ:addit_sqr}), (\ref{equ:addit_trng}) oraz (\ref{equ:addit_sawth}).
 
 \begin{figure}[H]
 	\centering
@@ -55,7 +55,7 @@ Postać harmoniczna syntezy addytywnej pozwala również na uzyskanie podstawowy
 	\label{rys:add_sawtooth}
 \end{figure}
 
-Na rysunku \ref{rys:add_sawtooth} przedstawiono wygenerowany przebieg piłokształtny, jako przykład addytywnej syntezy dźwięku w postaci harmonicznej. Na pierwszym z wykresów przedstawiono przebieg uzyskany z dwóch składowych harmonicznych, a na kolejnym z 10. Na ostatnim wykresie widać przebieg składający się z 50 SH, który jest dobrą aproksymacją idealnego przebiegu piłokształtnego. Sygnał został wygenerowany na podstawie wzoru \ref{equ:addit_sawth}
+Na rysunku \ref{rys:add_sawtooth} przedstawiono wygenerowany przebieg piłokształtny, jako przykład addytywnej syntezy dźwięku w postaci harmonicznej. Na pierwszym z wykresów przedstawiono przebieg uzyskany z dwóch składowych harmonicznych, a na kolejnym z dziesięciu. Na ostatnim wykresie widać przebieg składający się z 50 SH, który jest dobrą aproksymacją idealnego przebiegu piłokształtnego. Sygnał został wygenerowany na podstawie wzoru (\ref{equ:addit_sawth}).
 
 \subsection{Postać nieharmoniczna} \label{pos_nieharm}
 Dobieranie składowych dźwięku w syntezie addytywnej nie musi zależeć od konkretnej częstotliwości podstawowej. Niektóre instrumenty wydają dźwięk składający się ze składowych harmonicznych oraz nieharmonicznych (czyli takich, które nie są całkowitą wielokrotnością pewnej częstotliwości $f_{0}$). Zsyntezowany dźwięk w takiej postaci można opisać wzorem:
@@ -66,11 +66,11 @@ y(t) = \sum_{k=1}^{K} a_{k}sin(2\pi f_{k}t + \phi_{k})  \\
 	gdzie: 	&	$f_{k}$ & - &  częstotliwość składowej sygnału k,\\
 \end{tabular} \\
 
-Postać \ref{equ:addit_time_nieharm} można traktować jako uogólnioną formę wzoru \ref{equ:addit_time_harm}. Dźwięk opisany powyższym wzorem jest generowany przez instrumenty takie jak dzwony lub perkusjonalia.
+Postać (\ref{equ:addit_time_nieharm}) można traktować jako uogólnioną formę wzoru (\ref{equ:addit_time_harm}). Dźwięk opisany powyższym wzorem jest generowany przez instrumenty takie jak dzwony lub perkusjonalia.
 
 \subsection{Składowe zmienne w czasie}
 %https://books.google.pl/books/about/The_Computer_Music_Tutorial.html?id=nZ-TetwzVcIC&printsec=frontcover&source=kp_read_button&redir_esc=y#v=onepage&q&f=false  , strona 140
-Wzory matematyczne \ref{equ:addit_time_harm} i \ref{equ:addit_time_nieharm} pozwalają na uzyskanie jedynie stanu ustalonego zsyntezowanego brzmienia. Powtarzany jest jeden okres sygnału, co daje wrażenie słuchaczowi, iż barwa dźwięku jest bardzo prosta.
+Wzory matematyczne (\ref{equ:addit_time_harm}) i (\ref{equ:addit_time_nieharm}) pozwalają na uzyskanie jedynie stanu ustalonego zsyntezowanego brzmienia. Powtarzany jest jeden okres sygnału, co daje wrażenie słuchaczowi, iż barwa dźwięku jest bardzo prosta.
 
 Składowe dźwięku mogą jednak zmieniać się w czasie \cite{add_time_varying}. Zmiany te mogą dotyczyć ich amplitudy, jak i częstotliwości.
 Taką postać syntezy addytywnej zapisuje się:
@@ -82,7 +82,7 @@ y(t) = \sum_{k=1}^{K} a_{k}(t)sin(2\pi f_{k}(t)t + \phi_{k})  \\
 	&	$f_{k}(t)$ & - &  zmienna w czasie częstotliwość składowej k, \\
 \end{tabular} \\
 
-Realizacja brzmienia na podstawie wzoru \ref{equ:addit_time_zmienne} może być rozumiana jako zmiana parametrów instrumentu w trakcie generowania przez niego dźwięku.
+Realizacja brzmienia na podstawie wzoru (\ref{equ:addit_time_zmienne}) może być rozumiana jako zmiana parametrów instrumentu w trakcie generowania przez niego dźwięku.
 
 \subsection{Szum w syntezie addytywnej}
 %https://ccrma.stanford.edu/~jos/sasp/S_N_Synthesis.html
@@ -97,7 +97,7 @@ B(\omega) = F(\omega)*e^{j\phi(\omega_{k})} \\
 	&	$B(\omega)$ & - & zmienna w czasie częstotliwość składowej k, \\
 \end{tabular} \\
 
-Synteza części stochastycznej polega na przepuszczeniu białego szumu (bazującego na losowej fazie) przez filtr FIR. Takie działanie zostało zaprezentowane we wzorze \ref{equ:addit_szum}. Następnie część stochastyczna zostaje przetransformowana do dziedziny czasu. Końcowo obie części są ze sobą zsumowane.
+Synteza części stochastycznej polega na przetwarzaniu białego szumu (bazującego na losowej fazie) przez filtr FIR. Takie działanie zostało zaprezentowane we wzorze (\ref{equ:addit_szum}). Następnie część stochastyczna zostaje przetransformowana do dziedziny czasu. Ostatnim krokiem jest zsumowanie ze sobą obu części.
 
 Dodanie szumu do sygnału deterministycznego w syntezie addytywnej pozwala na uzyskanie dźwięków na przykład instrumentów dętych. Część stochastyczna sygnału sprawia wrażenie dmuchania w instrument.
 
@@ -120,11 +120,11 @@ Synteza addytywna w instrumentach klawiszowych jest używana między innymi do g
 %https://ccrma.stanford.edu/~jos/pasp/Additive_Synthesis.html
 Przykładowo, dla uzyskania pojedynczego dźwięku pianina w jakości CD-Audio,
 %https://en.wikipedia.org/wiki/Compact_Disc_Digital_Audio
-wymagane byłoby obliczenie około 400 fal sinusoidalnych na każdą próbkę zsyntezowanego dźwięku. Oznacza to, iż dla polifonicznej klawiatury takiego pianina mogłyby być to tysiące składowych przypadających na jedną próbkę. Obecne ograniczenia sprzętowe nie umożliwiają realizacji tak skomplikowanych brzmień poprzez syntezę addytywną z uwagi na zbyt dużą złożoność obliczeniową. Powstrzymują one szybki rozwój tej metody.
+wymagane byłoby obliczenie około 400 fal sinusoidalnych na każdą próbkę zsyntezowanego dźwięku. Oznacza to, iż dla polifonicznej klawiatury takiego pianina mogłyby być to tysiące składowych przypadających na jedną próbkę. Obecne ograniczenia sprzętowe nie umożliwiają realizacji w czasie rzeczywistym tak skomplikowanych brzmień za pomocą syntezy addytywnej, z uwagi na zbyt dużą złożoność obliczeniową. Powstrzymują one szybki rozwój tej metody.
 
 \subsection{Bank oscylatorów}
 %analogowe hammondy i zwykłe, ale ze są wolne
-Synteza przez bank oscylatorów jest najstarszą metodą implementacji addytywnej syntezy dźwięku. Opiera się ona bezpośrednio na równaniu \ref{equ:addit_time_harm}.
+Synteza przez bank oscylatorów jest najstarszą metodą implementacji addytywnej syntezy dźwięku. Opiera się ona bezpośrednio na równaniu (\ref{equ:addit_time_harm}).
 Ta metoda implementacji realizowana była nawet na instrumentach analogowych. Instrumenty takie jak organy Hammonda posiadały kilka dyskowych wirników, które były nacięte w wielu miejscach na ich powierzchni. Obracające wirniki generowały prąd elektryczny o charakterystyce zawierającej pewne składowe harmoniczne tonu podstawowego.
 \begin{figure}[H]
 	\centering
@@ -150,7 +150,7 @@ W syntezie addytywnej użycie takiej metody implementacji może znacznie przyspi
 %Rysunki z matlaba
 W 1990 roku P. Depalle oraz X. Rodet \cite{add_ifft_orig} przedstawili przełomową metodę implementacji syntezy addytywnej. W ich podejściu obliczanie składowych dźwięku nie opiera się na zestawie oscylatorów, lecz na algorytmie IFFT (ang. Inverse Fast Fourier Transform) stosowanym dla krótkiego okna widma (STS, ang. short term spectrum) \cite{add_ifft_method}. Wyniki ich pracy dowiodły, iż udało im się zmniejszyć koszt obliczeń syntezy addytywnej piętnastokrotnie, w stosunku do metody banku oscylatorów (w ich indywidualnym przypadku, gdzie obliczali 9 istotnych punktów widma w 256 próbkowym STS).
 
-Konstrukcja pojedynczej ramki STS została przedstawiona poniżej. Niech $f_{j}$, $a_{j}$ oraz $\phi_{j}$ będą średnimi wartościami częstotliwości, amplitudy i fazy ramki czasowej pożądanego sygnału $w[n]$. $W$ niech będzie Transformatą Fouriera okna sygnału $w[n]$. Wtedy dodanie pojedynczej składowej do STS może być zapisana jako:
+Konstrukcja pojedynczej ramki STS została przedstawiona poniżej. Niech $f_{j}$, $a_{j}$ oraz $\phi_{j}$ będą średnimi wartościami częstotliwości, amplitudy i fazy ramki czasowej pożądanego sygnału $w[n]$. $W$ niech będzie Transformatą Fouriera okna sygnału $w[n]$. Dodanie pojedynczej składowej do STS może być zapisana zależnością:
 
 \begin{equation} \label{equ:addit_IFFT}
 S[k] = a_{j}e^{i\phi_{j}}W[f_{j} - k] \\  
@@ -161,7 +161,7 @@ S[k] = a_{j}e^{i\phi_{j}}W[f_{j} - k] \\
 	& $a_{j}e^{i\phi_{j}}$ & - & zespolona amplituda. \\
 \end{tabular} \\
 
-Wzór \ref{equ:addit_IFFT} oznacza, iż okno widmowe $W[f_{j} - k]$ zostanie wycentrowane na częstotliwości $f_{j}$ oraz przemnożone przez amplitudę $a_{j}e^{i\phi_{j}}$. Po takim działaniu w dziedzinie częstotliwości, okno STS poddane jest algorytmowi IFFT, którego rezultatem jest okno czasowe $s[n]$. Kolejne okna czasowe zakładkowane są metodą overlap-add. Końcowo otrzymuje się pełen sygnał zsyntezowanego dźwięku za pomocą syntezy IFFT.
+Wzór (\ref{equ:addit_IFFT}) oznacza, iż okno widmowe $W[f_{j} - k]$ zostanie wycentrowane na częstotliwości $f_{j}$ oraz przemnożone przez amplitudę $a_{j}e^{i\phi_{j}}$. Po takim działaniu w dziedzinie częstotliwości, okno STS poddane jest algorytmowi IFFT, którego rezultatem jest okno czasowe $s[n]$. Kolejne okna czasowe zakładkowane są metodą overlap-add. Końcowo otrzymuje się pełen sygnał zsyntezowanego dźwięku za pomocą syntezy IFFT.
 
 Dodanie szumu do sygnału jest również bardziej efektywne obliczeniowo w przypadku stosowania opisywanej metody implementacji syntezy addytywnej. Szum biały może zostać dodany już na etapie tworzenia STS, a następnie poddany algorytmowi IFFT. Ostatecznie uzyskiwane jest okno sygnału zawierającego część deterministyczną, jak i stochastyczną.
 
@@ -188,7 +188,7 @@ Pomimo zastosowanego mechanizmu zakładkowania, w generowanym dźwięku pojawia�
 Ostatecznie w autorskim programie komputerowym na procesor DSP wykorzystano metodę implementacji z użyciem tablicy wavetable, która została omówiona w punkcie \ref{add_wavetable}. W niniejszym podrozdziale został przedstawiony sposób realizacji programu umożliwiającego syntezę dźwięku organów Hammonda oraz rezultaty takiej syntezy na układzie TMS320C6727.
 
 \subsection{Opis implementacji}
-Zdefiniowana tablicę lookup o nazwie sinLut[.] zawiera jeden okres fali sinusoidalnej. Wypełniona zostaje na etapie inicjalizacji programu na procesorze DSP. Każdy element tablicy zostaje odczytany za pomocą funkcji mySin(), która jako argumenty przyjmuje częstotliwość pożądanej fali sinusoidalnej oraz jej przesunięcie w fazie.
+Zdefiniowana tablica lookup o nazwie sinLut[.] zawiera jeden okres fali sinusoidalnej. Wypełniona zostaje na etapie inicjalizacji programu na procesorze DSP. Każdy element tablicy zostaje odczytany za pomocą funkcji mySin(), która jako argumenty przyjmuje częstotliwość pożądanej fali sinusoidalnej oraz jej przesunięcie w fazie.
 \begin{equation} \label{equ:addit_sinLut}
 \text{samp} = \text{sinLut}[(kf\frac{N}{F_s})\mod{N}] \\  
 \end{equation}
@@ -200,7 +200,7 @@ Zdefiniowana tablicę lookup o nazwie sinLut[.] zawiera jeden okres fali sinusoi
 	& $F_s$ & - & częstotliwość próbkowania DAC. \\
 \end{tabular} \\
 
-Funkcja mySin() zwraca element z tablicy na podstawie wzoru \ref{equ:addit_sinLut}. Do wygenerowania jednej próbki organów Hammonda sumowane jest 9 tak odczytanych wartości sinLut[.] (odpowiadających składowym harmonicznym). Każda próbka zsyntezowanego dźwięku ulega wymnożeniu z obecną wartością amplitudy ADSR. Opisana czynność wykonywana jest tyle razy, jaką ilość elementów posiada jeden blok generowanego sygnału.
+Funkcja mySin() zwraca element z tablicy na podstawie wzoru (\ref{equ:addit_sinLut}). Do wygenerowania jednej próbki organów Hammonda sumowane jest 9 tak odczytanych wartości sinLut[.] (odpowiadających składowym harmonicznym). Każda próbka zsyntezowanego dźwięku ulega wymnożeniu z obecną wartością amplitudy ADSR. Opisana czynność wykonywana jest tyle razy, ile elementów posiada jeden blok generowanego sygnału.
 
 Procesor DSP otrzymuje nastawy gałek syntezy addytywnej z interfejsu użytkownika w obsłudze przerwania UART. Parametry te są zapisywane do tablicy add\_knobAmp[.]. Następnie są używane do syntezy dźwięku organów.
 
