@@ -19,6 +19,6 @@ extern double h1[nh+1];
 extern short nr;
 
 void filterARMA();
-void genNoise();
+void genNoise_half(int start);
 
 #endif /* WOODWIND_H_ */

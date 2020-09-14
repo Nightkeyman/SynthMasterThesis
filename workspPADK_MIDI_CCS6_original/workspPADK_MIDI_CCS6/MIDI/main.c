@@ -123,11 +123,6 @@ int main( int argc, char *argv[] ) {
 	for(i = 0; i < HAMMOND_KNOBS; i++)
 		add_knobAmp[i] = 0;
 
-	for(i = 0; i < N; i++) {
-		r1[i] = 0;
-		r2[i] = 0;
-	}
-
 	for(i = 0; i < 2*N; i+=2) {
 		waveform0[i] = 0;
 		waveform0[i+1] = 0;
@@ -218,29 +213,39 @@ int main( int argc, char *argv[] ) {
 				for(i = 0; i < MIDI_POLY_MAX; i++) {
 					if(freqs[i] > 0 || adsr_state[i] > 0) {
 						ADSR(i);
-						genNoise();
+						genNoise_half(0);
+						for(m = 0; m < N/2; m++) {
+							r1[m] = 0;
+						}
 						filterARMA();
+						for(m = 0; m < N; m++) {
+							v[m*2] = r1[m]/1000.0;
+						}
+						// Sprawdzenie czy wyrabia sie w czasie
+						//for(m = 0; m < N; m++) {
+						//	v[m*2] = 1000.0*SIG_AMP*sinf((float)(m+k)*2.0*M_PI*freqs[i]*(1.0/Fs));
+						//}
 					}
 				}
 				while(sem_dac == 0);
 				for(j = 0; j < N; j++) {
 					if (j < OVERLAP) {
 						if (whichwaveform == 1) {
-							waveform0[j] = overlaptable[j]*SIG_AMP*v[j*2]; // tu by bylo przepisywanie z myWav
+							waveform0[j] = overlaptable[j]*1*v[j*2]; // tu by bylo przepisywanie z myWav
 						} else {
-							waveform1[j] = overlaptable[j]*SIG_AMP*v[j*2];
+							waveform1[j] = overlaptable[j]*1*v[j*2];
 						}
 					} else if (j >= N - OVERLAP) {
 						if (whichwaveform) {
-							waveform0[j] = overlaptable[N-j-1]*SIG_AMP*v[j*2];
+							waveform0[j] = overlaptable[N-j-1]*1*v[j*2];
 						} else {
-							waveform1[j] = overlaptable[N-j-1]*SIG_AMP*v[j*2];
+							waveform1[j] = overlaptable[N-j-1]*1*v[j*2];
 						}
 					} else {
 						if (whichwaveform) {
-							waveform0[j] = SIG_AMP*v[j*2];
+							waveform0[j] = 1*v[j*2];
 						} else {
-							waveform1[j] = SIG_AMP*v[j*2];
+							waveform1[j] = 1*v[j*2];
 						}
 					}
 				}
