@@ -18,7 +18,7 @@ emb_delay = floor(period/8); % period/2
 bore_delay = floor(period/4); % period/1
 fbk_scl1 = 0.2; %0.5
 fbk_scl2 = 0.33; %0.55
-filt_b = -0.2; %-0.3
+filt_b = -0.1; %-0.3
 filt_a = 0.7; %0.7
 
 % AFLOW1 creation

@@ -1,9 +1,9 @@
 close all
 
-Fs = 44100;
+Fs = 48000;
 N = 1024;
 tt = floor(Fs/N);
-T = 1;
+T = 3;
 L = tt*T;
 output = zeros(1, L);
 
@@ -24,16 +24,9 @@ for i = nh+2:N
     r1(i) = r1(i) + h2(j)*x(i-j-1) - h1(j+1)*r1(i-j);
   end
 end
-
-figure(1)
-plot(x)
-
-figure(2)
-r1 = r1/max(r1);
-plot(r1)
 %}
-x(1:N) = rand(1, N) - 0.5;
 
+x(1:N) = rand(1, N) - 0.5;
 % PODEJSCIE z jedna tablica R1
 for k = 0:L
   % tworzymy pierwsze pol szumu i czyscimy pierwsze pol r1
@@ -59,32 +52,11 @@ for k = 0:L
   end
 end
 
-%{
-% PODEJSCIE z R1 i R2
-for k = 0:L
-  % za kazdym razem nowy szum
-  x = rand(1, N) - 0.5;
-  % zaczyna sie od jedynki bo bierzemy tez z poprzednich blokow ( tablica r2)
-  for i = 1:N
-    for j = 1:nh
-      if(i <= nh)
-        r1(i) = r1(i) + h2(j)*x2(nh-j+1) - h1(j+1)*r2(nh-j+1);
-      else
-        r1(i) = r1(i) + h2(j)*x(i-j-1) - h1(j+1)*r1(i-j);
-      end
-    end
-    if(i >= N-nh)
-      r2(i) = r1(i);
-      x2(i) = x(i);
-    end
-    output(k*N + i) = r1(i);
-  end
-  r1(1:N) = 0;
-end
-%}
+subplot(2,1,1)
+plot(output(1:N))
+subplot(2,1,2)
+plot(output(N+1:2*N))
 
-%{
-Y = output/max(output);
+Y = output;
 Y = Y/max(Y);
 sound(Y*0.7, Fs);
-%}

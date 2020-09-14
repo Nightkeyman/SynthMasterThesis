@@ -1,6 +1,6 @@
 close all
 clear
-Fs = 44100;
+Fs = 48000;
 f = 1:2048;
 fft_size = 2048;
 y = audioread('Samples/flute_A_2.wav');
@@ -29,12 +29,12 @@ ylabel("Amplituda [dB]")
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 f = 0:0.1:round(Fs/2);
-T = 10;
+T = 3;
 s = [1 zeros(1,length(0:1/Fs:T-1/Fs))];
 insig = randn(length(0:1/Fs:T-1/Fs), 1);
 insig = ADSR(insig,1,1,2,2);
 % insig = noise(length(0:1/Fs:T-1/Fs), 1, 'white');
-note = 68
+note = 69
 Resonances_freq_A = [440*1.059463^(note - 69) 440*1.059463^(note - 57) 440*1.059463^(note - 50) 440*1.059463^(note - 45) 440*1.059463^(note - 42) 440*1.059463^(note - 38)];
 # Resonances_freq_A = [440 880 1312 1764 2194 2649 3513];
 Resonances_mag_A = [33.6 30.58 18.289 22.35 4.53 0.67]*3;
