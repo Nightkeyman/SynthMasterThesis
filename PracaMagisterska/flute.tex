@@ -34,7 +34,7 @@ Synteza falowodowa instrumentów dętych drewnianych opiera się głównie na cy
 \end{tabular} \\
 
 %https://sound.eti.pg.gda.pl/student/eim/synteza/macmal/
-Powyższe jednowymiarowe równanie falowe przedstawia rozchodzenie się fali płaskiej w nieskończenie długim cylindrze. Rozwiązaniem równania \ref{equ:flute_row_falowe} jest superpozycja dwóch fal ciśnienia rozchodzących się w przeciwnych kierunkach komory dźwiękowej instrumentu dętego.
+Powyższe jednowymiarowe równanie falowe przedstawia rozchodzenie się fali płaskiej w nieskończenie długim cylindrze. Rozwiązaniem równania (\ref{equ:flute_row_falowe}) jest superpozycja dwóch fal ciśnienia rozchodzących się w przeciwnych kierunkach komory dźwiękowej instrumentu dętego.
 
 
 \subsubsection{Model}
@@ -93,7 +93,7 @@ q = 1-\frac{0.05}{A_{q}}e^{jf_{q}2\pi/F_{s}}
 	&	$A_{p,q}$ & - &  amplituda rezonansu zer i biegunów, \\
 \end{tabular} \\
 
-Każdy pik charakterystyki został przetworzony na dwa bieguny odbite lustrzanie względem osi rzeczywistej na płaszczyźnie Z, według wzoru \ref{equ:flute_bieguny}. Każda z dolin została odwzorowana jako dwa zera odbite lustrzanie względem osi Z, według wzoru \ref{equ:flute_doliny}.
+Każdy pik charakterystyki został przetworzony na dwa bieguny odbite lustrzanie względem osi rzeczywistej na płaszczyźnie Z, według wzoru (\ref{equ:flute_bieguny}). Każda z dolin została odwzorowana jako dwa zera odbite lustrzanie względem osi Z, według wzoru (\ref{equ:flute_doliny}).
 
 Model ARMA zsyntezowanego fletu utworzono na podstawie wyznaczonych zer i biegunów. W celu wygenerowania dźwięku z modelu w środowisku symulacyjnym, pobudzono go szumem białym. Następnie znormalizowano otrzymany sygnał, aby uniknąć przesterowań. Dźwięk wygenerowany z modelu przypomina brzmienie instrumentu z rodziny instrumentów dętych drewnianych. Wysokość wygenerowanego dźwięku jest taka sama jak w oryginalnym nagraniu (440Hz).
 
@@ -101,7 +101,7 @@ Model ARMA zsyntezowanego fletu utworzono na podstawie wyznaczonych zer i biegun
 Gra na instrumencie wymaga wydobywania z niego dźwięków o różnej wysokości. Zidentyfikowany w poprzednim punkcie model jest statyczny - po pobudzeniu modelu szumem, wydobywa się z niego zawsze dźwięk o tej samej częstotliwości podstawowej ("A" razkreślny, na podstawie którego, model był identyfikowany). W celu wydobycia innego tonu na podstawie utworzonego modelu, należy dokonać jego parametryzacji. Parametryzacja zidentyfikowanego modelu polega na uzależnieniu każdego biegunu i zera modelu od pożądanego tonu.
 
 Parametryzacja modelu opierać się będzie o zasady przyjęte w protokole MIDI. 
-Na podstawie wzoru \ref{equ:wpr_dzwiek}, każdy biegun został uzależniony od częstotliwości podstawowej zidentyfikowanego modelu. Częstotliwość podstawowa wymnożona przez pierwiastek dwunastego stopnia podniesiony do potęgi różnicy półtonów między częstotliwością 440Hz a częstotliwością pożądanego dźwięku pozwoliła utworzyć bieguny oraz zera w odpowiednim miejscu.
+Na podstawie wzoru (\ref{equ:wpr_dzwiek}), każdy biegun został uzależniony od częstotliwości podstawowej zidentyfikowanego modelu. Częstotliwość podstawowa wymnożona przez pierwiastek dwunastego stopnia podniesiony do potęgi różnicy półtonów między częstotliwością 440Hz a częstotliwością pożądanego dźwięku pozwoliła utworzyć bieguny oraz zera w odpowiednim miejscu.
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=12cm]{grafiki/Model_B_A}
