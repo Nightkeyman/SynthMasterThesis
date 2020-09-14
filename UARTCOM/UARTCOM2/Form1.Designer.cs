@@ -662,7 +662,7 @@
             this.drawbar9.Minimum = 0;
             this.drawbar9.MouseWheelBarPartitions = 1;
             this.drawbar9.Name = "drawbar9";
-            this.drawbar9.PointerColor = System.Drawing.Color.MidnightBlue;
+            this.drawbar9.PointerColor = System.Drawing.Color.Maroon;
             this.drawbar9.ScaleColor = System.Drawing.Color.Black;
             this.drawbar9.ScaleDivisions = 9;
             this.drawbar9.ScaleFont = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
@@ -689,7 +689,7 @@
             this.drawbar8.Minimum = 0;
             this.drawbar8.MouseWheelBarPartitions = 1;
             this.drawbar8.Name = "drawbar8";
-            this.drawbar8.PointerColor = System.Drawing.Color.MidnightBlue;
+            this.drawbar8.PointerColor = System.Drawing.Color.Maroon;
             this.drawbar8.ScaleColor = System.Drawing.Color.Black;
             this.drawbar8.ScaleDivisions = 9;
             this.drawbar8.ScaleFont = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
@@ -716,7 +716,7 @@
             this.drawbar7.Minimum = 0;
             this.drawbar7.MouseWheelBarPartitions = 1;
             this.drawbar7.Name = "drawbar7";
-            this.drawbar7.PointerColor = System.Drawing.Color.MidnightBlue;
+            this.drawbar7.PointerColor = System.Drawing.Color.Maroon;
             this.drawbar7.ScaleColor = System.Drawing.Color.Black;
             this.drawbar7.ScaleDivisions = 9;
             this.drawbar7.ScaleFont = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
@@ -743,7 +743,7 @@
             this.drawbar1.Minimum = 0;
             this.drawbar1.MouseWheelBarPartitions = 1;
             this.drawbar1.Name = "drawbar1";
-            this.drawbar1.PointerColor = System.Drawing.Color.MidnightBlue;
+            this.drawbar1.PointerColor = System.Drawing.Color.Maroon;
             this.drawbar1.ScaleColor = System.Drawing.Color.Black;
             this.drawbar1.ScaleDivisions = 9;
             this.drawbar1.ScaleFont = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
@@ -756,7 +756,6 @@
             this.drawbar1.StartAngle = 135F;
             this.drawbar1.TabIndex = 1;
             this.drawbar1.Value = 0;
-            this.drawbar1.Load += new System.EventHandler(this.drawbar1_Load_1);
             // 
             // drawbar6
             // 
@@ -771,7 +770,7 @@
             this.drawbar6.Minimum = 0;
             this.drawbar6.MouseWheelBarPartitions = 1;
             this.drawbar6.Name = "drawbar6";
-            this.drawbar6.PointerColor = System.Drawing.Color.MidnightBlue;
+            this.drawbar6.PointerColor = System.Drawing.Color.Maroon;
             this.drawbar6.ScaleColor = System.Drawing.Color.Black;
             this.drawbar6.ScaleDivisions = 9;
             this.drawbar6.ScaleFont = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
@@ -798,7 +797,7 @@
             this.drawbar2.Minimum = 0;
             this.drawbar2.MouseWheelBarPartitions = 1;
             this.drawbar2.Name = "drawbar2";
-            this.drawbar2.PointerColor = System.Drawing.Color.MidnightBlue;
+            this.drawbar2.PointerColor = System.Drawing.Color.Maroon;
             this.drawbar2.ScaleColor = System.Drawing.Color.Black;
             this.drawbar2.ScaleDivisions = 9;
             this.drawbar2.ScaleFont = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
@@ -811,7 +810,6 @@
             this.drawbar2.StartAngle = 135F;
             this.drawbar2.TabIndex = 1;
             this.drawbar2.Value = 0;
-            this.drawbar2.Load += new System.EventHandler(this.drawbar2_Load);
             // 
             // drawbar5
             // 
@@ -826,7 +824,7 @@
             this.drawbar5.Minimum = 0;
             this.drawbar5.MouseWheelBarPartitions = 1;
             this.drawbar5.Name = "drawbar5";
-            this.drawbar5.PointerColor = System.Drawing.Color.MidnightBlue;
+            this.drawbar5.PointerColor = System.Drawing.Color.Maroon;
             this.drawbar5.ScaleColor = System.Drawing.Color.Black;
             this.drawbar5.ScaleDivisions = 9;
             this.drawbar5.ScaleFont = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
@@ -853,7 +851,7 @@
             this.drawbar3.Minimum = 0;
             this.drawbar3.MouseWheelBarPartitions = 1;
             this.drawbar3.Name = "drawbar3";
-            this.drawbar3.PointerColor = System.Drawing.Color.MidnightBlue;
+            this.drawbar3.PointerColor = System.Drawing.Color.Maroon;
             this.drawbar3.ScaleColor = System.Drawing.Color.Black;
             this.drawbar3.ScaleDivisions = 9;
             this.drawbar3.ScaleFont = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
@@ -881,7 +879,7 @@
             this.drawbar4.Minimum = 0;
             this.drawbar4.MouseWheelBarPartitions = 1;
             this.drawbar4.Name = "drawbar4";
-            this.drawbar4.PointerColor = System.Drawing.Color.MidnightBlue;
+            this.drawbar4.PointerColor = System.Drawing.Color.Maroon;
             this.drawbar4.ScaleColor = System.Drawing.Color.Black;
             this.drawbar4.ScaleDivisions = 9;
             this.drawbar4.ScaleFont = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
