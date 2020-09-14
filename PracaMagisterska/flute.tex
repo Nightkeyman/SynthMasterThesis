@@ -15,9 +15,9 @@ W niniejszym podrozdziale przedstawiono dwa podejścia do implementacji syntezy 
 	\item za pomocą falowodu cyfrowego,
 	\item za pomocą zidentyfikowanego modelu ARMA.
 \end{itemize}
-Na końcu podrozdziału przedstawiono wyniki porównujące oba te podejścia do syntezy na podstawie zsyntezowanych dźwięków.
+Na końcu podrozdziału przedstawiono porównanie wyników obu tych podejść do syntezy, na podstawie wygenerowanych dźwięków.
 
-\subsection{Synteza falowodowa dźwięku fletu}
+\subsection{Synteza falowodowa}
 %https://ccrma.stanford.edu/~jos/pasp/Digital_Waveguide_Models.html
 %https://quod.lib.umich.edu/cache//b/b/p/bbp2372.1992.072/bbp2372.1992.072.pdf#page=1;zoom=75
 
@@ -34,7 +34,7 @@ Synteza falowodowa instrumentów dętych drewnianych opiera się głównie na cy
 \end{tabular} \\
 
 %https://sound.eti.pg.gda.pl/student/eim/synteza/macmal/
-Powyższe jednowymiarowe równanie falowe przedstawia rozchodzenie się fali płaskiej w nieskończenie długim cylindrze. Rozwiązaniem równania (\ref{equ:flute_row_falowe}) jest superpozycja dwóch fal ciśnienia rozchodzących się w przeciwnych kierunkach komory dźwiękowej instrumentu dętego.
+Jednowymiarowe równanie falowe (\ref{equ:flute_row_falowe}) przedstawia rozchodzenie się fali płaskiej w nieskończenie długim cylindrze. Rozwiązaniem równania jest superpozycja dwóch fal ciśnienia (fal dźwiękowych) rozchodzących się w przeciwnych kierunkach komory dźwiękowej instrumentu dętego.
 
 
 \subsubsection{Model}
@@ -49,24 +49,21 @@ W niniejszej pracy, syntezę falowodową dźwięku instrumentu dętego drewniane
 \end{figure}
 
 %https://courses.cs.washington.edu/courses/cse467/05wi/pdfs/lectures/15-waveguideInstruments.pdf
-Wejściem systemu przedstawionego na rysunku \ref{rys:flute_cook} jest przepływ powietrza. Szum zostaje dodany w celu symulowania odgłosu wydechu flecisty. Interakcja między ustnikiem a komorą dźwiękową fletu przedstawiona została równaniem matematycznym $x-x^3$. Końcówka komory dźwiękowej fletu odbija niskie częstotliwości. Ta część schematu zostaje zasymulowana poprzez dodanie filtru dolnoprzepustowego. Obliczenie jednej próbki syntezowanego dźwieku na podstawie rysunku \ref{rys:flute_cook} wymaga 9 mnożeń oraz 6 operacji sumowania.
+Wejściem systemu przedstawionego na rysunku \ref{rys:flute_cook} jest przepływ powietrza. Szum zostaje dodany w celu symulowania odgłosu wydechu flecisty. 
+Interakcja między ustnikiem a komorą dźwiękową fletu przedstawiona została równaniem matematycznym $x-x^3$. Końcówka komory dźwiękowej fletu odbija niskie częstotliwości - ta część została zasymulowana poprzez dodanie filtru dolnoprzepustowego przed wyjściem sygnału. Elementy "Emb Delay" oraz "Flute Bore Delay" to linie opóźniające, odpowiadające opóźnieniom fali w ustniku oraz komorze dźwiękowej. 
+Obliczenie jednej próbki syntezowanego dźwieku na podstawie rysunku \ref{rys:flute_cook} wymaga 9 mnożeń oraz 6 operacji sumowania.
 
 \subsubsection{Implementacja}
-W autorskim programie realizowanym na procesorze DSP wzorowano się na schemacie \ref{rys:flute_cook}. Przepływ powietrza został zaimplementowany jako jedna sinusoida o odpowiedniej obwiedni \cite{flute_prezka}. Szum dochodzący do utworzonego sygnału został zasymulowany funkcją rand(), a jego ilość zostaje zeskalowana. 
+Implementację syntezy falowodowej w autorskim programie realizowanym na procesorze DSP,  wzorowano również na schemacie \ref{rys:flute_cook}. Przepływ powietrza został zaimplementowany jako jedna fala sinusoidalna o odpowiedniej obwiedni \cite{flute_prezka}. Szum dochodzący do utworzonego sygnału został zasymulowany funkcją rand(), a jego ilość została zeskalowana. Sygnały sinusoidy i szumu zostały zsumowane, a następnie trafiają do pętli zamkniętej. Została ona zaimplementowana w postaci pętli "for".
 
-... TODO ...
-
-\subsection{Synteza dźwięku fletu na podstawie modelu ARMA}
+\subsection{Synteza na podstawie modelu ARMA}
 W tym punkcie przedstawiono identyfikację modelu matematycznego fletu, na podstawie którego przeprowadzono później syntezę dźwięku. Do rozpoznania modelu instrumentu użyto tonu "A" razkreślnego o częstotliwości 440Hz. Dźwięk wygenerowany przez grę na flecie zmienia swoją charakterystykę w czasie. Oznacza to, iż jego model również zmienia się w trakcie nagranego przebiegu sygnału. Do identyfikacji wybrano te część nagrania dźwięku fletu, w której model instrumentu jest w stanie ustalonym.
 
 \subsubsection{Identyfikacja modelu}
-Identyfikacja modelu matematycznego instrumentu została przeprowadzona dwoma sposobami: 
-\begin{itemize}
-	\item poprzez manualne dopasowanie zer i biegunów modelu, 
-	\item za pomocą funkcji wbudowanej w środowisko symulacyjne Matlab.
-\end{itemize}
-
+Identyfikacja modelu matematycznego instrumentu została przeprowadzona poprzez manualne dopasowanie zer i biegunów modelu.
 Proces identyfikacji przeprowadzono w środowisku symulacyjnym Matlab. Na nagranym fragmencie sygnału przeprowadzono dyskretną transformację Fouriera za pomocą algorytmu FFT.
+
+Identyfikacja procesu modelem wysokiego rzędu za pomocą funkcji wbudowanych w środowisku Matlab dawała lepsze rezultaty niż manualne szukanie pików i dolin. Taki sposób nie pozwalał jednak na późniejszą parametryzację modelu dla różnych dźwięków. Z tego powodu, autorzy zrezygnowali w automatycznej identyfikacji modelu ARMA.
 
 % WYKRESSSSS
 \begin{figure}[H]
@@ -113,24 +110,11 @@ Na podstawie wzoru (\ref{equ:wpr_dzwiek}), każdy biegun został uzależniony od
 Na rysunku \ref{rys:por_mod_flet} widać, iż wszystkie piki oraz doliny opisane zidentyfikowanym modelem przesuwają się w dziedzinie częstotliwości dla różnych tonów. Oznacza to, iż pobudzony model wyda dźwięk o różnej wysokości dla różnych parametrów wejściowych.
 
 
-\subsection{Synteza dźwięku fletu na podstawie zidentyfikowanego modelu AR oraz ARMA}
-W tym podrozdziale zsyntezowany dźwięk zostanie wytworzony na podstawie modelu znalezionego w sposób algorytmiczny. Poszukiwane będą modele w postaci AR oraz ARMA dla dźwięku fletu, a następnie porównane pod względem rzędu oraz brzmienia po ich pobudzeniu.
-
-W celu znalezienia modelu AR zaimplementowano estymator Yula-Walkera, który opiera się na wyliczeniu autokorelacji sygnału identyfikowanego procesu \cite{Y_W}. Rezultatem takiej estymacji są współczynniki procesu AR. Rząd modelu potrzebny do odnalezienia odpowiednio brzmiącego zsyntezowanego fletu wyniósł 300.
-
-W celu znalezienia modelu autoregresyjnego ze średnią ruchomą użyto gotowej funkcji "armax()" wbudowanej w środowisko symulacyjne Matlab. Funkcja "armax()" pobiera dwa argumenty - sygnał, którego model jest identyfikowany oraz rząd mianownika i licznika tego modelu \cite{armax}. Estymator ten wykorzystuje zapętloną metodę przewidywania błędu do wykrywania parametrów modelu ARMA. Rząd modelu ARMA, który dawał dobre rezultaty po pobudzeniu go szumem (brzmiał podobnie do pierwotnego sygnału fletu) wyniósł 100. Przy takim rzędzie wciąż można usłyszeć 'cyfrowość' sygnału. Sygnał zsyntezowanego fletu brzmiał bardzo dobrze przy pobudzeniu modelu o rzędzie 500.
-
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=12cm, height=5cm]{grafiki/Model_AR_300}
-	\captionsetup{justification=centering}
-	\caption{Porownanie widm częstotliwości zidentyfikowanych modeli fletu w postaci AR oraz ARMA. Od lewej: Oryginalne widmo sygnału, widmo sygnału zidentyfikowanego procesu AR rzędu 300, widmo sygnału zidentyfikowanego procesu ARMA rzędu 100}
-	\label{rys:por_ar_arma}
-\end{figure}
-Na rysunku \ref{rys:por_ar_arma} dokonano porównania widm częstotliwościowych dla różnych rzędów zidentyfikowanych modeli AR i ARMA. Wrażenia słuchowe są lepsze dla modelu ARMA 100 rzędu niż modelu AR 300 rzędu.
-
 \subsubsection{Implementacja}
+W autorskim programie na procesorze DSP, syntezę dźwięku za pomocą zidentyfikowanego modelu ARMA zaimplementowano jako przetwarzanie szumu przez filtr IIR.
 
-\subsection{Interfejs użytkownika}
+Interfejs użytkownika metody fizycznej ogranicza się jedynie do włączenia tej syntezy na procesorze DSP. Nie ma możliwości zmian parametrów modeli przez użytkownika.
 
 \subsection{Wyniki}
+
+%O tym jak precyzja zmieniala wyniki!! Na floatach nie dziala.
