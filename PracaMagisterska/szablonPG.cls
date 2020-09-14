@@ -144,6 +144,14 @@
 {#1}
 \titlespacing{\subsection}{0pt}{12pt}{6pt}
 
+% subsubsection
+\titleformat{\subsubsection}                       % see (h3)
+{\normalfont\itshape}
+{\thesubsubsection.\quad}
+{0pt}
+{#1}
+\titlespacing{\subsubsection}{0pt}{12pt}{6pt}
+
 %--------------------------------------------------------------------
 % TOC (see (toc1)-(toc3)
 %--------------------------------------------------------------------
