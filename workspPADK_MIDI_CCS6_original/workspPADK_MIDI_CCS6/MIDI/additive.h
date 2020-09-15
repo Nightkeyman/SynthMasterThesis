@@ -1,0 +1,34 @@
+/*
+ * additive.h
+ *
+ *  Created on: 1 kwi 2020
+ *      Author: Jan
+ */
+
+#ifndef ADDITIVE_H_
+#define ADDITIVE_H_
+
+#define HAMMOND_KNOB1 0
+#define HAMMOND_KNOB2 1
+#define HAMMOND_KNOB3 2
+#define HAMMOND_KNOB4 3
+#define HAMMOND_KNOB5 4
+#define HAMMOND_KNOB6 5
+#define HAMMOND_KNOB7 6
+#define HAMMOND_KNOB8 7
+#define HAMMOND_KNOB9 8
+
+#define HAMMOND_KNOBS 9
+
+#define HAMMOND_KNOB1_UART 11
+#define HAMMOND_KNOB2_UART 12
+#define HAMMOND_KNOB3_UART 13
+#define HAMMOND_KNOB4_UART 14
+#define HAMMOND_KNOB5_UART 15
+#define HAMMOND_KNOB6_UART 16
+#define HAMMOND_KNOB7_UART 17
+#define HAMMOND_KNOB8_UART 18
+#define HAMMOND_KNOB9_UART 19
+
+
+#endif /* ADDITIVE_H_ */

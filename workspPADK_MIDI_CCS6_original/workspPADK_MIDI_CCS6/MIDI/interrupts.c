@@ -16,6 +16,7 @@ interrupt void midi_isr( void );
 #include "audioBufConst&ExtVar.h"
 #include "uart_fifo.h"
 #include "midi_fifo.h"
+#include "additive.h"
 
 int SetupInterrupts()
 {
@@ -139,14 +140,20 @@ extern int pressedkeys;
 extern enum methodtype{subtractive, additive, fm};
 extern enum methodtype method;
 
+extern enum waveformtype{square, triangle, sawtooth};
+extern enum waveformtype waveformSet;
 extern enum filtertype{lowpass, highpass, bandpass, bandstop};
-extern enum filtertype filter;
+extern enum filtertype filterSet;
 extern int sub_lowfreq;
 extern int sub_highfreq;
 
 // FM GLOBALS
 extern int fm_modfreq;
 extern int fm_modamp;
+
+// ADDITIVE GLOBALS
+extern float add_knobAmp[HAMMOND_KNOBS];
+
 // ################## DAC/ADC end ##################
 
 // ################## UART RELATED VARs ############
@@ -237,11 +244,53 @@ interrupt void uart_isr( void )
 						sub_lowfreq = UART_pull(2) + UART_pull(3)*256 + UART_pull(4)*256*256;
 					}
 					if (UART_pull(1) == 5){
-						filter = UART_pull(2);
+						filterSet = UART_pull(2);
+					}
+					if (UART_pull(1) == 6){
+						waveformSet = UART_pull(2);
 					}
 				}
 			}
 			break;
+	    case 101: // ADDITIVE
+	    	if (UART_pull(7) == 102){
+	    		if (UART_pull(8) == UART_checksum()) {
+	    			if (UART_pull(1) == 1){
+	    				UART_send(101, 1, 0, 0, 0, 0, 0);
+	    				method = additive;
+	    			} else if (UART_pull(1) == 2){
+	    				UART_send(101, 2, 0, 0, 0, 0, 0);
+	    			}
+					if (UART_pull(1) == HAMMOND_KNOB1_UART){
+						add_knobAmp[HAMMOND_KNOB1] = (UART_pull(2))*0.125;
+					}
+					if (UART_pull(1) == HAMMOND_KNOB2_UART){
+						add_knobAmp[HAMMOND_KNOB2] = (UART_pull(2))*0.125;
+					}
+					if (UART_pull(1) == HAMMOND_KNOB3_UART){
+						add_knobAmp[HAMMOND_KNOB3] = (UART_pull(2))*0.125;
+					}
+					if (UART_pull(1) == HAMMOND_KNOB4_UART){
+						add_knobAmp[HAMMOND_KNOB4] = (UART_pull(2))*0.125;
+					}
+					if (UART_pull(1) == HAMMOND_KNOB5_UART){
+						add_knobAmp[HAMMOND_KNOB5] = (UART_pull(2))*0.125;
+					}
+					if (UART_pull(1) == HAMMOND_KNOB6_UART){
+						add_knobAmp[HAMMOND_KNOB6] = (UART_pull(2))*0.125;
+					}
+					if (UART_pull(1) == HAMMOND_KNOB7_UART){
+						add_knobAmp[HAMMOND_KNOB7] = (UART_pull(2))*0.125;
+					}
+					if (UART_pull(1) == HAMMOND_KNOB8_UART){
+						add_knobAmp[HAMMOND_KNOB8] = (UART_pull(2))*0.125;
+					}
+					if (UART_pull(1) == HAMMOND_KNOB9_UART){
+						add_knobAmp[HAMMOND_KNOB9] = (UART_pull(2))*0.125;
+					}
+	    		}
+	    	}
+	    	break;
 		case 102: // FM
 			if (UART_pull(7) == 103){
 				if (UART_pull(8) == UART_checksum()){
@@ -299,6 +348,7 @@ interrupt void dmax_isr( void )
 		//pDac = (int *)waveform[licz*128];
 
 		OBuf3.pBuf = pDac;
+
 		int i = 0;
 		if (licz == 0){
 			licz = OVERLAP/FRAME_SIZE;
@@ -338,6 +388,7 @@ interrupt void dmax_isr( void )
 				}
 			}
 		}
+
 		/*
 		OBuf2.ptab[LEFT][CH_0] = (int)waveform[wav_iterator];
 		OBuf2.ptab[RIGHT][CH_0] = (int)waveform[wav_iterator];

@@ -9,6 +9,7 @@ using System.IO.Ports;
 using System.Windows.Forms;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Threading;
 
 namespace UARTCOM2
 {
@@ -20,6 +21,14 @@ namespace UARTCOM2
         byte buffer_iterator = 0;
         byte buffer_length = 9;
         byte[] buffer;
+        uint currFilter = 0;
+
+        //SUBTRACTIVE GLOBALS
+        int filtertype = 1;
+        int waveformtype = 1;
+        int highfreq = 1;
+        int lowfreq = 1;
+
         void Buffer_push(byte data)
         {
             buffer_iterator++;
@@ -148,7 +157,7 @@ namespace UARTCOM2
                 Buffer_push(x);
                 switch (Buffer_pull(0))
                 {
-                    case 100:
+                    case 100:   // SUBTRACTIVE
                         if (Buffer_pull(7) == 101)
                         {
                             if (Checksum() == Buffer_pull(8))
@@ -173,26 +182,34 @@ namespace UARTCOM2
                             }
                         }
                         break;
-                    case 101:
-                        if (Buffer_pull(7) == 101)
+                    case 101:   // ADDITIVE
+                        if (Buffer_pull(7) == 102)
                         {
                             if (Checksum() == Buffer_pull(8))
                             {
                                 if (Buffer_pull(1) == 1)
                                 {
-                                    button_subtractive_en.Text = "Enabled";
-                                    button_subtractive_en.ForeColor = Color.Green;
+                                    button_additive_hammond_en.Invoke((MethodInvoker)delegate {
+                                        button_additive_hammond_en.Text = "Enabled";
+                                    });
+                                    button_additive_hammond_en.Invoke((MethodInvoker)delegate {
+                                        button_additive_hammond_en.ForeColor = Color.Green;
+                                    });
                                 }
                                 else if (Buffer_pull(1) == 2)
                                 {
-                                    button_subtractive_en.Text = "Disabled";
-                                    button_subtractive_en.ForeColor = Color.Red;
+                                    button_additive_hammond_en.Invoke((MethodInvoker)delegate {
+                                        button_additive_hammond_en.Text = "Disabled";
+                                    });
+                                    button_additive_hammond_en.Invoke((MethodInvoker)delegate {
+                                        button_additive_hammond_en.ForeColor = Color.Red;
+                                    });
                                 }
                             }
                         }
                         break;
 
-                    case 102:
+                    case 102:   // FM
                         if (Buffer_pull(7) == 103)
                         {
                             if (Checksum() == Buffer_pull(8))
@@ -214,6 +231,24 @@ namespace UARTCOM2
                                     button_fm_en.Invoke((MethodInvoker)delegate {
                                         button_fm_en.ForeColor = Color.Red;
                                     });
+                                }
+                            }
+                        }
+                        break;
+                    case 170:
+                        if (Buffer_pull(7) == 171)
+                        {
+                            if (Checksum() == Buffer_pull(8))
+                            {
+                                if (Buffer_pull(1) == 1)
+                                {
+                                    button_fm_en.Invoke((MethodInvoker)delegate {
+                                        //disableAllMethods();
+                                    });
+                                }
+                                else if (Buffer_pull(1) == 2)
+                                {
+
                                 }
                             }
                         }
@@ -241,6 +276,7 @@ namespace UARTCOM2
             {
                 ComPort.Write(bytes, 0, bytes.Length);
             }
+            Thread.Sleep(10);
         }
         private void button_clear_Click(object sender, EventArgs e)
         {
@@ -255,19 +291,27 @@ namespace UARTCOM2
                 ComPort.Write(bytes, 0, bytes.Length);
             }
         }
+        private void disableAllMethods()
+        {
+            button_subtractive_en.Text = "Disabled";
+            button_subtractive_en.ForeColor = Color.Red;
 
+            button_additive_hammond_en.Text = "Disabled";
+            button_additive_hammond_en.ForeColor = Color.Red;
+
+            button_fm_en.Text = "Disabled";
+            button_fm_en.ForeColor = Color.Red;
+        }
         private void button_subtractive_en_Click(object sender, EventArgs e)
         {
             Console.WriteLine("siemsa");
             if (button_subtractive_en.Text.Equals("Disabled"))
             {
                 send(100, 1, 0, 0, 0, 0, 0);
-                
             }
             else
             {
                 send(100, 2, 0, 0, 0, 0, 0);
-               
             }
         }
 
@@ -293,9 +337,9 @@ namespace UARTCOM2
             textBox_subtractive_freq2.Enabled = true;
             trackBar_subtractive_freq1.Enabled = false;
             textBox_subtractive_freq1.Enabled = false;
-            sendInt(100, 4, (UInt32)trackBar_subtractive_freq2.Value); // set higher frequency
-            sendInt(100, 3, 0); // zero lower frequency
-            sendInt(100, 5, 0); // set 0(lowpass) filter type
+            highfreq = trackBar_subtractive_freq2.Value;
+            filtertype = 0;
+            sendSubtractiveParameters();
         }
 
         private void radioButton_subtractive_highpass_CheckedChanged(object sender, EventArgs e)
@@ -304,9 +348,11 @@ namespace UARTCOM2
             textBox_subtractive_freq1.Enabled = true;
             trackBar_subtractive_freq2.Enabled = false;
             textBox_subtractive_freq2.Enabled = false;
-            sendInt(100, 3, (UInt32)trackBar_subtractive_freq1.Value); // set lower frequency
-            sendInt(100, 4, 96000); // max higher frequency
-            sendInt(100, 5, 1); // set 1(highpass) filter type
+           
+            filtertype = 1;
+            lowfreq = trackBar_subtractive_freq1.Value;
+            highfreq = 96000;
+            sendSubtractiveParameters();
         }
 
         private void radioButton_subtractive_bandpass_CheckedChanged(object sender, EventArgs e)
@@ -315,9 +361,11 @@ namespace UARTCOM2
             textBox_subtractive_freq1.Enabled = true;
             trackBar_subtractive_freq2.Enabled = true;
             textBox_subtractive_freq2.Enabled = true;
-            sendInt(100, 3, (UInt32)trackBar_subtractive_freq1.Value); // set lower frequency
-            sendInt(100, 4, (UInt32)trackBar_subtractive_freq2.Value); // set higher frequency
-            sendInt(100, 5, 2); // set 2(bandpass) filter type
+
+            filtertype = 2;
+            lowfreq = trackBar_subtractive_freq1.Value;
+            highfreq = trackBar_subtractive_freq2.Value;
+            sendSubtractiveParameters();
         }
 
         private void radioButton_subtractive_bandstop_CheckedChanged(object sender, EventArgs e)
@@ -326,9 +374,11 @@ namespace UARTCOM2
             textBox_subtractive_freq1.Enabled = true;
             trackBar_subtractive_freq2.Enabled = true;
             textBox_subtractive_freq2.Enabled = true;
-            sendInt(100, 3, (UInt32)trackBar_subtractive_freq1.Value); // set lower frequency
-            sendInt(100, 4, (UInt32)trackBar_subtractive_freq2.Value); // set higher frequency
-            sendInt(100, 5, 3); // set 3(bandstop) filter type
+            
+            filtertype = 3;
+            lowfreq = trackBar_subtractive_freq1.Value;
+            highfreq = trackBar_subtractive_freq2.Value;
+            sendSubtractiveParameters();
         }
 
         private void label7_Click(object sender, EventArgs e)
@@ -347,25 +397,18 @@ namespace UARTCOM2
             if (button_additive_hammond_en.Text.Equals("Disabled"))
             {
                 send(101, 1, 0, 0, 0, 0, 0);
-
             }
             else
             {
                 send(101, 2, 0, 0, 0, 0, 0);
-
             }
-        }
-
-        private void drawbar1_Load_1(object sender, EventArgs e)
-        {
-            byte[] byteArray = BitConverter.GetBytes(drawbar1.Value);
-            send(110, byteArray[0], byteArray[1], 0, 0, 0, 0);
         }
 
         private void drawbar3_Load(object sender, EventArgs e)
         {
 
         }
+
 
         private void tabPage_additive_Click(object sender, EventArgs e)
         {
@@ -403,12 +446,11 @@ namespace UARTCOM2
 
         private void button1_Click(object sender, EventArgs e)
         {
-            sendInt(100, 3, (UInt32)trackBar_subtractive_freq1.Value);
-        }
+            // SEND VALUES
+            highfreq = trackBar_subtractive_freq2.Value;
+            lowfreq = trackBar_subtractive_freq1.Value;
 
-        private void button2_Click(object sender, EventArgs e)
-        {
-            sendInt(100, 4, (UInt32)trackBar_subtractive_freq2.Value);
+            sendSubtractiveParameters();
         }
 
         private void textBox_fm_modamp_TextChanged(object sender, EventArgs e)
@@ -450,24 +492,49 @@ namespace UARTCOM2
             if (button_fm_en.Text.Equals("Disabled"))
             {
                 send(102, 1, 0, 0, 0, 0, 0);
-
             }
             else
             {
                 send(102, 2, 0, 0, 0, 0, 0);
-
             }
         }
 
         private void button3_Click(object sender, EventArgs e)
         {
+            // FM - signal 102
             sendInt(102, 4, (UInt32)trackBar_fm_modamp.Value);
             sendInt(102, 3, (UInt32)trackBar_fm_modfreq.Value);
         }
 
         private void button4_Click(object sender, EventArgs e)
         {
+            // ADDITIVE - signal 101
+            byte[] knob1Array = BitConverter.GetBytes(drawbar1.Value);
+            send(101, 11, knob1Array[0], knob1Array[1], 0, 0, 0);
 
+            byte[] knob2Array = BitConverter.GetBytes(drawbar2.Value);
+            send(101, 12, knob2Array[0], knob2Array[1], 0, 0, 0);
+
+            byte[] knob3Array = BitConverter.GetBytes(drawbar3.Value);
+            send(101, 13, knob3Array[0], knob3Array[1], 0, 0, 0);
+
+            byte[] knob4Array = BitConverter.GetBytes(drawbar4.Value);
+            send(101, 14, knob4Array[0], knob4Array[1], 0, 0, 0);
+
+            byte[] knob5Array = BitConverter.GetBytes(drawbar5.Value);
+            send(101, 15, knob5Array[0], knob5Array[1], 0, 0, 0);
+
+            byte[] knob6Array = BitConverter.GetBytes(drawbar6.Value);
+            send(101, 16, knob6Array[0], knob6Array[1], 0, 0, 0);
+
+            byte[] knob7Array = BitConverter.GetBytes(drawbar7.Value);
+            send(101, 17, knob7Array[0], knob7Array[1], 0, 0, 0);
+
+            byte[] knob8Array = BitConverter.GetBytes(drawbar8.Value);
+            send(101, 18, knob8Array[0], knob8Array[1], 0, 0, 0);
+
+            byte[] knob9Array = BitConverter.GetBytes(drawbar9.Value);
+            send(101, 19, knob9Array[0], knob9Array[1], 0, 0, 0);
         }
 
         private void button_adsr_set_Click(object sender, EventArgs e)
@@ -475,11 +542,15 @@ namespace UARTCOM2
             // ADSR - signal 200
             byte[] byteArray;
             // attack
-            byteArray = BitConverter.GetBytes(knobControl_attack.Maximum - Convert.ToInt32(knobControl_attack.Value) + 1);
+            double att_log = Math.Pow(knobControl_attack.Maximum - Convert.ToInt32(knobControl_attack.Value) + 1, 2); // logarithm, base 2
+            int att_val = knobControl_attack.Maximum - Convert.ToInt32(knobControl_attack.Value) + 1;
+            byteArray = BitConverter.GetBytes((int)(att_val*0.75) + 1);
             send(200, 1, byteArray[0], byteArray[1], 0, 0, 0);
 
             // decay
-            byteArray = BitConverter.GetBytes(knobControl_decay.Maximum - Convert.ToInt32(knobControl_decay.Value) + 1);
+            double dec_log = Math.Log(knobControl_decay.Maximum - Convert.ToInt32(knobControl_decay.Value) + 1, 2);
+            int dec_val = knobControl_decay.Maximum - Convert.ToInt32(knobControl_decay.Value) + 1;
+            byteArray = BitConverter.GetBytes((int)(dec_val*0.75) + 1);
             send(200, 2, byteArray[0], byteArray[1], 0, 0, 0);
 
             // sustain
@@ -487,8 +558,35 @@ namespace UARTCOM2
             send(200, 3, byteArray[0], byteArray[1], 0, 0, 0);
 
             // release
-            byteArray = BitConverter.GetBytes(knobControl_release.Maximum - Convert.ToInt32(knobControl_release.Value) + 1);
+            double rel_log = Math.Log(knobControl_release.Maximum - Convert.ToInt32(knobControl_release.Value) + 1, 2); // logarithm, base 2
+            int rel_val = knobControl_release.Maximum - Convert.ToInt32(knobControl_release.Value) + 1;
+            byteArray = BitConverter.GetBytes((int)(rel_val*0.5) + 1);
             send(200, 4, byteArray[0], byteArray[1], 0, 0, 0);
+        }
+
+        private void radioButton_subtractive_square_CheckedChanged(object sender, EventArgs e)
+        {
+            waveformtype = 1;
+            sendSubtractiveParameters();
+        }
+        private void sendSubtractiveParameters()
+        {
+            sendInt(100, 4, (UInt32)highfreq); // set higher frequency
+            sendInt(100, 3, (UInt32)lowfreq); // zero lower frequency
+            sendInt(100, 5, (UInt32)filtertype); // set 0(lowpass) filter type
+            sendInt(100, 6, (UInt32)waveformtype); // set 0(lowpass) filter type
+        }
+
+        private void radioButton_subtractive_triangle_CheckedChanged(object sender, EventArgs e)
+        {
+            waveformtype = 2;
+            sendSubtractiveParameters();
+        }
+
+        private void radioButton_subtractive_sawtooth_CheckedChanged(object sender, EventArgs e)
+        {
+            waveformtype = 3;
+            sendSubtractiveParameters();
         }
     }
 }
