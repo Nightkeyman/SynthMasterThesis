@@ -163,7 +163,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(29, 64);
+            this.label1.Location = new System.Drawing.Point(29, 55);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(29, 13);
             this.label1.TabIndex = 4;
@@ -172,7 +172,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(5, 82);
+            this.label2.Location = new System.Drawing.Point(9, 80);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(53, 13);
             this.label2.TabIndex = 5;
@@ -1150,9 +1150,9 @@
             this.ADSR.Controls.Add(this.knobControl_attack);
             this.ADSR.Controls.Add(this.button_adsr_set);
             this.ADSR.ForeColor = System.Drawing.SystemColors.Control;
-            this.ADSR.Location = new System.Drawing.Point(705, 71);
+            this.ADSR.Location = new System.Drawing.Point(712, 15);
             this.ADSR.Name = "ADSR";
-            this.ADSR.Size = new System.Drawing.Size(331, 324);
+            this.ADSR.Size = new System.Drawing.Size(331, 437);
             this.ADSR.TabIndex = 13;
             this.ADSR.TabStop = false;
             this.ADSR.Text = "ADSR";
@@ -1161,7 +1161,7 @@
             // 
             this.label_release_knob.AutoSize = true;
             this.label_release_knob.ForeColor = System.Drawing.SystemColors.Control;
-            this.label_release_knob.Location = new System.Drawing.Point(208, 157);
+            this.label_release_knob.Location = new System.Drawing.Point(208, 218);
             this.label_release_knob.Name = "label_release_knob";
             this.label_release_knob.Size = new System.Drawing.Size(46, 13);
             this.label_release_knob.TabIndex = 22;
@@ -1171,7 +1171,7 @@
             // 
             this.label_sustain_knob.AutoSize = true;
             this.label_sustain_knob.ForeColor = System.Drawing.SystemColors.Control;
-            this.label_sustain_knob.Location = new System.Drawing.Point(60, 157);
+            this.label_sustain_knob.Location = new System.Drawing.Point(60, 218);
             this.label_sustain_knob.Name = "label_sustain_knob";
             this.label_sustain_knob.Size = new System.Drawing.Size(42, 13);
             this.label_sustain_knob.TabIndex = 21;
@@ -1181,7 +1181,7 @@
             // 
             this.label_decay_knob.AutoSize = true;
             this.label_decay_knob.ForeColor = System.Drawing.SystemColors.Control;
-            this.label_decay_knob.Location = new System.Drawing.Point(216, 20);
+            this.label_decay_knob.Location = new System.Drawing.Point(216, 71);
             this.label_decay_knob.Name = "label_decay_knob";
             this.label_decay_knob.Size = new System.Drawing.Size(38, 13);
             this.label_decay_knob.TabIndex = 20;
@@ -1191,7 +1191,7 @@
             // 
             this.label_attack_knob.AutoSize = true;
             this.label_attack_knob.ForeColor = System.Drawing.SystemColors.Control;
-            this.label_attack_knob.Location = new System.Drawing.Point(60, 20);
+            this.label_attack_knob.Location = new System.Drawing.Point(60, 71);
             this.label_attack_knob.Name = "label_attack_knob";
             this.label_attack_knob.Size = new System.Drawing.Size(38, 13);
             this.label_attack_knob.TabIndex = 14;
@@ -1204,7 +1204,7 @@
             this.knobControl_release.KnobBackColor = System.Drawing.Color.Maroon;
             this.knobControl_release.KnobPointerStyle = KnobControl.KnobControl.KnobPointerStyles.line;
             this.knobControl_release.LargeChange = 5;
-            this.knobControl_release.Location = new System.Drawing.Point(188, 173);
+            this.knobControl_release.Location = new System.Drawing.Point(188, 234);
             this.knobControl_release.Maximum = 1000;
             this.knobControl_release.Minimum = 1;
             this.knobControl_release.Name = "knobControl_release";
@@ -1229,7 +1229,7 @@
             this.knobControl_decay.KnobBackColor = System.Drawing.Color.Maroon;
             this.knobControl_decay.KnobPointerStyle = KnobControl.KnobControl.KnobPointerStyles.line;
             this.knobControl_decay.LargeChange = 5;
-            this.knobControl_decay.Location = new System.Drawing.Point(188, 36);
+            this.knobControl_decay.Location = new System.Drawing.Point(188, 87);
             this.knobControl_decay.Maximum = 1000;
             this.knobControl_decay.Minimum = 1;
             this.knobControl_decay.Name = "knobControl_decay";
@@ -1255,7 +1255,7 @@
             this.knobControl_sustain.KnobBackColor = System.Drawing.Color.Maroon;
             this.knobControl_sustain.KnobPointerStyle = KnobControl.KnobControl.KnobPointerStyles.line;
             this.knobControl_sustain.LargeChange = 5;
-            this.knobControl_sustain.Location = new System.Drawing.Point(36, 173);
+            this.knobControl_sustain.Location = new System.Drawing.Point(36, 234);
             this.knobControl_sustain.Maximum = 1000;
             this.knobControl_sustain.Minimum = 1;
             this.knobControl_sustain.Name = "knobControl_sustain";
@@ -1281,7 +1281,7 @@
             this.knobControl_attack.KnobBackColor = System.Drawing.Color.Maroon;
             this.knobControl_attack.KnobPointerStyle = KnobControl.KnobControl.KnobPointerStyles.line;
             this.knobControl_attack.LargeChange = 5;
-            this.knobControl_attack.Location = new System.Drawing.Point(36, 36);
+            this.knobControl_attack.Location = new System.Drawing.Point(36, 87);
             this.knobControl_attack.Maximum = 1000;
             this.knobControl_attack.Minimum = 1;
             this.knobControl_attack.Name = "knobControl_attack";
@@ -1302,7 +1302,7 @@
             // button_adsr_set
             // 
             this.button_adsr_set.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.button_adsr_set.Location = new System.Drawing.Point(112, 277);
+            this.button_adsr_set.Location = new System.Drawing.Point(112, 369);
             this.button_adsr_set.Name = "button_adsr_set";
             this.button_adsr_set.Size = new System.Drawing.Size(102, 41);
             this.button_adsr_set.TabIndex = 15;
@@ -1315,11 +1315,11 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.ClientSize = new System.Drawing.Size(1055, 449);
+            this.ClientSize = new System.Drawing.Size(1046, 453);
             this.Controls.Add(this.ADSR);
             this.Controls.Add(this.tabPage_Connection);
             this.Name = "Form1";
-            this.Text = "Form1";
+            this.Text = "Synthesizer User Interface";
             this.tabPage_Connection.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
