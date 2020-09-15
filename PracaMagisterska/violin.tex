@@ -184,7 +184,7 @@ Z linią opóźniającą skojarzone są zmienne przechowujące indeksy początko
 \end{array}
 \right.
 \end{equation}
- Do komórki o indeksie inPoint wpisywana jest nowa próbka, a w komórkach o indeksach outPoint zapisane są próbki "wyjściowe". Prawdziwe wyjście linii opóźniających najczęściej nie ma całkowitego indeksu, zatem obliczane jest jako średnia ważona pomiędzy dwoma sąsiednimi próbkami. W tym celu obliczyć należy współczynnik wagowy
+ Do komórki o indeksie inPoint wpisywana jest nowa próbka, a w komórce o "indeksie" outPointer zapisana jest próbka "wyjściowa". Prawdziwe wyjście linii opóźniających najczęściej nie ma całkowitego indeksu, zatem obliczane jest jako średnia ważona pomiędzy dwoma sąsiednimi próbkami. W tym celu obliczyć należy współczynnik wagowy
  \begin{equation} \label{equ:model_alpha}
 \alpha_{neck} = \text{neck\_outPointer} - \text{neck\_outPoint},
  \end{equation}
@@ -197,9 +197,13 @@ który służy do wyznaczania wyjścia jako
 \end{tabular} \\
 Na końcu jednej z linii (bridgeDelay[.]) znajduje się prosty filtr dolnoprzepustowy (stringFilter). Każda wychodząca próbka poddawana jest filtracji według wzoru:
  \begin{equation} \label{equ:model_stringfilter}
-\text{stringFilter[n]} = 0.95*0.541875*\text{bridge\_output} + 0.4581* \text{stringFilter[n-1]}.
+\text{stringFilter[n]} = \text{SF}\_\text{g}*\text{SF}\_\text{b}*\text{bridge\_output} - \text{SF}\_\text{a}* \text{stringFilter[n-1]}.
 \end{equation}
-
+\begin{tabular}{ l l l l}
+	gdzie: & \text{SF}\_\text{g} & - & wzmocnienie filtra równe 0.95, \\
+			& \text{SF}\_\text{a} & - & współczynnik a filtra równy $\frac{24000}{5F_s} - 0.55$, \\
+			& \text{SF}\_\text{b} & - & współczynnik b filtra równy $1+\text{SF}\_\text{a}$. \\
+\end{tabular} \\
 Następnie oblicza się różnicę pomiędzy sumą wyjść stringFilter i neck\_Output (wyjścia te dodatkowo zmieniają znak na przeciwny) a wprowadzaną prędkością smyczka przemnożoną przez ADSR:
  \begin{equation} \label{equ:model_deltav}
 \Delta v = \text{ADSR[n]} v_b + (\text{stringFilter[n]} + \text{neck\_output})
@@ -229,3 +233,12 @@ W celu uzyskania efektu Vibrato, należy w każdej chwili czasu modyfikować zmi
 %\section{Implementacja syntezy dźwięku skrzypiec}
 %\subsection{Implementacja syntezy dźwięku skrzypiec}
 %\subsubsection{Implementacja syntezy dźwięku skrzypiec}
+\subsection{Wyniki}
+Opisana implementacja daje w wyniku dźwięk o charakterze instrumentu smyczkowego. Na końcowe wrażenia słuchowe, poza samą syntezą falowodową, spory wpływ mają dodatki takie jak odpowiednie kształtowanie obwiedni czy odpowiednio dobrany (częstotliwość, amplituda) efekt Vibrato. Wyniki symulacji przeprowadzonej w środowisku Matlab przedstawiono na rysunku \ref{rys:model_violin_matlab}.
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=12cm]{grafiki/model_violin_matlab}
+	\captionsetup{justification=centering}
+	\caption{Wygenerowany dźwięk skrzypiec. Ton o częstotliwości 240 Hz.}
+	\label{rys:model_violin_matlab}
+\end{figure}
