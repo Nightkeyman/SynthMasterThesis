@@ -1,7 +1,7 @@
-\chapter{Synteza dźwięku - modulacja częstotliwościowa}\label{chapter_fm}
-Modulacja częstotliwościowa jest powszechnie kojarzona z radiem analogowym. W tym zastosowaniu, w chwilowej częstotliwości sygnału sinusoidalnego zaszyta jest informacja, która ma drogą radiową dotrzeć do odbiorcy. W przypadku syntezy dźwięku, modulowane są dowolne sygnały okresowe. Nie niosą one żadnej informacji, a dewiacje częstotliwości chwilowej wprowadza się w celu uzyskania wrażeń dźwiękowych.
-\section{Zasada działania modulacji częstotliwościowej}
-Modulacja częstotliwościowa polega na zmienianiu częstotliwości chwilowej przebiegu okresowego. Sygnał, którego częstotliwość ulega tym zmianom nazywany jest sygnałem modulowanym czy też nośnym. Zmiany wprowadzane w częstotliwości sygnału modulowanego, to odchylenia od jego własnej częstotliwości. Mogą one być dokonywane za pomocą innego sygnału okresowego, który nazywany jest sygnałem modulującym. 
+\chapter{Synteza dźwięku - modulacja częstotliwości}\label{chapter_fm}
+Modulacja częstotliwości jest powszechnie kojarzona z radiem analogowym. W tym zastosowaniu, w chwilowej częstotliwości sygnału sinusoidalnego zaszyta jest informacja, która ma drogą radiową dotrzeć do odbiorcy. W przypadku syntezy dźwięku, modulowane są dowolne sygnały okresowe. Nie niosą one żadnej informacji, a dewiacje częstotliwości chwilowej wprowadza się w celu uzyskania efektów dźwiękowych.
+\section{Zasada działania modulacji częstotliwości}
+Modulacja częstotliwości polega na zmienianiu częstotliwości chwilowej przebiegu okresowego. Sygnał, którego częstotliwość ulega tym zmianom, nazywany jest sygnałem modulowanym czy też nośnym. Zmiany wprowadzane w częstotliwości sygnału modulowanego, to odchylenia od jego własnej częstotliwości. Mogą one być dokonywane za pomocą innego sygnału okresowego, który nazywany jest sygnałem modulującym. 
 \subsection{Modulacja FM w dziedzinie czasu}
 Przykładem sygnału modulującego może być sinusoida. Przebieg zmodulowany częstotliwościowo, z pominięciem fazy sygnału modulującego \cite{oland}, opisuje wyrażenie:
 \begin{equation} \label{equ:fm_wzor1}
@@ -29,15 +29,15 @@ Na rysunku \ref{rys:fm_arg} przedstawiono przebiegi argumentów funkcji sinus z 
 	\caption{Przebiegi czasowe argumentu funkcji sinus przed i po modulacji FM.}
 	\label{rys:fm_arg}
 \end{figure}
-Linią ciągłą narysowano przebieg argumentu sygnału nośnego przed modulacją. Natomiast linia przerywana obrazuje przebieg argumentu sygnału po modulacji częstotliwościowej.
+Linią ciągłą narysowano przebieg argumentu sygnału nośnego przed modulacją. Natomiast linia przerywana obrazuje przebieg argumentu sygnału po modulacji częstotliwości.
 \subsection{Modulacja FM w dziedzinie częstotliwości}
-Wartość $\beta$ jest także określana mianem indeksu modulacji \cite{chowning}. Widmo sygnału poddanego modulacji częstotliwościowej składa się z prążka środkowego na częstotliwości nośnej oraz prążków bocznych. Prążki boczne są rozmieszczone symetrycznie względem częstotliwości nośnej i leżą na częstotliwościach $f_c \pm kf_m$, gdzie $k$ jest liczbą całkowitą. Moduł widma sygnału z powyższego przykładu przestawiony został na rysunku \ref{rys:fm_widmo}. Sygnał poddany transformacji Fouriera miał długość 96000 próbek przy $F_s = 96000$, zatem indeks częstotliwościowy jest równoważny częstotliwości. Ze względu na sposób indeksowania w Matlabie, zaczynający się od liczby 1 (a nie od 0), w celu uzyskania wartości częstotliwości należy odjąć jedynkę od indeksu.
+Wartość $\beta$ jest także określana mianem indeksu modulacji \cite{chowning}. Widmo sygnału poddanego modulacji częstotliwości składa się z prążka środkowego na częstotliwości nośnej oraz prążków bocznych. Prążki boczne są rozmieszczone symetrycznie względem częstotliwości nośnej i leżą na częstotliwościach $f_c \pm kf_m$, gdzie $k$ jest liczbą całkowitą. Moduł widma sygnału z powyższego przykładu przestawiony został na rysunku \ref{rys:fm_widmo}. Sygnał poddany transformacji Fouriera miał długość 96000 próbek przy $F_s = 96000$, zatem indeks częstotliwości jest równoważny częstotliwości. Ze względu na sposób indeksowania w Matlabie, zaczynający się od liczby 1 (a nie od 0), w celu uzyskania wartości częstotliwości należy odjąć jedynkę od indeksu.
 
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=10cm]{grafiki/fm_widmo}
 	\captionsetup{justification=centering}
-	\caption{Moduł widma sygnału zmodulowanego (wartość indeksu 1201 należy pomniejszyć o 1 ze względu na sposób indeksowania w Matlabie).}
+	\caption{Moduł widma sygnału zmodulowanego (wartość indeksu 1201 należy pomniejszyć o 1 ze względu na sposób indeksowania w środowisku Matlab).}
 	\label{rys:fm_widmo}
 \end{figure}
 Wraz ze wzrostem wartości $\beta$, wzrasta liczba znaczących prążków bocznych oraz poszerza się pasmo częstotliwościowe sygnału zmodulowanego.
@@ -81,7 +81,7 @@ Na rysunku \ref{rys:fm_arg2} przedstawiono przebiegi argumentów funkcji sinus z
 	\caption{Przebiegi czasowe argumentu funkcji sinus przed i po zagnieżdżonej modulacji FM.}
 	\label{rys:fm_arg2}
 \end{figure}
-Linią ciągłą narysowano przebieg argumentu sygnału nośnego przed modulacją. Natomiast linia przerywana obrazuje przebieg argumentu sygnału po zagnieżdżonej modulacji częstotliwościowej. Na drodze eksperymentów można uzyskiwać w ten sposób naprawdę ciekawe brzmienia.
+Linią ciągłą narysowano przebieg argumentu sygnału nośnego przed modulacją. Natomiast linia przerywana obrazuje przebieg argumentu sygnału po zagnieżdżonej modulacji częstotliwości. Na drodze eksperymentów można uzyskiwać w ten sposób naprawdę ciekawe brzmienia.
 \subsection{Uzyskiwanie konkretnych brzmień}
 W literaturze można znaleźć parametry syntezy FM, które pozwalają uzyskać brzmienie zbliżone do naturalnych dźwięków. W \cite{chowning} odnaleźć można na przykład parametry, za pomocą których można uzyskać brzmienie dzwona. Parametry te wyglądają następująco:
 
@@ -117,7 +117,7 @@ Przebieg obwiedni opisanej za pomocą (\ref{equ:fm_belladsr}) pokazano na rysunk
 \end{figure}
 
 \section{Implementacja syntezy FM}
-W celu nie naruszania struktury pętli głównej programu wykonywanego na DSP, algortym syntezy dla metody FM został dostosowany do istniejącego kodu. Stąd generowanie dźwięku będzie realizowane w sposób blokowy. Blok ma rozmiar $N = 1024$ próbek. 
+W celu nienaruszania struktury pętli głównej programu wykonywanego na DSP, algortym syntezy dla metody FM został dostosowany do istniejącego kodu. Stąd generowanie dźwięku jest realizowane w sposób blokowy. Blok ma rozmiar $N = 1024$ próbek. 
 \subsection{Generowanie przebiegu}
 W programie wykorzystywane są dwie tablice o $N$ próbkach, które naprzemiennie wysyłane są do przetwornika cyfrowo-analogowego. W czasie, gdy jedna z nich jest przetwarzana na sygnał analogowy, druga jest wypełniana nowymi próbkami przebiegu. W celu zachowania ciągłości pomiędzy blokami, wprowadzony został licznik bloków $k$, który odpowiada za odpowiednie przesuniecię w fazie generowanych sygnałów. Za generowanie pojedynczego tonu zmodulowanego częstotliwościowo odpowiada kod:
 \begin{equation} \label{equ:fm_wzor2}
@@ -162,7 +162,7 @@ W projekcie autorskim, w przypadku syntezy FM, użytkownik może poprzez interfe
 	\centering
 	\includegraphics[width=12cm]{grafiki/sub_interface}
 	\captionsetup{justification=centering}
-	\caption{Interfejs użytkownika dla modulacji częstotliwościowej.}
+	\caption{Interfejs użytkownika dla modulacji częstotliwości.}
 	\label{rys:fm_interface}
 \end{figure}
 Na rysunku \ref{rys:fm_interface} zaznaczono dwie sekcje wykonanego interfejsu dla syntezy FM. W pierwszej z nich znajduje się przycisk, który służy do aktywacji tej metody syntezy dźwięku. Po naciśnięciu tego klawisza, DSP otrzymuje komunikat, po którym przechodzi w tryb syntezy FM.
