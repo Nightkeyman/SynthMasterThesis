@@ -172,8 +172,8 @@ Obsługa danych zawierających zsyntezowane dźwięki oraz ich przesłanie na mo
 
 Obsługa danych tej funkcji opiera się na zainicjalizowanym wcześniej buforze cyrkulacyjnym dmaxDacBuffer[PING/PONG][FRAME][L/R][.]. Programowo bufor jest czterowymiarową tablicą, gdzie pierwszy wymiar dokonuje synchronizacji odczytu i zapisu typu ping-pong. Następnie wykonywany jest mechanizm zakładkowania dwóch tablic przechowujących próbki zsyntezowanego dźwięku. Dane po zakładkowaniu przekazywane są do modułu DAC przez tablicę dmaxDacBuffer[PING/PONG][FRAME][L/R][.].
 
-\section{Klawiatura polifoniczna}
-<W trakcie implementacji>
+\section{Klawiatura polifoniczna}\label{section:real_polifonia}
+Jednym z wymagań projektowych jest implementacja polifonii. Generowanie więcej niż jednego tonu jednocześnie zostało osiągnięte poprzez asynchroniczne odczytywanie wciśnięć i zwalniania klawiszy instrumentu oraz przechowywanie informacji o klawiszach wciśniętych w danej chwili. Rozwiązano to poprzez utworzenie tablicy freqs[.] o 12 elementach typu float (zakłada się obsługę nie więcej niż 12 klawiszy jednocześnie). Odebranie ramki MIDI z informacją o wciśnięciu klawisza instrumentu, powoduje wpisanie odczytanej wartości częstotliwości do niezajętej komórki tablicy. Gdy dźwięk związany z danym klawiszem kończy wybrzmiewanie, odpowiedni element tablicy jest zerowany. W każdej z metod syntezy odczytywane są częstotliwości z tej tablicy i generowane odpowiednie dźwięki. Rozwiązania polifonii różnią się pomiedzy metodami syntezy, z tego powodu zostaną one indywidualnie opisane w odpowiednich rozdziałach.
 % opisać ogólnie, i powiedziec, ze dla kazdej metody to bedzie wyglądało trochę inaczej
 
 
@@ -191,7 +191,7 @@ W autorskim projekcie została użyta biblioteka \emph{DSP Library} z procesora 
 \subsection{Funkcje zawarte w pamięci ROM procesora}
 %http://software-dl.ti.com/jacinto7/esd/processor-sdk-rtos-jacinto7/latest/exports/docs/dsplib_c66x_3_4_0_0/docs/doxygen/html/dsplib_html/group___f_f_t.html
 Funkcja DSPF\_sp\_cfftr2\_dit() odpowiada za przeprowadzenie algorytmu FFT radix-2 z decymacją w dziedzinie czasu dla liczb zmiennoprzecinkowych. Sygnał na wejściu powinien posiadać N liczb zespolonych ułożonych w tablicy kolejno w pary liczb rzeczywistych i urojonych. Jako drugi argument wejściowy funkcja przyjmuje tablicę współczynników obrotu dla FFT o długości N/2. Współczynniki obrotu utworzone zostają przez zestaw trzech funkcji udostępnionych na stronie producenta procesora. Funkcje zostały skopiowane do autorskiego projektu. %https://www.rose-hulman.edu/class/ee/yoder/ece581/TI%20library/C6700/dsplib/support/fft/tw_r2fft.c <-- twiddle factors
-Według dokumentacji opisywana funkcja może również zostać użyta do uzyskania transformaty odwrotnej, poprzez zmianę kolejności współczynników obrotu, a na końcu podzielenie wynikowej transformaty przez N. Jest to działanie odpowiadające wzorowi \ref{equ:idft_upr}. Wyniki zastosowania funkcji DSPF\_sp\_cfftr2\_dit() jako odwrotnej transformacji okazały się błędne. W celu poprawienia wyników, zastosowano funkcję DSPF\_sp\_icfftr2\_dif(), która dedykowana jest konkretnie do odwrotnej transformacji DFT. Wykonuje ona algorytm FFT radix-2 z decymacją w dziedzinie częstotliwości. Po użyciu tej funkcji, wyniki były poprawne.
+Według dokumentacji opisywana funkcja może również zostać użyta do uzyskania transformaty odwrotnej, poprzez zmianę kolejności współczynników obrotu, a na końcu podzielenie wynikowej transformaty przez N. Jest to działanie odpowiadające wzorowi (\ref{equ:idft_upr}). Wyniki zastosowania funkcji DSPF\_sp\_cfftr2\_dit() jako odwrotnej transformacji okazały się błędne. W celu poprawienia wyników, zastosowano funkcję DSPF\_sp\_icfftr2\_dif(), która dedykowana jest konkretnie do odwrotnej transformacji DFT. Wykonuje ona algorytm FFT radix-2 z decymacją w dziedzinie częstotliwości. Po użyciu tej funkcji, wyniki były poprawne.
 
 %http://software-dl.ti.com/jacinto7/esd/processor-sdk-rtos-jacinto7/latest/exports/docs/dsplib_c66x_3_4_0_0/docs/doxygen/html/dsplib_html/group___d_s_p_f__sp__bitrev__cplx.html
 Za zmianę kolejności próbek w tablicy wynikowej otrzymanej z funkcji wykonującej algorytm FFT odpowiada funkcja DSPF\_sp\_bitrev\_cplx(). Zmiana ciągu elementów tablicy realizowana jest przez odczytanie jej indeksów jako liczb w postaci bitowej, a następnie dokonanie lustrzanego odbicia każdego indeksu z osobna (ang. bit-reverse). Jest to niezbędny krok do zrealizowania pełnego algorytmu FFT radix-2.
@@ -228,12 +228,26 @@ Jednym z elementów projektowania układów cyfrowego przetwarzania sygnałów j
 W literaturze można znaleźć informacje, iż widmo częstotliwościowe jest dużo bardziej dokładne przy większej rozdzielczości częstotliwości. Minusem jej zwiększenia jest jednak spowolnienie obliczenia transformaty wynikowej i tym samym negatywny wpływ na czas wykonania programu na procesorze.
 
 %Potwierdzenie ze jak sie zwiekszy rozdzielczosc to jest lepiej https://ieeexplore-1ieee-1org-10000074b15d2.han.bg.pg.edu.pl/document/1604324
-Podjęto próby osiągnięcia jak największej rozdzielczości DFT na wykorzystywanym procesorze TMS320C672x. Dokumentacja funkcji realizującej algorytm FFT wskazywała, iż liczba próbek do jednokrotnej transformacji DFT powinna wynosić maksymalnie 2048. Po wprowadzeniu takiej wartości, procesor ulegał zawieszeniu. Obniżenie liczby próbek do 1024 pozwoliło na bezproblemowe działanie procesora. Jednocześnie spowodowało ono dwukrotne obniżenie dokładności. Ze wzoru \ref{equ:fft_resol} można wyliczyć, iż rozdzielczość częstotliwości w autorskim projekcie wyniosła 46,875Hz.
+Podjęto próby osiągnięcia jak największej rozdzielczości DFT na wykorzystywanym procesorze TMS320C672x. Dokumentacja funkcji realizującej algorytm FFT wskazywała, iż liczba próbek do jednokrotnej transformacji DFT powinna wynosić maksymalnie 2048. Po wprowadzeniu takiej wartości, procesor ulegał zawieszeniu. Obniżenie liczby próbek do 1024 pozwoliło na bezproblemowe działanie procesora. Jednocześnie spowodowało ono dwukrotne obniżenie dokładności. Ze wzoru (\ref{equ:fft_resol}) można wyliczyć, iż rozdzielczość częstotliwości w autorskim projekcie wyniosła 46,875Hz.
 
 
 \section{ADSR}\label{sec:real_adsr}
-<W trakcie implementacji>
+Kształtowanie obwiedni generowanych dźwięków związane jest z naciskaniem i zwalnianiem klawiszy syntezatora. Realizacja ADSR'a musi uwzględniać założenie, że klawisze nie muszą być naciskane równocześnie. Fakt ten wyklucza zastosowanie jednego globalnego systemu kształtowania obwiedni. Zastosowanym rozwiązaniem jest kształtowanie obwiedni dla każdego klawisza indywidualnie. Doprowadziło to do powstania dwóch 12 elementowych tablic:
+\begin{itemize}
+	\item tablica typu float, która przechowuje aktualną wartość obwiedni dla wybrzmiewających dźwięków,
+	\item tablica typu int, która przechowuje stan ADSR dla wybrzmiewających dźwięków.
+\end{itemize}
+Poszczególne stany ADSR zaznaczone zostały na rysunku \ref{rys:real_adsr}.
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=8cm]{./grafiki/real_adsr}
+	\captionsetup{justification=centering}
+	\caption{Stany ADSR.}
+	\label{rys:real_adsr}
+\end{figure}
+Gdy wciśnięty zostanie klawisz syntezatora, w tablicy stanów ADSR elementowi o indeksie zgodnym z indeksem tablicy freqs[.] (opisaną w \ref{section:real_polifonia}) przypisana zostanie wartość oznaczająca stan "attack". Gdy syntezowany dźwięk jest w tym stanie, wartość obwiedni w tablicy o odpowiednim indeksie jest zwiększana wraz z upływem czasu. Gdy osiągnięta zostanie wartość maksymalna, stan ADSR tego dźwięku zostanie zmieniony na "decay". Wartość obwiedni maleje aż do osiagnięcia ustalonego poziomu dla stanu "sustain". Gdy to nastąpi, stan zostanie zmieniony na "sustain" i będzie on trwał aż do zwolnienia klawisza instrumentu. Zwolnienie klawisza spowoduje przejście do stanu "release" i stopniowe wyzerowanie wartości obwiedni. Po osiągnięciu zera przez wartość obwiedni danego dźwięku, jego stan jest czyszczony, a odpowiedni element tablicy opisanej w \ref{section:real_polifonia} zostaje wyzerowany, co kończy syntezę danego dźwięku.
 
+Użytkownik ma możliwosć ustawiania, za pomocą interfejsu użytkownika, czasu trwania stanów "attack", "decay" i "release" oraz poziomu dla stanu "sustain".
 
 \section{Interfejs użytkownika}
 Użytkownik może sterować pracą instrumentu za pomocą specjalnie przygotowanego graficznego interfejsu użytkownika (GUI). GUI stanowi okienkowy program komputerowy napisany w języku C\#. Komunikacja pomiędzy GUI a DSP została opisana w części \ref{sec:real_komunikacja}. Okno programu składa się z:

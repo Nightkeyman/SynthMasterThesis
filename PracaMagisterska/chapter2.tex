@@ -16,12 +16,12 @@ W muzyce, dźwięk rozpatrywany jest jako zjawisko, które wydobywane jest z ins
 	
 	\item głośność - zależna od amplitudy drgań powietrza przenoszącego dźwięk,
 	
-	\item barwa dźwięku - zależna od liczby, częstotliwości poszczególnych składowych harmonicznych dźwięku oraz zmian ich amplitudy w czasie. Jako składowa harmoniczna, rozumiana jest składowa sinusoidalna dźwięku, która jest całkowitą wielkrotnością częstotliwości podstawowej danego dźwięku \cite{synth_brief_intro}.
+	\item barwa dźwięku - zależna od liczby, częstotliwości poszczególnych składowych harmonicznych (SH) dźwięku oraz zmian ich amplitudy w czasie. Jako SH, rozumiana jest składowa sinusoidalna dźwięku, która jest całkowitą wielkrotnością częstotliwości podstawowej danego dźwięku \cite{synth_brief_intro}.
 	% (źródło: https://pl.wikipedia.org/wiki/D%C5%BAwi%C4%99k_(muzyka))
 \end{itemize}
 
 W celu ustandardyzowania dźwięków w utworach muzycznych, wprowadzono skale dźwiękowe. Obecnie w muzyce europejskiej stosowana jest skala dwunastotonowa równomiernie temperowana. Odległości między tymi dźwiękami nazywane są interwałami, które wyraża się w jednostkach półtonów. Istnieje zależność między kolejnymi półtonami. Może ona być wyrażona wzorem:
-\begin{equation} \label{equ:idft}
+\begin{equation} \label{equ:wpr_dzwiek}
 k = f(\sqrt[12]{2})^{n}
 \end{equation}
 \begin{tabular}{ l l l l}
@@ -211,7 +211,7 @@ x[n] = \frac{1}{N}\sum_{k=0}^{N-1} X[k]e^{j\frac{2\pi n}{N}k}  \\
 	&	$k$ & - &  próbki dyskretnego widma sygnału, \\
 \end{tabular}
 
-We wzorach \ref{equ:dft} i \ref{equ:idft} przyjęto indeksowanie asymetryczne. Zapis taki wybrano z uwagi na bardziej czytelną postać. W celu uproszczenia zapisu definicji DFT stosuje się współczynniki obrotu (ang. twiddle factors):
+We wzorach (\ref{equ:dft}) i (\ref{equ:idft}) przyjęto indeksowanie asymetryczne. Zapis taki wybrano z uwagi na bardziej czytelną postać. W celu uproszczenia zapisu definicji DFT stosuje się współczynniki obrotu (ang. twiddle factors):
 \begin{equation} \label{equ:twid_fact}
 \openup\jot
 \begin{aligned}[t]
@@ -242,7 +242,7 @@ x[0] \\ x[1] \\ ... \\ x[N-1]
 \end{aligned}
 \end{equation}
 
-Ze wzorów \ref{equ:twid_fact} i \ref{equ:dft_wekt} uzyskuje się uproszczony zapis definicji DFT:
+Ze wzorów (\ref{equ:twid_fact}) i (\ref{equ:dft_wekt}) uzyskuje się uproszczony zapis definicji DFT:
 \begin{equation} \label{equ:dft_upr}
 	\mathbf{X} = [W_{N}^{kn}]\mathbf{x}
 \end{equation}
@@ -272,7 +272,7 @@ W środkowej kolumnie tabeli \ref{tab:dft_wlasc} przedstawiono sygnał w dziedzi
 
 \subsection{Algorytm FFT}
 %Technika cyfrowego przetwarzania sygnałów 292 strona - A. Leśnicki
-Wyznaczenie widma dyskretnego bezpośrednio z definicji \ref{equ:dft} jest bardzo złożone obliczeniowo. Przy założeniu, że próbki sygnału poddanego przekształceniu są liczbami zespolonymi, do obliczenia DFT wymagane jest $N^{2}$ mnożeń zespolonych oraz $N(N-1)$ dodawań zespolonych.
+Wyznaczenie widma dyskretnego bezpośrednio z definicji (\ref{equ:dft}) jest bardzo złożone obliczeniowo. Przy założeniu, że próbki sygnału poddanego przekształceniu są liczbami zespolonymi, do obliczenia DFT wymagane jest $N^{2}$ mnożeń zespolonych oraz $N(N-1)$ dodawań zespolonych.
 
 W praktyce obliczenia DFT sygnału wykonuje się z wykorzystaniem bardzo efektywnego algorytmu szybkiej transformacji Fouriera (FFT, ang. Fast Fourier Transform). Algorytm został przedstawiony w 1965 roku przez Cooleya-Tukeya i zapoczątkował nowy rozdział w dziedzinie cyfrowego przetwarzania sygnałów. Algorytm FFT można stosować również do obliczenia transformacji odwrotnej IDFT.
 
@@ -289,4 +289,4 @@ W praktyce obliczenia DFT sygnału wykonuje się z wykorzystaniem bardzo efektyw
 Algorytm FFT bazuje na metodzie dziel i zwyciężaj, dzieląc N-punktową transformację DFT na mniejsze transformacje N/2-punktowe, a następnie dokonując transformacji wyników poprzednich transformacji. Najbardziej popularną wersją algorytmu FFT jest FFT o podstawie 2, który wymaga $2^{k}$ próbek, gdzie k to liczba naturalna. Działanie algorytmu FFT o podstawie 2 opiera się na strukturach motylkowych i zostało przedstawione na rysunku \ref{rys:fft_motyl}.
 
 %http://home.agh.edu.pl/~kkowal/DSP/FFT_wyklad.pdf
-Dla liczby próbek $N$ równej $2^{k}$, występuje $log_{2}N$ poziomów algorytmu, a na każdym z nich jest $N/2$ operacji motylkowych. Ostatecznie złożoność obliczeniowa algorytmu FFT wynosi $\frac{N}{2}log_{2}N$. Pokazuje to, iż algorytm Cooleya-Tukeya jest zdecydowanie bardziej wydajny od obliczania DFT sygnału na podstawie definicji \ref{equ:dft}.
+Dla liczby próbek $N$ równej $2^{k}$, występuje $log_{2}N$ poziomów algorytmu, a na każdym z nich jest $N/2$ operacji motylkowych. Ostatecznie złożoność obliczeniowa algorytmu FFT wynosi $\frac{N}{2}log_{2}N$. Pokazuje to, iż algorytm Cooleya-Tukeya jest zdecydowanie bardziej wydajny od obliczania DFT sygnału na podstawie definicji (\ref{equ:dft}).

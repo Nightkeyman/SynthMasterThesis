@@ -404,16 +404,6 @@ namespace UARTCOM2
             }
         }
 
-        private void drawbar1_Load_1(object sender, EventArgs e)
-        {
-
-        }
-
-        private void drawbar2_Load(object sender, EventArgs e)
-        {
-
-        }
-
         private void drawbar3_Load(object sender, EventArgs e)
         {
 
