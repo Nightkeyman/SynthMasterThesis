@@ -4,6 +4,7 @@ clear
 N = 100;
 Fs = 44100;
 fft_size = 8192*2;
+%y = audioread('Woodwind/Woodwind/flute/flute_A4_1_mezzo-piano_normal.mp3');
 y = audioread('Woodwind/Woodwind/flute/flute_A4_1_mezzo-piano_normal.mp3');
 %y = y(fft_size:2*fft_size, 1);
 L = length(y);
