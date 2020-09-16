@@ -17,20 +17,20 @@ W niniejszym podrozdziale przedstawiono dwa podejścia do implementacji syntezy 
 \end{itemize}
 Na końcu podrozdziału przedstawiono porównanie wyników obu tych podejść do syntezy, na podstawie wygenerowanych dźwięków.
 
-\subsection{Synteza falowodowa}
+\subsection{Synteza falowodowa instrumentów dętych}
 %https://ccrma.stanford.edu/~jos/pasp/Digital_Waveguide_Models.html
 %https://quod.lib.umich.edu/cache//b/b/p/bbp2372.1992.072/bbp2372.1992.072.pdf#page=1;zoom=75
 
-Synteza falowodowa instrumentów dętych drewnianych opiera się głównie na cyfrowych liniach opóźniających, które symulują odbicia fali w komorze dźwiękowej (ang. bore) tego rodzaju instrumentów. Komorę dźwiękową można uprościć do cylindra, w którym rozchodzi się fala. Jest to znaczna zaleta metody falowodowej, gdyż dowolny element instrumentu może zostać zamodelowany za pomocą zestawu tub cylindrycznych.
+Synteza falowodowa instrumentów dętych drewnianych opiera się głównie na cyfrowych liniach opóźniających, które symulują odbicia fali w komorze dźwiękowej (ang. bore) tego rodzaju instrumentów. Komorę dźwiękową można uprościć do cylindra, w którym rozchodzi się fala. Jest to znaczna zaleta metody falowodowej, gdyż dowolny element instrumentu dętego może zostać zamodelowany za pomocą zestawu tub cylindrycznych.
 
 \begin{equation} \label{equ:flute_row_falowe}
-\frac{\partial^2 p}{\partial t^2} = \frac{\partial^2 p}{\partial x^2}
+\frac{\partial^2 p}{\partial t^2} = c^{2}\frac{\partial^2 p}{\partial x^2}
 \end{equation}
 \begin{tabular}{ l l l l}
 	gdzie: 	&	$p$ & - &  ciśnienie, \\
-	& $c$ &  - & prędkość propagacji dźwięku w powietrzu, \\
 	&	$x$ & - &  długość korpusu instrumentu dętego,\\
-	&	$t$ & - &  czas, \\
+	&	$c$ & - &  prędkość propagacji dźwięku w powietrzu,\\
+	&	$t$ & - &  czas. \\
 \end{tabular} \\
 
 %https://sound.eti.pg.gda.pl/student/eim/synteza/macmal/
@@ -54,12 +54,12 @@ Interakcja między ustnikiem a komorą dźwiękową fletu przedstawiona została
 Obliczenie jednej próbki syntezowanego dźwieku na podstawie rysunku \ref{rys:flute_cook} wymaga 9 mnożeń oraz 6 operacji sumowania.
 
 \subsubsection{Implementacja}
-Implementację syntezy falowodowej w autorskim programie realizowanym na procesorze DSP,  wzorowano również na schemacie \ref{rys:flute_cook}. Przepływ powietrza (\emph{flow}) został zaimplementowany jako fala sinusoidalna o odpowiedniej obwiedni \cite{flute_prezka}. Szum dochodzący do utworzonego sygnału został zasymulowany funkcją rand(), a jego ilość została zeskalowana. Sygnały sinusoidy i szumu są sumowane, a następnie trafiają do pętli zamkniętej, którą zaimplementowano w postaci pętli "for". Charakter brzmienia takiego modelu fletu zmienia się w zależności od parametrów wzmocnienia obu linii sprzężenia zwrotnego oraz wartości opóźnień "Emb Delay" i "Flute Bore Delay".
+Implementację syntezy falowodowej w autorskim programie realizowanym na procesorze DSP,  wzorowano również na schemacie \ref{rys:flute_cook}. Przepływ powietrza (\emph{flow}) został zaimplementowany jako fala sinusoidalna o odpowiedniej obwiedni \cite{flute_prezka}. Szum dochodzący do utworzonego sygnału został zasymulowany funkcją rand(), a jego amplituda została przeskalowana. Sygnały sinusoidy i szumu są sumowane, a następnie trafiają do pętli zamkniętej, którą zaimplementowano w postaci pętli "for". Charakter brzmienia takiego modelu fletu zmienia się w zależności od parametrów wzmocnienia obu linii sprzężenia zwrotnego oraz wartości opóźnień "Emb Delay" i "Flute Bore Delay".
 
 Jeden blok danych na procesorze DSP zawiera 1024 próbek. Linie opóźniające przesuwają próbki o kilkadziesiąt indeksów w tył. Oznacza to, iż pierwsza próbka nowego bloku danych, musi sięgnąć do poprzednio wygenerowanej tablicy. Do implementacji wykorzystano mechanizm tablicowy typu "ping-pong". Po wygenerowaniu pełnego bloku danych, pierwsza tablica przepisuje wszystkie wartości do drugiej. Następnie pierwsza tablica zostaje wyzerowana. Opóźnione próbki, do których należy się odnieść przy generowaniu nowego bloku danych, znajdują się w drugiej tablicy. Takim mechanizmem zapewniono ciągłość generowanego sygnału, bez błędów obliczeniowych.
 
 \subsection{Synteza na podstawie modelu ARMA}
-W tym punkcie przedstawiono identyfikację modelu matematycznego fletu, na podstawie którego przeprowadzono później syntezę dźwięku. Do rozpoznania modelu instrumentu użyto tonu "A" razkreślnego o częstotliwości 440Hz. Dźwięk wygenerowany przez grę na flecie zmienia swoją charakterystykę w czasie. Oznacza to, iż jego model również zmienia się w trakcie nagranego przebiegu sygnału. Do identyfikacji wybrano te część nagrania, w której model instrumentu jest w stanie ustalonym.
+W tym punkcie przedstawiono identyfikację modelu matematycznego fletu, na podstawie którego przeprowadzono później syntezę dźwięku. Do rozpoznania modelu instrumentu użyto tonu "A" razkreślnego o częstotliwości 440 Hz. Dźwięk wygenerowany przez grę na flecie zmienia swoją charakterystykę w czasie. Oznacza to, iż jego model również zmienia się w trakcie nagranego przebiegu sygnału. Do identyfikacji wybrano te część nagrania, w której model instrumentu jest w stanie ustalonym.
 
 \subsubsection{Identyfikacja modelu}
 Identyfikacja modelu matematycznego instrumentu została przeprowadzona poprzez manualne dopasowanie zer i biegunów modelu do widma nagrania.
@@ -89,12 +89,12 @@ q = 1-\frac{0.05}{A_{q}}e^{jf_{q}2\pi/F_{s}}
 	&	$q$ & - &  zera modelu, \\
 	&	$F_{s}$ & - &  częstotliwość próbkowania nagranego dźwięku,\\
 	&	$f_{p,q}$ & - &  częstotliwość rezonansowa biegunów i zer modelu, \\
-	&	$A_{p,q}$ & - &  amplituda rezonansu zer i biegunów, \\
+	&	$A_{p,q}$ & - &  amplituda rezonansu zer i biegunów. \\
 \end{tabular} \\
 
 Każdy pik charakterystyki został przetworzony na dwa bieguny odbite lustrzanie względem osi rzeczywistej na płaszczyźnie Z, według wzoru (\ref{equ:flute_bieguny}). Każda z dolin została odwzorowana jako dwa zera odbite lustrzanie względem osi Z, według wzoru (\ref{equ:flute_doliny}).
 
-Model ARMA zsyntezowanego fletu utworzono na podstawie wyznaczonych zer i biegunów. W celu wygenerowania dźwięku z modelu w środowisku symulacyjnym, pobudzono go szumem białym. Następnie znormalizowano otrzymany sygnał, aby uniknąć przesterowań. Dźwięk wygenerowany z modelu przypominał brzmienie instrumentu z rodziny instrumentów dętych drewnianych. Wysokość wygenerowanego dźwięku odpowiadała tej z oryginalnego nagrania (440Hz).
+Model ARMA zsyntezowanego fletu utworzono na podstawie wyznaczonych zer i biegunów. W celu wygenerowania dźwięku z modelu w środowisku symulacyjnym, pobudzono go szumem białym. Następnie znormalizowano otrzymany sygnał, aby uniknąć przesterowań. Dźwięk wygenerowany z modelu przypominał brzmienie instrumentu z rodziny instrumentów dętych drewnianych. Wysokość wygenerowanego dźwięku odpowiadała tej z oryginalnego nagrania (440 Hz).
 
 \subsubsection{Parametryzacja zidentyfikowanego modelu}
 Model powinien mieć możliwość generowania dźwięków o różnej wysokości. Model zidentyfikowany metodą z poprzedniego punktu ma charakter statyczny - po pobudzeniu go szumem, zostaje wygenerowany z niego dźwięk zawsze o tej samej częstotliwości podstawowej (ton "A" razkreślny, na podstawie którego, model był identyfikowany). W celu osiągnięcia innego tonu na podstawie utworzonego modelu, należało dokonać jego parametryzacji. Polegała ona utworzeniu zależności między każdym biegunem i zerem modelu a pożądanym tonem, w oparciu o zasady przyjęte w protokole MIDI.
@@ -111,7 +111,7 @@ k = 69, 57, 50, 45, 42, 38 \\
 \end{equation}
 \begin{tabular}{ l l l l}
 	gdzie: & $f_{p}$ &  - & częstotliwość rezonansowa biegunu modelu, \\
-	&	$f_{A^{1}}$ & - &  częstotliwość dźwięku A razkreślnego (440Hz), \\
+	&	$f_{A^{1}}$ & - &  częstotliwość dźwięku A razkreślnego (440 Hz), \\
 	&	$n$ & - &  numer aktualnie wciskanego klawisza w systemie MIDI.\\
 \end{tabular} \\
 
