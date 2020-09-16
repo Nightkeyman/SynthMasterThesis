@@ -92,7 +92,7 @@ Z uwagi na nieunaukowy charakter tego rodzaju syntezy dźwięku, żadnej z tych 
 \section{Klasyczne moduły syntezatorów dźwięku}
 %https://www.dummies.com/art-center/music/piano/common-keyboard-terms-and-abbreviations/
 %https://en.wikipedia.org/wiki/Modular_synthesizer#:~:text=Modular%20synthesizers%20are%20synthesizers%20composed,user%20to%20create%20a%20patch.
-Syntezatory analogowe nazywane są również modularnymi. Utworzenie dźwięku przez takie urządzenie wymaga przejścia sygnału przez kilka modułów. Źródłem sygnału jest zazwyczaj pewien oscylator lub generator szumu. Dźwięk jest tworzony w źródle, a następnie trafia do filtru. Następnie po filtracji jest wyprowadzany na wyjście układu.
+Syntezatory analogowe nazywane są również modularnymi. Utworzenie dźwięku przez takie urządzenie wymaga przejścia sygnału przez kilka modułów. Źródłem sygnału jest zazwyczaj pewien oscylator lub generator szumu. Dźwięk jest tworzony w źródle, a następnie trafia do filtra. Następnie po filtracji jest wyprowadzany na wyjście układu.
 
 \begin{figure}[H]
 	\centering
@@ -102,7 +102,7 @@ Syntezatory analogowe nazywane są również modularnymi. Utworzenie dźwięku p
 	\label{rys:analog_scheme}
 \end{figure}
 
-Na rysunku \ref{rys:analog_scheme} przedstawiono podstawowy schemat syntezatora modularnego. Składa się on z najbardziej uniwersalnych elementów stosowanych w analogowej syntezie dźwięku. Sygnał jest tworzony przy wykorzystaniu oscylatora (VCO), którego częstotliwość zostaje ustalona poprzez naciśnięcie odpowiedniego klawisza (na klawiaturze sterującej). Następnie dźwięk, za pomocą filtru (VCF) zostaje pozbawiony pewnej części składowych harmonicznych. W dalszej kolejności dociera on do modułu sterującego amplitudą dźwięku (VCA), który ustala jego amplitudę zgodnie z ustawieniami modułu ADSR. Następnie dźwięk jest wyprowadzany na wyjście, czyli do zestawu nagłośnieniowego.
+Na rysunku \ref{rys:analog_scheme} przedstawiono podstawowy schemat syntezatora modularnego. Składa się on z najbardziej uniwersalnych elementów stosowanych w analogowej syntezie dźwięku. Sygnał jest tworzony przy wykorzystaniu oscylatora (VCO), którego częstotliwość zostaje ustalona poprzez naciśnięcie odpowiedniego klawisza (na klawiaturze sterującej). Następnie dźwięk, za pomocą filtra (VCF) zostaje pozbawiony pewnej części składowych harmonicznych. W dalszej kolejności dociera on do modułu sterującego amplitudą dźwięku (VCA), który ustala jego amplitudę zgodnie z ustawieniami modułu ADSR. Następnie dźwięk jest wyprowadzany na wyjście, czyli do zestawu nagłośnieniowego.
 
 W cyfrowej syntezie dźwięku, każdy z omówionych modułów jest realizowany jako część programu komputerowego procesora klasy DSP. Poniżej opisano bardziej szczegółowo moduł, który będzie realizowany jako część programu autorskiego projektu dyplomowego.
 
@@ -112,7 +112,7 @@ Akronim, który jest tytułem tego podrozdziału, oznacza cztero-etapowy generat
 % źródło: D:/Data/Studia/Magisterka/Literatura%20wstepna/synthesizers__a_brief_introduction.pdf
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=15cm]{./grafiki/ADSR}
+	\includegraphics[width=12cm]{./grafiki/ADSR2}
 	\captionsetup{justification=centering}
 	\caption{Generator obwiedni dźwięku (ADSR).}
 	\label{rys:ADSR}
