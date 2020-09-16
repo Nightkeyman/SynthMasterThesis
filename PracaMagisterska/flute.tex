@@ -49,7 +49,7 @@ W niniejszej pracy, syntezę falowodową dźwięku instrumentu dętego drewniane
 \end{figure}
 
 %https://courses.cs.washington.edu/courses/cse467/05wi/pdfs/lectures/15-waveguideInstruments.pdf
-Wejściem systemu przedstawionego na rysunku \ref{rys:flute_cook} jest przepływ powietrza. Szum zostaje dodany w celu symulowania odgłosu wydechu flecisty. 
+Wejściem systemu przedstawionego na rysunku \ref{rys:flute_cook} jest przepływ powietrza. Szum zostaje dodany w celu zasymulowania odgłosu wydechu flecisty. 
 Interakcja między ustnikiem a komorą dźwiękową fletu przedstawiona została równaniem matematycznym $x-x^3$. Końcówka komory dźwiękowej fletu odbija niskie częstotliwości - ta część została zasymulowana poprzez dodanie filtru dolnoprzepustowego przed wyjściem sygnału. Elementy "Emb Delay" oraz "Flute Bore Delay" to linie opóźniające, odpowiadające opóźnieniom fali w ustniku oraz komorze dźwiękowej. 
 Obliczenie jednej próbki syntezowanego dźwieku na podstawie rysunku \ref{rys:flute_cook} wymaga 9 mnożeń oraz 6 operacji sumowania.
 
@@ -97,10 +97,26 @@ Każdy pik charakterystyki został przetworzony na dwa bieguny odbite lustrzanie
 Model ARMA zsyntezowanego fletu utworzono na podstawie wyznaczonych zer i biegunów. W celu wygenerowania dźwięku z modelu w środowisku symulacyjnym, pobudzono go szumem białym. Następnie znormalizowano otrzymany sygnał, aby uniknąć przesterowań. Dźwięk wygenerowany z modelu przypominał brzmienie instrumentu z rodziny instrumentów dętych drewnianych. Wysokość wygenerowanego dźwięku jest taka sama jak w oryginalnym nagraniu (440Hz).
 
 \subsubsection{Parametryzacja zidentyfikowanego modelu}
-Gra na instrumencie wymaga wydobywania z niego dźwięków o różnej wysokości. Zidentyfikowany w poprzednim punkcie model jest statyczny - po pobudzeniu modelu szumem, wydobywa się z niego zawsze dźwięk o tej samej częstotliwości podstawowej ("A" razkreślny, na podstawie którego, model był identyfikowany). W celu wydobycia innego tonu na podstawie utworzonego modelu, należy dokonać jego parametryzacji. Parametryzacja zidentyfikowanego modelu polega na uzależnieniu każdego biegunu i zera modelu od pożądanego tonu.
+Gra na instrumencie wymaga wydobywania z niego dźwięków o różnej wysokości. Model zidentyfikowany w poprzednim punkcie ma charakter statyczny - po pobudzeniu go szumem, wygenerowanego zostaje z niego zawsze dźwięk o tej samej częstotliwości podstawowej (ton "A" razkreślny, na podstawie którego, model był identyfikowany). W celu wydobycia innego tonu na podstawie utworzonego modelu, należało dokonać jego parametryzacji. Polegała ona utworzeniu zależności między każdym biegunem i zerem modelu a pożądanym tonem, w oparciu o zasady przyjęte w protokole MIDI.
 
-Parametryzacja modelu opierać się będzie o zasady przyjęte w protokole MIDI. 
-Na podstawie wzoru (\ref{equ:wpr_dzwiek}), każdy biegun został uzależniony od częstotliwości podstawowej zidentyfikowanego modelu. Częstotliwość podstawowa wymnożona przez pierwiastek dwunastego stopnia podniesiony do potęgi różnicy półtonów między częstotliwością 440Hz a częstotliwością pożądanego dźwięku pozwoliła utworzyć bieguny oraz zera w odpowiednim miejscu.
+\begin{equation} \label{equ:flute_param}
+\openup\jot
+\begin{aligned}[t]
+f_{p} = f_{A^{1}}(\sqrt[12]{2})^{n-k} \\ 
+\end{aligned}
+\qquad\qquad % adjust to suit
+\begin{aligned}[t]
+k = 69, 57, 50, 45, 42, 38 \\
+\end{aligned}
+\end{equation}
+\begin{tabular}{ l l l l}
+	gdzie: & $f_{p}$ &  - & częstotliwość rezonansowa biegunu modelu, \\
+	&	$f_{A^{1}}$ & - &  częstotliwość dźwięku A razkreślnego (440Hz), \\
+	&	$n$ & - &  numer aktualnie wciskanego klawisza w systemie MIDI.\\
+\end{tabular} \\
+
+Na podstawie wzoru (\ref{equ:wpr_dzwiek}), została utworzona zależność bieguna od częstotliwości podstawowej zidentyfikowanego modelu. Przedstawiono ją we wzorze (\ref{equ:flute_param}). 
+
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=12cm]{grafiki/Model_B_A}
@@ -109,21 +125,22 @@ Na podstawie wzoru (\ref{equ:wpr_dzwiek}), każdy biegun został uzależniony od
 	\caption{Porównanie widma modeli ARMA fletu dla dzwieku "B" razkreślnego (wykres przesuniety w prawo) i "A" razkreślnego (wykres przesunięty w lewo).}
 	\label{rys:por_mod_flet}
 \end{figure}
-Na rysunku \ref{rys:por_mod_flet} widać, iż wszystkie piki oraz doliny opisane zidentyfikowanym modelem przesuwają się w dziedzinie częstotliwości dla różnych tonów. Oznacza to, iż pobudzony model wyda dźwięk o różnej wysokości dla różnych parametrów wejściowych.
+Można zauważyć, iż na rysunku \ref{rys:por_mod_flet} wszystkie piki oraz doliny opisane zidentyfikowanym modelem przesuwają się w dziedzinie częstotliwości dla różnych tonów. Oznacza to, iż pobudzony model może wygenerować dźwięk o różnej wysokości, w zależności od parametru $n$ we wzorze (\ref{equ:flute_param}).
 
 
 \subsubsection{Implementacja}
-W autorskim programie na procesorze DSP, syntezę dźwięku za pomocą zidentyfikowanego modelu ARMA, zaimplementowano jako przetwarzanie szumu przez filtr IIR. Współczynniki filtru pobrano z przeprowadzonej wcześniej symulacji w środowisku Matlab. Sygnałem wyjściowym był generowany dźwięk instrumentu dętego.
-
-% opisac jak zaimplementowano filtr IIR ??
+W autorskim programie na procesorze DSP, syntezę dźwięku za pomocą zidentyfikowanego modelu ARMA, zaimplementowano jako przetwarzanie szumu przez filtr IIR. Współczynniki filtru pobrano z przeprowadzonej wcześniej symulacji w środowisku Matlab. 
 % O tym jak precyzja zmieniala wyniki!! Na floatach nie dziala.
+W celu zmniejszenia złożoności obliczeniowej, do obliczania próbek zastosowano typ zmiennych o pojedynczej precyzji (float). Spowodowało to sytuację, w której wartości generowanego dźwięku fletu narastały do nieskończoności. Działo się to w skutek zbyt niskiej precyzji powodującej błędy numeryczne. Po zmianie typu zmiennych na takie o podwójnej precyzji (double), uzyskano pożądane rezultaty. Sygnałem wyjściowym był generowany dźwięk instrumentu dętego.
 
-Algorytm wystawiania kolejnych bloków danych z próbkami dźwięku jest taki sam, jak opisany w podrozdziale || REF IMPLEMENTACJA KUBY W FM ||.
+% opisac jak zaimplementowano filtr IIR ?? - tak
+% przedstawic splot sygnału
 
-Interfejs użytkownika metody fizycznej ogranicza się jedynie do włączenia syntezy fletu na procesorze DSP. Nie ma możliwości zmian parametrów modeli przez użytkownika.
+Algorytm wystawiania kolejnych bloków danych z próbkami dźwięku jest taki sam, jak opisany w podrozdziale \ref{sec:fm_gen_przeb}. Z uwagi na dużą złożoność obliczeniową, w syntezie fletu za pomocą modelu ARMA nie zaimplementowano mechanizmu polifonii.
+Interfejs użytkownika dla syntezy dźwięku fletu ogranicza się do włączenia jej na procesorze DSP, za pomocą przycisku "Enable". Nie ma możliwości zmiany parametrów syntezy przez użytkownika. Jest to spodowodowane bardzo dużą wrażliwością modelu na nawet najmniejsze zmiany.
 
 \subsection{Wyniki}
-Poniżej przedstawiono wyniki syntezy fletu dla obu metod - falowodowej oraz poprzez model ARMA.
+Poniżej przedstawiono wyniki syntezy dźwięku fletu dla obu metod - falowodowej oraz  za pomocą modelu ARMA.
 
 \begin{figure}[H]
 	\centering
@@ -133,4 +150,4 @@ Poniżej przedstawiono wyniki syntezy fletu dla obu metod - falowodowej oraz pop
 	\label{rys:por_synt_flet}
 \end{figure}
 
-Można zauważyć, iż porównanie syntezy instrumentu dętego, które zostało przedstawione na rysunku \ref{rys:por_synt_flet}, dało zupełnie różne wyniki dla obu metod. Po odpowiednim doborze parametrów, brzmienie uzyskane metodą syntezy falowodowej jest bliższe barwy fletu. W celu otrzymania lepszych wyników syntezą za pomocą modelu ARMA, należałoby prawdopodobnie użyć modelu zmiennego w czasie.
+Można zauważyć, iż porównanie syntezy instrumentu dętego, które zostało przedstawione na rysunku \ref{rys:por_synt_flet}, dało zupełnie różne wyniki dla obu metod. Po odpowiednim doborze parametrów, takich jak wzmocnienie sprzężenia pętli zamkniętej oraz wartość opóźnienia, brzmienie uzyskane metodą syntezy falowodowej jest bardziej zbliżone do barwy fletu. W celu otrzymania lepszych wyników syntezą za pomocą modelu ARMA, należałoby prawdopodobnie użyć modelu zmiennego w czasie. Dodatkowo, aby generowany dźwięk był bardziej zbliżony do naturalnego, zidentyfikowany model powinien być wyższego rzędu.
