@@ -118,7 +118,7 @@ Przebieg obwiedni opisanej za pomocą (\ref{equ:fm_belladsr}) pokazano na rysunk
 
 \section{Implementacja syntezy FM}
 W celu nienaruszania struktury pętli głównej programu wykonywanego na DSP, algortym syntezy dla metody FM został dostosowany do istniejącego kodu. Stąd generowanie dźwięku jest realizowane w sposób blokowy. Blok ma rozmiar $N = 1024$ próbek. 
-\subsection{Generowanie przebiegu}
+\subsection{Generowanie przebiegu} \label{sec:fm_gen_przeb}
 W programie wykorzystywane są dwie tablice o $N$ próbkach, które naprzemiennie wysyłane są do przetwornika cyfrowo-analogowego. W czasie, gdy jedna z nich jest przetwarzana na sygnał analogowy, druga jest wypełniana nowymi próbkami przebiegu. W celu zachowania ciągłości pomiędzy blokami, wprowadzony został licznik bloków $k$, który odpowiada za odpowiednie przesuniecię w fazie generowanych sygnałów. Za generowanie pojedynczego tonu zmodulowanego częstotliwościowo odpowiada kod:
 \begin{equation} \label{equ:fm_wzor2}
 \text{waveform[i]} = \text{sinf}(2\pi f_c(i+kN)\frac{1}{F_s} + \beta \text{sinf}(2 \pi f_m(i+kN)\frac{1}{F_s}))
