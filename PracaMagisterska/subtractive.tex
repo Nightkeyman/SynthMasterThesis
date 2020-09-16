@@ -74,7 +74,12 @@ Analogicznie, dla przypadku dyskretnego:
 \begin{equation} \label{equ:sub_splot_twierdzenie_dyskretne}
 \mathcal{F}\{y[n]\} = \mathcal{F}\{h[n]*x[n]\} = H(k) X(k).
 \end{equation}
-Oznacza to, że równoważnym do działania opisanego w \ref{equ:sub_splot_dyskretny} jest:
+\begin{tabular}{ l l l l}
+	gdzie: & $ H(k)$ & - &  dyskretna transformata Fouriera odpowiedzi impulsowej filtru,\\
+	&	$X(k)$ & - &  dyskretna transformata Fouriera filtrowanego sygnału.\\
+	
+\end{tabular} \\ \\
+Oznacza to, że równoważnym do działania opisanego w (\ref{equ:sub_splot_dyskretny}) jest:
 \begin{equation} \label{equ:sub_splot_dyskretny2}
 y[n] = \mathcal{F}^{-1}\{ H(k) X(k)\} 
 \end{equation}
@@ -88,9 +93,9 @@ Próbki sygnału są syntezowane w sposób blokowy. Blok danych składa się z $
 \subsection{Generowanie przebiegu}
 W dwóch tablicach o $N$ elementach przechowywane są kolejne próbki sygnału podstawowego, czyli sygnału bogatego w wyższe składowe harmoniczne. 
 %Po dokonaniu filtracji i przesłaniu danych jednej z tablic do przetwornika cyfrowo-analogowego, do przetwornika trafiają próbki z drugiej tablicy. 
-Dane przesyłane są na przemian z jednej tablicy bądź drugiej do przetwornika...
+Dane są przesyłane do przetwornika DAC na przemian z jednej lub drugiej tablicy.
 %POPRAWIĆ
-W tym czasie w chwilowo nieużywanej tablicy należy wygenerować kolejne 1024 próbek sygnału. Trzeba przy tym pamiętać o odpowiednim przesunięciu fazowym, tak aby zachować ciągłość pomiędzy kolejnymi blokami przesyłanymi do przetwornika. Równanie \ref{equ:sub_1} opisuje sposób generowania przebiegu prostokątnego.
+W tym czasie w chwilowo nieużywanej tablicy należy wygenerować kolejne 1024 próbek sygnału. Trzeba przy tym pamiętać o odpowiednim przesunięciu fazowym, tak aby zachować ciągłość pomiędzy kolejnymi blokami przesyłanymi do przetwornika. Równanie (\ref{equ:sub_1}) opisuje sposób generowania przebiegu prostokątnego.
 
 	\iffalse
 	\begin{equation} \label{equ:sub_1}
@@ -102,11 +107,11 @@ W tym czasie w chwilowo nieużywanej tablicy należy wygenerować kolejne 1024 p
 	\end{equation}
 	\fi
 \begin{equation} \label{equ:sub_1}
-waveform[i]=sgn(sin(2\pi f\frac{k+i}{F_s}))
+\text{waveform[i]}=sgn(sin(2\pi f\frac{k+i}{F_s}))
 %zmienic formatowanie waveform[i] na jakies sanserif(????) i bold
 \end{equation}
 \begin{tabular}{ l l l l}
-	gdzie: & $waveform$ &  - & tablica zmiennych typu float, \\
+	gdzie: & waveform &  - & tablica zmiennych typu float, \\
 	&	$f$ & - &  pożądana częstotliwość generowanego przebiegu, \\
 	&	$F_s$ & - & częstotliwość próbkowania,\\
 	&	$i$ & - &  licznik iteracji, $i$ = 1, 2, 3, ..., N,\\
@@ -126,7 +131,7 @@ Na rysunku \ref{rys:sub_waveform_blocks} pokazano dwie kolejne ramki próbek wyg
 \end{figure}
 
 \subsection{Efekt Gibbsa}
-Generowanie sygnału podstawowego opisane powyżej jest mało kosztowne obliczeniowo. W wyniku otrzymuje się wizualnie doskonały przebieg prostokątny. Jednak jego aproksymacja za pomocą skończonej liczby składowych sinusoidalnych jest niemożliwa. Oznacza to, że jego widmo nie będzie składało się tylko i wyłącznie ze składowych o częstotliwości przebiegu podstawowego i jej nieparzystych wielokrotności. 
+Generowanie sygnału podstawowego opisane powyżej jest mało kosztowne obliczeniowo. W wyniku otrzymuje się wizualnie doskonały przebieg prostokątny. Jednak jego aproksymacja za pomocą skończonej liczby składowych sinusoidalnych jest niemożliwa. Oznacza to, że jego widmo nie będzie składało się tylko i wyłącznie ze składowych o częstotliwości przebiegu podstawowego i jej nieparzystych wielokrotności. Wynika to z braku spełnienia twierdzenia o próbkowaniu. 
 %Powiedzieć, że tu nie jest spełnione twierdzenie o próbkowaniu
 W widmie takiego sygnału pojawią się dodatkowe składowe w całym zakresie częstotliwości. Zjawisko to zostało przedstawione na rysunku \ref{rys:sub_gibbs1}.
 \begin{figure}[H]
@@ -139,7 +144,7 @@ W widmie takiego sygnału pojawią się dodatkowe składowe w całym zakresie cz
 
 W celu wygenerowania sygnału prostokątnego, w którego widmie nie pojawiają się niechciane składowe, można wykorzystać wzór na aproksymację szeregiem Fouriera tego przebiegu:
 \begin{equation} \label{equ:sub_gibbs}
-waveform[i] = \sum_{p=1}^{P}\frac{1}{2p-1}sin(2\pi f(2p-1)  \frac{i}{F_s}).
+\text{waveform[i]} = \sum_{p=1}^{P}\frac{1}{2p-1}sin(2\pi f(2p-1)  \frac{i}{F_s}).
 \end{equation}
 Wartość $P$ zależy od częstotliwości generowanego sygnału i opisuje ją zależność 
 \begin{equation} \label{equ:sub_gibbs2}
@@ -168,15 +173,15 @@ Metoda generowania sygnałów przez aproksymację szeregiem Fouriera pozwala wye
 \subsection{DFT i filtracja sygnału}
 Na podstawie wygenerowanych próbek przebiegu oblicza się DFT za pomocą algorytmu FFT. W wyniku otrzymuje się $N$ liczb zespolonych. Przechowywane są one w tablicy o rozmiarze $2N$ w taki sposób, że każdy element o indeksie parzystym to część rzeczywista próbki, a sąsiadujący z nią element o indeksie nieparzystym to część urojona tej próbki. Filtracja dokonywana jest poprzez wyzerowanie elementów o odpowiednich indeksach. Na przykład filtracja dolnoprzepustowa z częstotliwością graniczną o wartości 1400 Hz dokonywana jest według poniższego wzoru:
 \begin{equation} \label{equ:sub_3}
-waveform_{fft}[i]=\left \{\begin{array}{ r l }
+\text{waveform}_{\text{fft}}\text{[i]}=\left \{\begin{array}{ r l }
 0, & \quad  \text{dla } N - f_g \leqslant \frac{i}{2} \leqslant N + f_g \\
-waveform_{fft}[i], & \quad \text{w pozostałych przypadkach } 
+\text{waveform}_{\text{fft}}\text{[i]}, & \quad \text{w pozostałych przypadkach } 
 
 \end{array}
 \right.
 \end{equation}
 \begin{tabular}{ l l l l}
-	gdzie: & $waveform_{fft}$ &  - & próbki transformaty Fouriera sygnału, \\
+	gdzie: & $\text{waveform}_{\text{fft}}$ &  - & próbki transformaty Fouriera sygnału, \\
 	&	$freq$ & - &  częstotliwość przeliczona na indeksy w tablicy, $freq = N - 2 \frac{1400N}{Fs} - 1$, \\
 	&	$F_s$ & - & częstotliwość próbkowania,\\
 	&	$i$ & - &  indeks, $i$ = 1, 2, 3, ..., 2N.\\
@@ -185,8 +190,8 @@ waveform_{fft}[i], & \quad \text{w pozostałych przypadkach }
 Efekt tego typu filtracji można zobaczyć na trzecim wykresie na \ref{rys:sub_wykres1}. W analogiczny sposób dokonuje się pozostałych filtracji: górnoprzepustowej, pasmo-przepustowej i pasmo-zaporowej.
 
 \subsection{Zakładkowanie bloków danych}
-Samo przesuwanie w fazie generowanych sygnałów opisanych w \ref{equ:sub_2} nie rozwiązuje wszystkich problemów. Jak widać na ostatnim wykresie na \ref{rys:sub_wykres1}, uzyskany sygnał na końcu ma niespodziewany przebieg. Po połączeniu następujących po sobie bloków próbek, otrzyma się nieciągłość pokazaną na rysunku \ref{rys:sub_zakladkowania_brak}.
-%Dodać strzałkę na punkt na rysunku o który chodzi
+Samo przesuwanie w fazie generowanych sygnałów opisane przez (\ref{equ:sub_2}) nie rozwiązuje wszystkich problemów. Jak widać na ostatnim wykresie na \ref{rys:sub_wykres1}, uzyskany sygnał na końcu ma niespodziewany przebieg. Po połączeniu następujących po sobie bloków próbek, otrzyma się nieciągłość pokazaną na rysunku \ref{rys:sub_zakladkowania_brak}.
+
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=12cm]{grafiki/sub_zakladkowania_brak}
