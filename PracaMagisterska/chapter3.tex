@@ -216,11 +216,11 @@ do odwrotnego przekształcenia DFT.
 Jednym z elementów projektowania układów cyfrowego przetwarzania sygnałów jest odpowiednie dobranie ilości próbek do pojedynczej transformacji DFT. W związku z użyciem algorytmu FFT typu radix-2, liczba próbek musi być potęgą dwójki. Powiązanie autorskiej pracy z dziedziną syntezy dźwięku wymaga również wysokiej dokładności w dziedzinie częstotliwości, aby móc tworzyć tony z dużą dokładnością. Miarą dokładności jest rozdzielczość częstotliwości (ang. frequency resolution), która określana jest wzorem:
 
 \begin{equation} \label{equ:fft_resol}
-\Delta R = \frac{f_{s}}{N_{fft}}
+\Delta R = \frac{F_{s}}{N_{fft}}
 \end{equation}
 \begin{tabular}{ l l l l}
 	gdzie: 	&	$\Delta R$ & - &  rozdzielczość częstotliwości, \\
-	&	$f_{s}$ & - &  częstotliwość próbkowania, \\
+	&	$F_{s}$ & - &  częstotliwość próbkowania, \\
 	&   $N_{fft}$ &  - & liczba punktów transformacji DFT. \\
 \end{tabular}
 

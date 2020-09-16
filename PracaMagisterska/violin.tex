@@ -8,14 +8,14 @@ W odniesieniu do syntezy dźwięku, modelowanie fizyczne polega na opisaniu zale
 	\item transmitancja.
 \end{itemize}
 
-W niniejszym rozdziale opisano działanie syntezy falowodowej, która miała bardzo duże znaczenie w rozwoju modelowania fizycznego instrumentów. W kolejnych podrodrozdziałach przedstawiono syntezę skrzypiec oraz fletu na podstawie schematów falowodowych. Opisano również implementację tej metody na procesorze DSP.
+W niniejszym rozdziale opisano działanie syntezy falowodowej, która miała bardzo duże znaczenie w rozwoju modelowania fizycznego instrumentów. Jest to zarazem jedyna z metod modelowania fizycznego, która jest implementowana w urządzeniach komercyjnych, takich producentów jak Yamaha czy Korg. W kolejnych podrozdziałach przedstawiono syntezę dźwięku skrzypiec oraz fletu na podstawie schematów falowodowych. Opisano również implementację tej metody na procesorze DSP.
 
 
 \section{Synteza falowodowa}
-W instrumentach muzycznych w wydawaniu dźwięków biorą udział fale bieżące. Wykorzystując ich fizyczny opis, można zasymulować ich działanie. Na tej zasadzie działa metoda cyfrowych falowodów (ang. digital waveguide). Pozwala ona na symulowanie  rozchodzenia się fal bieżących w elementach instrumentów takich jak struna gitary czy tuba instrumentu dętego. Metoda ta została zaproponowana przez Juliusa O. Smitha z Uniwersytetu Stanfordzkiego w 1973 roku. Od tego czasu, metoda cyfrowych falowodów służy do syntezy brzmień takich instrumentów jak gitary, instrumenty smyczkowe czy instrumenty dęte.
+W instrumentach muzycznych w wydawaniu dźwięków biorą udział fale bieżące. Wykorzystując ich fizyczny opis, można zasymulować ich działanie. Na tej zasadzie działa metoda cyfrowych falowodów (ang. digital waveguide). Pozwala ona na symulowanie  rozchodzenia się fal bieżących w elementach instrumentów takich jak struna gitary czy tuba instrumentu dętego. Metoda ta została zaproponowana przez Juliusa O. Smitha z Uniwersytetu Stanforda w latach 90. Od tego czasu, metoda cyfrowych falowodów służy do syntezy brzmień takich instrumentów jak gitary, instrumenty smyczkowe czy instrumenty dęte.
 
 %\section{Linia opóźniająca}
-Do opisu cyfrowego falowodu potrzebna jest znajmość linii opóźniającej (ang. delay line). Jest to element wprowadzający opóźnienie czasowe pomiędzy próbkami, które do niego wchodzą, a próbkami, które z niego wychodzą. 
+Do opisu cyfrowego falowodu potrzebna jest znajmość pojęcia linii opóźniającej (ang. delay line). Jest to element wprowadzający opóźnienie czasowe pomiędzy próbkami, które do niego wchodzą, a próbkami, które z niego wychodzą. 
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=5cm]{grafiki/linia}
@@ -45,7 +45,7 @@ Cyfrowy falowód to w uproszczeniu dwukierunkowa linia opóźniająca. Implement
 	\label{rys:model_falowod}
 \end{figure}
 \section{Synteza dźwięku skrzypiec}
-Dźwięk skrzypiec można syntezować za pomocą cyfrowych falowodów. Sposób ten został do syntezy skrzypiec wykorzystany przez wspomnianego twórcę cyfrowych falowodów.
+Instrumenty smyczkowe są jedną z grup instrumentów, które modeluje się za pomocą cyfrowych falowodów. W niniejszym podrozdziale przedstawiona zostanie zasada działania syntezy dźwięku skrzypiec z wykorzystaniem właśnie tej metody, implementacja zastosowana w autorskim projekcie oraz uzyskane wyniki.
 
 \subsection{Zasada działania syntezy dźwięku skrzypiec}
 Syntezę dźwięku skrzypiec można podzielić na trzy obszary:
@@ -55,7 +55,7 @@ Syntezę dźwięku skrzypiec można podzielić na trzy obszary:
 	\item symulację rozchodzenia się fal w strunie,
 	\item symulację przechodzenia fal ze strun do korpusu skrzypiec poprzez mostek.
 \end{itemize}
-Kompletny schemat blokowy modelu realizującego syntezę dźwięku instrumentu smyczkowego jest pokazany na rysunku \ref{rys:schematblokowy} pochodzącego z \cite{bowed_3}.
+Kompletny schemat blokowy modelu realizującego syntezę dźwięku instrumentu smyczkowego został pokazany na rysunku \ref{rys:schematblokowy} pochodzącego z \cite{bowed_3}.
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=12cm]{grafiki/schematblokowy}
@@ -76,18 +76,18 @@ W następnych podrodziałach omówione zostaną kolejne obszary syntezy w oparci
 
 
 \subsubsection{Rozchodzenie się fal w strunie}
-Rozchodzenie się fal w strunie jest symulowane przy wykorzystaniu cyfrowego falowodu oraz filtrów, które mają za zadanie odwzorować odbijanie się fal na końcach struny. Fale rozchodzące się w strunie wpływają na prędkość lokalnych odchyleń tej struny. Ta prędkośc wraz z prędkością przesuwania smyczkiem po strunie stanowią podstawę do syntezy dźwięku skrzypiec. 
+Rozchodzenie się fal w strunie jest symulowane z wykorzystaniem cyfrowego falowodu oraz filtrów, które mają za zadanie odwzorować odbijanie się fal na końcach struny. Fale rozchodzące się w strunie wpływają na prędkość lokalnych odchyleń tej struny. Ta prędkość wraz z prędkością przesuwania smyczkiem po strunie stanowią podstawę do syntezy dźwięku skrzypiec. 
 
 
 %\subsubsection{Odbicia na końcach struny}
 Fale w strunie rozchodzą się w obu kierunkach, aż dotrą do końca struny - mostka, prożka lub palca skrzypka. Elementy te, oznaczone na rysunku \ref{rys:skrzypce}, uniemożliwiają strunie ruch, zatem fale się od nich odbijają. Fala, która dociera do jednego z tych elementów, zostaje częściowo odbita, więc zmienia się jej kierunek rozchodzenia. Odbijanie implementowane jest jako przepisywanie danej próbki z końca jednej linii opóźniającej do początku drugiej w obrębie jednego cyfrowego falowodu. Przy takim odbiciu następuje zmiana znaku próbki.
 Dodatkowo, aby uwzględnić straty zależne od częstotliwości zachodzące przy odbiciach oraz samym rozchodzeniu się fali, co najmniej jedno odbicie modeluje się za pomocą filtra dolnoprzepustowego o wzmocnieniu mniejszym od 1. 
-Ponadto do modelowania zjawiska dyspersji można użyć filtru wszechprzepustowego \cite{allpass}.
+Ponadto do modelowania zjawiska dyspersji można użyć filtra wszechprzepustowego \cite{allpass}.
 
 
 \subsubsection{Interakcja pomiędzy smyczkiem a struną}
-Smyczek przesuwany po strunie, na skutek tarcia pomiędzy jego włosiem a struną, wprawia ją w ruch. Dopóki siła tarcia jest większa niż siła sprężystości struny, to struna odchyla się zgodnie z ruchem smyczka. Jednak w momencie kiedy siła sprężystości będzie odpowiednio duża, struna przestanie podążać za smyczkiem i wykona gwałtowny ruch w kierunku przeciwnym do przesuwania smyczka.  Cykl ten się powtarza przez cały czas trwania pojedynczego przejazdu smyczka po strunie.  \\
-Wykres współczynnika tarcia w zależności od różnicy pomiędzy prędkościami struny oraz smyczka pokazano na rysunku \ref{rys:tarcie}. Jako że zmienną kontrolowaną jest prędkość wychylenia struny, wykorzystuje się współczynnik odbicia, którego wykres przedstawiono na rysunku \ref{rys:tarcie}. Przy wartości równej $1$ współczynnika odbicia $\rho$, struna podąża za smyczkiem. Im wartość $\rho$ jest mniejsza, tym większy jest poślizg struny.
+Smyczek przesuwany po strunie, na skutek tarcia pomiędzy jego włosiem a struną, wprawia ją w ruch. Dopóki siła tarcia jest większa niż siła sprężystości struny, to struna odchyla się zgodnie z ruchem smyczka. Jednak w momencie kiedy siła sprężystości będzie odpowiednio duża, struna przestanie podążać za smyczkiem i wykona gwałtowny ruch w kierunku przeciwnym do przesuwania smyczka.  Cykl ten powtarza się przez cały czas trwania pojedynczego przejazdu smyczka po strunie.  \\
+Wykres współczynnika tarcia w zależności od różnicy pomiędzy prędkościami struny oraz smyczka pokazano na rysunku \ref{rys:tarcie}. Jako że zmienną kontrolowaną jest prędkość wychylenia struny, wykorzystuje się współczynnik odbicia, którego wykres przedstawiono na rysunku \ref{rys:tarcie}. Przy wartości współczynnika odbicia $\rho$ równej $1$, struna podąża za smyczkiem. Im wartość $\rho$ jest mniejsza, tym większy jest poślizg struny.
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=10cm]{grafiki/tarcie2}
@@ -117,7 +117,7 @@ v_{diff}[t] = v_b[t] - v_{l}^{+} - v_{r}^{+}
 	&	$v_{l}^{+}$ & - & prędkość struny przychodząca wraz z falą z lewej strony,\\
 	&	$v_{r}^{+}$ & - &  prędkość struny przychodząca wraz z falą z prawej strony.\\
 \end{tabular} \\ \\
-I dalej wyznaczone zostają prędkości struny, które rozejdą się od smyczka odpowiednio w lewą i prawą stronę:
+Dalej wyznaczone zostają prędkości struny, które rozejdą się od smyczka odpowiednio w lewą i prawą stronę:
 \begin{equation} \label{equ:wzor2}
 v_{l}^{-} = v_r^{+} +  \rho(v_{diff}[t])v_{diff}[t]
 \end{equation}
@@ -130,7 +130,7 @@ v_{r}^{-} = v_l^{+} +  \rho(v_{diff}[t])v_{diff}[t]
 \end{tabular}
 \vspace{6pt}
 
-W wyniku pobudzania smyczkiem, struna wpada w charakterystyczny ruch, który jest nazywany ruchem Helmholtza. Jak pokazano w \cite{bowed_2}, próbkowanie prędkości wychyleń struny - będącej w ruchu Helmholtza - w danym punkcie jej długości, daje sygnał zbliżony do przebiegu piłokształtnego. Zgadza się to z wcześniej opisanym zjawiskiem cyklicznego podążania struny wraz ze smyczkiem oraz ślizgania się po nim.
+W wyniku pobudzania smyczkiem, struna wpada w charakterystyczny ruch, który jest nazywany ruchem Helmholtza. Jak pokazano w \cite{bowed_2}, próbkowanie prędkości wychyleń struny - będącej w ruchu Helmholtza - w danym punkcie jej długości, daje sygnał zbliżony do przebiegu piłokształtnego. Zgadza się to z wcześniej opisanym zjawiskiem cyklicznego podążania struny za smyczkiem oraz ślizgania się po nim.
 
 \subsubsection{Przechodzenie fal ze strun do korpusu skrzypiec}\label{sec:model_violinarma}
 
@@ -146,7 +146,7 @@ W \cite{bowed_smith} do zbadania transmitancji mostek-korpus, zaproponowano meto
 	\label{rys:pomiary}
 \end{figure}
 
-Spróbowano rozmaitych sposobów pobudzania struny: prostego smyczkowania, techniki glissando, ze strunami owiniętymi tkaniną (próbowano uchwycić szum, syczenie smyczka lekko przesuwanego po strunie w pobliżu mostka), uderzania przetwornika śrubokrętem oraz szarpania strun kostką gitarową w pobliżu mostka. Najlepsze wyniki uzyskano dla tego ostatniego sposobu.
+Autorzy tej pracy spróbowali rozmaitych sposobów pobudzania struny: prostego smyczkowania, techniki glissando, ze strunami owiniętymi tkaniną (próbowano uchwycić szum, syczenie smyczka lekko przesuwanego po strunie w pobliżu mostka), uderzania przetwornika śrubokrętem oraz szarpania strun kostką gitarową w pobliżu mostka. Najlepsze wyniki uzyskano dla tego ostatniego sposobu.
 
 Uzyskane w ten sposób widmo częstotliwościowe poddano odpowiedniej obróbce. Między innymi zmniejszono częstotliwość próbkowania oraz wygładzono przebieg widma. Następnie próbowano dopasować do niego proces autoregresyjny używając różnych metod identyfikacji. Ostatecznie najlepszy wynik uzyskano stosując normę Hankela, a ostateczne dopasowanie charakterystyk pokazano na rysunku \ref{rys:hankel}.
 
@@ -165,7 +165,7 @@ W \cite{bowed_2} pomiarów dokonano nieco inaczej. W opisanej tam metodzie, wyko
 Wszystkie te działania zmierzały do zidentyfikowania modelu autoregresyjnego, który odwzorowuje szczyty rezonansowe pomierzonego widma częstotliwościowego. Model ten jest pobudzany sygnałem uzyskanym z próbkowania prędkości struny. Uzyskane w ten sposób wyjście to dźwięk skrzypiec.
 
 \subsection{Implementacja syntezy dźwięku skrzypiec}
-Schemat z rysunku \ref{rys:schematblokowy} na potrzeby implementacji można nieco uprościć. Dwie linie opóźniające rozdzielone jedynie inwerterem można połączyć w jedną, której znak jest zmieniany na końcu. Tak samo można zrobić z dwoma liniami opóźniającymi rozdzielonymi filtrem dolnoprzepustowym. Takie działania nie mają wpływu na efekt końcowy, a dzięki nim do zaimplementowania są tylko dwie linie opóźniające, zamiast czterech. Ponadto można zrezygnować z wpływu siły nacisku smyczka na symulację. Uproszczony schemat blokowy został pokazany na rysunku \ref{rys:model_violin_schemat}.
+Schemat z rysunku \ref{rys:schematblokowy} na potrzeby implementacji można nieco uprościć. Dwie linie opóźniające rozdzielone jedynie inwerterem można połączyć w jedną, której znak jest zmieniany na końcu. Tak samo można zrobić z dwoma liniami opóźniającymi rozdzielonymi filtrem dolnoprzepustowym. Takie działania nie mają wpływu na efekt końcowy, a dzięki nim zaimplementować trzeba tylko dwie linie opóźniające, zamiast czterech. Ponadto można zrezygnować z wpływu siły nacisku smyczka na symulację. Uproszczony schemat blokowy został pokazany na rysunku \ref{rys:model_violin_schemat}.
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=12cm]{grafiki/model_violin_schemat}
@@ -179,8 +179,16 @@ L_{DL} = \frac{F_s}{F_{lowest}}
 \end{equation}
 \begin{tabular}{ l l l l}
 	gdzie: & $F_{lowest}$ &  - & najniższa generowana częstotliwość. \\
-\end{tabular}
-Z linią opóźniającą skojarzone są zmienne przechowujące indeksy początkowe i końcowe linii: całkowite inPoint i outPoint oraz zmiennoprzecinkowy outPointer. W każdej chwili czasu wskaźniki te są inkrementowane (przykład dla neckDelay):
+\end{tabular}\\
+Z linią opóźniającą skojarzone są zmienne przechowujące indeksy początkowe i końcowe linii: całkowite inPoint i outPoint oraz zmiennoprzecinkowy outPointer. 
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=10cm]{grafiki/model_violin_wskazniki}
+	\captionsetup{justification=centering}
+	\caption{Schemat linii opóźniającej i jej wskaźników.}
+	\label{rys:model_violin_wskazniki}
+\end{figure}
+Na rysunku \ref{rys:model_violin_wskazniki} przedstawiono schemat linii opóźniającej i opisane wskaźniki. W każdej chwili czasu wskaźniki te są inkrementowane (przykład dla neckDelay):
 \begin{equation} \label{equ:model_wskazniki}
 \text{neck\_inPoint} \gets \left \{ 
 \begin{array}{ l l}

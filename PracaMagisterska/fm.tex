@@ -5,7 +5,7 @@ Modulacja częstotliwości polega na zmienianiu częstotliwości chwilowej przeb
 \subsection{Modulacja FM w dziedzinie czasu}
 Przykładem sygnału modulującego może być sinusoida. Przebieg zmodulowany częstotliwościowo, z pominięciem fazy sygnału modulującego \cite{oland}, opisuje wyrażenie:
 \begin{equation} \label{equ:fm_wzor1}
-S(t)= sin(2 \pi f_c t + \beta sin(2 \pi f_m t))
+S(t)= \text{sin}(2 \pi f_c t + \beta \text{sin}(2 \pi f_m t))
 \end{equation}
 \begin{tabular}{ l l l l}
 	gdzie: & $t$ &  - & czas w sekundach, \\
@@ -55,7 +55,7 @@ Moduł funkcji Bessela rzędu 0 w punkcie $\beta$ jest równy modułowi prążka
 \subsection{Rozbudowana modulacja FM}
 Zastosowanie modulacji FM w syntezie dźwięku ma doprowadzić do uzyskania efektów dźwiękowych. Zatem nic nie stoi na przeszkodzie, aby tę modulację rozbudowywać wedle własnego uznania. Można na przykład poddać modulacji przebieg modulujący. Niech sygnał modulujący (SM1) będzie modulowany przez SM2 (sygnał modulujący 2). Na rysunku \ref{rys:fm_modmod} przedstawiono wykresy sygnału nośnego, SM1, SM2 oraz sygnału końcowego, który jest opisany przez wzór:
 \begin{equation} \label{equ:fm_modmod}
-S(t)= sin(2 \pi f_c t + \beta sin(2 \pi f_m t + \gamma sin(2 \pi f_{m2} t)))
+S(t)= \text{sin}(2 \pi f_c t + \beta \text{sin}(2 \pi f_m t + \gamma \text{sin}(2 \pi f_{m2} t)))
 \end{equation}
 \begin{tabular}{ l l l l}
 	gdzie: & $t$ &  - & czas w sekundach, \\
@@ -160,7 +160,7 @@ Zastosowane rozwiązanie pozwala wygenerować do 6 tonów jednocześnie.
 W projekcie autorskim, w przypadku syntezy FM, użytkownik może poprzez interfejs użytkownika określać parametry modulacji: amplitudę sygnału modulującego oraz jego częstotliwość.
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=12cm]{grafiki/sub_interface}
+	\includegraphics[width=12cm]{grafiki/fm_interface}
 	\captionsetup{justification=centering}
 	\caption{Interfejs użytkownika dla modulacji częstotliwości.}
 	\label{rys:fm_interface}
