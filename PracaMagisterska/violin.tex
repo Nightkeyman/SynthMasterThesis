@@ -1,4 +1,17 @@
 \chapter{Modelowanie fizyczne}
+W odniesieniu do syntezy dźwięku, modelowanie fizyczne polega na opisaniu zależności fizycznych występujących w trakcie gry na danym instrumencie. Niektóre z nich skupiają się na własnościach materiałowych, inne opisują interakcję fizyczną instrumentalisty z instrumentem. Generowanie fali dźwiękowej z takiego modelu opiera się na równaniach matematycznych oraz odpowiednich algorytmach pozwalających na połączenie wszystkich zależności. Istnieją różne postacie opisów modeli fizycznych instrumentów:
+\begin{itemize}
+	\item równania różniczkowe,
+	\item synteza falowodowa,
+	\item modelowanie reakcji masy,
+	\item przestrzeń stanów,
+	\item transmitancja.
+\end{itemize}
+
+W niniejszym rozdziale opisano działanie syntezy falowodowej, która miała bardzo duże znaczenie w rozwoju modelowania fizycznego instrumentów. W kolejnych podrodrozdziałach przedstawiono syntezę skrzypiec oraz fletu na podstawie schematów falowodowych. Opisano również implementację tej metody na procesorze DSP.
+
+
+\section{Synteza falowodowa}
 W instrumentach muzycznych w wydawaniu dźwięków biorą udział fale bieżące. Wykorzystując ich fizyczny opis, można zasymulować ich działanie. Na tej zasadzie działa metoda cyfrowych falowodów (ang. digital waveguide). Pozwala ona na symulowanie  rozchodzenia się fal bieżących w elementach instrumentów takich jak struna gitary czy tuba instrumentu dętego. Metoda ta została zaproponowana przez Juliusa O. Smitha z Uniwersytetu Stanfordzkiego w 1973 roku. Od tego czasu, metoda cyfrowych falowodów służy do syntezy brzmień takich instrumentów jak gitary, instrumenty smyczkowe czy instrumenty dęte.
 
 %\section{Linia opóźniająca}
