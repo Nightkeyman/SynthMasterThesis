@@ -29,7 +29,7 @@ H(\omega)=\left \{\begin{array}{ r l }
 \end{equation}
 \begin{tabular}{ l l l l}
 	gdzie: & $\omega$ &  - & pulsacja, \\
-	&	$\omega_{gr}$ & - &  pulsacja graniczna filtru,\\
+	&	$\omega_{gr}$ & - &  pulsacja graniczna filtra,\\
 \end{tabular} \\ \\
 przedstawiono na rysunku \ref{rys:sub_lowpass}. Pulsacja graniczna filtra to taka pulsacja, powyżej której wzmocnienie jest mniejsze niż 3 dB w stosunku do pasma przepustowego. W przypadku idealnym wzmocnienie zmienia się skokowo z 1 na 0 dokładnie na pulsacji granicznej. W przedstawionym przykładzie pulsacja graniczna wynosi około 6283 rad/s, co zgodnie ze wzorem
 \begin{equation} \label{equ:sub_frequency}
@@ -66,7 +66,7 @@ Jedną z własności przekształcenia Fouriera jest to, że operacji splotu w dz
 \end{equation}
 \begin{tabular}{ l l l l}
 	gdzie: & $\mathcal{F}\{y(t)\}$ &  - & transformata Fouriera wyniku splotu, \\
-	&	$ H(\omega)$ & - &  transformata Fouriera odpowiedzi impulsowej filtru,\\
+	&	$ H(\omega)$ & - &  transformata Fouriera odpowiedzi impulsowej filtra,\\
 	&	$X(\omega)$ & - &  transformata Fouriera filtrowanego sygnału.\\
 	
 \end{tabular} \\ \\
@@ -75,7 +75,7 @@ Analogicznie, dla przypadku dyskretnego:
 \mathcal{F}\{y[n]\} = \mathcal{F}\{h[n]*x[n]\} = H(k) X(k).
 \end{equation}
 \begin{tabular}{ l l l l}
-	gdzie: & $ H(k)$ & - &  dyskretna transformata Fouriera odpowiedzi impulsowej filtru,\\
+	gdzie: & $ H(k)$ & - &  dyskretna transformata Fouriera odpowiedzi impulsowej filtra,\\
 	&	$X(k)$ & - &  dyskretna transformata Fouriera filtrowanego sygnału.\\
 	
 \end{tabular} \\ \\
@@ -100,14 +100,14 @@ W tym czasie w chwilowo nieużywanej tablicy należy wygenerować kolejne 1024 p
 	\iffalse
 	\begin{equation} \label{equ:sub_1}
 	waveform[i]=\left \{\begin{array}{ r l }
-	1, & \quad \text{$dla$ } sin(2\pi f\frac{k+i}{F_s}) > 0\\
-	-1, & \quad  \text{$dla$ } sin(2\pi f\frac{k+i}{F_s}) \leqslant 0
+	1, & \quad \text{$dla$ } \text{sin}(2\pi f\frac{k+i}{F_s}) > 0\\
+	-1, & \quad  \text{$dla$ } \text{sin}(2\pi f\frac{k+i}{F_s}) \leqslant 0
 	\end{array}
 	\right.
 	\end{equation}
 	\fi
 \begin{equation} \label{equ:sub_1}
-\text{waveform[i]}=sgn(sin(2\pi f\frac{k+i}{F_s}))
+\text{waveform[i]}=\text{sgn}(\text{sin}(2\pi f\frac{k+i}{F_s}))
 %zmienic formatowanie waveform[i] na jakies sanserif(????) i bold
 \end{equation}
 \begin{tabular}{ l l l l}
@@ -130,7 +130,7 @@ Na rysunku \ref{rys:sub_waveform_blocks} pokazano dwie kolejne ramki próbek wyg
 	\label{rys:sub_waveform_blocks}
 \end{figure}
 
-\subsection{Efekt Gibbsa}
+\subsection{Efekt Gibbsa}\label{sec:gibbs}
 Generowanie sygnału podstawowego opisane powyżej jest mało kosztowne obliczeniowo. W wyniku otrzymuje się wizualnie doskonały przebieg prostokątny. Jednak jego aproksymacja za pomocą skończonej liczby składowych sinusoidalnych jest niemożliwa. Oznacza to, że jego widmo nie będzie składało się tylko i wyłącznie ze składowych o częstotliwości przebiegu podstawowego i jej nieparzystych wielokrotności. Wynika to z braku spełnienia twierdzenia o próbkowaniu. 
 %Powiedzieć, że tu nie jest spełnione twierdzenie o próbkowaniu
 W widmie takiego sygnału pojawią się dodatkowe składowe w całym zakresie częstotliwości. Zjawisko to zostało przedstawione na rysunku \ref{rys:sub_gibbs1}.
@@ -144,7 +144,7 @@ W widmie takiego sygnału pojawią się dodatkowe składowe w całym zakresie cz
 
 W celu wygenerowania sygnału prostokątnego, w którego widmie nie pojawiają się niechciane składowe, można wykorzystać wzór na aproksymację szeregiem Fouriera tego przebiegu:
 \begin{equation} \label{equ:sub_gibbs}
-\text{waveform[i]} = \sum_{p=1}^{P}\frac{1}{2p-1}sin(2\pi f(2p-1)  \frac{i}{F_s}).
+\text{waveform[i]} = \sum_{p=1}^{P}\frac{1}{2p-1}\text{sin}(2\pi f(2p-1)  \frac{i}{F_s}).
 \end{equation}
 Wartość $P$ zależy od częstotliwości generowanego sygnału i opisuje ją zależność 
 \begin{equation} \label{equ:sub_gibbs2}
@@ -182,9 +182,9 @@ Na podstawie wygenerowanych próbek przebiegu oblicza się DFT za pomocą algory
 \end{equation}
 \begin{tabular}{ l l l l}
 	gdzie: & $\text{waveform}_{\text{fft}}$ &  - & próbki transformaty Fouriera sygnału, \\
-	&	$freq$ & - &  częstotliwość przeliczona na indeksy w tablicy, $freq = N - 2 \frac{1400N}{Fs} - 1$, \\
+	&	$f_g$ & - &  częstotliwość przeliczona na indeksy w tablicy, $f_g = N - 2 \frac{1400N}{F_s} - 1$, \\
 	&	$F_s$ & - & częstotliwość próbkowania,\\
-	&	$i$ & - &  indeks, $i$ = 1, 2, 3, ..., 2N.\\
+	&	$i$ & - &  indeks, $i = 1, 2, 3, ..., 2N$.\\
 \end{tabular} \\ \\
 
 Efekt tego typu filtracji można zobaczyć na trzecim wykresie na \ref{rys:sub_wykres1}. W analogiczny sposób dokonuje się pozostałych filtracji: górnoprzepustowej, pasmo-przepustowej i pasmo-zaporowej.
@@ -200,7 +200,7 @@ Samo przesuwanie w fazie generowanych sygnałów opisane przez (\ref{equ:sub_2})
 	\label{rys:sub_zakladkowania_brak}
 \end{figure}
 Rozwiązaniem tego problemu jest zakładkowanie każdych dwóch sąsiednich porcji danych. Proces ten polega na nasunięciu pewnej liczby $m$ początkowych próbek następnego bloku, na $m$ końcowych próbek bloku bieżącego. W miejscach, gdzie ramki są na siebie nałożone, wartość sygnału obliczana jest jako średnia ważona z dwóch nachodzących na siebie elementów. Przy czym suma wag w każdej chwili czasu jest równa 1. Wagi $m$ ostatnich próbek bloku bieżącego maleją do zera, natomiast wagi $m$ pierwszych próbek bloku następnego narastają do jedynki. Najprostszym rozwiązaniem (a zatem efektywnym obliczeniowo) są wagi liniowe. Oznacza to, że wagi dla $m$ ostatnich lub pierwszych próbek bloku odpowiednio: liniowo maleją od 1 do 0 lub liniowo rosną od 0 do 1.
-Nakładane na siebie próbki muszą odpowiadać sygnałowi w tej samej fazie, zatem należy zmodyfikować przesunięcie fazowe opisane przez \ref{equ:sub_2} do postaci:
+Nakładane na siebie próbki muszą odpowiadać sygnałowi w tej samej fazie, zatem należy zmodyfikować przesunięcie fazowe opisane przez (\ref{equ:sub_2}) do postaci:
 \begin{equation} \label{equ:sub_4}
 k \gets k + N - m.
 \end{equation}
@@ -250,7 +250,7 @@ Na rysunku \ref{rys:sub_interface} zaznaczono trzy sekcje wykonanego interfejsu 
 
 W sekcji drugiej znajdują się rodzaje przebiegów podstawowych wykorzystywane w syntezie. W tym samym czasie może być aktywny tylko jeden z nich. Zaznaczenie dowolnego z przebiegów zmienia w programie DSP odpowiednią flagę. Naciskanie klawiszy syntezatora będzie skutkowało generowaniem sygnałów podstawowych o kształcie wybranym za pomocą interfejsu użytkownika.
 
-W trzeciej sekcji dokonuje się wyboru rodzaju filtra oraz suwaki pozwalające na wybór częstotliwości granicznych: dolnej, górnej lub obu jednocześnie - zależnie od wybranego rodzaju filtra. Podobnie jak przy wyborze rodzaju przebiegu podstawowego - tutaj również użytkownik zaznacza jedną z opcji. W zależności od wybranego filtra, odblokowane zostaną odpowiednie suwaki pozwalające zmieniać częstotliwości graniczne. Na przykład, dla filtra dolnoprzepustowego odblokowany zostanie tylko suwak dolny, gdyż to on odpowiada za częstotliwość graniczną górną. Natomiast dla filtru pasmo-przepustowego odblokowane zostaną oba suwaki, a pasmo przepustowe zawierać się będzie pomiędzy wskazaniem suwaka górnego - częstotliwości granicznej dolnej oraz suwaka dolnego - częstotliwości granicznej górnej.
+W trzeciej sekcji dokonuje się wyboru rodzaju filtra oraz suwaki pozwalające na wybór częstotliwości granicznych: dolnej, górnej lub obu jednocześnie - zależnie od wybranego rodzaju filtra. Podobnie jak przy wyborze rodzaju przebiegu podstawowego - tutaj również użytkownik zaznacza jedną z opcji. W zależności od wybranego filtra, odblokowane zostaną odpowiednie suwaki pozwalające zmieniać częstotliwości graniczne. Na przykład, dla filtra dolnoprzepustowego odblokowany zostanie tylko suwak dolny, gdyż to on odpowiada za częstotliwość graniczną górną. Natomiast dla filtra pasmo-przepustowego odblokowane zostaną oba suwaki, a pasmo przepustowe zawierać się będzie pomiędzy wskazaniem suwaka górnego - częstotliwości granicznej dolnej oraz suwaka dolnego - częstotliwości granicznej górnej.
 Zmian częstotliwości można dokonywać na dwa sposoby:
 \begin{itemize}
 	\item za pomocą suwaków. W tym wypadku wartość ustawiona za pomocą suwaka zostanie automatycznie wpisana do pola tekstowego skojarzonego z tym suwakiem.
@@ -258,4 +258,4 @@ Zmian częstotliwości można dokonywać na dwa sposoby:
 \end{itemize}
 
 \section{Wyniki}
-<TODO>
+Zaimplementowana na DSP synteza subtraktywna dała dobre wyniki odsłuchowe. Zastosowany algorytm jest w stanie wygenerować do 12 różnych tonów jednocześnie. Jedynym defektem jest są lekko słyszalne dodatkowe harmoniczne opisane w części \ref{sec:gibbs}. Uzyskanie czystszego brzmienia wiąże się ze zwiększeniem złożności obliczeniowej, a co za tym idzie - zmniejszeniem liczby tonów, które mogą być generowane jednocześnie.

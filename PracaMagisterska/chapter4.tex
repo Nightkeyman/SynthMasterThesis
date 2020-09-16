@@ -14,7 +14,7 @@ Synteza addytywna jest zbliżona pod niektórymi względami do analizy częstotl
 Dźwięk powstały w wyniku użycia syntezy addytywnej w formie harmonicznej można zapisać w postaci:
 %https://en.wikipedia.org/wiki/Additive_synthesis#:~:text=Additive%20synthesis%20is%20a%20sound,or%20inharmonic%20partials%20or%20overtones.
 \begin{equation} \label{equ:addit_time_harm}
-y(t) = \sum_{k=1}^{K} a_{k}sin(2\pi kf_{0}t + \phi_{k})  \\  
+y(t) = \sum_{k=1}^{K} a_{k}\text{sin}(2\pi kf_{0}t + \phi_{k})  \\  
 \end{equation}
 \begin{tabular}{ l l l l}
 	gdzie: & $y(t)$ &  - & wyjście addytywnej syntezy dźwięku, \\
@@ -31,17 +31,17 @@ Każda składowa dźwięku uzyskanego z takiej postaci syntezy addytywnej jest w
 
 %https://en.wikipedia.org/wiki/Square_wave
 \begin{equation} \label{equ:addit_sqr}
-y_{Square}(t) = \sum_{k=1}^{K} \frac{1}{2k-1} sin(2\pi (2k-1)f_{0}t) \\
+y_{Square}(t) = \sum_{k=1}^{K} \frac{1}{2k-1} \text{sin}(2\pi (2k-1)f_{0}t) \\
 \end{equation}
 
 %https://en.wikipedia.org/wiki/Triangle_wave
 \begin{equation} \label{equ:addit_trng}
-y_{Triangle}(t) = \sum_{k=1}^{K} \frac{(-1)^k}{(2k-1)^2} sin(2\pi (2k-1)f_{0}t)  \\
+y_{Triangle}(t) = \sum_{k=1}^{K} \frac{(-1)^k}{(2k-1)^2} \text{sin}(2\pi (2k-1)f_{0}t)  \\
 \end{equation}
 
 %https://en.wikipedia.org/wiki/Sawtooth_wave
 \begin{equation} \label{equ:addit_sawth}
-y_{Sawtooth}(t) = \sum_{k=1}^{K} \frac{(-1)^k}{k} sin(2\pi kf_{0}t) \\
+y_{Sawtooth}(t) = \sum_{k=1}^{K} \frac{(-1)^k}{k} \text{sin}(2\pi kf_{0}t) \\
 \end{equation}
 % O tym że na tym polegały organy Hammonda
 
@@ -60,7 +60,7 @@ Na rysunku \ref{rys:add_sawtooth} przedstawiono wygenerowany przebieg piłokszta
 \subsection{Postać nieharmoniczna} \label{pos_nieharm}
 Dobieranie składowych dźwięku w syntezie addytywnej nie musi zależeć od konkretnej częstotliwości podstawowej. Niektóre instrumenty wydają dźwięk składający się ze składowych harmonicznych oraz nieharmonicznych (czyli takich, które nie są całkowitą wielokrotnością pewnej częstotliwości $f_{0}$). Zsyntezowany dźwięk w takiej postaci można opisać wzorem:
 \begin{equation} \label{equ:addit_time_nieharm}
-y(t) = \sum_{k=1}^{K} a_{k}sin(2\pi f_{k}t + \phi_{k})  \\  
+y(t) = \sum_{k=1}^{K} a_{k}\text{sin}(2\pi f_{k}t + \phi_{k})  \\  
 \end{equation}
 \begin{tabular}{ l l l l}
 	gdzie: 	&	$f_{k}$ & - &  częstotliwość składowej sygnału k,\\
@@ -75,7 +75,7 @@ Wzory matematyczne (\ref{equ:addit_time_harm}) i (\ref{equ:addit_time_nieharm}) 
 Składowe dźwięku mogą jednak zmieniać się w czasie \cite{add_time_varying}. Zmiany te mogą dotyczyć ich amplitudy, jak i częstotliwości.
 Taką postać syntezy addytywnej zapisuje się:
 \begin{equation} \label{equ:addit_time_zmienne}
-y(t) = \sum_{k=1}^{K} a_{k}(t)sin(2\pi f_{k}(t)t + \phi_{k})  \\  
+y(t) = \sum_{k=1}^{K} a_{k}(t)\text{sin}(2\pi f_{k}(t)t + \phi_{k})  \\  
 \end{equation}
 \begin{tabular}{ l l l l}
 	gdzie: & $a_{k}(t)$ &  - & zmienna w czasie amplituda składowej k, \\
