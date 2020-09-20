@@ -146,6 +146,10 @@ float stringfilter_gain = 0.95;
 float stringfilter_b;
 float stringfilter_a;
 float stringfilter;
+float ARMAfilter[13] = {0,0,0,0,0,0,0,0,0,0,0,0,0};
+float ARMAfilter_out[13] = {0,0,0,0,0,0,0,0,0,0,0,0,0};
+float ARMAfilter_A[13] = {1.0000,   -9.7259,   42.9416, -113.1346,  196.1915, -231.9115,  185.0167,  -91.6156,   18.1100,    8.6574,   -7.5451,    2.2856,   -0.2700};
+float ARMAfilter_B[13] = {1.0000,   -7.8237,   25.5972,  -42.0507,   24.4400,   37.0621,  -96.1833,  100.6237,  -58.5431,   17.2920,   -0.4749,   -1.1823,   0.2430};
 
 // Static waveform arrays
 float sinusek[N];
@@ -726,6 +730,42 @@ int main( int argc, char *argv[] ) {
 										neck_outPoint = 0;
 									neck_doNextOut = 1;
 								}
+
+								ARMAfilter[12] = ARMAfilter[11];
+								ARMAfilter[11] = ARMAfilter[10];
+								ARMAfilter[10] = ARMAfilter[9];
+								ARMAfilter[9] = ARMAfilter[8];
+								ARMAfilter[8] = ARMAfilter[7];
+								ARMAfilter[7] = ARMAfilter[6];
+								ARMAfilter[6] = ARMAfilter[5];
+								ARMAfilter[5] = ARMAfilter[4];
+								ARMAfilter[4] = ARMAfilter[3];
+								ARMAfilter[3] = ARMAfilter[2];
+								ARMAfilter[2] = ARMAfilter[1];
+								ARMAfilter[1] = ARMAfilter[0];
+								ARMAfilter[0] = bridgeDelay[0];
+
+								v[j*2] = ARMAfilter_B[0]*ARMAfilter[0];
+								int h = 0;
+								for (h = 1; h < 13; h++){
+									v[j*2] += ARMAfilter_B[h]*ARMAfilter[h] - ARMAfilter_A[h]*ARMAfilter_out[h-1];
+
+								}
+
+								ARMAfilter_out[12] = ARMAfilter_out[11];
+								ARMAfilter_out[11] = ARMAfilter_out[10];
+								ARMAfilter_out[10] = ARMAfilter_out[9];
+								ARMAfilter_out[9] = ARMAfilter_out[8];
+								ARMAfilter_out[8] = ARMAfilter_out[7];
+								ARMAfilter_out[7] = ARMAfilter_out[6];
+								ARMAfilter_out[6] = ARMAfilter_out[5];
+								ARMAfilter_out[5] = ARMAfilter_out[4];
+								ARMAfilter_out[4] = ARMAfilter_out[3];
+								ARMAfilter_out[3] = ARMAfilter_out[2];
+								ARMAfilter_out[2] = ARMAfilter_out[1];
+								ARMAfilter_out[1] = ARMAfilter_out[0];
+								ARMAfilter_out[0] = v[j*2];
+
 								v[j*2] = bridgeDelay[0];
 							}
 							clear_v = 0;
