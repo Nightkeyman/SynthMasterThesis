@@ -55,7 +55,7 @@ Syntezę dźwięku skrzypiec można podzielić na trzy zakresy:
 	\item symulację rozchodzenia się fal w strunie,
 	\item symulację przechodzenia fal ze strun do korpusu skrzypiec poprzez mostek.
 \end{itemize}
-Kompletny schemat blokowy modelu realizującego syntezę dźwięku instrumentu smyczkowego został pokazany na rysunku \ref{rys:schematblokowy} pochodzącego z \cite{bowed_3}.
+Kompletny schemat blokowy modelu realizującego syntezę dźwięku instrumentu smyczkowego został pokazany na rysunku \ref{rys:schematblokowy} pochodzącym z \cite{bowed_3}.
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=12cm]{grafiki/schematblokowy}
@@ -95,7 +95,7 @@ Do modelowania tego zjawiska wykorzystuje się współczynnik odbicia $\rho$, kt
 	\caption{Współczynnik odbicia $\rho(\Delta v)$.}
 	\label{rys:tarcie}
 \end{figure}
-Wartości współczynnika odbicia $\rho$ są wyliczane raz według wzoru
+Wartości współczynnika odbicia $\rho$ są wyliczane raz, według wzoru
 \begin{equation} \label{equ:model_wsp_odbicia}
 \rho(\Delta v) = \left \{\begin{array}{ r l }
 0.98, & \quad \text{dla } (|3 (\Delta v + 0.001) | + 0.75)^{-4} > 0.98\\
@@ -134,7 +134,7 @@ W wyniku pobudzania smyczkiem, struna wpada w charakterystyczny ruch, który jes
 
 \subsubsection{Przechodzenie fal ze strun do korpusu skrzypiec}\label{sec:model_violinarma}
 
-Ostatnim etapem jest przenoszenie się fal akustycznych ze strun do korpusu skrzypiec, które zachodzi w mostku. Później korpus drgając wprowadza te fale do powietrza i tak powstaje słyszalny dźwięk. W tym celu bada się funkcję przenoszenia pomiędzy mostkiem a powietrzem. 
+Ostatnim etapem jest przenoszenie się fal akustycznych ze strun do korpusu skrzypiec, które zachodzi w mostku. Później drgający korpus wprowadza te fale do powietrza i tak powstaje słyszalny dźwięk. W tym celu bada się funkcję przenoszenia pomiędzy mostkiem a powietrzem. 
 
 W \cite{bowed_smith} do zbadania transmitancji mostek-korpus, zaproponowano metodę, w której sygnałem wyjściowym jest dźwięk w powietrzu, a sygnałem wejściowym jest siła działająca na mostek. Przyjęcie siły jako sygnału na wejściu tego układu wynika z tego, że mostek jest nieruchomym mocowaniem struny. Zatem prędkość mostka jest znikoma. Na mostek unieruchamiający wibrującą strunę działa siła wynikająca z prędkości odchyleń tej struny. W przytoczonej pracy, do pomiaru dźwięku został wykorzystany mikrofon, umieszczony w odległości około 30cm (jedna stopa) od czoła instrumentu, oraz przetwornik piezoelektryczny, przyklejony żywicą epoksydową do mostka, co pokazano na rysunku \ref{rys:pomiary}. Aby uzyskać jak najlepszy stosunek sygnału do szumu sygnału wyjściowego, mikrofon nie mógł znajdować się zbyt daleko oraz same pomiary powinny być przeprowadzane w komorze bezechowej.
 
@@ -146,7 +146,7 @@ W \cite{bowed_smith} do zbadania transmitancji mostek-korpus, zaproponowano meto
 	\label{rys:pomiary}
 \end{figure}
 
-Autor \cite{bowed_smith} dokonał prób z rozmaitymi sposobami pobudzania struny: prostego smyczkowania, techniki glissando, ze strunami owiniętymi tkaniną (próbowano uchwycić szum, syczenie smyczka lekko przesuwanego po strunie w pobliżu mostka), uderzania przetwornika śrubokrętem oraz szarpania strun kostką gitarową w pobliżu mostka. Najlepsze wyniki otrzymano dla tego ostatniego sposobu.
+Autor \cite{bowed_smith} dokonał prób z rozmaitymi sposobami pobudzania struny: prostego smyczkowania, techniki glissando, ze strunami owiniętymi tkaniną (próbowano uchwycić szum, syczenie smyczka lekko przesuwanego po strunie w pobliżu mostka), uderzania przetwornika śrubokrętem oraz szarpania strun kostką gitarową w pobliżu mostka. Najlepsze wyniki otrzymano ostatnim sposobem.
 
 Uzyskane w ten sposób widmo częstotliwościowe poddano odpowiedniej obróbce. Między innymi zmniejszono częstotliwość próbkowania oraz wygładzono przebieg widma. Następnie próbowano dopasować do niego proces autoregresyjny używając różnych metod identyfikacji. Najlepszy wynik uzyskano stosując normę Hankela, a końcowe dopasowanie uzyskanych charakterystyk pokazano na rysunku \ref{rys:hankel}.
 
