@@ -259,3 +259,5 @@ Zmian częstotliwości można dokonywać na dwa sposoby:
 
 \section{Wyniki}
 Zaimplementowana na DSP synteza subtraktywna dała dobre wyniki odsłuchowe. Zastosowany algorytm jest w stanie wygenerować do 12 różnych tonów jednocześnie. Jedynym defektem są lekko słyszalne dodatkowe harmoniczne, opisane w części \ref{sec:gibbs}. Uzyskanie czystszego brzmienia wiąże się ze zwiększeniem złożności obliczeniowej, a co za tym idzie - zmniejszeniem liczby tonów, które mogą być generowane jednocześnie.
+
+Brzmienia generowanych dźwięków różnią się, w zależności od wybranego w interfejsie użytkownika przebiegu (\emph{Waveform}). Barwa dźwięku oscylatora prostokątnego jest ostra. Przebieg trójkątny ma łagodny charakter brzmienia, podobny do fali sinusoidalnej. Generowany dźwięk za pomocą przebiegu piłokształtnego można określić jako brzęczący (ang. \emph{buzzy}). Filtracja dolnoprzepustowa wymienionych brzmień powoduje ich złagodzenie, natomiast przetworzenie ich filtrem górnoprzepustowym powoduje, iż mają ostrzejszą barwę.
