@@ -194,7 +194,7 @@ Na rysunku \ref{rys:model_violin_wskazniki} przedstawiono schemat linii opóźni
 \begin{array}{ l l}
 \text{neck\_inPoint+1} &  \text{gdy neck\_inPoint}+1 < L_{DL} \\
 0 &  \text{gdy neck\_inPoint}+1 \geqslant L_{DL}
-\end{array}
+\end{array},
 \right.
 \end{equation}
 \begin{equation} \label{equ:model_wskazniki2}
@@ -202,7 +202,7 @@ Na rysunku \ref{rys:model_violin_wskazniki} przedstawiono schemat linii opóźni
 \begin{array}{ l l}
 \text{neck\_outPoint+1} &  \text{gdy neck\_outPoint}+1 < L_{DL} \\
 0 &  \text{gdy neck\_outPoint}+1 \geqslant L_{DL}
-\end{array}
+\end{array}.
 \right.
 \end{equation}
  Do komórki o indeksie inPoint wpisywana jest nowa próbka, a w komórce o indeksie outPoint zapisana jest próbka "wyjściowa". Prawdziwe wyjście linii opóźniających najczęściej nie ma całkowitego indeksu, zatem obliczane jest jako średnia ważona pomiędzy dwoma sąsiednimi próbkami. W tym celu obliczyć należy współczynnik wagowy
@@ -242,10 +242,10 @@ v_{new} = \rho (\Delta v) \Delta v
 \end{tabular} \\
 Nowa wartość prędkości jest wprowadzana do linii opóźniających wraz z wartościami odbić:
  \begin{equation} \label{equ:model_newv2}
-\text{neckDelay[neck\_inPoint]} = v_{new} - \text{stringFilter[n]}
+\text{neckDelay[neck\_inPoint]} = v_{new} - \text{stringFilter[n]},
 \end{equation}
  \begin{equation} \label{equ:model_newv3}
-\text{bridgeDelay[neck\_inPoint]} = v_{new} - \text{neck\_output}
+\text{bridgeDelay[neck\_inPoint]} = v_{new} - \text{neck\_output}.
 \end{equation}
 
 Ostatnim krokiem jest filtracja wyjściowych próbek bridge\_output za pomocą procesu ARMA opisanego w części \ref{sec:model_violinarma}.

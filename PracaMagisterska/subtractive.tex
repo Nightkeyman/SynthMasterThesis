@@ -81,7 +81,7 @@ Analogicznie, dla przypadku dyskretnego:
 \end{tabular} \\ \\
 Oznacza to, że równoważnym do działania opisanego w (\ref{equ:sub_splot_dyskretny}) jest:
 \begin{equation} \label{equ:sub_splot_dyskretny2}
-y[n] = \mathcal{F}^{-1}\{ H(k) X(k)\} 
+y[n] = \mathcal{F}^{-1}\{ H(k) X(k)\}.
 \end{equation}
 Zatem z przefiltrowanego widma, za pomocą odwrotnej transformacji Fouriera, obliczany jest przebieg czasowy. W pokazanym przykładzie na rysunku \ref{rys:sub_wykres1}, w wyniku otrzymuje się sygnał prostokątny po filtracji dolnoprzepustowej.
 \section{Implementacja syntezy subtraktywnej}
@@ -185,7 +185,7 @@ Na podstawie wygenerowanych próbek przebiegu oblicza się DFT za pomocą algory
 	&	$f_g$ & - &  częstotliwość przeliczona na indeksy w tablicy, $f_g = N - 2 \frac{1400N}{F_s} - 1$, \\
 	&	$F_s$ & - & częstotliwość próbkowania,\\
 	&	$i$ & - &  indeks, $i = 1, 2, 3, ..., 2N$.\\
-\end{tabular} \\ \\
+\end{tabular} \\
 
 Efekt tego typu filtracji można zobaczyć na trzecim wykresie na \ref{rys:sub_wykres1}. W analogiczny sposób dokonuje się pozostałych filtracji: górnoprzepustowej, pasmo-przepustowej i pasmo-zaporowej.
 
@@ -258,4 +258,4 @@ Zmian częstotliwości można dokonywać na dwa sposoby:
 \end{itemize}
 
 \section{Wyniki}
-Zaimplementowana na DSP synteza subtraktywna dała dobre wyniki odsłuchowe. Zastosowany algorytm jest w stanie wygenerować do 12 różnych tonów jednocześnie. Jedynym defektem jest są lekko słyszalne dodatkowe harmoniczne opisane w części \ref{sec:gibbs}. Uzyskanie czystszego brzmienia wiąże się ze zwiększeniem złożności obliczeniowej, a co za tym idzie - zmniejszeniem liczby tonów, które mogą być generowane jednocześnie.
+Zaimplementowana na DSP synteza subtraktywna dała dobre wyniki odsłuchowe. Zastosowany algorytm jest w stanie wygenerować do 12 różnych tonów jednocześnie. Jedynym defektem są lekko słyszalne dodatkowe harmoniczne, opisane w części \ref{sec:gibbs}. Uzyskanie czystszego brzmienia wiąże się ze zwiększeniem złożności obliczeniowej, a co za tym idzie - zmniejszeniem liczby tonów, które mogą być generowane jednocześnie.

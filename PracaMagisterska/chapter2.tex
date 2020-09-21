@@ -27,7 +27,7 @@ k = f(\sqrt[12]{2})^{n}
 \begin{tabular}{ l l l l}
 	gdzie: 	&	$f$ & - &  częstotliwość tonu dźwięku, od którego liczona jest odległość n, \\
 	&	$k$ & - &  szukana częstotliwość tonu, do którego liczona jest odległość n, \\
-	&   $n$ &  - & odległość tonu o częstotliwości f od tonu o częstotliwości k w półtonach, \\
+	&   $n$ &  - & odległość tonu o częstotliwości f od tonu o częstotliwości k w półtonach. \\
 \end{tabular}
 
 Odstęp między pierwszym a ostatnim dźwiękiem w skali nazywany jest oktawą. Mierzy on 12 półtonów. Odległość ta jest wyjątkowa, gdyż dźwięk położony o oktawę dalej od pierwszego, jest jego dwukrotnością pod względem częstotliwości podstawowej składowej harmonicznej.
@@ -208,7 +208,7 @@ x[n] = \frac{1}{N}\sum_{k=0}^{N-1} X[k]e^{j\frac{2\pi n}{N}k}  \\
 	&	$x[n]$ & - &  n-ta próbka dyskretnego sygnału w dziedzinie czasu, \\
 	&	$N$ & - &  liczba próbek sygnału poddanego przekształceniu Fouriera,\\
 	&	$n$ & - &  próbki dyskretnego sygnału w dziedzinie czasu, \\
-	&	$k$ & - &  próbki dyskretnego widma sygnału, \\
+	&	$k$ & - &  próbki dyskretnego widma sygnału. \\
 \end{tabular}
 
 We wzorach (\ref{equ:dft}) i (\ref{equ:idft}) przyjęto indeksowanie asymetryczne. Zapis taki wybrano z uwagi na bardziej czytelną postać. W celu uproszczenia zapisu definicji DFT stosuje się współczynniki obrotu (ang. twiddle factors):
@@ -219,7 +219,7 @@ We wzorach (\ref{equ:dft}) i (\ref{equ:idft}) przyjęto indeksowanie asymetryczn
 \end{aligned}
 \qquad\qquad % adjust to suit
 \begin{aligned}[t]
-   k, n = 0, 1, 2, ..., N - 1 \\
+   k, n = 0, 1, 2, ..., N - 1. \\
 \end{aligned}
 \end{equation}
 
@@ -238,16 +238,16 @@ X[0] \\ X[1] \\ ... \\ X[N-1]
 \mathbf{x} =  
 \begin{bmatrix} 
 x[0] \\ x[1] \\ ... \\ x[N-1]
-\end{bmatrix}
+\end{bmatrix}.
 \end{aligned}
 \end{equation}
 
 Ze wzorów (\ref{equ:twid_fact}) i (\ref{equ:dft_wekt}) uzyskuje się uproszczony zapis definicji DFT:
 \begin{equation} \label{equ:dft_upr}
-	\mathbf{X} = [W_{N}^{kn}]\mathbf{x}
+	\mathbf{X} = [W_{N}^{kn}]\mathbf{x},
 \end{equation}
 \begin{equation} \label{equ:idft_upr}
-\mathbf{X} = \frac{1}{N}[W_{N}^{-kn}]\mathbf{x}
+\mathbf{X} = \frac{1}{N}[W_{N}^{-kn}]\mathbf{x}.
 \end{equation}
 
 \subsection{Właściwości przekształcenia DFT}
