@@ -4,7 +4,7 @@ W literaturze można znaleźć wiele różnych metod syntezy dźwięku instrumen
 %klarnet: https://www.researchgate.net/publication/4333455_Representation_of_solo_clarinet_music_by_physical_modeling_synthesis
 %gestures: https://www.researchgate.net/publication/5323798_Gesture_synthesis_basic_control_of_a_flute_physical_model
 %slide-flute perry cook: https://quod.lib.umich.edu/cache//b/b/p/bbp2372.1992.072/bbp2372.1992.072.pdf#page=1;zoom=75
-Przykładem takiej pracy naukowej jest artykuł na temat modelu fizycznego klarnetu, w którym autorzy opisują równaniami różniczkowymi interakcje poszczególnych elementów instrumentu dętego drewnianego \cite{flute_klarnet}. Inna praca naukowa porusza temat sterowania modelem fletu, w którym autorzy skupili się na opisaniu zależności fizycznych związanych głównie z grą flecisty \cite{flute_flecista}. Elementy jakie były brane pod uwagę to ciśnienie w jamie ustnej instumentalisty, odległości warg od ustnika fletu oraz szerokości otwarcia ust grającego. Kolejnym przykładem artykułu opisującego model instrumentu dętego drewnianego jest praca P. Cooka przedstawiająca falowody cyfrowe fletu suwakowego (ang. slide flute) oraz klarnetu \cite{flute_cook}.
+Przykładem takiej pracy naukowej jest artykuł na temat modelu fizycznego klarnetu, w którym autorzy opisują równaniami różniczkowymi interakcje poszczególnych elementów instrumentu dętego drewnianego \cite{flute_klarnet}. Inna praca naukowa porusza temat sterowania modelem fletu, w którym autorzy skupili się na opisaniu zależności fizycznych związanych głównie z grą flecisty \cite{flute_flecista}. Elementy jakie były brane pod uwagę to ciśnienie w jamie ustnej instrumentalisty, odległości warg od ustnika fletu oraz szerokości otwarcia ust grającego. Kolejnym przykładem artykułu opisującego model instrumentu dętego drewnianego jest praca P. Cooka przedstawiająca falowody cyfrowe fletu suwakowego (ang. slide flute) oraz klarnetu \cite{flute_cook}.
 
 W niniejszym podrozdziale przedstawiono dwa podejścia do implementacji syntezy dźwięku drewnianego instrumentu dętego:
 \begin{itemize}
@@ -57,7 +57,7 @@ Implementację syntezy falowodowej w autorskim programie realizowanym na proceso
 Jeden blok danych na procesorze DSP zawiera 1024 próbki. Linie opóźniające przesuwają próbki o kilkadziesiąt indeksów w tył. Oznacza to, iż pierwsza próbka nowego bloku danych, musi sięgnąć do poprzednio wygenerowanej tablicy. Do implementacji wykorzystano mechanizm tablicowy typu "ping-pong". Po wygenerowaniu pełnego bloku danych, pierwsza tablica przepisuje wszystkie wartości do drugiej. Następnie pierwsza tablica zostaje wyzerowana. Opóźnione próbki, do których należy się odnieść przy generowaniu nowego bloku danych, znajdują się w~drugiej tablicy. Takim mechanizmem zapewniono ciągłość generowanego sygnału, bez błędów obliczeniowych.
 
 \subsection{Synteza na podstawie modelu ARMA}
-W tym punkcie przedstawiono identyfikację modelu matematycznego fletu, na podstawie którego przeprowadzono później syntezę dźwięku. Do rozpoznania modelu instrumentu użyto tonu "A" razkreślnego o częstotliwości 440 Hz. Dźwięk wygenerowany w trakcie gry na flecie zmienia swoją charakterystykę w czasie. Oznacza to, iż jego model również zmienia się w trakcie granego przebiegu sygnału. Do identyfikacji wybrano te część nagrania, w której model instrumentu jest w~stanie ustalonym.
+W tym punkcie przedstawiono identyfikację modelu matematycznego fletu, na podstawie którego przeprowadzono później syntezę dźwięku. Do rozpoznania modelu instrumentu użyto tonu "A" razkreślnego o częstotliwości 440 Hz. Dźwięk wygenerowany w trakcie gry na flecie zmienia swoją charakterystykę w czasie. Oznacza to, iż jego model również zmienia się w trakcie granego przebiegu sygnału. Do identyfikacji wybrano tę część nagrania, w której model instrumentu jest w~stanie ustalonym.
 
 \subsubsection{Identyfikacja modelu}
 Identyfikacja modelu matematycznego instrumentu została przeprowadzona poprzez manualne dopasowanie zer i biegunów modelu do widma nagrania.
@@ -120,14 +120,14 @@ Na podstawie wzoru (\ref{equ:wpr_dzwiek}), została utworzona zależność biegu
 	\includegraphics[width=11.5cm]{grafiki/Model_B_A}
 	\label{rys:por_mod_flet}
 	\captionsetup{justification=centering}
-	\caption{Porównanie widma modeli ARMA fletu dla dzwieku "B" razkreślnego (wykres przesuniety w~prawo) i "A" razkreślnego (wykres przesunięty w lewo).}
+	\caption{Porównanie widma modeli ARMA fletu dla dzwieku "B" razkreślnego (wykres przesunięty w~prawo) i "A" razkreślnego (wykres przesunięty w lewo).}
 	\label{rys:por_mod_flet}
 \end{figure}
  Na rysunku \ref{rys:por_mod_flet} można zauważyć, że dla różnych tonów wszystkie piki oraz doliny opisane zidentyfikowanym modelem przesuwają się w dziedzinie częstotliwości. Oznacza to, iż pobudzony model może wygenerować dźwięk o różnej wysokości, w zależności od parametru $n$ występującego we wzorze (\ref{equ:flute_param}).
 
 
 \subsubsection{Implementacja}
-W autorskim programie dla procesora DSP, syntezę dźwięku za pomocą zidentyfikowanego modelu ARMA, zaimplementowano jako przetwarzanie szumu poprzez filtr IIR. Współczynniki filtru uzyskano z przeprowadzonej wcześniej symulacji w środowisku Matlab. 
+W autorskim programie dla procesora DSP, syntezę dźwięku za pomocą zidentyfikowanego modelu ARMA, zaimplementowano jako przetwarzanie szumu poprzez filtr IIR. Współczynniki filtra uzyskano z przeprowadzonej wcześniej symulacji w środowisku Matlab. 
 % O tym jak precyzja zmieniala wyniki!! Na floatach nie dziala.
 W celu zmniejszenia złożoności obliczeniowej, do obliczania próbek zastosowano typ zmiennych o pojedynczej precyzji (float). Spowodowało to sytuację, w której wartości generowanego dźwięku fletu narastały do nieskończoności. Działo się to na skutek zbyt niskiej precyzji powodującej błędy numeryczne w~filtrze ze sprzężeniem zwrotnym. Po modyfikacji typu zmiennych na zmienne o podwójnej precyzji (double), uzyskano pożądane rezultaty - stabilny model ARMA i sygnał wyjściowy odpowiadający dźwiękowi instrumentu dętego drewnianego.
 
@@ -144,7 +144,7 @@ Poniżej przedstawiono wyniki syntezy dźwięku fletu dla obydwu metod - falowod
 	\centering
 	\includegraphics[width=12cm]{grafiki/flute_porownanie_syntez_symulacja}
 	\captionsetup{justification=centering}
-	\caption{Porównanie symulacji dzwieku fletu dla syntezy falowodowej i syntezy za pomocą modelu ARMA fletu.}
+	\caption{Porównanie symulacji dźwięku fletu dla syntezy falowodowej i syntezy za pomocą modelu ARMA fletu.}
 	\label{rys:por_synt_flet}
 \end{figure}
 
