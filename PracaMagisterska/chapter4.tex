@@ -72,7 +72,7 @@ Postać (\ref{equ:addit_time_nieharm}) można traktować jako uogólnioną form�
 Wzory matematyczne (\ref{equ:addit_time_harm}) i (\ref{equ:addit_time_nieharm}) pozwalają na uzyskanie jedynie stanu ustalonego zsyntezowanego brzmienia. Powtarzany jest jeden okres sygnału, co daje wrażenie słuchaczowi stałości parametrów powtarzanego dźwięku.
 
 Składowe sygnału audio mogą jednak zmieniać się w czasie \cite{add_time_varying}. Zmiany te mogą dotyczyć ich amplitudy, jak i częstotliwości.
-Taką postać syntezy addytywnej zapisuje się:
+Taką postać syntezy addytywnej zapisuje się jako:
 \begin{equation} \label{equ:addit_time_zmienne}
 y(t) = \sum_{k=1}^{K} a_{k}(t)\text{sin}(2\pi f_{k}(t)t + \phi_{k})  \\  
 \end{equation}
@@ -108,7 +108,7 @@ Dodanie szumu do sygnału deterministycznego w syntezie addytywnej pozwala na uz
 %https://ccrma.stanford.edu/~jos/sasp/Sines_Noise_Analysis.html
 
 \section{Metody implementacji syntezy addytywnej}
-Istnieją różne metody implementacji addytywnej syntezy dźwięku \cite{add_imp_meth}. Oznacza to, iż sam dźwięk może zostać uzyskany różnymi sposobami. Popularne metody realizacji syntezy addytywnej to:
+Istnieją różne metody implementacji addytywnej syntezy dźwięku \cite{add_imp_meth}. Oznacza to, iż ten sam dźwięk może zostać uzyskany różnymi sposobami. Popularne metody realizacji syntezy addytywnej to:
 \begin{itemize}
 	\item bank oscylatorów,
 	\item synteza wavetable,
@@ -128,7 +128,7 @@ wymagane byłoby obliczenie około 400 fal sinusoidalnych na każdą próbkę zs
 \subsection{Bank oscylatorów}
 %analogowe hammondy i zwykłe, ale ze są wolne
 Synteza za pomocą banku oscylatorów jest najstarszą metodą implementacji addytywnej syntezy dźwięku. Opiera się ona bezpośrednio na równaniu (\ref{equ:addit_time_harm}).
-Ta metoda implementacji realizowana była nawet na instrumentach analogowych. Instrumenty takie jak organy Hammonda miały kilka wirujących dysków (koła tonacyjne) posiadających w wielu miejscach nacięcia o specyficznych kształtach. Obracające tarcze powodowały zmiany w polu magnetycznym, co generowało małe napięcie w zwojnicy. Dzięki temu uzyskiwano prąd elektryczny o charakterystyce zawierającej pewne składowe harmoniczne tonu podstawowego.
+Ta metoda implementacji realizowana była nawet na instrumentach analogowych. Instrumenty takie jak organy Hammonda miały kilka wirujących dysków (koła tonacyjne) posiadających w wielu miejscach nacięcia o specyficznych kształtach. Obracające tarcze powodowały zmiany w polu magnetycznym, co generowało małe napięcia w zwojnicy. Dzięki temu uzyskiwano prąd elektryczny o charakterystyce zawierającej pewne składowe harmoniczne tonu podstawowego.
 % Przez te tarcze oswietlana byla fotokomorka
 \begin{figure}[H]
 	\centering
