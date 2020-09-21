@@ -1,6 +1,6 @@
 % !TeX spellcheck = pl_PL
 \chapter{Projekt instrumentu muzycznego}
-W ramach realizacji projektu konieczne jest zaimplementowanie wielu różnych etapów przetwarzania i sterowania procesem generowania dźwięku: akwizycja sygnałów z klawiatury muzycznej, generowanie dźwięku z procesora DSP oraz komunikacja z interfejsem użytkownika. W niniejszym rozdziale przedstawiono sposób realizacji wymienionych zadań. Omówiono również warstwę sprzętową projektu, odgrywającą podstawową rolę w realizacji syntezatora. Implementacja poszczególnych algorytmów syntezy dźwięku przedstawiona zostanie w kolejnych rozdziałach im dedykowanych.
+W ramach realizacji projektu konieczne jest zaimplementowanie wielu różnych etapów przetwarzania i sterowania procesem generowania dźwięku: akwizycja sygnałów z klawiatury muzycznej, generowanie dźwięku z procesora DSP oraz komunikacja z interfejsem użytkownika. W~niniejszym rozdziale przedstawiono sposób realizacji wymienionych zadań. Omówiono również warstwę sprzętową projektu, odgrywającą podstawową rolę w realizacji syntezatora. Implementacja poszczególnych algorytmów syntezy dźwięku przedstawiona zostanie w kolejnych rozdziałach im dedykowanych.
 
 Kod programu na procesor DSP napisany został w języku C. Program uruchamiano w środowisku Code Composer Studio v6, które jest dedykowane dla procesorów firmy Texas Instruments. Wgrywanie kodu na płytę ewaluacyjną PADK odbywało się poprzez użycie debuggera XDS510 firmy Spectrum Digital.
 
@@ -68,7 +68,7 @@ Płyta PADK ma możliwość komunikowania się z innymi urządzeniami przez trzy
 Za komunikację przez interfejs MIDI oraz UART odpowiadają dwa układy TL16C550. Pozwalają one na alternatywny tryb kolejki danych FIFO, który odciąża procesor DSP. Interfejs USB obsługiwany jest na płycie poprzez mikrokontroler CY7C68013.
 
 \subsection{Przetworniki DAC}
-Na płycie PADK znajdują się dwa, czterokanałowe, 24-bitowe układy PCM4204, które posiadają możliwość próbkowania sygnału z częstotliwością do 192kHz. Umożliwiają one odczyt z płyty uruchomieniowej analogowegych sygnałów dźwiękowych za pomocą gniazd żeńskich typu CINCH.
+Na płycie PADK znajdują się dwa, czterokanałowe, 24-bitowe układy PCM4204, które posiadają możliwość próbkowania sygnału z częstotliwością do 192kHz. Umożliwiają one odczyt z~płyty uruchomieniowej analogowegych sygnałów dźwiękowych za pomocą gniazd żeńskich typu CINCH.
 
 \subsection{Pełen schemat układu instrumentu klawiszowego}
 \begin{figure}[H]
@@ -83,7 +83,7 @@ Strzałki na rysunku \ref{rys:real_uklad} przedstawiają kierunek przepływu dan
 \section{Komunikacja z płytą PADK}
 Do oprogramowania płyty PADK dołączone zostały dodatkowe biblioteki firmy Lyrtech, które ułatwiają obsługę jej komunikacji z urządzeniami zewnętrznymi. Przykładem interfejsów, dla których zostały utworzone nadmienione biblioteki, są UART oraz MIDI.
 
-Inicjalizacja przerwań i transferu danych obu interfejsów wygląda bardzo podobnie. Każdy z nich otrzymał swój identyfikator zdarzenia dMAX oraz identyfikator przerwania. Priorytet przerwań obu interfejsów ustawiono na wysoki. Ostatnim elementem inicjalizacji układów było ustawienie rejestru IER obu interfejsów na wartość umożliwiającą pracę w trybie przerwań.
+Inicjalizacja przerwań i transferu danych obu interfejsów wygląda bardzo podobnie. Każdy z~nich otrzymał swój identyfikator zdarzenia dMAX oraz identyfikator przerwania. Priorytet przerwań obu interfejsów ustawiono na wysoki. Ostatnim elementem inicjalizacji układów było ustawienie rejestru IER obu interfejsów na wartość umożliwiającą pracę w trybie przerwań.
 
 \subsection{Komunikacja z klawiaturą muzyczną  (MIDI)}
 % Datasheet "Professional Audio Development Kit Technical Reference Guide 1.4", September 2007
@@ -106,7 +106,7 @@ Można to osiągnąć poprzez umieszczenie funkcji MIDI\_Read z parametrem 3 - p
 	\label{rys:real_nofifo}
 \end{figure} 
 Problem ten został zobrazowany na rysunku \ref{rys:real_nofifo}. Przedstawia on zawartość bufora wejściowego w czasie biegnącym od góry do dołu rysunku. W pokazanej sytuacji pomiędzy wywołaniem funkcji MIDI\_Read z parametrem 3, a nadejściem 3-bajtowej ramki danych, został odczytany bajt zegarowy. Ostatecznie odczytana zostanie ramka czwarta oraz siódma od góry.  Oznacza to, że bajty, które miały zostać odczytane jako jedna ramka, mogą być dowolnie rozbite pomiędzy dwa wywołania ISR. 
-Aby rozwiązać ten problem, ISR wywołuje funkcję MIDI\_Read z parametrem 1. W rezultacie każdy przychodzący bajt wywołuje przerwanie. W jego obsłudze sprawdzana jest wartość bajta, jesli jest ona różna od 0xF8 (zegar MIDI), to zostaje ona dodana do trzyelementowej kolejki FIFO. W momencie gdy kolejka FIFO się zapełnia, ramka jest identyfikowana i interpretowana, a kolejka czyszczona. Działanie takiej kolejki zobrazowane jest na rysunku \ref{rys:real_fifo}.
+Aby rozwiązać ten problem, ISR wywołuje funkcję MIDI\_Read z parametrem 1. W~rezultacie każdy przychodzący bajt wywołuje przerwanie. W jego obsłudze sprawdzana jest wartość bajta, jesli jest ona różna od 0xF8 (zegar MIDI), to zostaje ona dodana do trzyelementowej kolejki FIFO. W momencie gdy kolejka FIFO się zapełnia, ramka jest identyfikowana i interpretowana, a kolejka czyszczona. Działanie takiej kolejki zobrazowane jest na rysunku \ref{rys:real_fifo}.
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=8cm]{./grafiki/real_fifo}
@@ -134,7 +134,7 @@ Aby zapewnić wygodny w użyciu oraz odporny na błędy przepływ informacji, ut
 	\caption{Struktura ramki protokołu.}
 	\label{rys:real_uartframe}
 \end{figure}
-Na rysunku \ref{rys:real_uartframe} pokazana została struktura 9-bajtowej ramki danych, która jest przesyłana pomiędzy DSP a komputerem. Składa się ona z dwóch bajtów identyfikujących, sześciu bajtow danych oraz jednego bajta sumy kontrolnej. Podobnie jak w przypadku MIDI, do identyfikacji i interpretacji przychodzących ramek, wykorzystywana jest kolejka FIFO. Tym razem ma ona rozmiar 9 bajtów. Bajty przychodzące są odczytywane pojedynczo przy wykorzystaniu przerwania sprzętowego i wpisywane do kolejki FIFO. W momencie gdy na pierwszym miejscu w kolejce znajdzie się odpowiedni bajt identyfikujący ramkę, a na miejscu ósmym znajdzie się jego wartość powiększona o jeden, można zakładać, że odebrana została "jakaś" ramka danych. W celu potwierdzenia jej poprawności, obliczana jest suma kontrolna z bajtów danych. Gdy ramka przejdzie taką weryfikację, zostaje odczytana informacja, którą niesie. Opisany mechanizm działa zarówno na procesorze DSP, jak i na komputerze PC.
+Na rysunku \ref{rys:real_uartframe} pokazana została struktura 9-bajtowej ramki danych, która jest przesyłana pomiędzy DSP a komputerem. Składa się ona z dwóch bajtów identyfikujących, sześciu bajtow danych oraz jednego bajta sumy kontrolnej. Podobnie jak w przypadku MIDI, do identyfikacji i~interpretacji przychodzących ramek, wykorzystywana jest kolejka FIFO. Tym razem ma ona rozmiar 9 bajtów. Bajty przychodzące są odczytywane pojedynczo przy wykorzystaniu przerwania sprzętowego i wpisywane do kolejki FIFO. W momencie gdy na pierwszym miejscu w kolejce znajdzie się odpowiedni bajt identyfikujący ramkę, a na miejscu ósmym znajdzie się jego wartość powiększona o jeden, można zakładać, że odebrana została "jakaś" ramka danych. W celu potwierdzenia jej poprawności, obliczana jest suma kontrolna z bajtów danych. Gdy ramka przejdzie taką weryfikację, zostaje odczytana informacja, którą niesie. Opisany mechanizm działa zarówno na procesorze DSP, jak i na komputerze PC.
 Takie dziewięciobajtowe ramki pozwalają na przesyłanie na przykład całych zmiennych 4-bajtowych lub jednocześnie trzech liczb 2-bajtowych. 
 
 
@@ -166,7 +166,7 @@ Priorytet przerwania został ustawiony na wysoki. Wszystkie wartości zostały p
 % DMAX Event initialization structure
 Kolejnym etapem była inicjalizacja parametrów dotyczących połączenia przetwornika cyfrowo-analogowego z modułem McASP oraz ustawienia struktury zdarzenia dMAX powiązanego z przetwornikiem DAC. 
 
-Ostatnią częścią inicjalizacji było ustawienie częstotliwości próbkowania na wartość 48kHz i wyłączenie przekaźnika blokującego przepływ sygnału analogowego z przetwornika do gniazda CINCH.
+Ostatnią częścią inicjalizacji było ustawienie częstotliwości próbkowania na wartość 48kHz i~wyłączenie przekaźnika blokującego przepływ sygnału analogowego z przetwornika do gniazda CINCH.
 
 \subsection{Komunikacja między procesorem a przetwornikiem DAC}
 Obsługa danych zawierających zsyntezowane dźwięki oraz ich przesłanie na moduł DAC odbywa się za pomocą przerwania dmax\_isr(). Za każdym razem, gdy wywoływane jest przerwanie z wykorzystaniem zdarzenia dMAX, sprawdzany jest warunek, czy poprzedni transfer danych na przetwornik DAC został ukończony. Jeżeli warunek jest spełniony, pozostały kod funkcji obsługi przerwania zostaje wykonany.
@@ -174,7 +174,7 @@ Obsługa danych zawierających zsyntezowane dźwięki oraz ich przesłanie na mo
 Obsługa danych tej funkcji opiera się na zainicjalizowanym wcześniej buforze cyrkulacyjnym dmaxDacBuffer[PING/PONG][FRAME][L/R][.]. Programowo bufor jest czterowymiarową tablicą, gdzie pierwszy wymiar dokonuje synchronizacji odczytu i zapisu typu ping-pong. Następnie wykonywany jest mechanizm zakładkowania dwóch tablic przechowujących próbki zsyntezowanego dźwięku. Dane po zakładkowaniu przekazywane są do modułu DAC przez tablicę dmaxDacBuffer[PING/PONG][FRAME][L/R][.].
 
 \section{Klawiatura polifoniczna}\label{section:real_polifonia}
-Jednym z wymagań projektowych jest implementacja polifonii. Generowanie więcej niż jednego tonu jednocześnie zostało osiągnięte poprzez asynchroniczne odczytywanie naciskania i zwalniania klawiszy instrumentu oraz przechowywanie informacji o klawiszach wciśniętych w danej chwili. Rozwiązano to poprzez utworzenie tablicy freqs[.] o 12 elementach typu float (zakłada się obsługę nie więcej niż 12 klawiszy jednocześnie). Odebranie ramki MIDI z informacją o wciśnięciu klawisza instrumentu, powoduje wpisanie odczytanej wartości częstotliwości do niezajętej komórki tablicy. Gdy dźwięk związany z danym klawiszem kończy wybrzmiewanie, odpowiedni element tablicy jest zerowany. W każdej z metod syntezy odczytywane są częstotliwości z tej tablicy i generowane odpowiednie dźwięki. Rozwiązania polifonii różnią się pomiedzy metodami syntezy, z tego powodu zostaną one indywidualnie opisane w odpowiednich rozdziałach.
+Jednym z wymagań projektowych jest implementacja polifonii. Generowanie więcej niż jednego tonu jednocześnie zostało osiągnięte poprzez asynchroniczne odczytywanie naciskania i~zwalniania klawiszy instrumentu oraz przechowywanie informacji o klawiszach wciśniętych w danej chwili. Rozwiązano to poprzez utworzenie tablicy freqs[.] o 12 elementach typu float (zakłada się obsługę nie więcej niż 12 klawiszy jednocześnie). Odebranie ramki MIDI z informacją o wciśnięciu klawisza instrumentu, powoduje wpisanie odczytanej wartości częstotliwości do niezajętej komórki tablicy. Gdy dźwięk związany z danym klawiszem kończy wybrzmiewanie, odpowiedni element tablicy jest zerowany. W każdej z metod syntezy odczytywane są częstotliwości z tej tablicy i~generowane odpowiednie dźwięki. Rozwiązania polifonii różnią się pomiedzy metodami syntezy, z~tego powodu zostaną one indywidualnie opisane w odpowiednich rozdziałach.
 % opisać ogólnie, i powiedziec, ze dla kazdej metody to bedzie wyglądało trochę inaczej
 
 
@@ -251,7 +251,7 @@ Gdy wciśnięty zostanie klawisz syntezatora, w tablicy stanów ADSR, elementowi
 Użytkownik ma możliwosć ustawiania, za pomocą interfejsu użytkownika, czasu trwania stanów "attack", "decay" i "release" oraz poziomu dla stanu "sustain".
 
 \section{Interfejs użytkownika}
-Użytkownik może sterować pracą instrumentu za pomocą specjalnie przygotowanego graficznego interfejsu użytkownika (GUI). GUI stanowi okienkowy program komputerowy napisany w języku C\#. Komunikacja pomiędzy GUI a DSP została opisana w części \ref{sec:real_komunikacja}. Okno programu składa się z:
+Użytkownik może sterować pracą instrumentu za pomocą specjalnie przygotowanego graficznego interfejsu użytkownika (GUI). GUI stanowi okienkowy program komputerowy napisany w~języku C\#. Komunikacja pomiędzy GUI a~DSP została opisana w części \ref{sec:real_komunikacja}. Okno programu składa się z:
 \begin{itemize}
 	\item paska zakładek,
 	\item okna głównego,
@@ -268,7 +268,7 @@ Okno zakładki połączenia jest przedstawione na rysunku \ref{rys:real_gui}, po
 	\caption{Okno graficznego interfejsu użytkownika.}
 	\label{rys:real_gui}
 \end{figure}
-Zawiera ono pola pozwalające na ustanowienie i konfigurację połączenia pomiędzy GUI a DSP:
+Zawiera ono pola pozwalające na ustanowienie i konfigurację połączenia pomiędzy GUI a~DSP:
 \begin{itemize}
 	\item Rozwijane pole "Port". Za jego pomocą wybierany jest port szeregowy, do którego podłączona jest płyta uruchomieniowa z DSP.
 	\item Przycisk "Refresh" służący do odświeżenia listy dostępnych portów szeregowych.

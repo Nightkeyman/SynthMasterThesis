@@ -131,7 +131,7 @@ Na rysunku \ref{rys:sub_waveform_blocks} pokazano dwie kolejne ramki próbek wyg
 \end{figure}
 
 \subsection{Efekt Gibbsa}\label{sec:gibbs}
-Generowanie sygnału podstawowego opisane powyżej jest mało kosztowne obliczeniowo. W wyniku otrzymuje się wizualnie doskonały przebieg prostokątny. Jednak jego aproksymacja za pomocą skończonej liczby składowych sinusoidalnych jest niemożliwa. Oznacza to, że jego widmo nie będzie składało się tylko i wyłącznie ze składowych o częstotliwości przebiegu podstawowego i jej nieparzystych wielokrotności. Wynika to z braku spełnienia twierdzenia o próbkowaniu. 
+Generowanie sygnału podstawowego opisane powyżej jest mało kosztowne obliczeniowo. W~wyniku otrzymuje się wizualnie doskonały przebieg prostokątny. Jednak jego aproksymacja za pomocą skończonej liczby składowych sinusoidalnych jest niemożliwa. Oznacza to, że jego widmo nie będzie składało się tylko i wyłącznie ze składowych o częstotliwości przebiegu podstawowego i jej nieparzystych wielokrotności. Wynika to z braku spełnienia twierdzenia o próbkowaniu. 
 %Powiedzieć, że tu nie jest spełnione twierdzenie o próbkowaniu
 W widmie takiego sygnału pojawią się dodatkowe składowe w całym zakresie częstotliwości. Zjawisko to zostało przedstawione na rysunku \ref{rys:sub_gibbs1}.
 \begin{figure}[H]
@@ -216,7 +216,7 @@ Porównanie zakładkowania dla różnych wartości $m$ przedstawiono na rysunku 
 Takie podejście wymusza użycie dwóch tablic ze zmiennymi typu float zawierającymi próbki sygnału, które będą przesyłane na przetwornik cyfrowo-analogowy. Wynika to z faktu, że w pewnych chwilach czasu, na DAC należy wysłać ważoną średnią próbek z dwóch różnych bloków. 
 
 \subsection{Polifonia w syntezie subtraktywnej}
-Powyższe rozważania dotyczyły syntezy pojedynczych tonów. Polifonię można osiągnąć wykonując opisane wcześniej operacje dla każdego naciśniętego klawisza instrumentu. Jednak aby zmniejszyć liczbę potrzebnych operacji wykonywanych na DSP, można wykorzystać własność liniowości przekształcenia Fouriera \cite{schafer}. Oznacza ona, że jeśli
+Powyższe rozważania dotyczyły syntezy pojedynczych tonów. Polifonię można osiągnąć wykonując opisane wcześniej operacje dla każdego naciśniętego klawisza instrumentu. Jednak, aby zmniejszyć liczbę potrzebnych operacji wykonywanych na DSP, można wykorzystać własność liniowości przekształcenia Fouriera \cite{schafer}. Oznacza ona, że jeśli
  \begin{equation} \label{equ:sub_5}
  \mathcal{F}\{x_n\} = X_k
  \end{equation}

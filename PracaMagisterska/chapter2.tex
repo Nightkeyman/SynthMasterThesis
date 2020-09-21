@@ -64,7 +64,7 @@ Podział metod syntezy dźwięku w literaturze jest bardzo zróżnicowany. Najcz
 W poniższych podrozdziałach scharakteryzowano poszczególne rodzaje metod syntezy dźwięku.
 
 \subsection{Metody widmowe}
-Do grupy widmowych metod syntezy dźwięku zaliczana jest synteza subtraktywna oraz addytywna. Zgodnie z nazwą, skupiają się one na syntezie brzmień w dziedzinie częstotliwości. Metoda subtraktywna zajmuje się głównie wycinaniem pasm widmowych z dźwieków o bogatym składzie harmonicznym. Metoda addytywna skupia się natomiast na dodawaniu kolejnych harmonicznych w dziedzinie częstotliwości. Obie metody zostały dokładnie omówione w rozdziałach \ref{chapter_subtractive} i \ref{chapter_additive} niniejszej pracy.
+Do grupy widmowych metod syntezy dźwięku zaliczana jest synteza subtraktywna oraz addytywna. Zgodnie z nazwą, skupiają się one na syntezie brzmień w dziedzinie częstotliwości. Metoda subtraktywna zajmuje się głównie wycinaniem pasm widmowych z dźwieków o bogatym składzie harmonicznym. Metoda addytywna skupia się natomiast na dodawaniu kolejnych harmonicznych w dziedzinie częstotliwości. Obie metody zostały dokładnie omówione w rozdziałach \ref{chapter_subtractive} i~\ref{chapter_additive} niniejszej pracy.
 
 \subsection{Algorytmy abstrakcyjne}
 % https://ccrma.stanford.edu/~bilbao/booktop/node6.html
@@ -169,7 +169,7 @@ Schemat sprzętowy interfejsu MIDI znajdującego się po stronie instrumentu cyf
 \subsection{Protokół MIDI}
 %https://www.midi.org/specifications-old/category/midi-1-0-detailed-specifications
 %PDF: D:\Data\Studia\Magisterka\Literatura wstepna\MIDI
-Wiadomości MIDI składają się z jednego bajta statusu, po którym następuje zazwyczaj jeden lub dwa bajty danych. Istnieją różne typy wiadomości MIDI. Dzieli się je na wiadomości kanałowe (odnoszące się do jednego kanału) oraz systemowe (odnoszące się do wszystkich kanałów). Wiadomości kanałowe mogą dzielić się dalej na komunikaty trybu lub komunikaty głosu. Te drugie w praktyce stanowią większość przesyłanych komunikatów w transmisji MIDI.
+Wiadomości MIDI składają się z jednego bajta statusu, po którym następuje zazwyczaj jeden lub dwa bajty danych. Istnieją różne typy wiadomości MIDI. Dzieli się je na wiadomości kanałowe (odnoszące się do jednego kanału) oraz systemowe (odnoszące się do wszystkich kanałów). Wiadomości kanałowe mogą dzielić się dalej na komunikaty trybu lub komunikaty głosu. Te drugie w~praktyce stanowią większość przesyłanych komunikatów w transmisji MIDI.
 Komunikat głosu może nieść informację na przykład o: naciśnięciu klawisza, zwolnieniu klawisza, aftertouch (zmiana siły nacisku na klawisz, odnotowana po pewnym czasie od jego naciśnięcia), pitch bend (delikatna zmiana wysokości dźwięku). Protokół MIDI, w ramach transmisji bajta danych (komunikat głosu), może obsłużyć 128 wysokości dźwięków z jednego instrumentu. Poziom głośności, zależny od siły nacisku na klawisz, również może przyjąć jedną ze 128 wartości.
 
 Oprócz przesyłu informacji między urządzeniami MIDI, występuje dodatkowo sygnał zegarowy MIDI (ang. MIDI Pulses), który pozwala na zsynchronizowanie kilku instrumentów, do wykonywania utworu w jednakowym tempie. Informacje zegarowe występują cyklicznie i zawsze posiadają tę samą wartość bitową.
