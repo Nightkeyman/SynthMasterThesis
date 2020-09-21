@@ -131,7 +131,7 @@ W programie wykorzystywane są dwie tablice o $N$ próbkach naprzemiennie wysył
 \end{tabular} \\ \\
 W (\ref{equ:fm_wzor2}) zastosowano funkcję "sinf" zamiast zwykłego "sin". Obie te funkcję należą do biblioteki math.h w języku C. Wybór "sinf" wynika z faktu, że funkcja "sin" operuje na zmiennych typu double (podwójna precyzja), a "sinf" na zmiennych typu float. Działania na zmiennych typu float są wykonywane szybciej. Kosztem jest mniejsza precyzja wykonywanych obliczeń.
 % sprawdzic sinf czy korzystamy z ROMu czy math.h
-Po wypełnieniu próbkami danej tablicy waveform, jest ona wysyłana do DAC. Licznik bloków jest modyfikowany w następujący sposób:
+Po wypełnieniu próbkami danej tablicy waveform, jest ona wysyłana do DAC. Licznik bloków jest modyfikowany w~następujący sposób:
 \begin{equation} \label{equ:fm_wzor3}
 k \gets k + N - m.
 \end{equation}
@@ -152,7 +152,7 @@ Do generowania wielu tonów jednocześnie, wykorzystywana jest tablica aktualnie
 	gdzie: & $J$ &  - & liczba wciśniętych klawiszy instrumentu, \\
 		&	$i$ & - & licznik iteracji, $i$ = 0, 1, 2, ..., N-1,\\
 		&	$f_j$ & - & częstotliwość j-tego tonu.\\
-\end{tabular} \\ \\
+\end{tabular} \\
 
 Zastosowane rozwiązanie pozwala wygenerować do 6 tonów jednocześnie. 
 
@@ -165,7 +165,7 @@ W projekcie autorskim, w przypadku syntezy FM, użytkownik może poprzez interfe
 	\caption{Interfejs użytkownika dla modulacji częstotliwości.}
 	\label{rys:fm_interface}
 \end{figure}
-Na rysunku \ref{rys:fm_interface} zaznaczono dwie sekcje wykonanego interfejsu syntezy FM. W pierwszej z nich znajduje się przycisk, który służy do aktywacji tej metody syntezy dźwięku. Po naciśnięciu klawisza, DSP otrzymuje komunikat, po którym przechodzi w tryb syntezy FM.
+Na rysunku \ref{rys:fm_interface} zaznaczono dwie sekcje wykonanego interfejsu syntezy FM. W pierwszej z~nich znajduje się przycisk, który służy do aktywacji tej metody syntezy dźwięku. Po naciśnięciu klawisza, DSP otrzymuje komunikat, po którym przechodzi w tryb syntezy FM.
 
 W drugiej sekcji znajdują się suwaki pozwalające na wybór amplitudy oraz częstotliwości sygnału modulującego. Zmian tych wielkości można dokonywać na dwa sposoby:
 \begin{itemize}

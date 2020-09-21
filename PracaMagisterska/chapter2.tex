@@ -10,24 +10,24 @@ Dźwięk można rozpatrywać w dwóch aspektach: fizycznym oraz muzycznym. Z fiz
 W muzyce, dźwięk rozpatrywany jest jako zjawisko, które wydobywane jest z instrumentów muzycznych lub generowane za pomocą głosu ludzkiego. Główne właściwości dźwięku w muzyce, to:
 
 \begin{itemize}
-	\item wysokość dźwięku, która jest zależna od wartości częstotliwości podstawowej dźwięku (pierwszej harmonicznej),
+	\item wysokość dźwięku - jest zależna od wartości częstotliwości podstawowej dźwięku (pierwszej harmonicznej),
 	
 	\item czas trwania - zależny od czasu emisji dźwięku na danym instrumencie,
 	
 	\item głośność - zależna od amplitudy drgań powietrza przenoszącego dźwięk,
 	
-	\item barwa dźwięku - zależna od liczby, częstotliwości poszczególnych składowych harmonicznych (SH) dźwięku oraz zmian ich amplitudy w czasie. Jako SH, rozumiana jest składowa sinusoidalna dźwięku, która jest całkowitą wielkrotnością częstotliwości podstawowej danego dźwięku \cite{synth_brief_intro}.
+	\item barwa dźwięku - zależna od liczby i częstotliwości poszczególnych składowych harmonicznych (SH) dźwięku oraz zmian ich amplitudy w czasie. Jako SH rozumiane są składowe sinusoidalne dźwięku, które są całkowitymi wielkrotnościami częstotliwości podstawowej danego dźwięku \cite{synth_brief_intro}.
 	% (źródło: https://pl.wikipedia.org/wiki/D%C5%BAwi%C4%99k_(muzyka))
 \end{itemize}
 
-W celu ustandardyzowania dźwięków w utworach muzycznych, wprowadzono skale dźwiękowe. Obecnie w muzyce europejskiej stosowana jest skala dwunastotonowa równomiernie temperowana. Odległości między tymi dźwiękami nazywane są interwałami, które wyraża się w jednostkach półtonów. Istnieje zależność między kolejnymi półtonami. Może ona być wyrażona wzorem:
+W celu ustandardyzowania dźwięków w utworach muzycznych wprowadzono skale dźwiękowe. Obecnie w muzyce europejskiej stosowana jest skala dwunastotonowa równomiernie temperowana. Odległości między tymi dźwiękami nazywane są interwałami, które wyraża się w jednostkach półtonów. Istnieje zależność między kolejnymi półtonami. Może ona być wyrażona wzorem:
 \begin{equation} \label{equ:wpr_dzwiek}
 k = f(\sqrt[12]{2})^{n}
 \end{equation}
 \begin{tabular}{ l l l l}
 	gdzie: 	&	$f$ & - &  częstotliwość tonu dźwięku, od którego liczona jest odległość n, \\
 	&	$k$ & - &  szukana częstotliwość tonu, do którego liczona jest odległość n, \\
-	&   $n$ &  - & odległość tonu o częstotliwości f od tonu o częstotliwości k w półtonach, \\
+	&   $n$ &  - & odległość tonu o częstotliwości f od tonu o częstotliwości k w półtonach. \\
 \end{tabular}
 
 Odstęp między pierwszym a ostatnim dźwiękiem w skali nazywany jest oktawą. Mierzy on 12 półtonów. Odległość ta jest wyjątkowa, gdyż dźwięk położony o oktawę dalej od pierwszego, jest jego dwukrotnością pod względem częstotliwości podstawowej składowej harmonicznej.
@@ -41,7 +41,7 @@ Podstawowy podział klawiatur muzycznych rozpatruje się pod względem możliwo�
 Monofonia w muzyce to faktura muzyczna utworzona z pojedynczej linii melodycznej. Aby aktualnie wykonywany fragment utworu można było nazwać monofonicznym, w poszczególnych chwilach czasu powinien być grany tylko jeden dźwięk. W odniesieniu do klawiatury cyfrowej oraz analogowej, oznacza to, iż można za ich pomocą w danej chwili czasu wytwarzać tylko jeden dźwięk. Klasycznym przykładem klawiatury monofonicznej jest syntezator analogowy Minimoog.
 
 \subsection{Klawiatura polifoniczna}
-Polifonia w muzyce oznacza występowanie kilku linii melodycznych w tym samym czasie. Polifonia klawiatury zatem oznacza możliwość wydobycia w danym momencie czasu wielu dźwięków, poprzez naciśnięcie kilku klawiszy. Pojęcie polifonicznej klawiatury muzycznej nie definiuje dokładnej liczby wydobywanych się za jej pomocą dźwięków. Obecnie produkowane cyfrowe instrumenty muzyczne posiadają ograniczoną liczbę możliwych do wydobycia na raz dźwięków. Spowodowane jest to niewystarczającą mocą obliczeniową procesorów DSP.
+Polifonia w muzyce oznacza występowanie kilku linii melodycznych w tym samym czasie. Polifonia klawiatury zatem oznacza możliwość wydobycia w danym momencie czasu wielu dźwięków, poprzez naciśnięcie kilku klawiszy. Pojęcie polifonicznej klawiatury muzycznej nie definiuje dokładnej liczby wydobywanych za jej pomocą dźwięków. Obecnie produkowane cyfrowe instrumenty muzyczne posiadają ograniczoną liczbę możliwych do wydobycia na raz tonów. Spowodowane jest to niewystarczającą mocą obliczeniową procesorów DSP.
 
 %
 % Voice allocation alghorithm - opisac jaki bedziemy uzywac
@@ -55,16 +55,17 @@ Jednym z głównych zadań niniejszego projektu magisterskiego jest implementacj
 % http://legacy.spa.aalto.fi/publications/reports/sound_synth_report.pdf
 Podział metod syntezy dźwięku w literaturze jest bardzo zróżnicowany. Najczęściej wykorzystuje się różnice w metodach syntezy \cite{metody_syntezy}:
 \begin{itemize}
-	\item algorytmy abstrakcyjne,
-	\item metody fizyczne,
-	\item metody przetwarzania sygnału,
+	\item widmowych,
+	\item algorytmach abstrakcyjnych,
+	\item fizycznych,
+	\item przetwarzania sygnałów.
 	% https://ieeexplore.ieee.org/document/4412805
 \end{itemize}
 
 W poniższych podrozdziałach scharakteryzowano poszczególne rodzaje metod syntezy dźwięku.
 
 \subsection{Metody widmowe}
-Do grupy widmowych metod syntezy dźwięku zaliczana jest synteza subtraktywna oraz addytywna. Zgodnie z nazwą, skupiają się one na syntezie brzmień w dziedzinie częstotliwości. Metoda subtraktywna zajmuje się głównie wycinaniem pasm widmowych z dźwieków o bogatym składzie harmonicznym. Metoda addytywna skupia się natomiast na dodawaniu kolejnych harmonicznych w dziedzinie częstotliwości. Obie metody zostały dokładnie omówione w rozdziałach \ref{chapter_subtractive} i \ref{chapter_additive} niniejszej pracy.
+Do grupy widmowych metod syntezy dźwięku zaliczana jest synteza subtraktywna oraz addytywna. Zgodnie z nazwą, skupiają się one na syntezie brzmień w dziedzinie częstotliwości. Metoda subtraktywna zajmuje się głównie wycinaniem pasm widmowych z dźwieków o bogatym składzie harmonicznym. Metoda addytywna skupia się natomiast na dodawaniu kolejnych harmonicznych w dziedzinie częstotliwości. Obie metody zostały dokładnie omówione w rozdziałach \ref{chapter_subtractive} i~\ref{chapter_additive} niniejszej pracy.
 
 \subsection{Algorytmy abstrakcyjne}
 % https://ccrma.stanford.edu/~bilbao/booktop/node6.html
@@ -76,7 +77,7 @@ Synteza za pomocą algorytmów abstrakcyjnych zazwyczaj odnosi się do zmian ist
 % https://edu.pjwstk.edu.pl/wyklady/mul/scb/main37.html
 Metody fizyczne skupiają się na odwzorowywaniu instrumentów muzycznych poprzez tworzenie ich modeli fizycznych. Do tej grupy należy synteza dźwięku przy użyciu modelowania matematycznego, synteza komórkowa (ang. Cellular Sound Synthesis) oraz synteza falowodowa (ang. Digital Waveguide Modeling) \cite{czyzewski_dzwiek_cyfrowy}.
 
-Metody syntezy oparte na modelach fizycznych są uważane za najbardziej naukowe i poświęcone jest im wiele prac naukowych. W niniejszej pracy, z tej grupy metod syntezy, przedstawiono głównie syntezę fizyczną opartą o falowody cyfrowe oraz modele matematyczne.
+Metody syntezy oparte na modelach fizycznych są uważane za najbardziej naukowe i poświęcone jest im wiele prac naukowych. W niniejszej pracy, z tej grupy metod syntezy, przedstawiono głównie syntezę fizyczną opartą o falowody cyfrowe oraz modele ARMA.
 
 \subsection{Metody przetwarzania sygnału}
 %http://marcdata.hamu.cz/vyzkum/dokumenty/Lit92.pdf - additive, subtractive, FM. sampling
@@ -102,9 +103,9 @@ Syntezatory analogowe nazywane są również modularnymi. Utworzenie dźwięku p
 	\label{rys:analog_scheme}
 \end{figure}
 
-Na rysunku \ref{rys:analog_scheme} przedstawiono podstawowy schemat syntezatora modularnego. Składa się on z najbardziej uniwersalnych elementów stosowanych w analogowej syntezie dźwięku. Sygnał jest tworzony przy wykorzystaniu oscylatora (VCO), którego częstotliwość zostaje ustalona poprzez naciśnięcie odpowiedniego klawisza (na klawiaturze sterującej). Następnie dźwięk, za pomocą filtra (VCF) zostaje pozbawiony pewnej części składowych harmonicznych. W dalszej kolejności dociera on do modułu sterującego amplitudą dźwięku (VCA), który ustala jego amplitudę zgodnie z ustawieniami modułu ADSR. Następnie dźwięk jest wyprowadzany na wyjście, czyli do zestawu nagłośnieniowego.
+Na rysunku \ref{rys:analog_scheme} przedstawiono podstawowy schemat syntezatora modularnego. Składa się on z najbardziej uniwersalnych elementów stosowanych w analogowej syntezie dźwięku. Sygnał jest tworzony przy wykorzystaniu oscylatora (VCO), którego częstotliwość zostaje ustalona poprzez naciśnięcie odpowiedniego klawisza (na klawiaturze sterującej). Następnie dźwięk, za pomocą filtra (VCF) zostaje pozbawiony pewnej części składowych harmonicznych. W dalszej kolejności dociera on do modułu sterującego amplitudą dźwięku (VCA), który ustala jego amplitudę zgodnie z ustawieniami modułu obwiedni dźwięku (ADSR). Następnie dźwięk jest wyprowadzany na wyjście (OUT), czyli do zestawu nagłośnieniowego.
 
-W cyfrowej syntezie dźwięku, każdy z omówionych modułów jest realizowany jako część programu komputerowego procesora klasy DSP. Poniżej opisano bardziej szczegółowo moduł, który będzie realizowany jako część programu autorskiego projektu dyplomowego.
+W cyfrowej syntezie dźwięku, każdy z omówionych modułów jest realizowany jako część programu komputerowego procesora klasy DSP. Poniżej opisano moduł pozwalający na zmianę kształtu transjentów, który został zrealizowany jako część programu autorskiego projektu dyplomowego.
 
 \subsection{ADSR}
 Akronim, który jest tytułem tego podrozdziału, oznacza cztero-etapowy generator obwiedni stosowany w syntezatorach. Jest on wykorzystywany zarówno w syntezatorach analogowych, jak i cyfrowych.
@@ -134,7 +135,7 @@ Moduł ADSR może być używany niezależnie od metody syntezy dźwięku.
 Debata na temat tego, który rodzaj syntezatorów jest lepszy, trwa od samego wprowadzenia cyfrowych syntezatorów (CS) do sprzedaży. Argumenty za i przeciw obu stron tego konfliku zazwyczaj odnoszą się do charakteru brzmienia obu rodzajów syntezatorów. Nie jest to jednak jedyna właściwość syntezatorów poróżniająca obie strony.
 
 % Porownanie: https://www.synthtopia.com/content/2019/01/11/analog-vs-digital-synthesizer-blind-test/  W opisie na YT sa wyniki
-Lorenzo Furlanetto utworzył test ślepego (ang. blind test) porównania klasycznego analogowego syntezatora (AS) oraz jego cyfrowej emulacji \cite{synthtopia}. Wyniki testu pokazały, iż 51 procent ankietowanych rozpoznało, który z syntezatorów był analogowy, natomiast aż 57 procent osób orzekło, iż dźwięk syntezatorów cyfrowych jest przyjemniejszy. Oznacza to, że trudno jest odróżnić dźwięk obu typów syntezatorów, oraz że większość słuchaczy preferuje brzmienia cyfrowe.
+Lorenzo Furlanetto utworzył test ślepego porównania (ang. blind test) klasycznego analogowego syntezatora (AS) oraz jego cyfrowej emulacji \cite{synthtopia}. Wyniki testu pokazały, iż 51 procent ankietowanych rozpoznało, który z syntezatorów był analogowy, natomiast aż 57 procent osób orzekło, iż dźwięk CS jest przyjemniejszy. Oznacza to, że trudno jest odróżnić dźwięk obu typów syntezatorów, oraz że większość słuchaczy preferuje brzmienia cyfrowe.
 
 % https://blog.andertons.co.uk/labs/hardware-synths-vs-software-synths
 Syntezatory cyfrowe, w stosunku do analogowych, posiadają wiele zalet. Za pomocą tych pierwszych można dokonać syntezy wielu rodzajów dźwięków, w tym również takich, które imitują brzmienia prawdziwych instrumentów. Analogowe syntezatory natomiast, pozwalają jedynie na uzyskanie prostych brzmień, za pomocą filtracji i zmian podstawowej grupy przebiegów (trójkątnych, prostokątnych, sinusoidalnych i piłokształtnych). 
@@ -160,16 +161,16 @@ Podobnie jak w popularnym interfejsie UART, początek transmisji ramki danych ro
 	\centering
 	\includegraphics[width=9cm]{./grafiki/hardware_midi}
 	\captionsetup{justification=centering}
-	\caption{Schemat elektryczny interfejsu MIDI.}
+	\caption{Schemat elektryczny interfejsu MIDI \cite{dokumentacja_midi}.}
 	\label{rys:hardware_midi}
 \end{figure}
 
-Schemat sprzętowy interfejsu MIDI znajdującego się po stronie instrumentu cyfrowego przedstawiono na rysunku \ref{rys:hardware_midi}. Do połączeń z instrumentem używane są wtyki DIN pięciopinowe. Na wejściu interfejsu MIDI zawsze umieszczony zostaje transoptor, który chroni instrument otrzymujący informację przed uszkodzeniem.
+Schemat sprzętowy interfejsu MIDI, znajdującego się po stronie instrumentu cyfrowego, przedstawiono na rysunku \ref{rys:hardware_midi}. Do połączeń z instrumentem używane są wtyki DIN pięciopinowe. Na wejściu interfejsu MIDI zawsze umieszczony zostaje transoptor, który chroni instrument otrzymujący informację przed uszkodzeniem.
 
 \subsection{Protokół MIDI}
 %https://www.midi.org/specifications-old/category/midi-1-0-detailed-specifications
 %PDF: D:\Data\Studia\Magisterka\Literatura wstepna\MIDI
-Wiadomości MIDI składają się z jednego bajta statusu, po którym następuje zazwyczaj jeden lub dwa bajty danych. Istnieją różne typy wiadomości MIDI. Dzieli się je na wiadomości kanałowe (odnoszące się do jednego kanału) oraz systemowe (odnoszące się do wszystkich kanałów). Wiadomości kanałowe mogą dzielić się dalej na komunikaty trybu lub komunikaty głosu. Te drugie w praktyce stanowią większość przesyłanych komunikatów w transmisji MIDI.
+Wiadomości MIDI składają się z jednego bajta statusu, po którym następuje zazwyczaj jeden lub dwa bajty danych. Istnieją różne typy wiadomości MIDI. Dzieli się je na wiadomości kanałowe (odnoszące się do jednego kanału) oraz systemowe (odnoszące się do wszystkich kanałów). Wiadomości kanałowe mogą dzielić się dalej na komunikaty trybu lub komunikaty głosu. Te drugie w~praktyce stanowią większość przesyłanych komunikatów w transmisji MIDI.
 Komunikat głosu może nieść informację na przykład o: naciśnięciu klawisza, zwolnieniu klawisza, aftertouch (zmiana siły nacisku na klawisz, odnotowana po pewnym czasie od jego naciśnięcia), pitch bend (delikatna zmiana wysokości dźwięku). Protokół MIDI, w ramach transmisji bajta danych (komunikat głosu), może obsłużyć 128 wysokości dźwięków z jednego instrumentu. Poziom głośności, zależny od siły nacisku na klawisz, również może przyjąć jedną ze 128 wartości.
 
 Oprócz przesyłu informacji między urządzeniami MIDI, występuje dodatkowo sygnał zegarowy MIDI (ang. MIDI Pulses), który pozwala na zsynchronizowanie kilku instrumentów, do wykonywania utworu w jednakowym tempie. Informacje zegarowe występują cyklicznie i zawsze posiadają tę samą wartość bitową.
@@ -208,7 +209,7 @@ x[n] = \frac{1}{N}\sum_{k=0}^{N-1} X[k]e^{j\frac{2\pi n}{N}k}  \\
 	&	$x[n]$ & - &  n-ta próbka dyskretnego sygnału w dziedzinie czasu, \\
 	&	$N$ & - &  liczba próbek sygnału poddanego przekształceniu Fouriera,\\
 	&	$n$ & - &  próbki dyskretnego sygnału w dziedzinie czasu, \\
-	&	$k$ & - &  próbki dyskretnego widma sygnału, \\
+	&	$k$ & - &  próbki dyskretnego widma sygnału. \\
 \end{tabular}
 
 We wzorach (\ref{equ:dft}) i (\ref{equ:idft}) przyjęto indeksowanie asymetryczne. Zapis taki wybrano z uwagi na bardziej czytelną postać. W celu uproszczenia zapisu definicji DFT stosuje się współczynniki obrotu (ang. twiddle factors):
@@ -219,11 +220,11 @@ We wzorach (\ref{equ:dft}) i (\ref{equ:idft}) przyjęto indeksowanie asymetryczn
 \end{aligned}
 \qquad\qquad % adjust to suit
 \begin{aligned}[t]
-   k, n = 0, 1, 2, ..., N - 1 \\
+   k, n = 0, 1, 2, ..., N - 1. \\
 \end{aligned}
 \end{equation}
 
-Współczynniki obrotu ułatwiają obliczenia dzięki ich prostej interpretacji graficznej. Interpretowane są one jako wskazy na wykresie kołowym. Każdy ze współczynników należy rozumieć jako liczbę $e^{-j\frac{2\pi}{N}nk}$ podniesioną do potęgi $k$ razy $n$. W celu uzyskania uproszczonego zapisu definicji należy również zapisać próbki widma i sygnału w postaci wektorowej:
+Współczynniki obrotu ułatwiają obliczenia, dzięki ich prostej interpretacji graficznej. Interpretowane są one jako wskazy na wykresie kołowym. Każdy ze współczynników należy rozumieć jako liczbę $e^{-j\frac{2\pi}{N}}$ podniesioną do potęgi $k$ razy $n$. W celu uzyskania uproszczonego zapisu definicji należy również zapisać próbki widma i sygnału w postaci wektorowej:
 
 \begin{equation} \label{equ:dft_wekt}
 \openup\jot
@@ -238,16 +239,16 @@ X[0] \\ X[1] \\ ... \\ X[N-1]
 \mathbf{x} =  
 \begin{bmatrix} 
 x[0] \\ x[1] \\ ... \\ x[N-1]
-\end{bmatrix}
+\end{bmatrix}.
 \end{aligned}
 \end{equation}
 
-Ze wzorów (\ref{equ:twid_fact}) i (\ref{equ:dft_wekt}) uzyskuje się uproszczony zapis definicji DFT:
+Ze wzorów (\ref{equ:twid_fact}) i (\ref{equ:dft_wekt}) uzyskuje się uproszczony zapis definicji DFT oraz IDFT:
 \begin{equation} \label{equ:dft_upr}
-	\mathbf{X} = [W_{N}^{kn}]\mathbf{x}
+	\mathbf{X} = [W_{N}^{kn}]\mathbf{x},
 \end{equation}
 \begin{equation} \label{equ:idft_upr}
-\mathbf{X} = \frac{1}{N}[W_{N}^{-kn}]\mathbf{x}
+\mathbf{x} = \frac{1}{N}[W_{N}^{-kn}]\mathbf{X}.
 \end{equation}
 
 \subsection{Właściwości przekształcenia DFT}

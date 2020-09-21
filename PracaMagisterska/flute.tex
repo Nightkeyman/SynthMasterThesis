@@ -35,7 +35,7 @@ Jednowymiarowe równanie falowe (\ref{equ:flute_row_falowe}) przedstawia rozchod
 
 
 \subsubsection{Model}
-W niniejszej pracy, syntezę falowodową dźwięku instrumentu dętego drewnianego oparto o schemat blokowy przedstawiony przez P. Cooka w 1992 roku.
+W niniejszej pracy, syntezę falowodową dźwięku instrumentu dętego drewnianego oparto o~schemat blokowy przedstawiony przez P. Cooka w 1992 roku.
 
 %Odnosnik do literatury na rysunku
 \begin{figure}[H]
@@ -54,10 +54,10 @@ Obliczenie jednej próbki syntezowanego dźwieku, na podstawie rysunku \ref{rys:
 \subsubsection{Implementacja}
 Implementację syntezy falowodowej w autorskim programie realizowanym na procesorze DSP,  wzorowano na schemacie \ref{rys:flute_cook}. Przepływ powietrza (\emph{flow}) został zaimplementowany jako fala sinusoidalna o odpowiedniej obwiedni \cite{flute_prezka}. Szum dochodzący do utworzonego sygnału został zasymulowany funkcją rand(), a jego amplituda została odpowiednio przeskalowana. Sygnały sinusoidy i szumu są sumowane, a następnie trafiają do pętli zamkniętej, którą zaimplementowano w postaci pętli "for". Charakter brzmienia takiego modelu fletu zmienia się w zależności od parametrów wzmocnienia obu linii sprzężenia zwrotnego oraz wartości opóźnień \emph{Emb Delay} i \emph{Flute Bore Delay}.
 
-Jeden blok danych na procesorze DSP zawiera 1024 próbek. Linie opóźniające przesuwają próbki o kilkadziesiąt indeksów w tył. Oznacza to, iż pierwsza próbka nowego bloku danych, musi sięgnąć do poprzednio wygenerowanej tablicy. Do implementacji wykorzystano mechanizm tablicowy typu "ping-pong". Po wygenerowaniu pełnego bloku danych, pierwsza tablica przepisuje wszystkie wartości do drugiej. Następnie pierwsza tablica zostaje wyzerowana. Opóźnione próbki, do których należy się odnieść przy generowaniu nowego bloku danych, znajdują się w drugiej tablicy. Takim mechanizmem zapewniono ciągłość generowanego sygnału, bez błędów obliczeniowych.
+Jeden blok danych na procesorze DSP zawiera 1024 próbek. Linie opóźniające przesuwają próbki o kilkadziesiąt indeksów w tył. Oznacza to, iż pierwsza próbka nowego bloku danych, musi sięgnąć do poprzednio wygenerowanej tablicy. Do implementacji wykorzystano mechanizm tablicowy typu "ping-pong". Po wygenerowaniu pełnego bloku danych, pierwsza tablica przepisuje wszystkie wartości do drugiej. Następnie pierwsza tablica zostaje wyzerowana. Opóźnione próbki, do których należy się odnieść przy generowaniu nowego bloku danych, znajdują się w~drugiej tablicy. Takim mechanizmem zapewniono ciągłość generowanego sygnału, bez błędów obliczeniowych.
 
 \subsection{Synteza na podstawie modelu ARMA}
-W tym punkcie przedstawiono identyfikację modelu matematycznego fletu, na podstawie którego przeprowadzono później syntezę dźwięku. Do rozpoznania modelu instrumentu użyto tonu "A" razkreślnego o częstotliwości 440 Hz. Dźwięk wygenerowany w trakcie gry na flecie zmienia swoją charakterystykę w czasie. Oznacza to, iż jego model również zmienia się w trakcie granego przebiegu sygnału. Do identyfikacji wybrano te część nagrania, w której model instrumentu jest w stanie ustalonym.
+W tym punkcie przedstawiono identyfikację modelu matematycznego fletu, na podstawie którego przeprowadzono później syntezę dźwięku. Do rozpoznania modelu instrumentu użyto tonu "A" razkreślnego o częstotliwości 440 Hz. Dźwięk wygenerowany w trakcie gry na flecie zmienia swoją charakterystykę w czasie. Oznacza to, iż jego model również zmienia się w trakcie granego przebiegu sygnału. Do identyfikacji wybrano te część nagrania, w której model instrumentu jest w~stanie ustalonym.
 
 \subsubsection{Identyfikacja modelu}
 Identyfikacja modelu matematycznego instrumentu została przeprowadzona poprzez manualne dopasowanie zer i biegunów modelu do widma nagrania.
@@ -92,7 +92,7 @@ q = 1-\frac{0.05}{A_{q}}e^{jf_{q}2\pi/F_{s}}
 
 Każdy pik charakterystyki został przetworzony na dwa bieguny odbite lustrzanie względem osi rzeczywistej na płaszczyźnie Z, według wzoru (\ref{equ:flute_bieguny}). Każda z dolin została odwzorowana jako dwa zera odbite lustrzanie względem osi Z, według zależności (\ref{equ:flute_doliny}).
 
-Model ARMA zsyntezowanego fletu utworzono na podstawie wyznaczonych zer i biegunów. W celu wygenerowania dźwięku z modelu w środowisku symulacyjnym, pobudzono go szumem białym. Następnie znormalizowano otrzymany sygnał, aby uniknąć przesterowań. Dźwięk wygenerowany z modelu przypominał brzmienie instrumentu z rodziny instrumentów dętych drewnianych. Wysokość wygenerowanego dźwięku odpowiadała tej z oryginalnego nagrania (440 Hz).
+Model ARMA zsyntezowanego fletu utworzono na podstawie wyznaczonych zer i biegunów. W~celu wygenerowania dźwięku z modelu w środowisku symulacyjnym, pobudzono go szumem białym. Następnie znormalizowano otrzymany sygnał, aby uniknąć przesterowań. Dźwięk wygenerowany z modelu przypominał brzmienie instrumentu z rodziny instrumentów dętych drewnianych. Wysokość wygenerowanego dźwięku odpowiadała tej z oryginalnego nagrania (440 Hz).
 
 \subsubsection{Parametryzacja zidentyfikowanego modelu}
 Model powinien mieć możliwość generowania dźwięków o różnej wysokości. Model zidentyfikowany metodą z poprzedniego punktu ma charakter statyczny - po pobudzeniu go szumem, zostaje wygenerowany z niego dźwięk zawsze o tej samej częstotliwości podstawowej (ton "A" razkreślny, na podstawie którego, model był identyfikowany). W celu osiągnięcia innego tonu na podstawie utworzonego modelu, należało dokonać jego parametryzacji. Polegała ona utworzeniu zależności między każdym biegunem i zerem modelu a pożądanym tonem, w oparciu o zasady przyjęte w protokole MIDI.
@@ -120,7 +120,7 @@ Na podstawie wzoru (\ref{equ:wpr_dzwiek}), została utworzona zależność biegu
 	\includegraphics[width=11.5cm]{grafiki/Model_B_A}
 	\label{rys:por_mod_flet}
 	\captionsetup{justification=centering}
-	\caption{Porównanie widma modeli ARMA fletu dla dzwieku "B" razkreślnego (wykres przesuniety w prawo) i "A" razkreślnego (wykres przesunięty w lewo).}
+	\caption{Porównanie widma modeli ARMA fletu dla dzwieku "B" razkreślnego (wykres przesuniety w~prawo) i "A" razkreślnego (wykres przesunięty w lewo).}
 	\label{rys:por_mod_flet}
 \end{figure}
 Można zauważyć na rysunku \ref{rys:por_mod_flet}, że dla różnych tonów wszystkie piki oraz doliny opisane zidentyfikowanym modelem przesuwają się w dziedzinie częstotliwości. Oznacza to, iż pobudzony model może wygenerować dźwięk o różnej wysokości, w zależności od parametru $n$ występującego we wzorze (\ref{equ:flute_param}).
@@ -129,7 +129,7 @@ Można zauważyć na rysunku \ref{rys:por_mod_flet}, że dla różnych tonów ws
 \subsubsection{Implementacja}
 W autorskim programie dla procesora DSP, syntezę dźwięku za pomocą zidentyfikowanego modelu ARMA, zaimplementowano jako przetwarzanie szumu poprzez filtr IIR. Współczynniki filtru uzyskano z przeprowadzonej wcześniej symulacji w środowisku Matlab. 
 % O tym jak precyzja zmieniala wyniki!! Na floatach nie dziala.
-W celu zmniejszenia złożoności obliczeniowej, do obliczania próbek zastosowano typ zmiennych o pojedynczej precyzji (float). Spowodowało to sytuację, w której wartości generowanego dźwięku fletu narastały do nieskończoności. Działo się to na skutek zbyt niskiej precyzji powodującej błędy numeryczne w filtrze ze sprzężeniem zwrotnym. Po modyfikacji typu zmiennych na zmienne o podwójnej precyzji (double), uzyskano pożądane rezultaty - stabilny model ARMA i sygnał wyjściowy odpowiadający dźwiękowi instrumentu dętego drewnianego.
+W celu zmniejszenia złożoności obliczeniowej, do obliczania próbek zastosowano typ zmiennych o pojedynczej precyzji (float). Spowodowało to sytuację, w której wartości generowanego dźwięku fletu narastały do nieskończoności. Działo się to na skutek zbyt niskiej precyzji powodującej błędy numeryczne w~filtrze ze sprzężeniem zwrotnym. Po modyfikacji typu zmiennych na zmienne o podwójnej precyzji (double), uzyskano pożądane rezultaty - stabilny model ARMA i sygnał wyjściowy odpowiadający dźwiękowi instrumentu dętego drewnianego.
 
 % opisac jak zaimplementowano filtr IIR ?? - tak
 % przedstawic splot sygnału
@@ -138,7 +138,7 @@ Algorytm przesyłania kolejnych bloków danych z próbkami dźwięku do przetwor
 Interfejs użytkownika dla syntezy dźwięku fletu ogranicza się do włączenia tej opcji za pomocą przycisku "Enable". Nie ma możliwości zmiany parametrów syntezy przez użytkownika. Jest to spodowodowane bardzo dużą wrażliwością modelu na nawet najmniejsze zmiany parametrów.
 
 \subsection{Wyniki}
-Poniżej przedstawiono wyniki syntezy dźwięku fletu dla obydwu metod - falowodowej oraz z wykorzystaniem modelu ARMA.
+Poniżej przedstawiono wyniki syntezy dźwięku fletu dla obydwu metod - falowodowej oraz z~wykorzystaniem modelu ARMA.
 
 \begin{figure}[H]
 	\centering

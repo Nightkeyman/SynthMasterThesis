@@ -1,7 +1,7 @@
 \chapter{Addytywna synteza dźwięku}\label{chapter_additive}
 Synteza addytywna pozwala na utworzenie barwy dźwięku poprzez zbudowanie pełnego widma częstotliwościowego za pomocą wybranych składowych. Słowo "addytywna" odnosi się do sumowania wielu przebiegów w jeden złożony sygnał dźwiękowy. Historycznie metoda ta jest drugą najstarszą metodą syntezy, zaraz po subtraktywnej, opisanej w rozdziale \ref{chapter_subtractive}.
 Zazwyczaj synteza addytywna polega na dodawaniu sygnałów reprezentujących wiele fal sinusoidalnych o różnych częstotliwościach oraz amplitudach. Metoda ta daje użytkownikowi wiele różnorodnych możliwości. Dodawanymi składowywmi sygnału nie muszą być jedynie fale sinusoidalne.
-Synteza addytywna uznawana jest za odwrotność syntezy subtraktywnej. Znajduje zastosowanie w syntezie dźwięku oraz mowy.
+Synteza addytywna uznawana jest za odwrotność syntezy subtraktywnej. Znajduje zastosowanie w~syntezie dźwięku oraz mowy.
 
 W niniejszym rozdziale przedstawiono zasadę działania syntezy addytywnej. Zaprezentowano wzory matematyczne, za pomocą których można uzyskać zaprojektowane brzmienie. Przedstawiono również kilka metod implementacji tego rodzaju syntezy. Na końcu rozdziału omówiono autorski interfejs użytkownika oraz wyniki realizacji syntezy addytywnej na procesorze DSP.
 
@@ -32,17 +32,17 @@ Postać harmoniczna syntezy addytywnej pozwala również na uzyskanie podstawowy
 
 %https://en.wikipedia.org/wiki/Square_wave
 \begin{equation} \label{equ:addit_sqr}
-y_{Square}(t) = \sum_{k=1}^{K} \frac{1}{2k-1} \text{sin}(2\pi (2k-1)f_{0}t) \\
+y_{Square}(t) = \sum_{k=1}^{K} \frac{1}{2k-1} \text{sin}(2\pi (2k-1)f_{0}t), \\
 \end{equation}
 
 %https://en.wikipedia.org/wiki/Triangle_wave
 \begin{equation} \label{equ:addit_trng}
-y_{Triangle}(t) = \sum_{k=1}^{K} \frac{(-1)^k}{(2k-1)^2} \text{sin}(2\pi (2k-1)f_{0}t)  \\
+y_{Triangle}(t) = \sum_{k=1}^{K} \frac{(-1)^k}{(2k-1)^2} \text{sin}(2\pi (2k-1)f_{0}t),  \\
 \end{equation}
 
 %https://en.wikipedia.org/wiki/Sawtooth_wave
 \begin{equation} \label{equ:addit_sawth}
-y_{Sawtooth}(t) = \sum_{k=1}^{K} \frac{(-1)^k}{k} \text{sin}(2\pi kf_{0}t) \\
+y_{Sawtooth}(t) = \sum_{k=1}^{K} \frac{(-1)^k}{k} \text{sin}(2\pi kf_{0}t). \\
 \end{equation}
 % O tym że na tym polegały organy Hammonda
 
@@ -65,14 +65,14 @@ y(t) = \sum_{k=1}^{K} a_{k}\text{sin}(2\pi f_{k}t + \phi_{k})  \\
 	gdzie: 	&	$f_{k}$ & - &  częstotliwość składowej sygnału k. \\
 \end{tabular} \\
 
-Postać (\ref{equ:addit_time_nieharm}) można traktować jako uogólnioną formę wzoru (\ref{equ:addit_time_harm}). Częstotliwość $f_k$ to taka, dla której stosunek $f_i$ do $f_j$ (gdzie $i$,$j$ $\in$ $k$) nie da wyrazić się za pomocą ułamka prostego. Dźwięk opisany powyższym wzorem jest generowany przez instrumenty takie jak dzwony lub perkusjonalia.
+Postać (\ref{equ:addit_time_nieharm}) można traktować jako uogólnioną formę wzoru (\ref{equ:addit_time_harm}). Częstotliwość $f_k$ to taka, która zazwyczaj nie jest całkowitą wielokrotnością częstotliwości $f_0$. Dźwięk opisany powyższym wzorem jest generowany przez instrumenty takie jak dzwony lub perkusjonalia.
 
 \subsection{Składowe zmienne w czasie}
 %https://books.google.pl/books/about/The_Computer_Music_Tutorial.html?id=nZ-TetwzVcIC&printsec=frontcover&source=kp_read_button&redir_esc=y#v=onepage&q&f=false  , strona 140
 Wzory matematyczne (\ref{equ:addit_time_harm}) i (\ref{equ:addit_time_nieharm}) pozwalają na uzyskanie jedynie stanu ustalonego zsyntezowanego brzmienia. Powtarzany jest jeden okres sygnału, co daje wrażenie słuchaczowi stałości parametrów powtarzanego dźwięku.
 
 Składowe sygnału audio mogą jednak zmieniać się w czasie \cite{add_time_varying}. Zmiany te mogą dotyczyć ich amplitudy, jak i częstotliwości.
-Taką postać syntezy addytywnej zapisuje się:
+Taką postać syntezy addytywnej zapisuje się jako:
 \begin{equation} \label{equ:addit_time_zmienne}
 y(t) = \sum_{k=1}^{K} a_{k}(t)\text{sin}(2\pi f_{k}(t)t + \phi_{k})  \\  
 \end{equation}
@@ -108,7 +108,7 @@ Dodanie szumu do sygnału deterministycznego w syntezie addytywnej pozwala na uz
 %https://ccrma.stanford.edu/~jos/sasp/Sines_Noise_Analysis.html
 
 \section{Metody implementacji syntezy addytywnej}
-Istnieją różne metody implementacji addytywnej syntezy dźwięku \cite{add_imp_meth}. Oznacza to, iż sam dźwięk może zostać uzyskany różnymi sposobami. Popularne metody realizacji syntezy addytywnej to:
+Istnieją różne metody implementacji addytywnej syntezy dźwięku \cite{add_imp_meth}. Oznacza to, iż ten sam dźwięk może zostać uzyskany różnymi sposobami. Popularne metody realizacji syntezy addytywnej to:
 \begin{itemize}
 	\item bank oscylatorów,
 	\item synteza wavetable,
@@ -128,7 +128,7 @@ wymagane byłoby obliczenie około 400 fal sinusoidalnych na każdą próbkę zs
 \subsection{Bank oscylatorów}
 %analogowe hammondy i zwykłe, ale ze są wolne
 Synteza za pomocą banku oscylatorów jest najstarszą metodą implementacji addytywnej syntezy dźwięku. Opiera się ona bezpośrednio na równaniu (\ref{equ:addit_time_harm}).
-Ta metoda implementacji realizowana była nawet na instrumentach analogowych. Instrumenty takie jak organy Hammonda miały kilka wirujących dysków (koła tonacyjne) posiadających w wielu miejscach nacięcia o specyficznych kształtach. Obracające tarcze powodowały zmiany w polu magnetycznym, co generowało małe napięcie w zwojnicy. Dzięki temu uzyskiwano prąd elektryczny o charakterystyce zawierającej pewne składowe harmoniczne tonu podstawowego.
+Ta metoda implementacji realizowana była nawet na instrumentach analogowych. Instrumenty takie jak organy Hammonda miały kilka wirujących dysków (koła tonacyjne) posiadających w wielu miejscach nacięcia o specyficznych kształtach. Obracające tarcze powodowały zmiany w polu magnetycznym, co generowało małe napięcia w zwojnicy. Dzięki temu uzyskiwano prąd elektryczny o charakterystyce zawierającej pewne składowe harmoniczne tonu podstawowego.
 % Przez te tarcze oswietlana byla fotokomorka
 \begin{figure}[H]
 	\centering
@@ -149,7 +149,7 @@ Synteza wavetable (nazywana również syntezą tablicową) polega na zapisaniu j
 Odtwarzanie wszystkich próbek w opisanej tablicy pozwala uzyskać najniższą częstotliwość fali $f_0$. Wybieranie co drugiej próbki powoduje generowanie częstototliwości 2$f_0$, co trzeciej 3$f_0$ i tak dalej.
 % Generowanie dźwięków o okreslonej czestotliwosci polega na wybieraniu 
 
-W syntezie addytywnej użycie takiej metody implementacji może znacznie przyspieszyć generowanie kolejnych próbek składowych sygnału. Do tablicy zapisuje się jeden przebieg sinusoidalny. Odczyt jednego indeksu zabiera mniej czasu pracy procesora niż wygenerowanie próbki za pomocą funkcji sin(). Działanie takiej metody jest podobne do banku oscylatorów, ze względu na działanie w dziedzinie czasu. Różnica polega na tym, że tablicę w syntezie wavetable można traktować jako jeden oscylator, z którego należy jedynie odczytać wartości tj. znaleźć odpowiedni indeks tablicy (nie jest konieczne obliczanie na nowo próbki dla każdej składowej dźwięku, w każdej chwili czasu).
+W syntezie addytywnej użycie takiej metody implementacji może znacznie przyspieszyć generowanie kolejnych próbek składowych sygnału. Do tablicy zapisuje się jeden przebieg sinusoidalny. Odczyt jednego indeksu zabiera mniej czasu pracy procesora niż wygenerowanie próbki za pomocą funkcji sin(). Działanie takiej metody jest podobne do banku oscylatorów, ze względu na działanie w dziedzinie czasu. Różnica polega na tym, że tablicę w syntezie wavetable można traktować jako jeden oscylator, z którego należy jedynie odczytać wartości tj. znaleźć odpowiedni indeks tablicy (nie jest konieczne obliczanie na nowo próbki dla każdej składowej dźwięku, w~każdej chwili czasu).
 %https://en.wikipedia.org/wiki/Lookup_table
 
 \subsection{Synteza IFFT}
@@ -194,7 +194,7 @@ Laurens Hammond, twórca tychże organów, zaprojektował je tak, aby użytkowni
 
 Interfejs programu opiera się na oryginalnym instrumencie Laurensa Hammonda. Umożliwia on użytkownikowi regulację dziewięciu SH za pomocą gałek przedstawionych na rysunku \ref{rys:add_interface}. Można zauważyć, iż gałki posiadają również 8 poziomów wartości, które odpowiadają wartościom amplitud składowych harmonicznych. Po ustawieniu pożądanej barwy, użytkownik musi kliknąć na panelu w przycisk "Set", aby parametry syntezy addytywnej zostały wysłane do procesora DSP.
 
-Gałki panelu zostały zrealizowane za pomocą obiektów klasy KnobControl. Naciśnięcie przycisku "Set" wywołuje funkcję, która odczytuje wartość elementu panelu syntezy addytywnej w formie tablicy bajtów. Następnie program wysyła odpowiedni identyfikator gałki do procesora DSP, a po nim jej wartość odczytaną z tablicy.
+Gałki panelu zostały zrealizowane za pomocą obiektów klasy KnobControl. Naciśnięcie przycisku "Set" wywołuje funkcję, która odczytuje wartość elementu panelu syntezy addytywnej w formie tablicy bajtów. Następnie program wysyła odpowiedni identyfikator gałki do procesora DSP, a~po nim jej wartość odczytaną z tablicy.
 
 \section{Realizacja organów na procesorze DSP}
 Pierwszą próbą implementacji organów Hammonda w autorskim programie dla procesora DSP, było wykorzystanie metody banku oscylatorów. Rezultaty były jednak niezadowalające. Wywołanie funkcji sin() dziwięciokrotnie dla jednej próbki sygnału, oznaczało, iż w podejściu polifonicznym mogła ona zostać wywołana nawet dziewiędziesiąt razy (odpowiada to sytuacji naciśnięcia dziesięciu klawiszy na klawiaturze MIDI).
@@ -215,12 +215,12 @@ Zdefiniowana tablica lookup o nazwie sinLut[.] zawiera jeden okres fali sinusoid
 	& $F_s$ & - & częstotliwość próbkowania DAC. \\
 \end{tabular} \\
 
-Funkcja mySin() zwraca element z tablicy na podstawie wzoru (\ref{equ:addit_sinLut}). Do wygenerowania jednej próbki organów Hammonda sumowane jest 9 tak odczytanych wartości sinLut[.] (odpowiadających składowym harmonicznym). Każda próbka zsyntezowanego dźwięku ulega wymnożeniu z obecną wartością amplitudy ADSR. Opisana czynność wykonywana jest tyle razy, ile elementów posiada jeden blok generowanego sygnału.
+Funkcja mySin() zwraca element z tablicy na podstawie wzoru (\ref{equ:addit_sinLut}). Do wygenerowania jednej próbki organów Hammonda sumowane jest 9 tak odczytanych wartości sinLut[.] (odpowiadających składowym harmonicznym). Każda próbka zsyntezowanego dźwięku ulega wymnożeniu z~obecną wartością amplitudy ADSR. Opisana czynność wykonywana jest tyle razy, ile elementów posiada jeden blok generowanego sygnału.
 
 Procesor DSP otrzymuje z interfejsu użytkownika nastawy gałek regulatorów syntezy addytywnej za pomocą funkcji obsługi przerwania UART. Parametry te są zapisywane do tablicy add\_knobAmp[.]. Następnie są używane do syntezy dźwięku organów.
 
 \subsection{Wyniki}
-Wykorzystana metoda implementacji za pomocą tablicy wavetable umożliwiła jednoczesne wykorzystanie kilkunastu klawiszy instrumentu, bez pojawienia się niepożądanych artefaktów w dźwięku. Zmiany amplitud poszczególnych składowych harmonicznych wpływają na generowane brzmienie w bardzo wyraźny sposób.
+Wykorzystana metoda implementacji za pomocą tablicy wavetable umożliwiła jednoczesne wykorzystanie kilkunastu klawiszy instrumentu, bez pojawienia się niepożądanych artefaktów w~dźwięku. Zmiany amplitud poszczególnych składowych harmonicznych wpływają na generowane brzmienie w bardzo wyraźny sposób.
 
 \begin{figure}[H]
 	\centering

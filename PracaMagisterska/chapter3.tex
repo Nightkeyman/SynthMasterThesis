@@ -1,6 +1,6 @@
 % !TeX spellcheck = pl_PL
 \chapter{Projekt instrumentu muzycznego}
-W ramach realizacji projektu konieczne jest zaimplementowanie wielu różnych etapów przetwarzania i sterowania procesem generowania dźwięku: akwizycja sygnałów z klawiatury muzycznej, generowanie dźwięku z procesora DSP oraz komunikacja z interfejsem użytkownika. W niniejszym rozdziale przedstawiono sposób realizacji wymienionych zadań. Omówiono również warstwę sprzętową projektu, odgrywającą podstawową rolę w realizacji syntezatora. Implementacja poszczególnych algorytmów syntezy dźwięku przedstawiona zostanie w kolejnych rozdziałach im dedykowanych.
+W ramach realizacji projektu konieczne jest zaimplementowanie wielu różnych etapów przetwarzania i sterowania procesem generowania dźwięku: akwizycja sygnałów z klawiatury muzycznej, generowanie dźwięku z procesora DSP oraz komunikacja z interfejsem użytkownika. W~niniejszym rozdziale przedstawiono sposób realizacji wymienionych zadań. Omówiono również warstwę sprzętową projektu, odgrywającą podstawową rolę w realizacji syntezatora. Implementacja poszczególnych algorytmów syntezy dźwięku przedstawiona zostanie w kolejnych rozdziałach im dedykowanych.
 
 Kod programu na procesor DSP napisany został w języku C. Program uruchamiano w środowisku Code Composer Studio v6, które jest dedykowane dla procesorów firmy Texas Instruments. Wgrywanie kodu na płytę ewaluacyjną PADK odbywało się poprzez użycie debuggera XDS510 firmy Spectrum Digital.
 
@@ -27,11 +27,11 @@ Płyta Professional Audio Development Kit (PADK), która użyta została w ninie
 	\centering
 	\includegraphics[width=16cm]{./grafiki/real_PADK_block}
 	\captionsetup{justification=centering}
-	\caption{Schemat blokowy płyty PADK.}
+	\caption{Schemat blokowy płyty PADK \cite{dokumentacja_PADK}.}
 	\label{rys:real_padk}
 \end{figure}
 
-Na rysunku \ref{rys:real_padk} przedstawiającym schemat blokowy płyty PADK można zaobserwować uzależnienie układów peryferyjnych od procesora DSP, będącego głównym elementem systemu.
+Na rysunku \ref{rys:real_padk} przedstawiającym schemat blokowy płyty PADK można zaobserwować zależność układów peryferyjnych od procesora DSP, będącego głównym elementem systemu.
 
 \subsection{TMS320C6727}
 %https://www.ti.com/lit/ds/symlink/tms320c6727.pdf?ts=1595978326019&ref_url=https%253A%252F%252Fwww.google.com%252F 
@@ -54,7 +54,7 @@ W niniejszej pracy narzędzie McASP stosowane jest do przepływu danych między 
 %https://www.ti.com/lit/ug/spru795d/spru795d.pdf?ts=1595843361787&ref_url=https%253A%252F%252Fwww.google.com%252F, strona 14, Overview
 Kontroler dMAX (Dual Data Movement Accelerator) obsługuje transfery zaprogramowane przez użytkownika pomiędzy kontrolerem pamięci wewnętrznej a urządzeniami peryferialnymi na procesorach DSP firmy Texas Instruments. Mechanizm ten jest dedykowany szczególnie dla procesorów z serii C672x.
 
-Zasada działania dMAX opiera się na sygnałach zdarzeń (ang. event signals). Zdarzenie zdefiniowane jest jako zmiana wartości logicznej odpowiadającego sygnału zdarzeń w rejestrze flag zdarzeń. Zdarzenie może być używane jako: wzbudzenie rozpoczęcia transferu danych lub spowodowane wystąpieniem przerwania dla CPU. Wszystkie zdarzenia posortowane są w dwie grupy: niskiego oraz wysokiego priorytetu. Mechanizm dMAX może równolegle przetwarzać dwa żądania zdarzeń z każdej z grupy \cite{dokumentacja_dmax}.
+Zasada działania dMAX opiera się na sygnałach zdarzeń (ang. event signals). Zdarzenie jest zdefiniowane jako zmiana wartości logicznej odpowiadającego sygnału zdarzeń w rejestrze flag zdarzeń. Zdarzenie może być używane jako wzbudzenie rozpoczęcia transferu danych lub spowodowane wystąpieniem przerwania dla CPU. Wszystkie zdarzenia posortowane są w dwie grupy: niskiego oraz wysokiego priorytetu. Mechanizm dMAX może równolegle przetwarzać dwa żądania zdarzeń z każdej z grup \cite{dokumentacja_dmax}.
 
 Częścią mechanizmu dMAX jest również bufor cyrkulacyjny FIFO. Pozwala on na równoczesny, asynchroniczny odczyt i zapis danych do jednego bufora dwustronnego. Narzędzie dMAX wykrywa kiedy dane zostają zapisane do bufora i natychmiastowo wywołuje odwrócenie go. Po odwróceniu, zapisane chwilę wcześniej dane mogą zostać odczytane z drugiej strony bufora, natomiast równocześnie, kolejne dane są zapisywane po pierwszej stronie.
 
@@ -68,7 +68,7 @@ Płyta PADK ma możliwość komunikowania się z innymi urządzeniami przez trzy
 Za komunikację przez interfejs MIDI oraz UART odpowiadają dwa układy TL16C550. Pozwalają one na alternatywny tryb kolejki danych FIFO, który odciąża procesor DSP. Interfejs USB obsługiwany jest na płycie poprzez mikrokontroler CY7C68013.
 
 \subsection{Przetworniki DAC}
-Na płycie PADK znajdują się dwa, czterokanałowe, 24-bitowe układy PCM4204, które posiadają możliwość próbkowania sygnału z częstotliwością do 192kHz. Umożliwiają one odczyt z płyty uruchomieniowej analogowegych sygnałów dźwiękowych za pomocą gniazd żeńskich typu CINCH.
+Na płycie PADK znajdują się dwa, czterokanałowe, 24-bitowe układy PCM4204, które posiadają możliwość próbkowania sygnału z częstotliwością do 192kHz. Umożliwiają one odczyt z~płyty uruchomieniowej analogowych sygnałów dźwiękowych za pomocą gniazd żeńskich typu CINCH.
 
 \subsection{Pełen schemat układu instrumentu klawiszowego}
 \begin{figure}[H]
@@ -81,9 +81,9 @@ Na płycie PADK znajdują się dwa, czterokanałowe, 24-bitowe układy PCM4204, 
 Strzałki na rysunku \ref{rys:real_uklad} przedstawiają kierunek przepływu danych między głównymi elementami projektowanego układu. Klawiatura MIDI komunikuje się z płytą PADK za pomocą protokołu MIDI. Komputer osobisty z interfejsem użytkownika służy do dwukierunkowej komunikacji z płytą uruchomieniową z wykorzystaniem interfejsu UART. Ostatecznie płyta PADK przesyła próbki dźwięków do przetwornika DAC, którego wyjście analogowe jest połączone z zestawem nagłośnieniowym. Zestaw pozwala odsłuchiwać zsyntezowane brzmienia.
 
 \section{Komunikacja z płytą PADK}
-Do oprogramowania płyty PADK dołączone zostały dodatkowe biblioteki firmy Lyrtech, które ułatwiają obsługę jej komunikacji z urządzeniami zewnętrznymi. Przykładem interfejsów, dla których zostały utworzone nadmienione biblioteki, są UART oraz MIDI.
+Do oprogramowania płyty PADK dołączone zostały dodatkowe biblioteki firmy Lyrtech, które ułatwiają obsługę komunikacji z urządzeniami zewnętrznymi. Przykładem interfejsów, dla których zostały utworzone nadmienione biblioteki, są UART oraz MIDI.
 
-Inicjalizacja przerwań i transferu danych obu interfejsów wygląda bardzo podobnie. Każdy z nich otrzymał swój identyfikator zdarzenia dMAX oraz identyfikator przerwania. Priorytet przerwań obu interfejsów ustawiono na wysoki. Ostatnim elementem inicjalizacji układów było ustawienie rejestru IER obu interfejsów na wartość umożliwiającą pracę w trybie przerwań.
+Inicjalizacja przerwań i transferu danych obu interfejsów wygląda bardzo podobnie. Każdy z~nich otrzymał swój identyfikator zdarzenia dMAX oraz identyfikator przerwania. Priorytet przerwań obu interfejsów ustawiono na wysoki. Ostatnim elementem inicjalizacji układów było ustawienie rejestru IER obu interfejsów na wartość umożliwiającą pracę w trybie przerwań.
 
 \subsection{Komunikacja z klawiaturą muzyczną  (MIDI)}
 % Datasheet "Professional Audio Development Kit Technical Reference Guide 1.4", September 2007
@@ -97,7 +97,7 @@ Do obsługi interfejsu MIDI wykorzystana została biblioteka PADK\_MIDI.c, któr
 \end{itemize}
 W celu jak najmniejszego zużycia czasu procesora, obsługa interfejsu MIDI została sprowadzona jedynie do odczytywania przychodzących bajtów poprzez przerwania sprzętowe.
 Jako że ramki MIDI składają się z trzech bajtów, odczytywać oraz interpretować należy kolejne 3 przychodzące bajty.
-Można to osiągnąć poprzez umieszczenie funkcji MIDI\_Read z parametrem 3 - przerwanie sprzętowe co każde odczytane 3 bajty. Sytuację nieco komplikuje zegar MIDI pojawiający się "losowo", który powoduje, że DSP odczytuje regularnie bajt o wartości 0xF8 zakłócających odczytanie użytecznych danych MIDI. Powoduje to, że w odczytanej sekwencji 3 bajtów pojawiała się niepożądana wartość 0xF8.
+Można to osiągnąć poprzez umieszczenie funkcji MIDI\_Read z parametrem 3 - przerwanie sprzętowe co każde odczytane 3 bajty. Sytuację nieco komplikuje zegar MIDI pojawiający się "losowo", który powoduje, że DSP odczytuje regularnie bajt o wartości 0xF8 zakłócający odczytanie użytecznych danych MIDI. Powoduje to, że w odczytanej sekwencji 3 bajtów pojawiała się niepożądana wartość 0xF8.
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=8cm]{./grafiki/real_nofifo}
@@ -106,7 +106,7 @@ Można to osiągnąć poprzez umieszczenie funkcji MIDI\_Read z parametrem 3 - p
 	\label{rys:real_nofifo}
 \end{figure} 
 Problem ten został zobrazowany na rysunku \ref{rys:real_nofifo}. Przedstawia on zawartość bufora wejściowego w czasie biegnącym od góry do dołu rysunku. W pokazanej sytuacji pomiędzy wywołaniem funkcji MIDI\_Read z parametrem 3, a nadejściem 3-bajtowej ramki danych, został odczytany bajt zegarowy. Ostatecznie odczytana zostanie ramka czwarta oraz siódma od góry.  Oznacza to, że bajty, które miały zostać odczytane jako jedna ramka, mogą być dowolnie rozbite pomiędzy dwa wywołania ISR. 
-Aby rozwiązać ten problem, ISR wywołuje funkcję MIDI\_Read z parametrem 1. W rezultacie każdy przychodzący bajt wywołuje przerwanie. W jego obsłudze sprawdzana jest wartość bajta, jesli jest ona różna od 0xF8 (zegar MIDI), to zostaje ona dodana do trzyelementowej kolejki FIFO. W momencie gdy kolejka FIFO się zapełnia, ramka jest identyfikowana i interpretowana, a kolejka czyszczona. Działanie takiej kolejki zobrazowane jest na rysunku \ref{rys:real_fifo}.
+Aby rozwiązać ten problem, ISR wywołuje funkcję MIDI\_Read z parametrem 1. W~rezultacie każdy przychodzący bajt wywołuje przerwanie. W jego obsłudze sprawdzana jest wartość bajta, jesli jest ona różna od 0xF8 (zegar MIDI), to zostaje ona dodana do trzyelementowej kolejki FIFO. W momencie gdy kolejka FIFO się zapełnia, ramka jest identyfikowana i interpretowana, a kolejka czyszczona. Działanie takiej kolejki zobrazowane jest na rysunku \ref{rys:real_fifo}.
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=8cm]{./grafiki/real_fifo}
@@ -117,7 +117,7 @@ Aby rozwiązać ten problem, ISR wywołuje funkcję MIDI\_Read z parametrem 1. W
 Dzięki sprawdzaniu każdego przychodzącego bajta w obsłudze przerwania, do kolejki FIFO dostają się tylko istotne bajty. Dyskryminowanie wartości 0xF8 nie powinno mieć skutków ubocznych, gdyż wartość ta nie pojawia się w żadnym z bajtów ramki MIDI, poza bajtem statusu komunikatu zegarowego.
 
 \subsection{Komunikacja z interfejsem użytkownika (UART)}\label{sec:real_komunikacja}
-Do komunikacji płyty PADK z panelem sterującym użytkownika działajacym na komputerze klasy PC wykorzystany został interfejs RS-232. Aby umożliwić komunikację komputera nie posiadającego wyżej wymienionego interfejsu wykorzystano układ konwertujący RS-232 na USB.
+Do komunikacji płyty PADK z panelem sterującym użytkownika działajacym na komputerze klasy PC wykorzystany został interfejs RS-232. Aby umożliwić komunikację komputera nieposiadającego wyżej wymienionego interfejsu wykorzystano układ konwertujący RS-232 na USB.
 
 Do obsługi protokołu szeregowego została wykorzystana biblioteka PADK\_UART.c, która zawiera takie funkcje jak:
 \begin{itemize}
@@ -134,12 +134,13 @@ Aby zapewnić wygodny w użyciu oraz odporny na błędy przepływ informacji, ut
 	\caption{Struktura ramki protokołu.}
 	\label{rys:real_uartframe}
 \end{figure}
-Na rysunku \ref{rys:real_uartframe} pokazana została struktura 9-bajtowej ramki danych, która jest przesyłana pomiędzy DSP a komputerem. Składa się ona z dwóch bajtów identyfikujących, sześciu bajtow danych oraz jednego bajta sumy kontrolnej. Podobnie jak w przypadku MIDI, do identyfikacji i interpretacji przychodzących ramek, wykorzystywana jest kolejka FIFO. Tym razem ma ona rozmiar 9 bajtów. Bajty przychodzące są odczytywane pojedynczo przy wykorzystaniu przerwania sprzętowego i wpisywane do kolejki FIFO. W momencie gdy na pierwszym miejscu w kolejce znajdzie się odpowiedni bajt identyfikujący ramkę, a na miejscu ósmym znajdzie się jego wartość powiększona o jeden, można zakładać, że odebrana została "jakaś" ramka danych. W celu potwierdzenia jej poprawności, obliczana jest suma kontrolna z bajtów danych. Gdy ramka przejdzie taką weryfikację, zostaje odczytana informacja, którą niesie. Opisany mechanizm działa zarówno na procesorze DSP, jak i na komputerze PC.
+Na rysunku \ref{rys:real_uartframe} pokazana została struktura 9-bajtowej ramki danych, która jest przesyłana pomiędzy DSP a komputerem. Składa się ona z dwóch bajtów identyfikujących, sześciu bajtow danych oraz jednego bajta sumy kontrolnej. Podobnie jak w przypadku MIDI, do identyfikacji i~interpretacji przychodzących ramek, wykorzystywana jest kolejka FIFO. Tym razem ma ona rozmiar 9 bajtów. Bajty przychodzące są odczytywane pojedynczo przy wykorzystaniu przerwania sprzętowego i wpisywane do kolejki FIFO. W momencie gdy na pierwszym miejscu w kolejce znajdzie się odpowiedni bajt identyfikujący ramkę, a na miejscu ósmym znajdzie się jego wartość powiększona o jeden, można zakładać, że odebrana została "jakaś" ramka danych. W celu potwierdzenia jej poprawności, obliczana jest suma kontrolna z bajtów danych. Gdy ramka przejdzie taką weryfikację, zostaje odczytana informacja, którą niesie. Opisany mechanizm działa zarówno na procesorze DSP, jak i na komputerze PC.
 Takie dziewięciobajtowe ramki pozwalają na przesyłanie na przykład całych zmiennych 4-bajtowych lub jednocześnie trzech liczb 2-bajtowych. 
 
 
 
 \section{Generowanie sygnału analogowego (DAC)}
+W niniejszym podrozdziale przedstawiono inicjalizację części oprogramowania dla DSP dotyczącą modułu DAC. Omówiono również przesyłanie danych z procesora na przetwornik cyfrowo analogowy.
 
 \subsection{Inicjalizacja programowa modułu DAC}
 Odpowiednie zainicjowanie pracy przetwornika cyfrowo analogowego było najbardziej skomplikowanym elementem etapu uruchomienia całego projektu. Polegało ono na:
@@ -155,7 +156,7 @@ Odpowiednie zainicjowanie pracy przetwornika cyfrowo analogowego było najbardzi
 %źródła zegarów
 %parametry
 
-Program dotyczący modułu DAC wykorzystuje bufor cyrkulacyjny, którego działanie omówiono w \ref{par:dMax}. Pierwszym elementem inicjalizacji było ustawienie odpowiedniego obszaru pamięci dla zmiennej z buforem cyrkulacyjnym dmaxDacBuffer[PING/PONG][FRAME][L/R][.]. Następnie w programie ustawiono źródła zegarów taktujących przetwornik DAC. Kolejnym krokiem była inicjalizacja parametrów dla przetwornika. Tryb szybkości próbkowania ustawiony został na najwolniejszy, obejmujący szybkości 32kHz, 44,1kHz oraz 48kHz. Ustawiono rejestr odblokowujący generowanie sygnału z przetwornika oraz format danych na 24 bitowy wyjustowany do lewej (ang. left-justified). 
+Program dotyczący modułu DAC wykorzystuje bufor cyrkulacyjny, którego działanie omówiono w punkcie \ref{par:dMax}. Pierwszym elementem inicjalizacji było ustawienie odpowiedniego obszaru pamięci dla zmiennej z buforem cyrkulacyjnym dmaxDacBuffer[PING/PONG][FRAME][L/R][.]. Następnie w programie ustawiono źródła zegarów taktujących przetwornik DAC. Kolejnym krokiem była inicjalizacja parametrów dla przetwornika. Tryb szybkości próbkowania został ustawiony na najwolniejszy, obejmujący szybkości 32kHz, 44,1kHz oraz 48kHz. Ustawiono rejestr odblokowujący generowanie sygnału z przetwornika oraz format danych na 24 bitowy, wyjustowany do lewej (ang. left-justified). 
 % Wytlumaczyc to left-justified - ze w liczbie 32 bitowej traci sie 8 bitów
 Priorytet przerwania został ustawiony na wysoki. Wszystkie wartości zostały przekazane za pomocą funkcji z bibliotek firmy Lyrtech o nazwie DAC\_Init().
 
@@ -165,7 +166,7 @@ Priorytet przerwania został ustawiony na wysoki. Wszystkie wartości zostały p
 % DMAX Event initialization structure
 Kolejnym etapem była inicjalizacja parametrów dotyczących połączenia przetwornika cyfrowo-analogowego z modułem McASP oraz ustawienia struktury zdarzenia dMAX powiązanego z przetwornikiem DAC. 
 
-Ostatnią częścią inicjalizacji było ustawienie częstotliwości próbkowania na wartość 48kHz i wyłączenie przekaźnika blokującego przepływ sygnału analogowego z przetwornika do gniazda CINCH.
+Ostatnią częścią inicjalizacji było ustawienie częstotliwości próbkowania na wartość 48kHz i~wyłączenie przekaźnika blokującego przepływ sygnału analogowego z przetwornika do gniazda CINCH.
 
 \subsection{Komunikacja między procesorem a przetwornikiem DAC}
 Obsługa danych zawierających zsyntezowane dźwięki oraz ich przesłanie na moduł DAC odbywa się za pomocą przerwania dmax\_isr(). Za każdym razem, gdy wywoływane jest przerwanie z wykorzystaniem zdarzenia dMAX, sprawdzany jest warunek, czy poprzedni transfer danych na przetwornik DAC został ukończony. Jeżeli warunek jest spełniony, pozostały kod funkcji obsługi przerwania zostaje wykonany.
@@ -173,7 +174,7 @@ Obsługa danych zawierających zsyntezowane dźwięki oraz ich przesłanie na mo
 Obsługa danych tej funkcji opiera się na zainicjalizowanym wcześniej buforze cyrkulacyjnym dmaxDacBuffer[PING/PONG][FRAME][L/R][.]. Programowo bufor jest czterowymiarową tablicą, gdzie pierwszy wymiar dokonuje synchronizacji odczytu i zapisu typu ping-pong. Następnie wykonywany jest mechanizm zakładkowania dwóch tablic przechowujących próbki zsyntezowanego dźwięku. Dane po zakładkowaniu przekazywane są do modułu DAC przez tablicę dmaxDacBuffer[PING/PONG][FRAME][L/R][.].
 
 \section{Klawiatura polifoniczna}\label{section:real_polifonia}
-Jednym z wymagań projektowych jest implementacja polifonii. Generowanie więcej niż jednego tonu jednocześnie zostało osiągnięte poprzez asynchroniczne odczytywanie wciśnięć i zwalniania klawiszy instrumentu oraz przechowywanie informacji o klawiszach wciśniętych w danej chwili. Rozwiązano to poprzez utworzenie tablicy freqs[.] o 12 elementach typu float (zakłada się obsługę nie więcej niż 12 klawiszy jednocześnie). Odebranie ramki MIDI z informacją o wciśnięciu klawisza instrumentu, powoduje wpisanie odczytanej wartości częstotliwości do niezajętej komórki tablicy. Gdy dźwięk związany z danym klawiszem kończy wybrzmiewanie, odpowiedni element tablicy jest zerowany. W każdej z metod syntezy odczytywane są częstotliwości z tej tablicy i generowane odpowiednie dźwięki. Rozwiązania polifonii różnią się pomiedzy metodami syntezy, z tego powodu zostaną one indywidualnie opisane w odpowiednich rozdziałach.
+Jednym z wymagań projektowych jest implementacja polifonii. Generowanie więcej niż jednego tonu jednocześnie zostało osiągnięte poprzez asynchroniczne odczytywanie naciskania i~zwalniania klawiszy instrumentu oraz przechowywanie informacji o klawiszach wciśniętych w danej chwili. Rozwiązano to poprzez utworzenie tablicy freqs[.] o 12 elementach typu float (zakłada się obsługę nie więcej niż 12 klawiszy jednocześnie). Odebranie ramki MIDI z informacją o wciśnięciu klawisza instrumentu powoduje wpisanie odczytanej wartości częstotliwości do niezajętej komórki tablicy. Gdy dźwięk związany z danym klawiszem kończy wybrzmiewanie, odpowiedni element tablicy jest zerowany. W każdej z metod syntezy odczytywane są częstotliwości z tej tablicy i~generowane odpowiednie dźwięki. Rozwiązania polifonii różnią się pomiedzy metodami syntezy, z~tego powodu zostaną one indywidualnie opisane w odpowiednich rozdziałach.
 % opisać ogólnie, i powiedziec, ze dla kazdej metody to bedzie wyglądało trochę inaczej
 
 
@@ -191,7 +192,7 @@ W autorskim projekcie została użyta biblioteka \emph{DSP Library} z procesora 
 \subsection{Funkcje zawarte w pamięci ROM procesora}
 %http://software-dl.ti.com/jacinto7/esd/processor-sdk-rtos-jacinto7/latest/exports/docs/dsplib_c66x_3_4_0_0/docs/doxygen/html/dsplib_html/group___f_f_t.html
 Funkcja DSPF\_sp\_cfftr2\_dit() odpowiada za przeprowadzenie algorytmu FFT radix-2 z decymacją w dziedzinie czasu dla liczb zmiennoprzecinkowych. Sygnał na wejściu powinien posiadać N liczb zespolonych ułożonych w tablicy kolejno w pary liczb rzeczywistych i urojonych. Jako drugi argument wejściowy funkcja przyjmuje tablicę współczynników obrotu dla FFT o długości N/2. Współczynniki obrotu utworzone zostają przez zestaw trzech funkcji udostępnionych na stronie producenta procesora. Funkcje zostały skopiowane do autorskiego projektu. %https://www.rose-hulman.edu/class/ee/yoder/ece581/TI%20library/C6700/dsplib/support/fft/tw_r2fft.c <-- twiddle factors
-Według dokumentacji opisywana funkcja może również zostać użyta do uzyskania transformaty odwrotnej, poprzez zmianę kolejności współczynników obrotu, a na końcu podzielenie wynikowej transformaty przez N. Jest to działanie odpowiadające wzorowi (\ref{equ:idft_upr}). Wyniki zastosowania funkcji DSPF\_sp\_cfftr2\_dit() jako odwrotnej transformacji okazały się błędne. W celu poprawienia wyników, zastosowano funkcję DSPF\_sp\_icfftr2\_dif(), która dedykowana jest konkretnie do odwrotnej transformacji DFT. Wykonuje ona algorytm FFT radix-2 z decymacją w dziedzinie częstotliwości. Po użyciu tej funkcji, wyniki były poprawne.
+Według dokumentacji funkcja DSPF\_sp\_cfftr2\_dit() może również zostać użyta do uzyskania transformaty odwrotnej, poprzez zmianę kolejności współczynników obrotu, a na końcu podzielenie wynikowej transformaty przez N. Jest to działanie odpowiadające wzorowi (\ref{equ:idft_upr}). Wyniki zastosowania funkcji DSPF\_sp\_cfftr2\_dit() jako odwrotnej transformacji okazały się błędne. W celu poprawienia wyników, zastosowano funkcję DSPF\_sp\_icfftr2\_dif(), która dedykowana jest konkretnie do odwrotnej transformacji DFT. Wykonuje ona algorytm FFT radix-2 z decymacją w dziedzinie częstotliwości. Po użyciu tej funkcji, wyniki były poprawne.
 
 %http://software-dl.ti.com/jacinto7/esd/processor-sdk-rtos-jacinto7/latest/exports/docs/dsplib_c66x_3_4_0_0/docs/doxygen/html/dsplib_html/group___d_s_p_f__sp__bitrev__cplx.html
 Za zmianę kolejności próbek w tablicy wynikowej otrzymanej z funkcji wykonującej algorytm FFT odpowiada funkcja DSPF\_sp\_bitrev\_cplx(). Zmiana ciągu elementów tablicy realizowana jest przez odczytanie jej indeksów jako liczb w postaci bitowej, a następnie dokonanie lustrzanego odbicia każdego indeksu z osobna (ang. bit-reverse). Jest to niezbędny krok do zrealizowania pełnego algorytmu FFT radix-2.
@@ -222,13 +223,13 @@ Jednym z elementów projektowania układów cyfrowego przetwarzania sygnałów j
 	gdzie: 	&	$\Delta R$ & - &  rozdzielczość częstotliwości, \\
 	&	$F_{s}$ & - &  częstotliwość próbkowania, \\
 	&   $N_{fft}$ &  - & liczba punktów transformacji DFT. \\
-\end{tabular}
+\end{tabular} \\
 
 % http://cds.cern.ch/record/720344/files/ab-note-2004-021.pdf
 W literaturze można znaleźć informacje, iż widmo częstotliwościowe jest dużo bardziej dokładne przy większej rozdzielczości częstotliwości. Minusem jej zwiększenia jest jednak spowolnienie obliczenia transformaty wynikowej i tym samym negatywny wpływ na czas wykonania programu na procesorze.
 
 %Potwierdzenie ze jak sie zwiekszy rozdzielczosc to jest lepiej https://ieeexplore-1ieee-1org-10000074b15d2.han.bg.pg.edu.pl/document/1604324
-Podjęto próby osiągnięcia jak największej rozdzielczości DFT na wykorzystywanym procesorze TMS320C672x. Dokumentacja funkcji realizującej algorytm FFT wskazywała, iż liczba próbek do jednokrotnej transformacji DFT powinna wynosić maksymalnie 2048. Po wprowadzeniu takiej wartości, procesor ulegał zawieszeniu. Obniżenie liczby próbek do 1024 pozwoliło na bezproblemowe działanie procesora. Jednocześnie spowodowało ono dwukrotne obniżenie dokładności. Ze wzoru (\ref{equ:fft_resol}) można wyliczyć, iż rozdzielczość częstotliwości w autorskim projekcie wyniosła 46,875Hz.
+Podjęto próby osiągnięcia jak największej rozdzielczości DFT na wykorzystywanym procesorze TMS320C672x. Dokumentacja funkcji realizującej algorytm FFT wskazywała, iż liczba próbek do jednokrotnej transformacji DFT powinna wynosić maksymalnie 2048. Po wprowadzeniu takiej wartości, procesor ulegał zawieszeniu. Obniżenie liczby próbek do 1024 pozwoliło na bezproblemowe działanie procesora. Jednocześnie spowodowało ono dwukrotne obniżenie dokładności. Ze wzoru (\ref{equ:fft_resol}) można wyliczyć, iż rozdzielczość częstotliwości w autorskim projekcie wyniosła 46,875 Hz, przy ustawionej częstotliwości próbkowania 48 kHz.
 
 
 \section{ADSR}\label{sec:real_adsr}
@@ -245,12 +246,12 @@ Poszczególne stany ADSR zaznaczone zostały na rysunku \ref{rys:real_adsr}.
 	\caption{Stany ADSR.}
 	\label{rys:real_adsr}
 \end{figure}
-Gdy wciśnięty zostanie klawisz syntezatora, w tablicy stanów ADSR elementowi o indeksie zgodnym z indeksem tablicy freqs[.] (opisaną w \ref{section:real_polifonia}) przypisana zostanie wartość oznaczająca stan "attack". Gdy syntezowany dźwięk jest w tym stanie, wartość obwiedni w tablicy o odpowiednim indeksie jest zwiększana wraz z upływem czasu. Gdy osiągnięta zostanie wartość maksymalna, stan ADSR tego dźwięku zostanie zmieniony na "decay". Wartość obwiedni maleje aż do osiagnięcia ustalonego poziomu dla stanu "sustain". Gdy to nastąpi, stan zostanie zmieniony na "sustain" i będzie on trwał aż do zwolnienia klawisza instrumentu. Zwolnienie klawisza spowoduje przejście do stanu "release" i stopniowe wyzerowanie wartości obwiedni. Po osiągnięciu zera przez wartość obwiedni danego dźwięku, jego stan jest czyszczony, a odpowiedni element tablicy opisanej w \ref{section:real_polifonia} zostaje wyzerowany, co kończy syntezę danego dźwięku.
+Gdy wciśnięty zostanie klawisz syntezatora, w tablicy stanów ADSR, elementowi o indeksie zgodnym z indeksem tablicy freqs[.] (opisaną w \ref{section:real_polifonia}) przypisana zostanie wartość oznaczająca stan "attack". Gdy syntezowany dźwięk jest w tym stanie, wartość obwiedni w tablicy o odpowiednim indeksie jest zwiększana wraz z upływem czasu. Gdy osiągnięta zostanie wartość maksymalna, stan ADSR tego dźwięku zostanie zmieniony na "decay". Wartość obwiedni maleje aż do osiagnięcia ustalonego poziomu dla stanu "sustain". Gdy to nastąpi, stan zostanie zmieniony na "sustain" i będzie trwał aż do zwolnienia klawisza instrumentu. Zwolnienie klawisza spowoduje przejście do stanu "release" i stopniowe wyzerowanie wartości obwiedni. Po osiągnięciu zera przez wartość obwiedni danego dźwięku, jego stan jest czyszczony, a odpowiedni element tablicy opisanej w \ref{section:real_polifonia} zostaje wyzerowany, co kończy syntezę danego dźwięku.
 
-Użytkownik ma możliwosć ustawiania, za pomocą interfejsu użytkownika, czasu trwania stanów "attack", "decay" i "release" oraz poziomu dla stanu "sustain".
+Użytkownik ma możliwosć ustawiania, za pomocą interfejsu użytkownika, czasu trwania stanów "attack", "decay" i "release" oraz poziomu amplitudy dla stanu "sustain".
 
 \section{Interfejs użytkownika}
-Użytkownik może sterować pracą instrumentu za pomocą specjalnie przygotowanego graficznego interfejsu użytkownika (GUI). GUI stanowi okienkowy program komputerowy napisany w języku C\#. Komunikacja pomiędzy GUI a DSP została opisana w części \ref{sec:real_komunikacja}. Okno programu składa się z:
+Użytkownik może sterować pracą instrumentu za pomocą specjalnie przygotowanego graficznego interfejsu użytkownika (GUI). GUI stanowi okienkowy program komputerowy napisany w~języku C\#. Komunikacja pomiędzy GUI a~DSP została opisana w części \ref{sec:real_komunikacja}. Okno programu składa się z:
 \begin{itemize}
 	\item paska zakładek,
 	\item okna głównego,
@@ -267,7 +268,7 @@ Okno zakładki połączenia jest przedstawione na rysunku \ref{rys:real_gui}, po
 	\caption{Okno graficznego interfejsu użytkownika.}
 	\label{rys:real_gui}
 \end{figure}
-Zawiera ono pola pozwalające na ustanowienie i konfigurację połączenia pomiędzy GUI a DSP:
+Zawiera ono pola pozwalające na ustanowienie i konfigurację połączenia pomiędzy GUI a~DSP:
 \begin{itemize}
 	\item Rozwijane pole "Port". Za jego pomocą wybierany jest port szeregowy, do którego podłączona jest płyta uruchomieniowa z DSP.
 	\item Przycisk "Refresh" służący do odświeżenia listy dostępnych portów szeregowych.
@@ -277,7 +278,7 @@ Zawiera ono pola pozwalające na ustanowienie i konfigurację połączenia pomi�
 
 
 
-Ponadto, poniżej tych pól znajduje się konsola serwisowa. Składa się ona z pola "Received", w którym wyświetlane są wszystkie odbierane bajty, oraz pola edycyjnego z przyciskiem "Send", które pozwalają na wysyłanie bajtów do DSP. Konsola ta pełni funkcję diagnostyczną podczas pracy z interfejsem użytkownika.
+Ponadto, poniżej tych pól znajduje się konsola serwisowa. Składa się ona z pola "Received", w którym wyświetlane są wszystkie odbierane bajty oraz pola edycyjnego z przyciskiem "Send", które pozwalają na wysyłanie bajtów do DSP. Konsola ta pełni funkcję diagnostyczną podczas pracy z interfejsem użytkownika.
 
 Moduł ADSR to stały element okna GUI - widoczny niezależnie od wybranej zakładki z paska zakładek. W jego skład wchodzą cztery kontrolki w postaci gałek, które służą do określania stanów ADSR opisanych w podrodziale \ref{sec:real_adsr}:
 \begin{itemize}
