@@ -1,6 +1,6 @@
 \documentclass[nostrict]{szablonPG}
 
-
+\usepackage{afterpage}
 \usepackage{pdfpages}
 \usepackage{multicol} % do sk³adu w dwÃ³ch kolumnach
 \usepackage[nottoc]{tocbibind}
@@ -16,9 +16,16 @@
 \newcommand{\desctotoc}[1]{%
 	\addtocontents{toc}{\medskip\noindent\detokenize{#1}\leavevmode\par\medskip}
 }
+\newcommand\blankpage{%
+	\null
+	\thispagestyle{empty}%
+	\addtocounter{page}{-1}%
+	\newpage}
 \setcounter{secnumdepth}{4}
 \begin{document}
+\afterpage{\blankpage}
 \includepdf[pages=-]{StronaTytulowa_160648.pdf}
+\afterpage{\blankpage}
 \includepdf[pages=-]{Oswiadczenie_160648.pdf}
 
 	\setcounter{page}{3}
