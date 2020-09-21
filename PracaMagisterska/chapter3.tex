@@ -68,7 +68,7 @@ Płyta PADK ma możliwość komunikowania się z innymi urządzeniami przez trzy
 Za komunikację przez interfejs MIDI oraz UART odpowiadają dwa układy TL16C550. Pozwalają one na alternatywny tryb kolejki danych FIFO, który odciąża procesor DSP. Interfejs USB obsługiwany jest na płycie poprzez mikrokontroler CY7C68013.
 
 \subsection{Przetworniki DAC}
-Na płycie PADK znajdują się dwa, czterokanałowe, 24-bitowe układy PCM4204, które posiadają możliwość próbkowania sygnału z częstotliwością do 192kHz. Umożliwiają one odczyt z~płyty uruchomieniowej analogowych sygnałów dźwiękowych za pomocą gniazd żeńskich typu CINCH.
+Na płycie PADK znajdują się dwa czterokanałowe, 24-bitowe układy PCM4204, które posiadają możliwość próbkowania sygnału z częstotliwością do 192kHz. Umożliwiają one odczyt z~płyty uruchomieniowej analogowych sygnałów dźwiękowych za pomocą gniazd żeńskich typu CINCH.
 
 \subsection{Pełen schemat układu instrumentu klawiszowego}
 \begin{figure}[H]
@@ -97,7 +97,7 @@ Do obsługi interfejsu MIDI wykorzystana została biblioteka PADK\_MIDI.c, któr
 \end{itemize}
 W celu jak najmniejszego zużycia czasu procesora, obsługa interfejsu MIDI została sprowadzona jedynie do odczytywania przychodzących bajtów poprzez przerwania sprzętowe.
 Jako że ramki MIDI składają się z trzech bajtów, odczytywać oraz interpretować należy kolejne 3 przychodzące bajty.
-Można to osiągnąć poprzez umieszczenie funkcji MIDI\_Read z parametrem 3 - przerwanie sprzętowe co każde odczytane 3 bajty. Sytuację nieco komplikuje zegar MIDI pojawiający się "losowo", który powoduje, że DSP odczytuje regularnie bajt o wartości 0xF8 zakłócający odczytanie użytecznych danych MIDI. Powoduje to, że w odczytanej sekwencji 3 bajtów pojawiała się niepożądana wartość 0xF8.
+Można to osiągnąć poprzez umieszczenie funkcji MIDI\_Read z parametrem 3 - przerwanie sprzętowe co każde odczytane 3 bajty. Sytuację nieco komplikuje pojawiający się zegar MIDI. Powoduje on, że DSP regularnie odczytuje bajt o wartości 0xF8 zakłócający odczytanie użytecznych danych MIDI. Oznacza to, że w odczytanej sekwencji 3 bajtów, w jej losowym miejscu pojawiała się niepożądana wartość 0xF8.
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=8cm]{./grafiki/real_nofifo}
@@ -156,7 +156,7 @@ Odpowiednie zainicjowanie pracy przetwornika cyfrowo analogowego było najbardzi
 %źródła zegarów
 %parametry
 
-Program dotyczący modułu DAC wykorzystuje bufor cyrkulacyjny, którego działanie omówiono w punkcie \ref{par:dMax}. Pierwszym elementem inicjalizacji było ustawienie odpowiedniego obszaru pamięci dla zmiennej z buforem cyrkulacyjnym dmaxDacBuffer[PING/PONG][FRAME][L/R][.]. Następnie w programie ustawiono źródła zegarów taktujących przetwornik DAC. Kolejnym krokiem była inicjalizacja parametrów dla przetwornika. Tryb szybkości próbkowania został ustawiony na najwolniejszy, obejmujący szybkości 32kHz, 44,1kHz oraz 48kHz. Ustawiono rejestr odblokowujący generowanie sygnału z przetwornika oraz format danych na 24 bitowy, wyjustowany do lewej (ang. left-justified). 
+Program dotyczący modułu DAC wykorzystuje bufor cyrkulacyjny, którego działanie omówiono w punkcie \ref{par:dMax}. Pierwszym elementem inicjalizacji było ustawienie odpowiedniego obszaru pamięci dla zmiennej z buforem cyrkulacyjnym dmaxDacBuffer[PING/PONG][FRAME][L/R][.]. Następnie w programie ustawiono źródła zegarów taktujących przetwornik DAC. Kolejnym krokiem była inicjalizacja parametrów dla przetwornika. Tryb szybkości próbkowania został ustawiony na najwolniejszy, obejmujący szybkości 32kHz, 44,1kHz oraz 48kHz. Ustawiono rejestr odblokowujący generowanie sygnału z przetwornika oraz format danych na 24 bitowy, wyrównany do lewej (ang. left-justified). 
 % Wytlumaczyc to left-justified - ze w liczbie 32 bitowej traci sie 8 bitów
 Priorytet przerwania został ustawiony na wysoki. Wszystkie wartości zostały przekazane za pomocą funkcji z bibliotek firmy Lyrtech o nazwie DAC\_Init().
 
@@ -187,7 +187,7 @@ Jednym z wymagań projektowych jest implementacja polifonii. Generowanie więcej
 W pamięci ROM procesorów z serii TMS320C672x zostały umieszczone specjalnie zoptymalizowane biblioteki, dedykowane do szybkiego przetwarzania sygnałów cyfrowych. Skompilowane biblioteki zostały napisane w asemblerze w celu większej efektywności obliczeniowej. 
 
 %https://www.ti.com/lit/an/spraas8/spraas8.pdf?ts=1596035199216&ref_url=https%253A%252F%252Fwww.google.com%252F
-W autorskim projekcie została użyta biblioteka \emph{DSP Library} z procesora TMS320C6727, która posiada efektywne obliczeniowo funkcje takie jak: transformacja FFT, odwracanie macierzy lub operacje na wektorach. W celu wykorzystania jej w programie dla DSP, należało zmodyfikować komende pliku linkera, dodając bibliotekę o nazwie \emph{c67xdsplibR.lib}. Dodatkowo zmieniono sekcję pamięci tak, aby linker został odpowiednio poinstruowany, do których obszarów pamięci powinien się odnieść. Do pełnej transformacji FFT użyto trzech funkcji: DSPF\_sp\_cfftr2\_dit(), DSPF\_sp\_icfftr2\_dif() oraz DSPF\_sp\_bitrev\_cplx().
+W autorskim projekcie została użyta biblioteka \emph{DSP Library} z procesora TMS320C6727, która posiada wydajne obliczeniowo funkcje takie jak: transformacja FFT, odwracanie macierzy lub operacje na wektorach. W celu wykorzystania jej w programie dla DSP, należało zmodyfikować komende pliku linkera, dodając bibliotekę o nazwie \emph{c67xdsplibR.lib}. Dodatkowo zmieniono sekcję pamięci tak, aby linker został odpowiednio poinstruowany, do których obszarów pamięci powinien się odnieść. Do pełnej transformacji FFT użyto trzech funkcji: DSPF\_sp\_cfftr2\_dit(), DSPF\_sp\_icfftr2\_dif() oraz DSPF\_sp\_bitrev\_cplx().
 
 \subsection{Funkcje zawarte w pamięci ROM procesora}
 %http://software-dl.ti.com/jacinto7/esd/processor-sdk-rtos-jacinto7/latest/exports/docs/dsplib_c66x_3_4_0_0/docs/doxygen/html/dsplib_html/group___f_f_t.html
