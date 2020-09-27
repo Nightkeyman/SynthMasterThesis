@@ -146,6 +146,12 @@ double stringfilter_gain = 0.95;
 double stringfilter_b;
 double stringfilter_a;
 double stringfilter;
+double ARMAfilter[13] = {0,0,0,0,0,0,0,0,0,0,0,0,0};
+double ARMAfilter_out[13] = {0,0,0,0,0,0,0,0,0,0,0,0,0};
+double ARMAfilter_A[13] = {1.0000000000000,  -9.7259000000000 ,  42.9415563300000 , -113.1346092582090,  196.1914960641804 , -231.9115485212222, 185.0166631237151,  -91.6156228431431   ,18.1100104080538 ,  8.6574416264029,  -7.5450674014585 ,  2.2855956033724, -0.2700151127862};
+double ARMAfilter_B[13] = {1.0000000000000,  -7.8237000000000,   25.5972139800000,  -42.0507216875420,   24.4400387017344,   37.0620736594697,
+  -96.1832756284092,   100.6237052711708 , -58.5431292501682 ,  17.2920114575298,  -0.4749278473340,  -1.1823031489163,  0.2430145019172};
+int flag_violin = 0;
 
 // Static waveform arrays
 float sinusek[N];
@@ -622,6 +628,44 @@ int main( int argc, char *argv[] ) {
 					if(freqs[i] > 0 || adsr_state[i] > 0) {
 						ADSR(i);
 						if (clear_v == 1){
+							if(flag_violin == 1) {
+								flag_violin = 0;
+								baseDelay = Fs/freqs[i] - 4.0;
+								if (baseDelay <= 0.0) baseDelay = 0.3;
+								// neck delay line
+								neck_delay = baseDelay*(1.0-betaRatio);
+								neck_inPoint = 0;
+								neck_gain = 1;
+								neck_outPointer = (double)neck_inPoint - neck_delay;
+								while (neck_outPointer < 0)
+									neck_outPointer = neck_outPointer + nDelays+1;
+
+								neck_outPoint = neck_outPointer;
+								neck_alpha = neck_outPointer - (double)neck_outPoint;
+								neck_omAlpha = 1.0 - neck_alpha;
+								if (neck_outPoint == nDelays+1)
+									neck_outPoint = 0;
+
+								neck_doNextOut = 1;
+
+								// bridge delay line
+								bridge_delay = baseDelay*betaRatio;
+								bridge_inPoint = 0;
+								bridge_gain = 1;
+								bridge_outPointer = (double)bridge_inPoint - bridge_delay;
+								while (bridge_outPointer < 0)
+									bridge_outPointer = bridge_outPointer + nDelays+1;
+								bridge_outPoint = bridge_outPointer;
+								bridge_alpha = bridge_outPointer - (double)bridge_outPoint;
+								bridge_omAlpha = 1.0 - bridge_alpha;
+								if (bridge_outPoint == nDelays+1)
+									bridge_outPoint = 0;
+								for(i = 0; i < 343; i++) {
+									bridgeDelay[i] = 0.0;
+									neckDelay[i] = 0.0;
+								}
+							}
+							// TU ?
 							for(j = 0; j < OVERLAP; j++){
 									v[j*2] = v[(N-OVERLAP+j)*2];
 							}
@@ -729,7 +773,8 @@ int main( int argc, char *argv[] ) {
 										neck_outPoint = 0;
 									neck_doNextOut = 1;
 								}
-
+								/*
+								double temp = 0.0;
 								ARMAfilter[12] = ARMAfilter[11];
 								ARMAfilter[11] = ARMAfilter[10];
 								ARMAfilter[10] = ARMAfilter[9];
@@ -744,11 +789,10 @@ int main( int argc, char *argv[] ) {
 								ARMAfilter[1] = ARMAfilter[0];
 								ARMAfilter[0] = bridgeDelay[0];
 
-								v[j*2] = ARMAfilter_B[0]*ARMAfilter[0];
+								temp = ARMAfilter_B[0]*ARMAfilter[0];
 								int h = 0;
 								for (h = 1; h < 13; h++){
-									v[j*2] += ARMAfilter_B[h]*ARMAfilter[h] - ARMAfilter_A[h]*ARMAfilter_out[h-1];
-
+									temp += ARMAfilter_B[h]*ARMAfilter[h] - ARMAfilter_A[h]*ARMAfilter_out[h];
 								}
 
 								ARMAfilter_out[12] = ARMAfilter_out[11];
@@ -763,7 +807,8 @@ int main( int argc, char *argv[] ) {
 								ARMAfilter_out[3] = ARMAfilter_out[2];
 								ARMAfilter_out[2] = ARMAfilter_out[1];
 								ARMAfilter_out[1] = ARMAfilter_out[0];
-								ARMAfilter_out[0] = v[j*2];
+								ARMAfilter_out[0] = temp;
+								*/
 
 								v[j*2] = bridgeDelay[0];
 							}

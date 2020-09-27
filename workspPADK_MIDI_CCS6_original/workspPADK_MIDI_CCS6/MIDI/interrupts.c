@@ -159,6 +159,9 @@ extern int flag_flute;
 // ADDITIVE GLOBALS
 extern float add_knobAmp[HAMMOND_KNOBS];
 
+// VIOLIN GLOBALS
+extern int flag_violin;
+
 // ################## DAC/ADC end ##################
 
 // ################## UART RELATED VARs ############
@@ -203,6 +206,7 @@ interrupt void midi_isr( void )
 						if (freqs[i] == 0) {
 							freqs[i] = freq_wav;
 							flag_flute = 1;
+							flag_violin = 1;
 							adsr_state[i] = 1;
 							break;
 						}
