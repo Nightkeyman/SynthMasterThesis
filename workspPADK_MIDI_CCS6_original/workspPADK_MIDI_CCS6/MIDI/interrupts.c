@@ -134,7 +134,7 @@ extern float release_rate;
 extern float attack_level;
 extern int adsr_state[MIDI_POLY_MAX];
 extern int pressedkeys;
-
+extern float adsr[MIDI_POLY_MAX];
 
 // SYNTHESIS METHODS
 extern enum methodtype{subtractive, additive, fm, fm_bell};
@@ -150,7 +150,7 @@ extern int sub_highfreq;
 // FM GLOBALS
 extern int fm_modfreq;
 extern int fm_modamp;
-extern double bell_adsr;
+extern double bell_adsr_coefficient;
 
 // ADDITIVE GLOBALS
 extern float add_knobAmp[HAMMOND_KNOBS];
@@ -189,6 +189,7 @@ interrupt void midi_isr( void )
 				for (i = 0; i < MIDI_POLY_MAX; i++) {
 					if (freqs[i] >= freq_wav-0.5 && freqs[i] <= freq_wav+0.5) {
 						adsr_state[i] = 1;
+						adsr[i] = 0;
 						keyOccupFlag = 1;
 						break;
 					}
@@ -316,7 +317,7 @@ interrupt void uart_isr( void )
 							fm_modamp = UART_pull(2) + UART_pull(3)*256 + UART_pull(4)*256*256 + UART_pull(5)*256*256*256;
 						}
 					if (UART_pull(1) == 7){
-						bell_adsr = (double)(UART_pull(2) + UART_pull(3)*256 + UART_pull(4)*256*256 + UART_pull(5)*256*256*256)/100.0;
+						bell_adsr_coefficient = (double)(UART_pull(2) + UART_pull(3)*256 + UART_pull(4)*256*256 + UART_pull(5)*256*256*256)/100.0;
 					}
 				}
 			}
