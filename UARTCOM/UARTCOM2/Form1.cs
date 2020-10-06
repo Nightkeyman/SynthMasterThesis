@@ -298,6 +298,32 @@ namespace UARTCOM2
                             }
                         }
                         break;
+                    case 105:   // violin
+                        if (Buffer_pull(7) == 106)
+                        {
+                            if (Checksum() == Buffer_pull(8))
+                            {
+                                if (Buffer_pull(1) == 1)
+                                {
+                                    button_violin_en.Invoke((MethodInvoker)delegate {
+                                        button_violin_en.Text = "Enabled";
+                                    });
+                                    button_violin_en.Invoke((MethodInvoker)delegate {
+                                        button_violin_en.ForeColor = Color.Green;
+                                    });
+                                }
+                                else if (Buffer_pull(1) == 2)
+                                {
+                                    button_violin_en.Invoke((MethodInvoker)delegate {
+                                        button_violin_en.Text = "Disabled";
+                                    });
+                                    button_violin_en.Invoke((MethodInvoker)delegate {
+                                        button_violin_en.ForeColor = Color.Red;
+                                    });
+                                }
+                            }
+                        }
+                        break;
                 }
             }
                 
@@ -662,6 +688,64 @@ namespace UARTCOM2
             else
             {
                 send(109, 2, 0, 0, 0, 0, 0);
+            }
+        }
+
+        private void textBox_violin_amp_TextChanged(object sender, EventArgs e)
+        {
+            int val = Convert.ToInt32(textBox_violin_amp.Text);
+           
+            if (val > trackBar_violin_amp.Maximum)
+                val = trackBar_violin_amp.Maximum;
+            if (val < trackBar_violin_amp.Minimum)
+                val = trackBar_violin_amp.Minimum;
+
+            trackBar_violin_amp.Value = (int)(val );
+            textBox_violin_amp.Text = (val).ToString();
+            label_violin_amp.Text = (val/1000.0).ToString();
+        }
+
+        private void textBox_violin_freq_TextChanged(object sender, EventArgs e)
+        {
+            int val = Convert.ToInt32(textBox_violin_freq.Text) ;
+            if (val > trackBar_violin_freq.Maximum)
+                val = trackBar_violin_freq.Maximum;
+            if (val < trackBar_violin_freq.Minimum)
+                val = trackBar_violin_freq.Minimum;
+
+            trackBar_violin_freq.Value = (int)(val);
+            textBox_violin_freq.Text = (val ).ToString();
+            label_violin_freq.Text = (val / 1000.0).ToString();
+        }
+
+        private void trackBar_violin_amp_Scroll(object sender, EventArgs e)
+        {
+            textBox_violin_amp.Text = (trackBar_violin_amp.Value ).ToString();
+            label_violin_amp.Text = (trackBar_violin_amp.Value / 1000.0).ToString();
+        }
+
+        private void trackBar_violin_freq_Scroll(object sender, EventArgs e)
+        {
+            textBox_violin_freq.Text = (trackBar_violin_freq.Value).ToString();
+            label_violin_freq.Text = (trackBar_violin_freq.Value / 1000.0).ToString();
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            // violin - signal 105
+            sendInt(105, 4, (UInt32)trackBar_violin_amp.Value);
+            sendInt(105, 3, (UInt32)trackBar_violin_freq.Value);
+        }
+
+        private void button_violin_en_Click(object sender, EventArgs e)
+        {
+            if (button_violin_en.Text.Equals("Disabled"))
+            {
+                send(105, 1, 0, 0, 0, 0, 0);
+            }
+            else
+            {
+                send(105, 2, 0, 0, 0, 0, 0);
             }
         }
     }

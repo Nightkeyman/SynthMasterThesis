@@ -161,6 +161,8 @@ extern float add_knobAmp[HAMMOND_KNOBS];
 
 // VIOLIN GLOBALS
 extern int flag_violin;
+extern double vibrato_gain;
+extern double vibrato_freq;
 
 // ################## DAC/ADC end ##################
 
@@ -345,6 +347,26 @@ interrupt void uart_isr( void )
 					if (UART_pull(1) == 3) {
 						fm_modfreq = UART_pull(2) + UART_pull(3)*256 + UART_pull(4)*256*256 + UART_pull(5)*256*256*256;
 					}
+				}
+			}
+			break;
+		case 105: // violin
+			if (UART_pull(7) == 106){
+				if (UART_pull(8) == UART_checksum()){
+					if (UART_pull(1) == 1){
+						UART_send(105, 1, 0,0,0,0,0);
+						method = violin;
+					} else if (UART_pull(1) == 2){
+						UART_send(105, 2, 0,0,0,0,0);
+					}
+
+
+					if (UART_pull(1) == 3){
+							vibrato_gain = (double)((UART_pull(2) + UART_pull(3)*256 + UART_pull(4)*256*256 + UART_pull(5)*256*256*256)/1000.0);
+						}
+					if (UART_pull(1) == 4){
+							vibrato_freq = (double)((UART_pull(2) + UART_pull(3)*256 + UART_pull(4)*256*256 + UART_pull(5)*256*256*256)/1000.0);
+						}
 				}
 			}
 			break;
