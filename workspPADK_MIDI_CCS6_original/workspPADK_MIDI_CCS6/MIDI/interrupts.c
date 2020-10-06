@@ -137,7 +137,7 @@ extern int pressedkeys;
 
 
 // SYNTHESIS METHODS
-extern enum methodtype{subtractive, additive, fm};
+extern enum methodtype{subtractive, additive, fm, fm_bell};
 extern enum methodtype method;
 
 extern enum waveformtype{square, triangle, sawtooth};
@@ -150,6 +150,7 @@ extern int sub_highfreq;
 // FM GLOBALS
 extern int fm_modfreq;
 extern int fm_modamp;
+extern double bell_adsr;
 
 // ADDITIVE GLOBALS
 extern float add_knobAmp[HAMMOND_KNOBS];
@@ -301,6 +302,12 @@ interrupt void uart_isr( void )
 						UART_send(102, 2, 0,0,0,0,0);
 					}
 
+					if (UART_pull(1) == 5){
+						UART_send(102, 5, 0,0,0,0,0);
+						method = fm_bell;
+					} else if (UART_pull(1) == 6){
+						UART_send(102, 6, 0,0,0,0,0);
+					}
 
 					if (UART_pull(1) == 3){
 							fm_modfreq = UART_pull(2) + UART_pull(3)*256 + UART_pull(4)*256*256 + UART_pull(5)*256*256*256;
@@ -308,6 +315,9 @@ interrupt void uart_isr( void )
 					if (UART_pull(1) == 4){
 							fm_modamp = UART_pull(2) + UART_pull(3)*256 + UART_pull(4)*256*256 + UART_pull(5)*256*256*256;
 						}
+					if (UART_pull(1) == 7){
+						bell_adsr = (double)(UART_pull(2) + UART_pull(3)*256 + UART_pull(4)*256*256 + UART_pull(5)*256*256*256)/100.0;
+					}
 				}
 			}
 			break;

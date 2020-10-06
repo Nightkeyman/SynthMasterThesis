@@ -52,7 +52,7 @@ extern volatile unsigned PP;
 extern volatile unsigned sem_dac;
 extern int sem_new_note; // 0 - 128
 
-enum methodtype{subtractive, additive, fm};
+enum methodtype{subtractive, additive, fm, fm_bell};
 enum methodtype method = subtractive;
 // SUBTRACTIVE GLOBALS
 enum waveformtype{square, triangle, sawtooth};
@@ -65,6 +65,7 @@ int sub_highfreq = Fs;
 // FM GLOBALS
 int fm_modfreq = 1;
 int fm_modamp = 10;
+double bell_adsr_coefficient = 1.0;
 
 // ADSR GLOBALS
 float adsr[MIDI_POLY_MAX];
@@ -200,11 +201,11 @@ int main( int argc, char *argv[] ) {
 				clear_v = 1;
 				for(i = 0; i < MIDI_POLY_MAX; i++) {
 					if(freqs[i] > 0 || adsr_state[i] > 0) {
-						if (waveformSet == 1)
+						if (waveformSet == square)
 							square_wave(freqs[i], SIG_AMP, k, clear_v, i);
-						else if (waveformSet == 2)
+						else if (waveformSet == triangle)
 							triangle_wave(freqs[i], SIG_AMP, k, clear_v, i);
-						else if (waveformSet == 3)
+						else if (waveformSet == sawtooth)
 							sawtooth_wave(freqs[i], SIG_AMP, k, clear_v, i);
 
 						if (clear_v == 1)
@@ -296,7 +297,63 @@ int main( int argc, char *argv[] ) {
 				sem_dac = 0;
 				k += N - OVERLAP;
 			}
-    	}
+    	} else if (method == fm_bell){
+			if(pressedkeys < 1) {
+				for(j = 0; j < N; j++) {
+					waveform0[j] = 0;
+					waveform1[j] = 0;
+					k = 0;
+				}
+			} else {
+				clear_v = 1;
+				for(i = 0; i < MIDI_POLY_MAX; i++) {
+					if(freqs[i] > 0 || adsr_state[i] > 0) {
+						float bell_adsr = exp(-adsr[i]*bell_adsr_coefficient);
+						adsr[i] += 1.0/Fs;
+						float mod_freq = 1.4*freqs[i];
+						if (clear_v == 1){
+							for(j = 0; j < N; j++) {
+								v[j*2] = bell_adsr*sinf((float)(j+k)*2.0*M_PI*freqs[i]*(1.0/Fs) + (float)fm_modamp*sinf((float)(j+k)*2.0*M_PI*(float)mod_freq*(1.0/Fs)));
+							}
+							clear_v = 0;
+						} else {
+							for(j = 0; j < N; j++) {
+								v[j*2] += bell_adsr*sinf((float)(j+k)*2.0*M_PI*freqs[i]*(1.0/Fs) + (float)fm_modamp*sinf((float)(j+k)*2.0*M_PI*(float)mod_freq*(1.0/Fs)));
+							}
+						}
+						if (adsr[i] < 0.00001)
+							adsr_state[i] = 0;
+							adsr[i] = 0.0;
+							freqs[i] = 0.0;
+							pressedkeys--;
+					}
+				}
+				while(sem_dac == 0);
+				for(j = 0; j < N; j++) {
+					if (j < OVERLAP) {
+						if (whichwaveform == 1) {
+							waveform0[j] = overlaptable[j]*v[j*2]*SIG_AMP*1000;
+						} else {
+							waveform1[j] = overlaptable[j]*v[j*2]*SIG_AMP*1000;
+						}
+					} else if (j >= N - OVERLAP) {
+						if (whichwaveform) {
+							waveform0[j] = overlaptable[N-j-1]*v[j*2]*SIG_AMP*1000;
+						} else {
+							waveform1[j] = overlaptable[N-j-1]*v[j*2]*SIG_AMP*1000;
+						}
+					} else {
+						if (whichwaveform) {
+							waveform0[j] = v[j*2]*SIG_AMP*1000;
+						} else {
+							waveform1[j] = v[j*2]*SIG_AMP*1000;
+						}
+					}
+				}
+				sem_dac = 0;
+				k += N - OVERLAP;
+			}
+		}
     }
 }
 

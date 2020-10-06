@@ -232,6 +232,25 @@ namespace UARTCOM2
                                         button_fm_en.ForeColor = Color.Red;
                                     });
                                 }
+
+                                if (Buffer_pull(1) == 5)
+                                {
+                                    button_fm_bell_en.Invoke((MethodInvoker)delegate {
+                                        button_fm_bell_en.Text = "Enabled";
+                                    });
+                                    button_fm_bell_en.Invoke((MethodInvoker)delegate {
+                                        button_fm_bell_en.ForeColor = Color.Green;
+                                    });
+                                }
+                                else if (Buffer_pull(1) == 6)
+                                {
+                                    button_fm_bell_en.Invoke((MethodInvoker)delegate {
+                                        button_fm_bell_en.Text = "Disabled";
+                                    });
+                                    button_fm_bell_en.Invoke((MethodInvoker)delegate {
+                                        button_fm_bell_en.ForeColor = Color.Red;
+                                    });
+                                }
                             }
                         }
                         break;
@@ -587,6 +606,24 @@ namespace UARTCOM2
         {
             waveformtype = 3;
             sendSubtractiveParameters();
+        }
+
+        private void button_fm_bell_Click(object sender, EventArgs e)
+        {
+            // FM - signal 102
+            sendInt(102, 7, (UInt32)trackBar_fm_bell.Value);
+        }
+
+        private void button_fm_bell_en_Click(object sender, EventArgs e)
+        {
+            if (button_fm_bell_en.Text.Equals("Disabled"))
+            {
+                send(102, 5, 0, 0, 0, 0, 0);
+            }
+            else
+            {
+                send(102, 6, 0, 0, 0, 0, 0);
+            }
         }
     }
 }

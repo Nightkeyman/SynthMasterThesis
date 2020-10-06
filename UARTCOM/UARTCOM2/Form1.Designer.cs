@@ -112,6 +112,12 @@
             this.knobControl_sustain = new KnobControl.KnobControl();
             this.knobControl_attack = new KnobControl.KnobControl();
             this.button_adsr_set = new System.Windows.Forms.Button();
+            this.groupBox5 = new System.Windows.Forms.GroupBox();
+            this.button_fm_bell = new System.Windows.Forms.Button();
+            this.textBox_fm_bell = new System.Windows.Forms.TextBox();
+            this.label20 = new System.Windows.Forms.Label();
+            this.trackBar_fm_bell = new System.Windows.Forms.TrackBar();
+            this.button_fm_bell_en = new System.Windows.Forms.Button();
             this.tabPage_Connection.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage_subtractive.SuspendLayout();
@@ -131,6 +137,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar2)).BeginInit();
             this.ADSR.SuspendLayout();
+            this.groupBox5.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBar_fm_bell)).BeginInit();
             this.SuspendLayout();
             // 
             // btnGetSerialPorts
@@ -918,6 +926,7 @@
             // tabPage2
             // 
             this.tabPage2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.tabPage2.Controls.Add(this.groupBox5);
             this.tabPage2.Controls.Add(this.button_fm_en);
             this.tabPage2.Controls.Add(this.groupBox3);
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
@@ -1310,6 +1319,73 @@
             this.button_adsr_set.UseVisualStyleBackColor = true;
             this.button_adsr_set.Click += new System.EventHandler(this.button_adsr_set_Click);
             // 
+            // groupBox5
+            // 
+            this.groupBox5.Controls.Add(this.button_fm_bell_en);
+            this.groupBox5.Controls.Add(this.button_fm_bell);
+            this.groupBox5.Controls.Add(this.textBox_fm_bell);
+            this.groupBox5.Controls.Add(this.label20);
+            this.groupBox5.Controls.Add(this.trackBar_fm_bell);
+            this.groupBox5.ForeColor = System.Drawing.SystemColors.Control;
+            this.groupBox5.Location = new System.Drawing.Point(9, 272);
+            this.groupBox5.Name = "groupBox5";
+            this.groupBox5.Size = new System.Drawing.Size(604, 151);
+            this.groupBox5.TabIndex = 6;
+            this.groupBox5.TabStop = false;
+            this.groupBox5.Text = "Bell synthesis";
+            // 
+            // button_fm_bell
+            // 
+            this.button_fm_bell.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.button_fm_bell.Location = new System.Drawing.Point(15, 106);
+            this.button_fm_bell.Name = "button_fm_bell";
+            this.button_fm_bell.Size = new System.Drawing.Size(99, 33);
+            this.button_fm_bell.TabIndex = 11;
+            this.button_fm_bell.Text = "Set";
+            this.button_fm_bell.UseVisualStyleBackColor = true;
+            this.button_fm_bell.Click += new System.EventHandler(this.button_fm_bell_Click);
+            // 
+            // textBox_fm_bell
+            // 
+            this.textBox_fm_bell.Location = new System.Drawing.Point(120, 37);
+            this.textBox_fm_bell.Name = "textBox_fm_bell";
+            this.textBox_fm_bell.Size = new System.Drawing.Size(100, 20);
+            this.textBox_fm_bell.TabIndex = 6;
+            this.textBox_fm_bell.Text = "0";
+            // 
+            // label20
+            // 
+            this.label20.AutoSize = true;
+            this.label20.Location = new System.Drawing.Point(7, 40);
+            this.label20.Name = "label20";
+            this.label20.Size = new System.Drawing.Size(89, 13);
+            this.label20.TabIndex = 5;
+            this.label20.Text = "ADSR coefficient";
+            // 
+            // trackBar_fm_bell
+            // 
+            this.trackBar_fm_bell.AllowDrop = true;
+            this.trackBar_fm_bell.LargeChange = 50;
+            this.trackBar_fm_bell.Location = new System.Drawing.Point(6, 56);
+            this.trackBar_fm_bell.Maximum = 1000;
+            this.trackBar_fm_bell.Name = "trackBar_fm_bell";
+            this.trackBar_fm_bell.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.trackBar_fm_bell.Size = new System.Drawing.Size(490, 45);
+            this.trackBar_fm_bell.SmallChange = 10;
+            this.trackBar_fm_bell.TabIndex = 4;
+            this.trackBar_fm_bell.TickFrequency = 1000;
+            // 
+            // button_fm_bell_en
+            // 
+            this.button_fm_bell_en.ForeColor = System.Drawing.Color.Red;
+            this.button_fm_bell_en.Location = new System.Drawing.Point(6, 14);
+            this.button_fm_bell_en.Name = "button_fm_bell_en";
+            this.button_fm_bell_en.Size = new System.Drawing.Size(75, 23);
+            this.button_fm_bell_en.TabIndex = 7;
+            this.button_fm_bell_en.Text = "Disabled";
+            this.button_fm_bell_en.UseVisualStyleBackColor = true;
+            this.button_fm_bell_en.Click += new System.EventHandler(this.button_fm_bell_en_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1346,6 +1422,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.trackBar2)).EndInit();
             this.ADSR.ResumeLayout(false);
             this.ADSR.PerformLayout();
+            this.groupBox5.ResumeLayout(false);
+            this.groupBox5.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBar_fm_bell)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -1436,6 +1515,12 @@
         private System.Windows.Forms.Label label18;
         private System.Windows.Forms.TrackBar trackBar2;
         private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.GroupBox groupBox5;
+        private System.Windows.Forms.Button button_fm_bell_en;
+        private System.Windows.Forms.Button button_fm_bell;
+        private System.Windows.Forms.TextBox textBox_fm_bell;
+        private System.Windows.Forms.Label label20;
+        private System.Windows.Forms.TrackBar trackBar_fm_bell;
     }
 }
 
