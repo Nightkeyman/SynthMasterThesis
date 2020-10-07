@@ -10,6 +10,8 @@
 
 #define N 1024
 #define nh 13
+#define EMB_DELAY_MAX 150
+#define BORE_DELAY_MAX 300
 
 extern double r1[N];
 extern float r2[N];
@@ -20,5 +22,6 @@ extern short nr;
 
 void filterARMA();
 void genNoise_half(int start);
+void genNoise_full();
 
 #endif /* WOODWIND_H_ */

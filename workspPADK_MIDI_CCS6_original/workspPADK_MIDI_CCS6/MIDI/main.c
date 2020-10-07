@@ -82,14 +82,44 @@ float phase = 0;
 float add_knobAmp[HAMMOND_KNOBS];
 
 // WOODWIND GLOBALS
-double r1[N]; // r1 - output data used
 double x[N]; // x - input data - noise
+double r1[N]; // r1 - output data used
 float r2[N]; // r2 - output data stored --> for next cycle
-// MA filter coefficients --> numerator
+// h2 = MA filter coefficients --> numerator
 double h2[nh+1] = {1.0,	-11.43375376752887,	60.31833674426191,	-194.1394812807309,	424.5937877928701,	-664.769900430088,	764.0300762539232,	-649.5156931345342,	405.3715864508815,	-181.1511334347017,	55.02415296193268,	-10.20098698106399,	0.8730088389019536, 0.0};
-// AR filter coefficients --> denom
+// h1 = AR filter coefficients --> denom
 double h1[nh+1] = {1.0,	-11.59763215270097,	61.97101071357208,	-201.7393812534704,	445.6198758436103,	-703.6355440065329,	814.3969626483859,	-696.1747269288569,	436.2403933464246,	-195.4265157932021,	59.4119294426669,	-11.00594700485998,	0.9395751465939362, 0.0};
 short nr = N;
+// WOODWIND WAVEGUIDE GLOBALS
+int f_sin = 440;
+double dt = 1.0/Fs;
+
+float att_time = 0.5;
+float amp_noise = 0.035;
+double fbk_scl1 = 0.2;
+double fbk_scl2 = 0.33;
+double filt_b = -0.1;
+double filt_a = 0.7;
+
+const unsigned int env_del = 50000;
+unsigned int kenvibr_del = 12*N;
+unsigned int kenv1_del = 24;
+
+// ARRAYS
+double kenv1[N];
+double wave[N];
+double kenvibr[N];
+double avalue[N+1];
+double asum2_del[EMB_DELAY_MAX];
+double avalue_del[BORE_DELAY_MAX];
+double apoly;
+double asum3;
+double aflute1;
+/*
+double avalue[N+1];
+double avalue_del[BORE_DELAY_MAX];
+double aflute1[N];
+*/
 
 // Static waveform arrays
 float sinusek[N];
@@ -128,6 +158,19 @@ int main( int argc, char *argv[] ) {
 		waveform0[i+1] = 0;
 		waveform1[i] = 0;
 		waveform1[i+1] = 0;
+	}
+
+	apoly = 0.0;
+	asum3 = 0.0;
+	aflute1 = 0.0;
+	for(i = 0; i <= N; i++) {
+		avalue[i] = 0;
+	}
+	for(i = 0; i < EMB_DELAY_MAX; i++) {
+		asum2_del[i] = 0;
+	}
+	for(i = 0; i < BORE_DELAY_MAX; i++) {
+		avalue_del[i] = 0;
 	}
 
 	sin_wave(440, SIG_AMP, 0);
@@ -212,7 +255,64 @@ int main( int argc, char *argv[] ) {
 				clear_v = 1;
 				for(i = 0; i < MIDI_POLY_MAX; i++) {
 					if(freqs[i] > 0 || adsr_state[i] > 0) {
+						double wave_period = floor(Fs/(double)freqs[i]);
+						int emb_delay = floor(wave_period/6);
+						int bore_delay = floor(wave_period/3);
+						double aflute1_del = 0.0, asum2 = 0.0, ax = 0.0;
 						ADSR(i);
+						///////// FLUTE WAVEGUIDE IMPLEMENTATION ///////////
+						genNoise_full();
+						// kenv1 creation
+						for(j = 0; j < N; j++) {
+							if(env_del > (j + k*N)) {
+								kenv1[j] = (double)(j + k*N)/(env_del);
+							} else {
+								kenv1[j] = 1.0;
+							}
+							kenv1[j] = (kenv1[j]*x[j])/10.0; // 10.0 to wspolczynnik dobrego wyniku
+							wave[j] = sin((double)(j+k*N)*2.0*M_PI*freqs[i]/Fs); // 10.0 to wspolczynnik dobrego wyniku
+						}
+
+						// KENVIBR creation
+						for(j = 0; j < N; j++) {
+							if(kenvibr_del > (j + k*N)) {
+								kenvibr[j] = (double)(j + k*N)/(kenvibr_del);
+							} else {
+								kenvibr[j] = 1.0;
+							}
+							kenvibr[j] = wave[j]*kenvibr[j];
+							kenv1[j] = kenv1[j]*kenvibr[j];
+							// ASUM1 creation
+							kenv1[j] = amp_noise*kenv1[j] + kenvibr[j];
+							avalue[0] = avalue[N];
+						}
+
+						  // FEEDBACK LOOP
+						for(j = 0; j < N; j++) {
+						    aflute1_del = aflute1;
+						    asum2 = kenv1[j] + aflute1_del;
+						    asum2_del[emb_delay] = asum2;
+						    ax = asum2_del[0];
+						    apoly = ax - ax*ax*ax;
+						    asum3 = aflute1_del + apoly;
+						    avalue[j+1] = filt_b*asum3 - filt_a*avalue[j];
+						    avalue_del[bore_delay] = avalue[j+1];
+						    aflute1 = avalue_del[0];
+						    // REWRITE TO DELAYED TABLES
+							for(m = 0; m < EMB_DELAY_MAX - 1; m++) {
+						      asum2_del[m] = asum2_del[m+1];
+							}
+
+						    for(m = 0; m < BORE_DELAY_MAX - 1; m++) {
+						      avalue_del[m] = avalue_del[m+1];
+						    }
+
+						    v[j*2] = avalue[j]*100000.0;
+						}
+
+						// END OF FLUTE WAVEGUIDE IMPLEMENTATION
+
+						/*
 						genNoise_half(0);
 						for(m = 0; m < N/2; m++) {
 							r1[m] = 0;
@@ -221,9 +321,10 @@ int main( int argc, char *argv[] ) {
 						for(m = 0; m < N; m++) {
 							v[m*2] = r1[m]/1000.0;
 						}
+						*/
 						// Sprawdzenie czy wyrabia sie w czasie
 						//for(m = 0; m < N; m++) {
-						//	v[m*2] = 1000.0*SIG_AMP*sinf((float)(m+k)*2.0*M_PI*freqs[i]*(1.0/Fs));
+						//	v[m*2] = 10000.0*sinf((float)(m+k)*2.0*M_PI*freqs[i]*(1.0/Fs));
 						//}
 					}
 				}
@@ -231,21 +332,21 @@ int main( int argc, char *argv[] ) {
 				for(j = 0; j < N; j++) {
 					if (j < OVERLAP) {
 						if (whichwaveform == 1) {
-							waveform0[j] = overlaptable[j]*1*v[j*2]; // tu by bylo przepisywanie z myWav
+							waveform0[j] = overlaptable[j]*SIG_AMP*v[j*2]; // tu by bylo przepisywanie z myWav
 						} else {
-							waveform1[j] = overlaptable[j]*1*v[j*2];
+							waveform1[j] = overlaptable[j]*SIG_AMP*v[j*2];
 						}
 					} else if (j >= N - OVERLAP) {
 						if (whichwaveform) {
-							waveform0[j] = overlaptable[N-j-1]*1*v[j*2];
+							waveform0[j] = overlaptable[N-j-1]*SIG_AMP*v[j*2];
 						} else {
-							waveform1[j] = overlaptable[N-j-1]*1*v[j*2];
+							waveform1[j] = overlaptable[N-j-1]*SIG_AMP*v[j*2];
 						}
 					} else {
 						if (whichwaveform) {
-							waveform0[j] = 1*v[j*2];
+							waveform0[j] = SIG_AMP*v[j*2];
 						} else {
-							waveform1[j] = 1*v[j*2];
+							waveform1[j] = SIG_AMP*v[j*2];
 						}
 					}
 				}

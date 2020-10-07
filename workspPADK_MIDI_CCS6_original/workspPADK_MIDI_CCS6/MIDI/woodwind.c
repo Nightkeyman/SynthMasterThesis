@@ -42,7 +42,7 @@ void genNoise_half(int start) {
 }
 
 //////// FUNCTIONS FOR SYNTHESIS VIA WAVEGUIDE ////////
-void genNoise_full(int start) {
+void genNoise_full() {
 	// ARMA filter: http://software-dl.ti.com/jacinto7/esd/processor-sdk-rtos-jacinto7/latest/exports/docs/dsplib_c66x_3_4_0_0/docs/doxygen/html/dsplib_html/group___d_s_p__iir.html
 	int i = 0;
 	for(i = 0; i < N; i++) {

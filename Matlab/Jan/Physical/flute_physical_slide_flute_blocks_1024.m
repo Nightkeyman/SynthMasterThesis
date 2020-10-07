@@ -2,7 +2,7 @@
 close all
 clear
 
-f_sin = 880;
+f_sin = 440;
 % UNCHANGABLE PARAMS
 Fs = 44100;
 f = 0:0.1:round(Fs/2);
@@ -20,7 +20,7 @@ fbk_scl1 = 0.2; %0.5
 fbk_scl2 = 0.33; %0.55
 filt_b = -0.1; %-0.3
 filt_a = 0.7; %0.7
-T = 3;
+T = 1;
 L = wave_period*T;
 output = zeros(1, L);
 env_del = 50000; % staly delay dla poczatkowych envelopów
@@ -30,17 +30,14 @@ kenv1_del = 24;
 % TABLES
 kenv1 = zeros(1, N);
 wave = zeros(N, 1);
-wave = zeros(N, 1);
 kenvibr = zeros(N, 1);
-% prepare signals for feedback loop
-asum2 = zeros(N, 1);
-asum2_del = zeros(emb_delay, 1);
-ax = zeros(N, 1);
-apoly = 0;
-asum3 = 0;
 avalue = zeros(N+1, 1);
+% prepare signals for feedback loop
+asum2_del = zeros(emb_delay, 1);
 avalue_del = zeros(bore_delay, 1);
-aflute1 = zeros(N, 1);
+apoly = 0;
+aflute1 = 0;
+asum3 = 0;
 
 % MAIN LOOP - k blocks
 for k = 0:L
@@ -55,8 +52,8 @@ for k = 0:L
   end
   
   % AFLOW1 creation
-  aflow1 = kenv1.*randn(N, 1);
-  aflow1 = aflow1/10;
+  kenv1 = kenv1.*randn(N, 1);
+  kenv1 = kenv1/10;
   
   % KVIBR creation
   for i = 1:N
@@ -71,22 +68,23 @@ for k = 0:L
       kenvibr(i) = 1;
     end
   end
-  kvibr = wave.*kenvibr;
-  aflow2 = aflow1.*kvibr;
+  kenvibr = wave.*kenvibr;
+  kenv1 = kenv1.*kenvibr;
   % ASUM1 creation
-  asum1 = amp_noise*aflow2 + kvibr;
+  kenv1 = amp_noise*kenv1 + kenvibr;
   avalue(1) = avalue(1025);
   
   % FEEDBACK LOOP
   for i = 1:N
-    asum2(i+1) = asum1(i) + aflute1(i);
-    asum2_del(emb_delay) = asum2(i+1);
-    ax(i+1) = asum2_del(1);
-    apoly = ax(i+1) - ax(i+1)^3;
-    asum3 = aflute1(i) + apoly;
+    aflute1_del = aflute1;
+    asum2 = kenv1(i) + aflute1_del;
+    asum2_del(emb_delay) = asum2;
+    ax = asum2_del(1);
+    apoly = ax - ax^3;
+    asum3 = aflute1_del + apoly;
     avalue(i+1) = filt_b*asum3 - filt_a*avalue(i);
     avalue_del(bore_delay) = avalue(i+1);
-    aflute1(i+1) = avalue_del(1);
+    aflute1 = avalue_del(1);
     % REWRITE TO DELAYED TABLES
     for j = 1:emb_delay-1
       asum2_del(j) = asum2_del(j+1);
