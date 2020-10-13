@@ -153,6 +153,9 @@ extern int fm_modfreq;
 extern int fm_modamp;
 extern double bell_adsr_coefficient;
 
+// WOODWIND GLOBALS
+extern int flag_flute;
+
 // ADDITIVE GLOBALS
 extern float add_knobAmp[HAMMOND_KNOBS];
 
@@ -199,6 +202,7 @@ interrupt void midi_isr( void )
 					for (i = 0; i < MIDI_POLY_MAX; i++) {
 						if (freqs[i] == 0) {
 							freqs[i] = freq_wav;
+							flag_flute = 1;
 							adsr_state[i] = 1;
 							break;
 						}
