@@ -11,7 +11,7 @@ time = 1/f_sin;
 wave_period = floor(Fs/f_sin);
 
 % CHANGABLE PARAMS
-T = 2;
+T = 1;
 att_time = 1/2;
 amp_noise = 0.03; %0.035
 emb_delay = floor(wave_period/6); % wave_period/2

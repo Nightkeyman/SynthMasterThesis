@@ -13,7 +13,7 @@ N = 1024;
 
 % CHANGABLE PARAMS
 att_time = 1/2;
-amp_noise = 0.035; %0.035
+amp_noise = 0.03; %0.035
 emb_delay = floor(wave_period/6); % wave_period/2
 bore_delay = floor(wave_period/3); % wave_period/1
 fbk_scl1 = 0.2; %0.5
@@ -43,11 +43,11 @@ asum3 = 0;
 for k = 0:L
   % kenv1 creation
   for i = 1:N
-    if(env_del > (i + k*N))
-      kenv1(i) = (i + k*N)/(env_del);
-    else
-      kenv1(i) = 1;
-    end
+    #if(env_del > (i + k*N))
+    #  kenv1(i) = (i + k*N)/(env_del);
+    #else
+    kenv1(i) = 1;
+    #end
     output(k*N + i) = kenv1(i);
   end
   
