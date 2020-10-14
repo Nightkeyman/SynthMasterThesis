@@ -71,11 +71,11 @@ double bell_adsr_coefficient = 1.0;
 // ADSR GLOBALS
 float adsr[MIDI_POLY_MAX];
 int adsr_state[MIDI_POLY_MAX];
-float attack_rate = 0.5;
-float attack_level = 1.3;
-float decay_rate = 0.5;
+float attack_rate = 1.0; //0.5
+float attack_level = 1.0;
+float decay_rate = 0.1;
 float sustain_level = 1.0;
-float release_rate = 0.5;
+float release_rate = 1.0; //0.5
 
 // ADDITIVE GLOBALS
 float phase = 0;
@@ -94,8 +94,7 @@ short nr = N;
 int f_sin = 440;
 double dt = 1.0/Fs;
 
-float att_time = 0.5;
-float amp_noise = 0.005;
+float amp_noise = 0.01; //0.005
 double fbk_scl1 = 0.2;
 double fbk_scl2 = 0.33;
 double filt_b = -0.1;
@@ -104,11 +103,6 @@ double filt_a = 0.7;
 const unsigned int env_del = 50000;
 unsigned int kenvibr_del = 12*N;
 unsigned int kenv1_del = 24;
-
-int sum2_del_in;
-int sum2_del_out;
-int val_del_in;
-int val_del_out;
 int flag_flute = 0;
 
 // ARRAYS
@@ -142,6 +136,8 @@ int main( int argc, char *argv[] ) {
 	int k = 0; // phase shift variable
 	float *p; // pointer for additive array
 	double aflute1_del = 0.0, asum2 = 0.0, ax = 0.0;
+	int emb_delay = 0, bore_delay = 0;
+	double wave_period = 0.0;
 	sem_dac = 1;
 	whichwaveform = 1;
 	for (i = 0 ; i < MIDI_POLY_MAX; i++){
@@ -249,95 +245,85 @@ int main( int argc, char *argv[] ) {
 				for(j = 0; j < N; j++) {
 					waveform0[j] = 0.0;
 					waveform1[j] = 0.0;
-					/*
-					for(i = 0; i < N; i++) {
-						kenvibr[i] = 0.0;
-						kenv1[i] = 0.0;
-						avalue[i] = 0.0;
-					}
-					for(i = 0; i < EMB_DELAY_MAX; i++) {
-						asum2_del[i] = 0.0;
-					}
-					for(i = 0; i < BORE_DELAY_MAX; i++) {
-						avalue_del[i] = 0.0;
-					}
-					aflute1_del = 0.0;
-					asum2 = 0.0;
-					ax = 0.0;
-					*/
 				}
 			} else {
 				clear_v = 1;
 				for(i = 0; i < MIDI_POLY_MAX; i++) {
 					if(freqs[i] > 0 || adsr_state[i] > 0) {
-						ADSR(i);
-						for(j = 0; j < OVERLAP; j++){
-								v[j*2] = v[(N-OVERLAP+j)*2];
-						}
-						if(flag_flute == 1) {
-							flag_flute = 0;
-							double wave_period = floor(Fs/(double)freqs[i]);
-							int emb_delay = floor(wave_period/6);
-							int bore_delay = floor(wave_period/3);
-							sum2_del_in = 0;
-							val_del_in = 0;
-							sum2_del_out = emb_delay;
-							val_del_out = bore_delay;
-							for(m = 0; m < EMB_DELAY_MAX; m++) asum2_del[m] = 0;
-							for(m = 0; m < CORE_DELAY_MAX; m++) avalue_del[m] = 0;
-						}
-						///////// FLUTE WAVEGUIDE IMPLEMENTATION ///////////
-
-
-						// TYLKO PIERWSZY DZWIEK ZAGRANY PO WLACZENIU LADNIE SIE ROBI, KOLEJNE S¥ JUZ JAKBY W JAKIEJŒ FAZIE
-						genNoise_full();
-						// kenv1 creation
-						for(j = 0; j < N - OVERLAP; j++) {
-							kenv1[j] = (1.0*x[j])/10.0; // 10.0 to wspolczynnik dobrego wyniku
-							wave[j] = sin((double)(j+k)*2.0*M_PI*freqs[i]/Fs); // 10.0 to wspolczynnik dobrego wyniku
-
-							// KENVIBR creation
-							if(kenvibr_del > (j + k)) {
-								kenvibr[j] = (double)(j + k)/(kenvibr_del);
-							} else {
-								kenvibr[j] = 1.0;
+						if (clear_v == 1){
+							clear_v = 0;
+							ADSR(i);
+							for(j = 0; j < OVERLAP; j++){
+									v[j*2] = v[(N-OVERLAP+j)*2];
 							}
-							kenvibr[j] = wave[j]*kenvibr[j];
-							kenv1[j] = kenv1[j]*kenvibr[j];
-							// ASUM1 creation
-							kenv1[j] = amp_noise*kenv1[j] + kenvibr[j];
-							avalue[0] = avalue[N-OVERLAP];
-						}
+							if(flag_flute == 1) {
+								flag_flute = 0;
+								wave_period = Fs/880.0;//floor(Fs/(double)freqs[i]);
+								emb_delay = floor(wave_period/6);
+								bore_delay = floor(wave_period/3);
+								aflute1 = 0.0;
+								for(m = 0; m < EMB_DELAY_MAX; m++) {
+									asum2_del[m] = 0;
+									avalue_del[m] = 0;
+								}
+								for(m = 0; m < N; m++) {
+									kenv1[m] = 0.0;
+									wave[m] = 0.0;
+									avalue[m] = 0.0;
+								}
+								avalue[N] = 0.0;
+								k = 0;
+							}
+							///////// FLUTE WAVEGUIDE IMPLEMENTATION ///////////
 
-						  // FEEDBACK LOOP
-						for(j = 0; j < N - OVERLAP; j++) {
-						    aflute1_del = aflute1;
-						    asum2 = kenv1[j] + aflute1_del;
-						    asum2_del[sum2_del_in] = asum2;
-						    sum2_del_in++;
-						    if(sum2_del_in >= emb_delay) sum2_del_in = 0;
-						    ax = asum2_del[sum2_del_out];
-						    sum2_del_out++;
-						    if(sum2_del_out >= emb_delay) sum2_del_out = 0;
-						    apoly = ax - ax*ax*ax;
-						    asum3 = aflute1_del + apoly;
-						    avalue[j+1] = filt_b*asum3 - filt_a*avalue[j];
-						    avalue_del[bore_delay] = avalue[j+1];
-						    aflute1 = avalue_del[0];
-						    // REWRITE TO DELAYED TABLES
 
-							for(m = 0; m < emb_delay; m++) {
-						      asum2_del[m] = asum2_del[m+1];
+							// TYLKO PIERWSZY DZWIEK ZAGRANY PO WLACZENIU LADNIE SIE ROBI, KOLEJNE S¥ JUZ JAKBY W JAKIEJŒ FAZIE
+							genNoise_full();
+							// kenv1 creation
+							for(j = 0; j < N - OVERLAP; j++) {
+								if(env_del > (j + k)/env_del) {
+									kenv1[j] = (j + k)/env_del;
+								} else {
+									kenv1[j] = 1.0;
+								}
+								kenv1[j] = (1.0*x[j])/10.0; // 10.0 to wspolczynnik dobrego wyniku
+								wave[j] = sin((double)(j+k)*2.0*M_PI*freqs[i]/Fs); // 10.0 to wspolczynnik dobrego wyniku
+
+								// KENVIBR creation
+								if(kenvibr_del > (j + k)) {
+									kenvibr[j] = (double)(j + k)/(kenvibr_del);
+								} else {
+									kenvibr[j] = 1.0;
+								}
+								kenvibr[j] = wave[j]*kenvibr[j];
+								kenv1[j] = kenv1[j]*kenvibr[j];
+								// ASUM1 creation
+								kenv1[j] = amp_noise*kenv1[j] + kenvibr[j];
+								avalue[0] = avalue[N-OVERLAP];
 							}
 
+							  // FEEDBACK LOOP
+							for(j = 0; j < N - OVERLAP; j++) {
+								aflute1_del = aflute1;
+								asum2 = kenv1[j] + aflute1_del;
+								asum2_del[emb_delay] = asum2;
+								ax = asum2_del[0];
+								apoly = ax - ax*ax*ax;
+								asum3 = aflute1_del + apoly;
+								avalue[j+1] = filt_b*asum3 - filt_a*avalue[j];
+								avalue_del[bore_delay] = avalue[j+1];
+								aflute1 = avalue_del[0];
+								// REWRITE TO DELAYED TABLES
+								for(m = 0; m < emb_delay; m++) {
+								  asum2_del[m] = asum2_del[m+1];
+								}
 
-						    for(m = 0; m < bore_delay; m++) {
-						      avalue_del[m] = avalue_del[m+1];
-						    }
+								for(m = 0; m < bore_delay; m++) {
+								  avalue_del[m] = avalue_del[m+1];
+								}
 
-
-						    v[(j+OVERLAP)*2] = avalue[j]*100000.0*adsr[i];
-						    */
+								v[(j+OVERLAP)*2] = avalue[j]*100000.0*adsr[i];
+							}
 						}
 
 						// END OF FLUTE WAVEGUIDE IMPLEMENTATION
@@ -355,9 +341,9 @@ int main( int argc, char *argv[] ) {
 						// END OF FLUTE ARMA IMPLEMENTATION
 						*/
 						// Sprawdzenie czy wyrabia sie w czasie
-						for(m = OVERLAP; m < N; m++) {
-							v[m*2] = 10000.0*sinf((float)(m+k)*2.0*M_PI*freqs[i]*(1.0/Fs));
-						}
+						//for(m = OVERLAP; m < N; m++) {
+						//	v[m*2] = 10000.0*sinf((float)(m+k)*2.0*M_PI*freqs[i]*(1.0/Fs));
+						//}
 					}
 				}
 				while(sem_dac == 0);

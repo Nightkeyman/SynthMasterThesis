@@ -12,7 +12,6 @@ wave_period = floor(Fs/f_sin);
 N = 1024;
 
 % CHANGABLE PARAMS
-att_time = 1/2;
 amp_noise = 0.035; %0.035
 emb_delay = floor(wave_period/6); % wave_period/2
 bore_delay = floor(wave_period/3); % wave_period/1
