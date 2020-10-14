@@ -664,6 +664,10 @@ int main( int argc, char *argv[] ) {
 									bridgeDelay[i] = 0.0;
 									neckDelay[i] = 0.0;
 								}
+								vibrato_rate = vibrato_TABLE_SIZE*vibrato_freq/(double)Fs;
+								for (i = 0; i <  vibrato_TABLE_SIZE; i++){
+									vibrato_table[i] = sin((double)i*2.0*M_PI/(double)vibrato_TABLE_SIZE);
+								}
 							}
 							// TU ?
 							for(j = 0; j < OVERLAP; j++){

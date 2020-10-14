@@ -362,10 +362,10 @@ interrupt void uart_isr( void )
 
 
 					if (UART_pull(1) == 3){
-							vibrato_gain = (double)(UART_pull(2) + UART_pull(3)*256 + UART_pull(4)*256*256 + UART_pull(5)*256*256*256)/1000.0;
+							vibrato_freq = (double)(UART_pull(2) + UART_pull(3)*256 + UART_pull(4)*256*256 + UART_pull(5)*256*256*256)/1000.0;
 						}
 					if (UART_pull(1) == 4){
-							vibrato_freq = (double)(UART_pull(2) + UART_pull(3)*256 + UART_pull(4)*256*256 + UART_pull(5)*256*256*256)/1000.0;
+							vibrato_gain = (double)(UART_pull(2) + UART_pull(3)*256 + UART_pull(4)*256*256 + UART_pull(5)*256*256*256)/1000.0;
 						}
 				}
 			}
