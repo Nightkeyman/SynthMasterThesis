@@ -22,7 +22,7 @@ filt_a = 0.7; %0.7
 T = 1;
 L = wave_period*T;
 output = zeros(1, L);
-env_del = 50000; % staly delay dla poczatkowych envelopów
+env_del = 10000; % staly delay dla poczatkowych envelopów
 kenvibr_del = 12*N;
 kenv1_del = 24;
 
@@ -43,13 +43,15 @@ for k = 0:L
   % kenv1 creation
   for i = 1:N
     if(env_del > (i + k*N))
-      kenv1(i) = (i + k*N)/(env_del);
+      kenv1(i) = 2*(i + k*N)/(env_del);
+    elseif((env_del <= (i + k*N)) && (2*env_del > (i + k*N)))
+      kenv1(i) = 2 - (i + k*N)/(env_del);
     else
       kenv1(i) = 1;
     end
     output(k*N + i) = kenv1(i);
   end
-  
+
   % AFLOW1 creation
   kenv1 = kenv1.*randn(N, 1);
   kenv1 = kenv1/10;
@@ -108,4 +110,4 @@ Y = Y/max(Y);
 %sound(Y, Fs);
 
 figure(3)
-plot(Y)
+plot(output)
