@@ -254,6 +254,32 @@ namespace UARTCOM2
                             }
                         }
                         break;
+                    case 109:   // flute
+                        if (Buffer_pull(7) == 110)
+                        {
+                            if (Checksum() == Buffer_pull(8))
+                            {
+                                if (Buffer_pull(1) == 1)
+                                {
+                                    button_flute_en.Invoke((MethodInvoker)delegate {
+                                        button_flute_en.Text = "Enabled";
+                                    });
+                                    button_flute_en.Invoke((MethodInvoker)delegate {
+                                        button_flute_en.ForeColor = Color.Green;
+                                    });
+                                }
+                                else if (Buffer_pull(1) == 2)
+                                {
+                                    button_flute_en.Invoke((MethodInvoker)delegate {
+                                        button_flute_en.Text = "Disabled";
+                                    });
+                                    button_flute_en.Invoke((MethodInvoker)delegate {
+                                        button_flute_en.ForeColor = Color.Red;
+                                    });
+                                }
+                            }
+                        }
+                        break;
                     case 170:
                         if (Buffer_pull(7) == 171)
                         {
@@ -623,6 +649,19 @@ namespace UARTCOM2
             else
             {
                 send(102, 6, 0, 0, 0, 0, 0);
+            }
+        }
+
+        private void button_flute_en_Click(object sender, EventArgs e)
+        {
+            // Flute - signal 109
+            if (button_flute_en.Text.Equals("Disabled"))
+            {
+                send(109, 1, 0, 0, 0, 0, 0);
+            }
+            else
+            {
+                send(109, 2, 0, 0, 0, 0, 0);
             }
         }
     }

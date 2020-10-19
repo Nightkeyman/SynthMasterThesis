@@ -1,6 +1,6 @@
-%close all
+close all
 clear
-Fs = 44100;
+Fs = 48000;
 f = 1:2048;
 fft_size = 2048;
 y = audioread('Samples/flute_A_2.wav');
@@ -32,12 +32,12 @@ f = 0:0.1:round(Fs/2);
 T = 3;
 s = [1 zeros(1,length(0:1/Fs:T-1/Fs))];
 insig = randn(length(0:1/Fs:T-1/Fs), 1);
-insig = ADSR(insig,3,4,2,2);
+insig = ADSR(insig,1,1,2,2);
 % insig = noise(length(0:1/Fs:T-1/Fs), 1, 'white');
-note = 60
-Resonances_freq_A = [440*1.059463^(note - 60) 440*1.059463^(note - 48) 440*1.059463^(note - 41) 440*1.059463^(note - 36) 440*1.059463^(note - 33) 440*1.059463^(note - 29) 440*1.059463^(note - 24)];
+note = 69
+Resonances_freq_A = [440*1.059463^(note - 69) 440*1.059463^(note - 57) 440*1.059463^(note - 50) 440*1.059463^(note - 45) 440*1.059463^(note - 42) 440*1.059463^(note - 38)];
 # Resonances_freq_A = [440 880 1312 1764 2194 2649 3513];
-Resonances_mag_A = [33.6 30.58 18.289 22.35 4.53 0.67 -4.06]*3;
+Resonances_mag_A = [33.6 30.58 18.289 22.35 4.53 0.67]*3;
 Resonances_mag_A = 200.^(Resonances_mag_A/20);
 Apoles = zeros(length(Resonances_freq_A)*2,1);
 for i=1:2:length(Apoles)
@@ -46,7 +46,7 @@ for i=1:2:length(Apoles)
 end
 A = poly(Apoles);
 
-Resonances_freq_B = [440*1.059463^(note - 53) 440*1.059463^(note - 44) 440*1.059463^(note - 39) 440*1.059463^(note - 34) 440*1.059463^(note - 31) 440*1.059463^(note - 27)];
+Resonances_freq_B = [440*1.059463^(note - 62) 440*1.059463^(note - 53) 440*1.059463^(note - 48) 440*1.059463^(note - 43) 440*1.059463^(note - 40) 440*1.059463^(note - 36)];
 # Resonances_freq_B = [660 1096 1538 1979 2421 3081];
 Resonances_mag_B = [33.6 30.58 18.289 22.35 4.53 0.67];
 Resonances_mag_B = 50.^(Resonances_mag_B/20);
@@ -56,7 +56,7 @@ for i=1:2:length(Bzeros)
     Bzeros(i+1) = (1 - 0.05/Resonances_mag_B(fix((i+1)/2)))*exp(-1i*Resonances_freq_B((i+1)/2)*2*pi/Fs);
 end
 
-B = [0 0 poly(Bzeros)];
+B = [poly(Bzeros)];
 %B = [zeros(1, length(A)-1) 1];
 
 figure(1);
@@ -75,7 +75,7 @@ abs(Apoles);
 atan(imag(Apoles)./real(Apoles))*Fs/(2*pi);
 Y = filter(B, A, insig);
 
-[a, b] = zp2tf(Bzeros, Apoles, 1)
+[numer, denom] = zp2tf(Bzeros, Apoles, 1)
 
 figure(3)
 y = impz(1, A);
@@ -85,6 +85,7 @@ title('Sygnal utworzony przez pobudzony model')
 xlabel('Czas [s]')
 ylabel('Amplituda')
 y = y/max(y);
+
 Y = Y/max(Y);
 insig = insig/max(insig);
 sound(Y, Fs);

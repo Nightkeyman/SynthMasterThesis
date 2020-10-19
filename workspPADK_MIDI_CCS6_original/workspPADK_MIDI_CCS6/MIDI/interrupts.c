@@ -13,6 +13,7 @@ interrupt void nmi_isr( void );
 interrupt void uart_isr( void );
 interrupt void midi_isr( void );
 
+#include "PADK.h"
 #include "audioBufConst&ExtVar.h"
 #include "uart_fifo.h"
 #include "midi_fifo.h"
@@ -137,7 +138,7 @@ extern int pressedkeys;
 extern float adsr[MIDI_POLY_MAX];
 
 // SYNTHESIS METHODS
-extern enum methodtype{subtractive, additive, fm, fm_bell};
+extern enum methodtype{subtractive, additive, fm, fm_bell, flute};
 extern enum methodtype method;
 
 extern enum waveformtype{square, triangle, sawtooth};
@@ -151,6 +152,9 @@ extern int sub_highfreq;
 extern int fm_modfreq;
 extern int fm_modamp;
 extern double bell_adsr_coefficient;
+
+// WOODWIND GLOBALS
+extern int flag_flute;
 
 // ADDITIVE GLOBALS
 extern float add_knobAmp[HAMMOND_KNOBS];
@@ -198,6 +202,7 @@ interrupt void midi_isr( void )
 					for (i = 0; i < MIDI_POLY_MAX; i++) {
 						if (freqs[i] == 0) {
 							freqs[i] = freq_wav;
+							flag_flute = 1;
 							adsr_state[i] = 1;
 							break;
 						}
@@ -318,6 +323,23 @@ interrupt void uart_isr( void )
 						}
 					if (UART_pull(1) == 7){
 						bell_adsr_coefficient = (double)(UART_pull(2) + UART_pull(3)*256 + UART_pull(4)*256*256 + UART_pull(5)*256*256*256)/100.0;
+					}
+				}
+			}
+			break;
+		case 109: // Flute
+			if (UART_pull(7) == 110){
+				if (UART_pull(8) == UART_checksum()) {
+					if (UART_pull(1) == 1) {
+						UART_send(109, 1, 0, 0, 0, 0, 0);
+						method = flute;
+						release_rate = 1.0;
+						attack_rate = 1.0;
+					} else if (UART_pull(1) == 2) {
+						UART_send(109, 2, 0, 0, 0, 0, 0);
+					}
+					if (UART_pull(1) == 3) {
+						fm_modfreq = UART_pull(2) + UART_pull(3)*256 + UART_pull(4)*256*256 + UART_pull(5)*256*256*256;
 					}
 				}
 			}
