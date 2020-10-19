@@ -99,14 +99,6 @@
             this.label7 = new System.Windows.Forms.Label();
             this.trackBar_fm_modamp = new System.Windows.Forms.TrackBar();
             this.tabPage_flute = new System.Windows.Forms.TabPage();
-            this.groupBox4 = new System.Windows.Forms.GroupBox();
-            this.button5 = new System.Windows.Forms.Button();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.label17 = new System.Windows.Forms.Label();
-            this.trackBar1 = new System.Windows.Forms.TrackBar();
-            this.textBox2 = new System.Windows.Forms.TextBox();
-            this.label18 = new System.Windows.Forms.Label();
-            this.trackBar2 = new System.Windows.Forms.TrackBar();
             this.button_flute_en = new System.Windows.Forms.Button();
             this.ADSR = new System.Windows.Forms.GroupBox();
             this.label_release_knob = new System.Windows.Forms.Label();
@@ -135,9 +127,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.trackBar_fm_modfreq)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar_fm_modamp)).BeginInit();
             this.tabPage_flute.SuspendLayout();
-            this.groupBox4.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBar2)).BeginInit();
             this.ADSR.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -1108,7 +1097,6 @@
             // tabPage_flute
             // 
             this.tabPage_flute.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.tabPage_flute.Controls.Add(this.groupBox4);
             this.tabPage_flute.Controls.Add(this.button_flute_en);
             this.tabPage_flute.Location = new System.Drawing.Point(4, 22);
             this.tabPage_flute.Name = "tabPage_flute";
@@ -1117,98 +1105,12 @@
             this.tabPage_flute.TabIndex = 4;
             this.tabPage_flute.Text = "Flute";
             // 
-            // groupBox4
-            // 
-            this.groupBox4.Controls.Add(this.button5);
-            this.groupBox4.Controls.Add(this.textBox1);
-            this.groupBox4.Controls.Add(this.label17);
-            this.groupBox4.Controls.Add(this.trackBar1);
-            this.groupBox4.Controls.Add(this.textBox2);
-            this.groupBox4.Controls.Add(this.label18);
-            this.groupBox4.Controls.Add(this.trackBar2);
-            this.groupBox4.ForeColor = System.Drawing.SystemColors.Control;
-            this.groupBox4.Location = new System.Drawing.Point(9, 35);
-            this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(604, 236);
-            this.groupBox4.TabIndex = 5;
-            this.groupBox4.TabStop = false;
-            this.groupBox4.Text = "Flute parameters";
-            // 
-            // button5
-            // 
-            this.button5.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.button5.Location = new System.Drawing.Point(20, 171);
-            this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(99, 33);
-            this.button5.TabIndex = 11;
-            this.button5.Text = "Set";
-            this.button5.UseVisualStyleBackColor = true;
-            // 
-            // textBox1
-            // 
-            this.textBox1.Location = new System.Drawing.Point(120, 123);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(100, 20);
-            this.textBox1.TabIndex = 9;
-            this.textBox1.Text = "0";
-            // 
-            // label17
-            // 
-            this.label17.AutoSize = true;
-            this.label17.Location = new System.Drawing.Point(7, 126);
-            this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(57, 13);
-            this.label17.TabIndex = 8;
-            this.label17.Text = "Bore delay";
-            // 
-            // trackBar1
-            // 
-            this.trackBar1.AllowDrop = true;
-            this.trackBar1.Location = new System.Drawing.Point(7, 78);
-            this.trackBar1.Maximum = 50;
-            this.trackBar1.Name = "trackBar1";
-            this.trackBar1.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.trackBar1.Size = new System.Drawing.Size(490, 45);
-            this.trackBar1.TabIndex = 7;
-            this.trackBar1.TickFrequency = 1000;
-            this.trackBar1.TickStyle = System.Windows.Forms.TickStyle.TopLeft;
-            // 
-            // textBox2
-            // 
-            this.textBox2.Location = new System.Drawing.Point(120, 37);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(100, 20);
-            this.textBox2.TabIndex = 6;
-            this.textBox2.Text = "0";
-            // 
-            // label18
-            // 
-            this.label18.AutoSize = true;
-            this.label18.Location = new System.Drawing.Point(7, 40);
-            this.label18.Name = "label18";
-            this.label18.Size = new System.Drawing.Size(95, 13);
-            this.label18.TabIndex = 5;
-            this.label18.Text = "Embouchure delay";
-            // 
-            // trackBar2
-            // 
-            this.trackBar2.AllowDrop = true;
-            this.trackBar2.LargeChange = 50;
-            this.trackBar2.Location = new System.Drawing.Point(7, 56);
-            this.trackBar2.Maximum = 300;
-            this.trackBar2.Name = "trackBar2";
-            this.trackBar2.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.trackBar2.Size = new System.Drawing.Size(490, 45);
-            this.trackBar2.SmallChange = 10;
-            this.trackBar2.TabIndex = 4;
-            this.trackBar2.TickFrequency = 1000;
-            // 
             // button_flute_en
             // 
             this.button_flute_en.ForeColor = System.Drawing.Color.Red;
-            this.button_flute_en.Location = new System.Drawing.Point(6, 6);
+            this.button_flute_en.Location = new System.Drawing.Point(265, 168);
             this.button_flute_en.Name = "button_flute_en";
-            this.button_flute_en.Size = new System.Drawing.Size(75, 23);
+            this.button_flute_en.Size = new System.Drawing.Size(144, 56);
             this.button_flute_en.TabIndex = 4;
             this.button_flute_en.Text = "Disabled";
             this.button_flute_en.UseVisualStyleBackColor = true;
@@ -1420,10 +1322,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.trackBar_fm_modfreq)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar_fm_modamp)).EndInit();
             this.tabPage_flute.ResumeLayout(false);
-            this.groupBox4.ResumeLayout(false);
-            this.groupBox4.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBar2)).EndInit();
             this.ADSR.ResumeLayout(false);
             this.ADSR.PerformLayout();
             this.ResumeLayout(false);
@@ -1507,14 +1405,6 @@
         private System.Windows.Forms.Button button4;
         private System.Windows.Forms.Button button_additive_hammond_en;
         private System.Windows.Forms.TabPage tabPage_flute;
-        private System.Windows.Forms.GroupBox groupBox4;
-        private System.Windows.Forms.Button button5;
-        private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.Label label17;
-        private System.Windows.Forms.TrackBar trackBar1;
-        private System.Windows.Forms.TextBox textBox2;
-        private System.Windows.Forms.Label label18;
-        private System.Windows.Forms.TrackBar trackBar2;
         private System.Windows.Forms.Button button_flute_en;
         private System.Windows.Forms.GroupBox groupBox5;
         private System.Windows.Forms.Button button_fm_bell_en;

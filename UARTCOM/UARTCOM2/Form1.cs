@@ -655,7 +655,7 @@ namespace UARTCOM2
         private void button_flute_en_Click(object sender, EventArgs e)
         {
             // Flute - signal 109
-            if (button_subtractive_en.Text.Equals("Disabled"))
+            if (button_flute_en.Text.Equals("Disabled"))
             {
                 send(109, 1, 0, 0, 0, 0, 0);
             }

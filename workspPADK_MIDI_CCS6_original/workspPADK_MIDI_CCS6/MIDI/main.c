@@ -38,7 +38,6 @@ int waveform0[N];
 int waveform1[N];
 
 volatile int whichwaveform = 0;
-volatile int mode = 0;
 const float overlaptable[128] = {0.008, 0.016, 0.023, 0.031, 0.039, 0.047, 0.055, 0.063, 0.070, 0.078, 0.086, 0.094, 0.102, 0.109, 0.117, 0.125, 0.133, 0.141, 0.148, 0.156, 0.164, 0.172, 0.180, 0.188, 0.195, 0.203, 0.211, 0.219, 0.227, 0.234, 0.242, 0.250, 0.258, 0.266, 0.273, 0.281, 0.289, 0.297, 0.305, 0.313, 0.320, 0.328, 0.336, 0.344, 0.352, 0.359, 0.367, 0.375, 0.383, 0.391, 0.398, 0.406, 0.414, 0.422, 0.430, 0.438, 0.445, 0.453, 0.461, 0.469, 0.477, 0.484, 0.492, 0.500, 0.508, 0.516, 0.523, 0.531, 0.539, 0.547, 0.555, 0.563, 0.570, 0.578, 0.586, 0.594, 0.602, 0.609, 0.617, 0.625, 0.633, 0.641, 0.648, 0.656, 0.664, 0.672, 0.680, 0.688, 0.695, 0.703, 0.711, 0.719, 0.727, 0.734, 0.742, 0.750, 0.758, 0.766, 0.773, 0.781, 0.789, 0.797, 0.805, 0.813, 0.820, 0.828, 0.836, 0.844, 0.852, 0.859, 0.867, 0.875, 0.883, 0.891, 0.898, 0.906, 0.914, 0.922, 0.930, 0.938, 0.945, 0.953, 0.961, 0.969, 0.977, 0.984, 0.992, 1.000};
 
 double s = 0;
@@ -80,29 +79,17 @@ float add_knobAmp[HAMMOND_KNOBS];
 
 // WOODWIND GLOBALS
 double x[N]; // x - input data - noise
-double r1[N]; // r1 - output data used
-float r2[N]; // r2 - output data stored --> for next cycle
-// h2 = MA filter coefficients --> numerator
-double h2[nh+1] = {1.0,	-11.43375376752887,	60.31833674426191,	-194.1394812807309,	424.5937877928701,	-664.769900430088,	764.0300762539232,	-649.5156931345342,	405.3715864508815,	-181.1511334347017,	55.02415296193268,	-10.20098698106399,	0.8730088389019536, 0.0};
-// h1 = AR filter coefficients --> denom
-double h1[nh+1] = {1.0,	-11.59763215270097,	61.97101071357208,	-201.7393812534704,	445.6198758436103,	-703.6355440065329,	814.3969626483859,	-696.1747269288569,	436.2403933464246,	-195.4265157932021,	59.4119294426669,	-11.00594700485998,	0.9395751465939362, 0.0};
-short nr = N;
-// WOODWIND WAVEGUIDE GLOBALS
 int f_sin = 440;
 double dt = 1.0/Fs;
-
 float amp_noise = 0.02; //0.005
 double fbk_scl1 = 0.2;
 double fbk_scl2 = 0.33;
 double filt_b = -0.1;
 double filt_a = 0.7;
-
 const unsigned int env_del = 50000;
 unsigned int kenvibr_del = 12*N;
 unsigned int kenv1_del = 24;
 int flag_flute = 0;
-
-// ARRAYS
 double kenv1[N];
 double wave[N];
 double kenvibr[N];
@@ -127,9 +114,7 @@ int main( int argc, char *argv[] ) {
 	int i = 0, j = 0, m = 0;
 	int freq_wav = 0;
 	int mono = 1; // 0 - mono, 1 - poly
-	int mode = 0; // 0 - subtractive, 1 - additive
 	int clear_v = 1;
-	int ph = 0; // phase shift variable
 	int k = 0; // phase shift variable
 	float *p; // pointer for additive array
 	double aflute1_del = 0.0, asum2 = 0.0, ax = 0.0;
@@ -190,9 +175,7 @@ int main( int argc, char *argv[] ) {
 	/*---------------------------------------------------------------*/
 	/*							 MAIN LOOP 		                     */
 	/*---------------------------------------------------------------*/
-	mode = 1;
     while(1)  {
-    	ph++;
     	///// ADDITIVE /////
 		if(method == additive) {
     		if(pressedkeys < 1) {
@@ -233,11 +216,9 @@ int main( int argc, char *argv[] ) {
 				}
 				sem_dac = 0;
 				k += N - OVERLAP;
-				ph += N;
     		}
 		///// WOODWIND /////
 		} else if (method == flute) {
-			ph++;
 			if(pressedkeys < 1) {
 				for(j = 0; j < N; j++) {
 					waveform0[j] = 0.0;
@@ -271,15 +252,12 @@ int main( int argc, char *argv[] ) {
 								avalue[N] = 0.0;
 								k = 0;
 							}
-							///////// FLUTE WAVEGUIDE IMPLEMENTATION ///////////
 
-
-							// TYLKO PIERWSZY DZWIEK ZAGRANY PO WLACZENIU LADNIE SIE ROBI, KOLEJNE S¥ JUZ JAKBY W JAKIEJŒ FAZIE
 							genNoise_full();
 							// kenv1 creation
 							for(j = 0; j < N - OVERLAP; j++) {
 								if(env_del > (j + k)/env_del) {
-									kenv1[j] = (j + k)/env_del;
+									kenv1[j] = 20.0;//(j + k)/env_del;
 								} else {
 									kenv1[j] = 1.0;
 								}
@@ -322,25 +300,6 @@ int main( int argc, char *argv[] ) {
 								v[(j+OVERLAP)*2] = avalue[j]*100000.0*adsr[i];
 							}
 						}
-
-						// END OF FLUTE WAVEGUIDE IMPLEMENTATION
-
-						// BEGIN FLUTE ARMA IMPLEMENTATION
-						/*
-						genNoise_half(0);
-						for(m = 0; m < N/2; m++) {
-							r1[m] = 0;
-						}
-						filterARMA();
-						for(m = 0; m < N; m++) {
-							v[m*2] = r1[m]/1000.0;
-						}
-						// END OF FLUTE ARMA IMPLEMENTATION
-						*/
-						// Sprawdzenie czy wyrabia sie w czasie
-						//for(m = OVERLAP; m < N; m++) {
-						//	v[m*2] = 10000.0*sinf((float)(m+k)*2.0*M_PI*freqs[i]*(1.0/Fs));
-						//}
 					}
 				}
 				while(sem_dac == 0);
@@ -367,7 +326,6 @@ int main( int argc, char *argv[] ) {
 				}
 				sem_dac = 0;
 				k += N - OVERLAP;
-				ph += N;
 			}
     	///// SUBTRACTIVE /////
 		} else if (method == subtractive) {
