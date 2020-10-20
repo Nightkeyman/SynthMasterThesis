@@ -49,7 +49,7 @@ extern volatile unsigned PP;
 extern volatile unsigned sem_dac;
 extern int sem_new_note; // 0 - 128
 
-enum methodtype{subtractive, additive, fm, fm_bell, flute};
+enum methodtype{subtractive, additive, fm, fm_bell, flute, violin};
 enum methodtype method = additive;
 // SUBTRACTIVE GLOBALS
 enum waveformtype{square, triangle, sawtooth};
@@ -99,6 +99,55 @@ double avalue_del[BORE_DELAY_MAX];
 double apoly;
 double asum3;
 double aflute1;
+
+// VIOLIN GLOBALS
+double maxVelocity = 0.25;
+double lowestFrequency = 140;
+int nDelays;
+int bowDown = 1;
+double betaRatio = 0.127236;
+double baseDelay;
+// vibrato
+double vibrato_gain = 0.005;
+double vibrato_freq = 6.12723;
+#define vibrato_TABLE_SIZE 256
+double vibrato_time = 0.0;
+double vibrato_alpha = 0.0;
+double vibrato_table[vibrato_TABLE_SIZE];
+double vibrato_rate;
+// neck delay line
+double neckDelay[343];
+double neck_delay;
+int neck_inPoint = 0;
+double neck_gain = 1;
+double neck_outPointer;
+int neck_outPoint;
+double neck_alpha;
+double neck_omAlpha;
+int neck_doNextOut = 1;
+// bridge delay line
+double bridgeDelay[343];
+double bridge_delay;
+int bridge_inPoint = 0;
+double bridge_gain = 1;
+double bridge_outPointer;
+int bridge_outPoint;
+double bridge_alpha;
+double bridge_omAlpha;
+int bridge_doNextOut = 1;
+// bow table function
+double bowtable_offset = 0.001;
+double bowtable_slope = 3.0;
+double bowtable_minOutput = 0.01;
+double bowtable_maxOutput = 0.98;
+// string one pole filter
+double stringfilter_pole = 0.55 - (0.2*Fs/(double)Fs);
+double stringfilter_gain = 0.95;
+double stringfilter_b;
+double stringfilter_a;
+double stringfilter;
+
+int flag_violin = 0;
 
 // Static waveform arrays
 float sinusek[N];
@@ -171,8 +220,41 @@ int main( int argc, char *argv[] ) {
 	for (i = 0; i < N; i++) {
 		sinusek[i] = sinf(2.0*M_PI*((float)i/(N*1.0)));
 	}
-	UART_send(170, 1,0,0,0,0,0);
-	/*---------------------------------------------------------------*/
+
+	// Prepare violin
+	stringfilter = 0;
+	maxVelocity = 0.25;
+	lowestFrequency = 140;
+	nDelays = Fs/lowestFrequency;
+	bowDown = 1;
+	betaRatio = 0.127236;
+
+	//vibrato
+	vibrato_gain = 0.005;
+	vibrato_freq = 6.12723;
+	vibrato_time = 0.0;
+	vibrato_alpha = 0.0;
+	vibrato_rate = vibrato_TABLE_SIZE*vibrato_freq/(double)Fs;
+
+	// bow table function
+	bowtable_offset = 0.001;
+	bowtable_slope = 3.0;
+	bowtable_minOutput = 0.01;
+	bowtable_maxOutput = 0.98;
+	// string one pole filter
+	stringfilter_pole = 0.55 - (0.2*(Fs/2)/(double)Fs);
+	stringfilter_gain = 0.95;
+	stringfilter_b;
+	stringfilter_a;
+	if (stringfilter_pole > 0.0)
+		stringfilter_b = 1.0 - stringfilter_pole;
+	else
+		stringfilter_b = 1.0 + stringfilter_pole;
+
+	stringfilter_a = -stringfilter_pole;
+
+
+ 	/*---------------------------------------------------------------*/
 	/*							 MAIN LOOP 		                     */
 	/*---------------------------------------------------------------*/
     while(1)  {
@@ -448,7 +530,7 @@ int main( int argc, char *argv[] ) {
 						float bell_adsr = exp(-adsr[i]*bell_adsr_coefficient);;
 						adsr[i] += (float)N/Fs;
 						float mod_freq = 1.4*freqs[i];
-						if (clear_v == 1){
+						if (clear_v == 1) {
 							for(j = 0; j < N; j++) {
 								v[j*2] = bell_adsr*sinf((float)(j+k)*2.0*M_PI*freqs[i]*(1.0/Fs) + (float)fm_modamp*sinf((float)(j+k)*2.0*M_PI*(float)mod_freq*(1.0/Fs)));
 							}
@@ -490,6 +572,190 @@ int main( int argc, char *argv[] ) {
 				}
 				sem_dac = 0;
 				k += N - OVERLAP;
+			}
+		// violin
+		} else if (method == violin){
+			if(pressedkeys < 1) {
+				for(j = 0; j < N; j++) {
+					waveform0[j] = 0;
+					waveform1[j] = 0;
+					k = 0;
+				}
+			} else {
+				clear_v = 1;
+				for(i = 0; i < MIDI_POLY_MAX; i++) {
+					if(freqs[i] > 0 || adsr_state[i] > 0) {
+						ADSR(i);
+						if (clear_v == 1){
+							if(flag_violin == 1) { // this is executed when the key is pressed
+								flag_violin = 0;
+								if(freqs[i] > -0.1 && freqs[i] < 0.1)
+									continue;
+								baseDelay = Fs/freqs[i] - 4.0;
+								if (baseDelay <= 0.0) baseDelay = 0.3;
+								// neck delay line
+								neck_delay = baseDelay*(1.0-betaRatio);
+								neck_inPoint = 0;
+								neck_gain = 1;
+								neck_outPointer = (double)neck_inPoint - neck_delay;
+								while (neck_outPointer < 0)
+									neck_outPointer = neck_outPointer + nDelays+1;
+
+								neck_outPoint = neck_outPointer;
+								neck_alpha = neck_outPointer - (double)neck_outPoint;
+								neck_omAlpha = 1.0 - neck_alpha;
+								if (neck_outPoint == nDelays+1)
+									neck_outPoint = 0;
+
+								neck_doNextOut = 1;
+
+								// bridge delay line
+								bridge_delay = baseDelay*betaRatio;
+								bridge_inPoint = 0;
+								bridge_gain = 1;
+								bridge_outPointer = (double)bridge_inPoint - bridge_delay;
+								while (bridge_outPointer < 0)
+									bridge_outPointer = bridge_outPointer + nDelays+1;
+								bridge_outPoint = bridge_outPointer;
+								bridge_alpha = bridge_outPointer - (double)bridge_outPoint;
+								bridge_omAlpha = 1.0 - bridge_alpha;
+								if (bridge_outPoint == nDelays+1)
+									bridge_outPoint = 0;
+								for(i = 0; i < 343; i++) {
+									bridgeDelay[i] = 0.0;
+									neckDelay[i] = 0.0;
+								}
+								vibrato_rate = vibrato_TABLE_SIZE*vibrato_freq/(double)Fs; // vibrato can be changed via user interface, so it needs to be reinitialized
+								for (i = 0; i <  vibrato_TABLE_SIZE; i++){
+									vibrato_table[i] = sin((double)i*2.0*M_PI/(double)vibrato_TABLE_SIZE);
+								}
+							}
+							for(j = 0; j < OVERLAP; j++){  // to avoid overlapping despite not turning it off, the last OVERLAP samples are rewritten to the beggining of next data frame
+									v[j*2] = v[(N-OVERLAP+j)*2];
+							}
+							for(j = OVERLAP; j < N; j++) { // the rest N-OVERLAP samples are generated
+								double bowVelocity = maxVelocity*adsr[i];
+								stringfilter = stringfilter_b*stringfilter_gain*bridgeDelay[0] - stringfilter_a*stringfilter;
+
+								double bridgeReflection = -stringfilter;
+								double nutReflection = -neckDelay[0];
+								double stringVelocity = bridgeReflection + nutReflection;
+								double deltaV = bowVelocity - stringVelocity;
+
+								// bowtable
+								double newVelocity = 0.0;
+								if (bowDown){
+									double sample = deltaV + bowtable_offset;
+									sample = pow(fabs(sample*bowtable_slope) + 0.75, -4);
+									if (sample < bowtable_minOutput) sample = bowtable_minOutput;
+									if (sample > bowtable_maxOutput) sample = bowtable_maxOutput;
+									newVelocity = deltaV*sample;
+								}
+
+								// neck delay line tick
+								double input = bridgeReflection + newVelocity;
+								neckDelay[neck_inPoint] = input*neck_gain;
+								neck_inPoint++;
+								if (neck_inPoint == nDelays+1)
+									neck_inPoint = 0;
+
+								double neck_nextOutput = 0;
+								if (neck_doNextOut) {
+									neck_nextOutput = neckDelay[neck_outPoint]*neck_omAlpha;
+									if (neck_outPoint+1 < nDelays+1)
+										neck_nextOutput = neck_nextOutput + neckDelay[neck_outPoint+1]*neck_alpha;
+									else
+										neck_nextOutput = neck_nextOutput + neckDelay[0]*neck_alpha;
+									neck_doNextOut = 0;
+								}
+								neckDelay[0] = neck_nextOutput;
+
+								neck_doNextOut = 1;
+								neck_outPoint++;
+								if (neck_outPoint == nDelays+1)
+									neck_outPoint = 0;
+
+								// bridge delay line tick
+								input = nutReflection + newVelocity;
+								bridgeDelay[bridge_inPoint] = input*bridge_gain;
+								bridge_inPoint++;
+								if (bridge_inPoint == nDelays+1)
+									bridge_inPoint = 0;
+								double bridge_nextOutput = 0;
+								if (bridge_doNextOut){
+									bridge_nextOutput = bridgeDelay[bridge_outPoint]*bridge_omAlpha;
+									if (bridge_outPoint+1 < nDelays+1)
+										bridge_nextOutput = bridge_nextOutput + bridgeDelay[bridge_outPoint+1]*bridge_alpha;
+									else
+										bridge_nextOutput = bridge_nextOutput + bridgeDelay[0]*bridge_alpha;
+
+									 bridge_doNextOut = 0;
+								}
+								bridgeDelay[0] = bridge_nextOutput;
+								bridge_doNextOut = 1;
+								bridge_outPoint++;
+								if (bridge_outPoint == nDelays+1)
+									bridge_outPoint = 0;
+
+								// vibrato
+								if (vibrato_gain > 0.0) {
+									while (vibrato_time < 0.0)
+										vibrato_time += vibrato_TABLE_SIZE;
+									while (vibrato_time >= vibrato_TABLE_SIZE)
+										vibrato_time -= vibrato_TABLE_SIZE;
+									int vibrato_iIndex = vibrato_time;
+									vibrato_alpha = vibrato_time - vibrato_iIndex;
+									double tmp = vibrato_table[vibrato_iIndex+1];
+									tmp += (vibrato_alpha*(vibrato_table[vibrato_iIndex+1] - tmp));
+									vibrato_time += vibrato_rate;
+
+									double newdel = baseDelay*(1.0-betaRatio) + baseDelay*vibrato_gain*tmp;
+									neck_delay = newdel;
+									neck_outPointer = (double)neck_inPoint - neck_delay;
+									while (neck_outPointer < 0)
+										neck_outPointer += nDelays+1;
+									neck_outPoint = neck_outPointer;
+									neck_alpha = neck_outPointer - (double)neck_outPoint;
+									neck_omAlpha = 1.0 - neck_alpha;
+									if (neck_outPoint == nDelays+1)
+										neck_outPoint = 0;
+									neck_doNextOut = 1;
+								}
+
+								v[j*2] = bridgeDelay[0];
+							}
+							clear_v = 0;
+						} else {
+							for(j = 0; j < N; j++) {
+								v[j*2] += 0; // No polyphony in violin synthesis
+							}
+						}
+					}
+				}
+				while(sem_dac == 0);
+				for(j = 0; j < N; j++) {
+					if (j < OVERLAP) {
+						if (whichwaveform == 1) {
+							waveform0[j] = overlaptable[j]*v[j*2]*SIG_AMP*10000;
+						} else {
+							waveform1[j] = overlaptable[j]*v[j*2]*SIG_AMP*10000;
+						}
+					} else if (j >= N - OVERLAP) {
+						if (whichwaveform) {
+							waveform0[j] = overlaptable[N-j-1]*v[j*2]*SIG_AMP*10000;
+						} else {
+							waveform1[j] = overlaptable[N-j-1]*v[j*2]*SIG_AMP*10000;
+						}
+					} else {
+						if (whichwaveform) {
+							waveform0[j] = v[j*2]*SIG_AMP*10000;
+						} else {
+							waveform1[j] = v[j*2]*SIG_AMP*10000;
+						}
+					}
+				}
+				sem_dac = 0;
+				k += N;
 			}
 		}
     }

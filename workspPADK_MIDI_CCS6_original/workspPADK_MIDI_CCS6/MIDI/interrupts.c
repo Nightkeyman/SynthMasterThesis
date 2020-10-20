@@ -103,12 +103,9 @@ int we[STEREO][NUM_CHANNEL];
 int wy[STEREO][NUM_CHANNEL];
 //int wl1, wp1, wl2, wp2, wl3, wp3, wl4, wp4;
 
-int Buf_1[N];  // bufor pomocniczy do "obserwacji" danych wejsciowych
-int Buf[N];  // bufor pomocniczy do "obserwacji" danych wyjœciowych
 int k = 0;
 extern int waveform0[N];
 extern int waveform1[N];
-int plot[2*N];
 extern volatile int whichwaveform;
 #define OVERLAP 128
 
@@ -138,7 +135,7 @@ extern int pressedkeys;
 extern float adsr[MIDI_POLY_MAX];
 
 // SYNTHESIS METHODS
-extern enum methodtype{subtractive, additive, fm, fm_bell, flute};
+extern enum methodtype{subtractive, additive, fm, fm_bell, flute, violin};
 extern enum methodtype method;
 
 extern enum waveformtype{square, triangle, sawtooth};
@@ -158,6 +155,11 @@ extern int flag_flute;
 
 // ADDITIVE GLOBALS
 extern float add_knobAmp[HAMMOND_KNOBS];
+
+// VIOLIN GLOBALS
+extern int flag_violin;
+extern double vibrato_gain;
+extern double vibrato_freq;
 
 // ################## DAC/ADC end ##################
 
@@ -203,6 +205,7 @@ interrupt void midi_isr( void )
 						if (freqs[i] == 0) {
 							freqs[i] = freq_wav;
 							flag_flute = 1;
+							flag_violin = 1;
 							adsr_state[i] = 1;
 							break;
 						}
@@ -344,6 +347,26 @@ interrupt void uart_isr( void )
 				}
 			}
 			break;
+		case 105: // violin
+			if (UART_pull(7) == 106){
+				if (UART_pull(8) == UART_checksum()){
+					if (UART_pull(1) == 1){
+						UART_send(105, 1, 0,0,0,0,0);
+						method = violin;
+					} else if (UART_pull(1) == 2){
+						UART_send(105, 2, 0,0,0,0,0);
+					}
+
+
+					if (UART_pull(1) == 3){
+							vibrato_freq = (double)(UART_pull(2) + UART_pull(3)*256 + UART_pull(4)*256*256 + UART_pull(5)*256*256*256)/1000.0;
+						}
+					if (UART_pull(1) == 4){
+							vibrato_gain = (double)(UART_pull(2) + UART_pull(3)*256 + UART_pull(4)*256*256 + UART_pull(5)*256*256*256)/1000.0;
+						}
+				}
+			}
+			break;
 		case 200: // ADSR
 			if (UART_pull(7) == 201){
 				if (UART_pull(8) == UART_checksum()){
@@ -394,22 +417,18 @@ interrupt void dmax_isr( void )
 				if (whichwaveform){
 					dmaxDacBuffer[!PP][0][0][i] = waveform1[index];
 					dmaxDacBuffer[!PP][1][0][i] = waveform1[index];
-					plot[index] = waveform1[index];
 				} else {
 					dmaxDacBuffer[!PP][0][0][i] = waveform0[index];
 					dmaxDacBuffer[!PP][1][0][i] = waveform0[index];
-					plot[index + 1024 - OVERLAP] = waveform0[index];
 				}
 			} else {
 				int wsp = -1024 + OVERLAP + index;
 				if (whichwaveform){
 					dmaxDacBuffer[!PP][0][0][i] = waveform1[index] + waveform0[wsp];
 					dmaxDacBuffer[!PP][1][0][i] = waveform1[index] + waveform0[wsp];
-					plot[index] = waveform1[index] + waveform0[wsp];
 				} else {
 					dmaxDacBuffer[!PP][0][0][i] = waveform0[index] + waveform1[wsp];
 					dmaxDacBuffer[!PP][1][0][i] = waveform0[index] + waveform1[wsp];
-					plot[index + 1024 - OVERLAP] = waveform0[index] + waveform1[wsp];
 				}
 				if (index >= 1024-1){
 					if(whichwaveform == 1) {
@@ -421,19 +440,6 @@ interrupt void dmax_isr( void )
 				}
 			}
 		}
-
-		/*
-		OBuf2.ptab[LEFT][CH_0] = (int)waveform[wav_iterator];
-		OBuf2.ptab[RIGHT][CH_0] = (int)waveform[wav_iterator];
-
-		wav_iterator = wav_iterator + 1;
-		if(wav_iterator >= N)
-			wav_iterator = 0;
-
-        Buf[k] = OBuf3.ptab[LEFT][CH_0][20];  //Zapamiêtanie próbki wyjœciowej
-        k++;							  //w buforze pomocniczym
-        if (k == N) { k = 0; }
-		 */
 
         licz++;
         if(licz >= 8) {
