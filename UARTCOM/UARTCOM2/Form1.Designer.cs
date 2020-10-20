@@ -100,16 +100,6 @@
             this.trackBar_fm_modamp = new System.Windows.Forms.TrackBar();
             this.tabPage_flute = new System.Windows.Forms.TabPage();
             this.button_flute_en = new System.Windows.Forms.Button();
-            this.ADSR = new System.Windows.Forms.GroupBox();
-            this.label_release_knob = new System.Windows.Forms.Label();
-            this.label_sustain_knob = new System.Windows.Forms.Label();
-            this.label_decay_knob = new System.Windows.Forms.Label();
-            this.label_attack_knob = new System.Windows.Forms.Label();
-            this.knobControl_release = new KnobControl.KnobControl();
-            this.knobControl_decay = new KnobControl.KnobControl();
-            this.knobControl_sustain = new KnobControl.KnobControl();
-            this.knobControl_attack = new KnobControl.KnobControl();
-            this.button_adsr_set = new System.Windows.Forms.Button();
             this.tabPage4 = new System.Windows.Forms.TabPage();
             this.button_violin_en = new System.Windows.Forms.Button();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
@@ -122,6 +112,16 @@
             this.textBox_violin_amp = new System.Windows.Forms.TextBox();
             this.label18 = new System.Windows.Forms.Label();
             this.trackBar_violin_amp = new System.Windows.Forms.TrackBar();
+            this.ADSR = new System.Windows.Forms.GroupBox();
+            this.label_release_knob = new System.Windows.Forms.Label();
+            this.label_sustain_knob = new System.Windows.Forms.Label();
+            this.label_decay_knob = new System.Windows.Forms.Label();
+            this.label_attack_knob = new System.Windows.Forms.Label();
+            this.knobControl_release = new KnobControl.KnobControl();
+            this.knobControl_decay = new KnobControl.KnobControl();
+            this.knobControl_sustain = new KnobControl.KnobControl();
+            this.knobControl_attack = new KnobControl.KnobControl();
+            this.button_adsr_set = new System.Windows.Forms.Button();
             this.tabPage_Connection.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage_subtractive.SuspendLayout();
@@ -139,12 +139,12 @@
             ((System.ComponentModel.ISupportInitialize)(this.trackBar_fm_modfreq)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar_fm_modamp)).BeginInit();
             this.tabPage_flute.SuspendLayout();
-            this.ADSR.SuspendLayout();
-            this.SuspendLayout();
             this.tabPage4.SuspendLayout();
             this.groupBox4.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar_violin_freq)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar_violin_amp)).BeginInit();
+            this.ADSR.SuspendLayout();
+            this.SuspendLayout();
             // 
             // btnGetSerialPorts
             // 
@@ -286,138 +286,6 @@
             this.tabPage1.Size = new System.Drawing.Size(692, 426);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Connection";
-            // 
-            // tabPage4
-            // 
-            this.tabPage4.BackColor = System.Drawing.SystemColors.Control;
-            this.tabPage4.Controls.Add(this.button_violin_en);
-            this.tabPage4.Controls.Add(this.groupBox4);
-            this.tabPage4.Location = new System.Drawing.Point(4, 22);
-            this.tabPage4.Name = "tabPage4";
-            this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage4.Size = new System.Drawing.Size(692, 426);
-            this.tabPage4.TabIndex = 4;
-            this.tabPage4.Text = "Violin";
-            // 
-            // button_violin_en
-            // 
-            this.button_violin_en.ForeColor = System.Drawing.Color.Red;
-            this.button_violin_en.Location = new System.Drawing.Point(6, 6);
-            this.button_violin_en.Name = "button_violin_en";
-            this.button_violin_en.Size = new System.Drawing.Size(75, 23);
-            this.button_violin_en.TabIndex = 7;
-            this.button_violin_en.Text = "Disabled";
-            this.button_violin_en.UseVisualStyleBackColor = true;
-            this.button_violin_en.Click += new System.EventHandler(this.button_violin_en_Click);
-            // 
-            // groupBox4
-            // 
-            this.groupBox4.Controls.Add(this.label_violin_amp);
-            this.groupBox4.Controls.Add(this.label_violin_freq);
-            this.groupBox4.Controls.Add(this.button5);
-            this.groupBox4.Controls.Add(this.textBox_violin_freq);
-            this.groupBox4.Controls.Add(this.label17);
-            this.groupBox4.Controls.Add(this.trackBar_violin_freq);
-            this.groupBox4.Controls.Add(this.textBox_violin_amp);
-            this.groupBox4.Controls.Add(this.label18);
-            this.groupBox4.Controls.Add(this.trackBar_violin_amp);
-            this.groupBox4.Location = new System.Drawing.Point(9, 35);
-            this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(604, 268);
-            this.groupBox4.TabIndex = 6;
-            this.groupBox4.TabStop = false;
-            this.groupBox4.Text = "Vibrato parameters";
-            // 
-            // label_violin_amp
-            // 
-            this.label_violin_amp.AutoSize = true;
-            this.label_violin_amp.Location = new System.Drawing.Point(106, 43);
-            this.label_violin_amp.Name = "label_violin_amp";
-            this.label_violin_amp.Size = new System.Drawing.Size(13, 13);
-            this.label_violin_amp.TabIndex = 14;
-            this.label_violin_amp.Text = "0";
-            // 
-            // label_violin_freq
-            // 
-            this.label_violin_freq.AutoSize = true;
-            this.label_violin_freq.Location = new System.Drawing.Point(106, 129);
-            this.label_violin_freq.Name = "label_violin_freq";
-            this.label_violin_freq.Size = new System.Drawing.Size(13, 13);
-            this.label_violin_freq.TabIndex = 13;
-            this.label_violin_freq.Text = "0";
-            // 
-            // button5
-            // 
-            this.button5.Location = new System.Drawing.Point(6, 161);
-            this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(75, 23);
-            this.button5.TabIndex = 11;
-            this.button5.Text = "Set";
-            this.button5.UseVisualStyleBackColor = true;
-            this.button5.Click += new System.EventHandler(this.button5_Click);
-            // 
-            // textBox_violin_freq
-            // 
-            this.textBox_violin_freq.Location = new System.Drawing.Point(152, 126);
-            this.textBox_violin_freq.Name = "textBox_violin_freq";
-            this.textBox_violin_freq.Size = new System.Drawing.Size(100, 20);
-            this.textBox_violin_freq.TabIndex = 9;
-            this.textBox_violin_freq.Text = "0";
-            this.textBox_violin_freq.TextChanged += new System.EventHandler(this.textBox_violin_freq_TextChanged);
-            // 
-            // label17
-            // 
-            this.label17.AutoSize = true;
-            this.label17.Location = new System.Drawing.Point(7, 126);
-            this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(93, 13);
-            this.label17.TabIndex = 8;
-            this.label17.Text = "Vibrato frequency:";
-            // 
-            // trackBar_violin_freq
-            // 
-            this.trackBar_violin_freq.AllowDrop = true;
-            this.trackBar_violin_freq.LargeChange = 10;
-            this.trackBar_violin_freq.Location = new System.Drawing.Point(7, 78);
-            this.trackBar_violin_freq.Maximum = 20000;
-            this.trackBar_violin_freq.Name = "trackBar_violin_freq";
-            this.trackBar_violin_freq.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.trackBar_violin_freq.Size = new System.Drawing.Size(490, 45);
-            this.trackBar_violin_freq.TabIndex = 7;
-            this.trackBar_violin_freq.TickFrequency = 1000;
-            this.trackBar_violin_freq.TickStyle = System.Windows.Forms.TickStyle.TopLeft;
-            this.trackBar_violin_freq.Scroll += new System.EventHandler(this.trackBar_violin_freq_Scroll);
-            // 
-            // textBox_violin_amp
-            // 
-            this.textBox_violin_amp.Location = new System.Drawing.Point(152, 40);
-            this.textBox_violin_amp.Name = "textBox_violin_amp";
-            this.textBox_violin_amp.Size = new System.Drawing.Size(100, 20);
-            this.textBox_violin_amp.TabIndex = 6;
-            this.textBox_violin_amp.Text = "0";
-            this.textBox_violin_amp.TextChanged += new System.EventHandler(this.textBox_violin_amp_TextChanged);
-            // 
-            // label18
-            // 
-            this.label18.AutoSize = true;
-            this.label18.Location = new System.Drawing.Point(7, 40);
-            this.label18.Name = "label18";
-            this.label18.Size = new System.Drawing.Size(88, 13);
-            this.label18.TabIndex = 5;
-            this.label18.Text = "Vibrato amplitude";
-            // 
-            // trackBar_violin_amp
-            // 
-            this.trackBar_violin_amp.AllowDrop = true;
-            this.trackBar_violin_amp.LargeChange = 10;
-            this.trackBar_violin_amp.Location = new System.Drawing.Point(7, 56);
-            this.trackBar_violin_amp.Maximum = 100;
-            this.trackBar_violin_amp.Name = "trackBar_violin_amp";
-            this.trackBar_violin_amp.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.trackBar_violin_amp.Size = new System.Drawing.Size(490, 45);
-            this.trackBar_violin_amp.TabIndex = 4;
-            this.trackBar_violin_amp.TickFrequency = 1000;
-            this.trackBar_violin_amp.Scroll += new System.EventHandler(this.trackBar_violin_amp_Scroll);
             // 
             // tabPage_subtractive
             // 
@@ -1265,6 +1133,140 @@
             this.button_flute_en.UseVisualStyleBackColor = true;
             this.button_flute_en.Click += new System.EventHandler(this.button_flute_en_Click);
             // 
+            // tabPage4
+            // 
+            this.tabPage4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.tabPage4.Controls.Add(this.button_violin_en);
+            this.tabPage4.Controls.Add(this.groupBox4);
+            this.tabPage4.Location = new System.Drawing.Point(4, 22);
+            this.tabPage4.Name = "tabPage4";
+            this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage4.Size = new System.Drawing.Size(692, 426);
+            this.tabPage4.TabIndex = 4;
+            this.tabPage4.Text = "Violin";
+            // 
+            // button_violin_en
+            // 
+            this.button_violin_en.ForeColor = System.Drawing.Color.Red;
+            this.button_violin_en.Location = new System.Drawing.Point(6, 6);
+            this.button_violin_en.Name = "button_violin_en";
+            this.button_violin_en.Size = new System.Drawing.Size(75, 23);
+            this.button_violin_en.TabIndex = 7;
+            this.button_violin_en.Text = "Disabled";
+            this.button_violin_en.UseVisualStyleBackColor = true;
+            this.button_violin_en.Click += new System.EventHandler(this.button_violin_en_Click);
+            // 
+            // groupBox4
+            // 
+            this.groupBox4.Controls.Add(this.label_violin_amp);
+            this.groupBox4.Controls.Add(this.label_violin_freq);
+            this.groupBox4.Controls.Add(this.button5);
+            this.groupBox4.Controls.Add(this.textBox_violin_freq);
+            this.groupBox4.Controls.Add(this.label17);
+            this.groupBox4.Controls.Add(this.trackBar_violin_freq);
+            this.groupBox4.Controls.Add(this.textBox_violin_amp);
+            this.groupBox4.Controls.Add(this.label18);
+            this.groupBox4.Controls.Add(this.trackBar_violin_amp);
+            this.groupBox4.ForeColor = System.Drawing.SystemColors.Control;
+            this.groupBox4.Location = new System.Drawing.Point(9, 35);
+            this.groupBox4.Name = "groupBox4";
+            this.groupBox4.Size = new System.Drawing.Size(604, 268);
+            this.groupBox4.TabIndex = 6;
+            this.groupBox4.TabStop = false;
+            this.groupBox4.Text = "Vibrato parameters";
+            // 
+            // label_violin_amp
+            // 
+            this.label_violin_amp.AutoSize = true;
+            this.label_violin_amp.Location = new System.Drawing.Point(106, 43);
+            this.label_violin_amp.Name = "label_violin_amp";
+            this.label_violin_amp.Size = new System.Drawing.Size(13, 13);
+            this.label_violin_amp.TabIndex = 14;
+            this.label_violin_amp.Text = "0";
+            // 
+            // label_violin_freq
+            // 
+            this.label_violin_freq.AutoSize = true;
+            this.label_violin_freq.Location = new System.Drawing.Point(106, 129);
+            this.label_violin_freq.Name = "label_violin_freq";
+            this.label_violin_freq.Size = new System.Drawing.Size(13, 13);
+            this.label_violin_freq.TabIndex = 13;
+            this.label_violin_freq.Text = "0";
+            // 
+            // button5
+            // 
+            this.button5.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.button5.Location = new System.Drawing.Point(6, 161);
+            this.button5.Name = "button5";
+            this.button5.Size = new System.Drawing.Size(75, 23);
+            this.button5.TabIndex = 11;
+            this.button5.Text = "Set";
+            this.button5.UseVisualStyleBackColor = true;
+            this.button5.Click += new System.EventHandler(this.button5_Click);
+            // 
+            // textBox_violin_freq
+            // 
+            this.textBox_violin_freq.Location = new System.Drawing.Point(152, 126);
+            this.textBox_violin_freq.Name = "textBox_violin_freq";
+            this.textBox_violin_freq.Size = new System.Drawing.Size(100, 20);
+            this.textBox_violin_freq.TabIndex = 9;
+            this.textBox_violin_freq.Text = "0";
+            this.textBox_violin_freq.TextChanged += new System.EventHandler(this.textBox_violin_freq_TextChanged);
+            // 
+            // label17
+            // 
+            this.label17.AutoSize = true;
+            this.label17.Location = new System.Drawing.Point(7, 126);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(93, 13);
+            this.label17.TabIndex = 8;
+            this.label17.Text = "Vibrato frequency:";
+            // 
+            // trackBar_violin_freq
+            // 
+            this.trackBar_violin_freq.AllowDrop = true;
+            this.trackBar_violin_freq.LargeChange = 10;
+            this.trackBar_violin_freq.Location = new System.Drawing.Point(7, 78);
+            this.trackBar_violin_freq.Maximum = 20000;
+            this.trackBar_violin_freq.Name = "trackBar_violin_freq";
+            this.trackBar_violin_freq.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.trackBar_violin_freq.Size = new System.Drawing.Size(490, 45);
+            this.trackBar_violin_freq.TabIndex = 7;
+            this.trackBar_violin_freq.TickFrequency = 1000;
+            this.trackBar_violin_freq.TickStyle = System.Windows.Forms.TickStyle.TopLeft;
+            this.trackBar_violin_freq.Scroll += new System.EventHandler(this.trackBar_violin_freq_Scroll);
+            // 
+            // textBox_violin_amp
+            // 
+            this.textBox_violin_amp.Location = new System.Drawing.Point(152, 40);
+            this.textBox_violin_amp.Name = "textBox_violin_amp";
+            this.textBox_violin_amp.Size = new System.Drawing.Size(100, 20);
+            this.textBox_violin_amp.TabIndex = 6;
+            this.textBox_violin_amp.Text = "0";
+            this.textBox_violin_amp.TextChanged += new System.EventHandler(this.textBox_violin_amp_TextChanged);
+            // 
+            // label18
+            // 
+            this.label18.AutoSize = true;
+            this.label18.Location = new System.Drawing.Point(7, 40);
+            this.label18.Name = "label18";
+            this.label18.Size = new System.Drawing.Size(88, 13);
+            this.label18.TabIndex = 5;
+            this.label18.Text = "Vibrato amplitude";
+            // 
+            // trackBar_violin_amp
+            // 
+            this.trackBar_violin_amp.AllowDrop = true;
+            this.trackBar_violin_amp.LargeChange = 10;
+            this.trackBar_violin_amp.Location = new System.Drawing.Point(7, 56);
+            this.trackBar_violin_amp.Maximum = 100;
+            this.trackBar_violin_amp.Name = "trackBar_violin_amp";
+            this.trackBar_violin_amp.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.trackBar_violin_amp.Size = new System.Drawing.Size(490, 45);
+            this.trackBar_violin_amp.TabIndex = 4;
+            this.trackBar_violin_amp.TickFrequency = 1000;
+            this.trackBar_violin_amp.Scroll += new System.EventHandler(this.trackBar_violin_amp_Scroll);
+            // 
             // ADSR
             // 
             this.ADSR.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
@@ -1471,14 +1473,15 @@
             ((System.ComponentModel.ISupportInitialize)(this.trackBar_fm_modfreq)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar_fm_modamp)).EndInit();
             this.tabPage_flute.ResumeLayout(false);
-            this.ADSR.ResumeLayout(false);
-            this.ADSR.PerformLayout();
-            this.ResumeLayout(false);
             this.tabPage4.ResumeLayout(false);
             this.groupBox4.ResumeLayout(false);
             this.groupBox4.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar_violin_freq)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar_violin_amp)).EndInit();
+            this.ADSR.ResumeLayout(false);
+            this.ADSR.PerformLayout();
+            this.ResumeLayout(false);
+
         }
 
         #endregion

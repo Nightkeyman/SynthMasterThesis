@@ -103,12 +103,9 @@ int we[STEREO][NUM_CHANNEL];
 int wy[STEREO][NUM_CHANNEL];
 //int wl1, wp1, wl2, wp2, wl3, wp3, wl4, wp4;
 
-int Buf_1[N];  // bufor pomocniczy do "obserwacji" danych wejsciowych
-int Buf[N];  // bufor pomocniczy do "obserwacji" danych wyjœciowych
 int k = 0;
 extern int waveform0[N];
 extern int waveform1[N];
-int plot[2*N];
 extern volatile int whichwaveform;
 #define OVERLAP 128
 
@@ -420,22 +417,18 @@ interrupt void dmax_isr( void )
 				if (whichwaveform){
 					dmaxDacBuffer[!PP][0][0][i] = waveform1[index];
 					dmaxDacBuffer[!PP][1][0][i] = waveform1[index];
-					plot[index] = waveform1[index];
 				} else {
 					dmaxDacBuffer[!PP][0][0][i] = waveform0[index];
 					dmaxDacBuffer[!PP][1][0][i] = waveform0[index];
-					plot[index + 1024 - OVERLAP] = waveform0[index];
 				}
 			} else {
 				int wsp = -1024 + OVERLAP + index;
 				if (whichwaveform){
 					dmaxDacBuffer[!PP][0][0][i] = waveform1[index] + waveform0[wsp];
 					dmaxDacBuffer[!PP][1][0][i] = waveform1[index] + waveform0[wsp];
-					plot[index] = waveform1[index] + waveform0[wsp];
 				} else {
 					dmaxDacBuffer[!PP][0][0][i] = waveform0[index] + waveform1[wsp];
 					dmaxDacBuffer[!PP][1][0][i] = waveform0[index] + waveform1[wsp];
-					plot[index + 1024 - OVERLAP] = waveform0[index] + waveform1[wsp];
 				}
 				if (index >= 1024-1){
 					if(whichwaveform == 1) {
@@ -447,19 +440,6 @@ interrupt void dmax_isr( void )
 				}
 			}
 		}
-
-		/*
-		OBuf2.ptab[LEFT][CH_0] = (int)waveform[wav_iterator];
-		OBuf2.ptab[RIGHT][CH_0] = (int)waveform[wav_iterator];
-
-		wav_iterator = wav_iterator + 1;
-		if(wav_iterator >= N)
-			wav_iterator = 0;
-
-        Buf[k] = OBuf3.ptab[LEFT][CH_0][20];  //Zapamiêtanie próbki wyjœciowej
-        k++;							  //w buforze pomocniczym
-        if (k == N) { k = 0; }
-		 */
 
         licz++;
         if(licz >= 8) {

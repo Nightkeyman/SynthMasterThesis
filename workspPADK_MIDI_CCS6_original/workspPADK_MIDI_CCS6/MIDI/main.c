@@ -110,7 +110,7 @@ double baseDelay;
 // vibrato
 double vibrato_gain = 0.005;
 double vibrato_freq = 6.12723;
-#define vibrato_TABLE_SIZE 1024
+#define vibrato_TABLE_SIZE 256
 double vibrato_time = 0.0;
 double vibrato_alpha = 0.0;
 double vibrato_table[vibrato_TABLE_SIZE];
@@ -589,6 +589,8 @@ int main( int argc, char *argv[] ) {
 						if (clear_v == 1){
 							if(flag_violin == 1) { // this is executed when the key is pressed
 								flag_violin = 0;
+								if(freqs[i] > -0.1 && freqs[i] < 0.1)
+									continue;
 								baseDelay = Fs/freqs[i] - 4.0;
 								if (baseDelay <= 0.0) baseDelay = 0.3;
 								// neck delay line
