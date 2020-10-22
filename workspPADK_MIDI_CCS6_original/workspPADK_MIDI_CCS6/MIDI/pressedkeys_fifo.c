@@ -9,6 +9,26 @@
 volatile float pressedkeys_buff[MIDI_POLY_MAX] = {{0.0}};
 unsigned char pressedkeys_buff_iterator = 0;
 
+void pressedkeys_mute(float freq) {
+	int i = 0;
+	for (i = 0; i< MIDI_POLY_MAX; i++) {
+		if (pressedkeys_buff[i] >= freq-0.5 && pressedkeys_buff[i] <= freq+0.5) {
+			pressedkeys_buff[i] = 0;
+			break;
+		}
+	}
+}
+
+int pressedkeys_delete(float freq) {
+	int i = 0;
+	for (i = 0; i< MIDI_POLY_MAX; i++) {
+		if (pressedkeys_buff[i] >= freq-0.5 && pressedkeys_buff[i] <= freq+0.5) {
+			return i;
+		}
+	}
+	return -1;
+}
+
 void pressedkeys_push(float data){
 	pressedkeys_buff_iterator++;
     if (pressedkeys_buff_iterator >= MIDI_POLY_MAX)

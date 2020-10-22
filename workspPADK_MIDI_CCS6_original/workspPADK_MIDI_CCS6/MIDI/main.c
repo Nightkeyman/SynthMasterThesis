@@ -271,7 +271,7 @@ int main( int argc, char *argv[] ) {
 				for(i = 0; i < MIDI_POLY_MAX; i++) {
 					unsigned char index = pressedkeys_index_of(-i);
 					float fifo_freq = pressedkeys_pull(-i);
-					if(fifo_freq > 0 && adsr_state[index] > 0) {
+					if(fifo_freq > 0 || adsr_state[index] > 0) {
 						hammond_wave(fifo_freq, k, clear_v, index);
 						if (clear_v == 1)
 							clear_v = 0;

@@ -203,13 +203,8 @@ interrupt void midi_isr( void )
 			} else if (status == 0x08) { // note off
 				unsigned char note = MIDI_pull(-1)&0x7f;
 				float freq_wav = MIDI_A_SOUND_FREQ*pow(1.059463,note - MIDI_A_SOUND_NUM);
-				int i = 0;
-				for (i = 0; i< MIDI_POLY_MAX; i++) {
-					if (freqs[i] >= freq_wav-0.5 && freqs[i] <= freq_wav+0.5) {
-						adsr_state[i] = 4;
-						break;
-					}
-				}
+				int ret = pressedkeys_delete(freq_wav);
+				if(ret >= 0) adsr_state[ret] = 4;
 				MIDI_clear();
 			}
 		}

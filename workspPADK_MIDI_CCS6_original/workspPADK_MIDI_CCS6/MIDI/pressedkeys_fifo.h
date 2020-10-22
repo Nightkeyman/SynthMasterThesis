@@ -22,6 +22,7 @@ unsigned char pressedkeys_index_of(char offset);
 // clear fifo queue
 void pressedkeys_clear();
 
-
+// delete note from fifo
+int pressedkeys_delete(float freq);
 
 #endif /* PRESSED_KEYS_FIFO_H_ */
