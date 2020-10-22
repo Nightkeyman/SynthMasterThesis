@@ -18,7 +18,7 @@ interrupt void midi_isr( void );
 #include "uart_fifo.h"
 #include "midi_fifo.h"
 #include "additive.h"
-
+#include "reverb_fifo.h"
 int SetupInterrupts()
 {
 	CSL_Status                    status;
@@ -413,22 +413,28 @@ interrupt void dmax_isr( void )
 		int index = 0;
 		for(i = 0; i < FRAME_SIZE; i++) {
 			index = licz*FRAME_SIZE + i;
+			float reverb_sample = 0.4*reverb_pull(-1000) + 0.2*reverb_pull(-2000) + 0.1333*reverb(-3000);
 			if (index < 1024 - OVERLAP) {
+
 				if (whichwaveform){
-					dmaxDacBuffer[!PP][0][0][i] = waveform1[index];
-					dmaxDacBuffer[!PP][1][0][i] = waveform1[index];
+					dmaxDacBuffer[!PP][0][0][i] = waveform1[index] + reverb_sample;
+					dmaxDacBuffer[!PP][1][0][i] = waveform1[index] + reverb_sample;
+					reverb_push(waveform1[index]);
 				} else {
-					dmaxDacBuffer[!PP][0][0][i] = waveform0[index];
-					dmaxDacBuffer[!PP][1][0][i] = waveform0[index];
+					dmaxDacBuffer[!PP][0][0][i] = waveform0[index]  + reverb_sample;
+					dmaxDacBuffer[!PP][1][0][i] = waveform0[index]  + reverb_sample;
+					reverb_push(waveform0[index]);
 				}
 			} else {
 				int wsp = -1024 + OVERLAP + index;
 				if (whichwaveform){
-					dmaxDacBuffer[!PP][0][0][i] = waveform1[index] + waveform0[wsp];
-					dmaxDacBuffer[!PP][1][0][i] = waveform1[index] + waveform0[wsp];
+					dmaxDacBuffer[!PP][0][0][i] = waveform1[index] + waveform0[wsp]+ reverb_sample;
+					dmaxDacBuffer[!PP][1][0][i] = waveform1[index] + waveform0[wsp]+ reverb_sample;
+					reverb_push(waveform1[index] + waveform0[wsp]);
 				} else {
-					dmaxDacBuffer[!PP][0][0][i] = waveform0[index] + waveform1[wsp];
-					dmaxDacBuffer[!PP][1][0][i] = waveform0[index] + waveform1[wsp];
+					dmaxDacBuffer[!PP][0][0][i] = waveform0[index] + waveform1[wsp]+ reverb_sample;
+					dmaxDacBuffer[!PP][1][0][i] = waveform0[index] + waveform1[wsp]+ reverb_sample;
+					reverb_push(waveform0[index] + waveform1[wsp]);
 				}
 				if (index >= 1024-1){
 					if(whichwaveform == 1) {
