@@ -5,7 +5,7 @@ Repository for Master Thesis project about Polyphonic Synthesizer Prototype &amp
 - Subtractive (Sawtooth, Triangle, Square waveforms. Filters: lowpass, highpass, bandpass, bandstop)
 - Additive (Hammond organs)
 - FM (strange effects, bells, glockens)
-- Physical modelling
+- Physical modelling (Flute, Violin - waveguide models)
 
 ## Prerequisite
 
