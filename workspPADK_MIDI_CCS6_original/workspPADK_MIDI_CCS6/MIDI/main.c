@@ -17,6 +17,7 @@
 #include "myfft.h"
 #include "additive.h"
 #include "woodwind.h"
+#include "pressedkeys_fifo.h"
 
 #define OVERLAP 128
 #define MIDI_TONE_RANGE 128
@@ -268,8 +269,10 @@ int main( int argc, char *argv[] ) {
     		} else {
 				clear_v = 1;
 				for(i = 0; i < MIDI_POLY_MAX; i++) {
-					if(freqs[i] > 0 || adsr_state[i] > 0) {
-						hammond_wave(freqs[i], k, clear_v, i);
+					unsigned char index = pressedkeys_index_of(-i);
+					float fifo_freq = pressedkeys_pull(-i);
+					if(fifo_freq > 0 || adsr_state[index] > 0) {
+						hammond_wave(fifo_freq, k, clear_v, index);
 						if (clear_v == 1)
 							clear_v = 0;
 					}
@@ -309,10 +312,12 @@ int main( int argc, char *argv[] ) {
 			} else {
 				clear_v = 1;
 				for(i = 0; i < MIDI_POLY_MAX; i++) {
-					if(freqs[i] > 0 || adsr_state[i] > 0) {
+					unsigned char index = pressedkeys_index_of(-i);
+					float fifo_freq = pressedkeys_pull(-i);
+					if(fifo_freq > 0 && adsr_state[index] > 0) {
 						if (clear_v == 1){
 							clear_v = 0;
-							ADSR(i);
+							ADSR(index);
 							for(j = 0; j < OVERLAP; j++){
 									v[j*2] = v[(N-OVERLAP+j)*2];
 							}
@@ -344,7 +349,7 @@ int main( int argc, char *argv[] ) {
 									kenv1[j] = 1.0;
 								}
 								kenv1[j] = (1.0*x[j])/10.0; // 10.0 to wspolczynnik dobrego wyniku
-								wave[j] = sin((double)(j+k)*2.0*M_PI*freqs[i]/Fs); // 10.0 to wspolczynnik dobrego wyniku
+								wave[j] = sin((double)(j+k)*2.0*M_PI*fifo_freq/Fs); // 10.0 to wspolczynnik dobrego wyniku
 
 								// KENVIBR creation
 								if(kenvibr_del > (j + k)) {
@@ -379,7 +384,7 @@ int main( int argc, char *argv[] ) {
 								  avalue_del[m] = avalue_del[m+1];
 								}
 
-								v[(j+OVERLAP)*2] = avalue[j]*100000.0*adsr[i];
+								v[(j+OVERLAP)*2] = avalue[j]*100000.0*adsr[index];
 							}
 						}
 					}
@@ -419,13 +424,16 @@ int main( int argc, char *argv[] ) {
 			} else {
 				clear_v = 1;
 				for(i = 0; i < MIDI_POLY_MAX; i++) {
-					if(freqs[i] > 0 || adsr_state[i] > 0) {
+
+					unsigned char index = pressedkeys_index_of(-i);
+					float fifo_freq = pressedkeys_pull(-i);
+					if(fifo_freq > 0 && adsr_state[index] > 0) {
 						if (waveformSet == 1)
-							square_wave(freqs[i], SIG_AMP, k, clear_v, i);
+							square_wave(fifo_freq, SIG_AMP, k, clear_v, i);
 						else if (waveformSet == 2)
-							triangle_wave(freqs[i], SIG_AMP, k, clear_v, i);
+							triangle_wave(fifo_freq, SIG_AMP, k, clear_v, i);
 						else if (waveformSet == 3)
-							sawtooth_wave(freqs[i], SIG_AMP, k, clear_v, i);
+							sawtooth_wave(fifo_freq, SIG_AMP, k, clear_v, i);
 
 						if (clear_v == 1)
 							clear_v = 0;
@@ -477,16 +485,18 @@ int main( int argc, char *argv[] ) {
 			} else {
 				clear_v = 1;
 				for(i = 0; i < MIDI_POLY_MAX; i++) {
-					if(freqs[i] > 0 || adsr_state[i] > 0) {
-						ADSR(i);
+					unsigned char index = pressedkeys_index_of(-i);
+					float fifo_freq = pressedkeys_pull(-i);
+					if(fifo_freq > 0 && adsr_state[index] > 0) {
+						ADSR(index);
 						if (clear_v == 1){
 							for(j = 0; j < N; j++) {
-								v[j*2] = adsr[i]*sinf((float)(j+k)*2.0*M_PI*freqs[i]*(1.0/Fs) + (float)fm_modamp*sinf((float)(j+k)*2.0*M_PI*(float)fm_modfreq*(1.0/Fs)));
+								v[j*2] = adsr[index]*sinf((float)(j+k)*2.0*M_PI*fifo_freq*(1.0/Fs) + (float)fm_modamp*sinf((float)(j+k)*2.0*M_PI*(float)fm_modfreq*(1.0/Fs)));
 							}
 							clear_v = 0;
 						} else {
 							for(j = 0; j < N; j++) {
-								v[j*2] += adsr[i]*sinf((float)(j+k)*2.0*M_PI*freqs[i]*(1.0/Fs) + (float)fm_modamp*sinf((float)(j+k)*2.0*M_PI*(float)fm_modfreq*(1.0/Fs)));
+								v[j*2] += adsr[index]*sinf((float)(j+k)*2.0*M_PI*fifo_freq*(1.0/Fs) + (float)fm_modamp*sinf((float)(j+k)*2.0*M_PI*(float)fm_modfreq*(1.0/Fs)));
 							}
 						}
 					}
@@ -526,24 +536,26 @@ int main( int argc, char *argv[] ) {
 			} else {
 				clear_v = 1;
 				for(i = 0; i < MIDI_POLY_MAX; i++) {
-					if(freqs[i] > 0 || adsr_state[i] > 0) {
-						float bell_adsr = exp(-adsr[i]*bell_adsr_coefficient);;
-						adsr[i] += (float)N/Fs;
-						float mod_freq = 1.4*freqs[i];
+					unsigned char index = pressedkeys_index_of(-i);
+					float fifo_freq = pressedkeys_pull(-i);
+					if(fifo_freq > 0 && adsr_state[index] > 0) {
+						float bell_adsr = exp(-adsr[index]*bell_adsr_coefficient);;
+						adsr[index] += (float)N/Fs;
+						float mod_freq = 1.4*fifo_freq;
 						if (clear_v == 1) {
 							for(j = 0; j < N; j++) {
-								v[j*2] = bell_adsr*sinf((float)(j+k)*2.0*M_PI*freqs[i]*(1.0/Fs) + (float)fm_modamp*sinf((float)(j+k)*2.0*M_PI*(float)mod_freq*(1.0/Fs)));
+								v[j*2] = bell_adsr*sinf((float)(j+k)*2.0*M_PI*fifo_freq*(1.0/Fs) + (float)fm_modamp*sinf((float)(j+k)*2.0*M_PI*(float)mod_freq*(1.0/Fs)));
 							}
 							clear_v = 0;
 						} else {
 							for(j = 0; j < N; j++) {
-								v[j*2] += bell_adsr*sinf((float)(j+k)*2.0*M_PI*freqs[i]*(1.0/Fs) + (float)fm_modamp*sinf((float)(j+k)*2.0*M_PI*(float)mod_freq*(1.0/Fs)));
+								v[j*2] += bell_adsr*sinf((float)(j+k)*2.0*M_PI*fifo_freq*(1.0/Fs) + (float)fm_modamp*sinf((float)(j+k)*2.0*M_PI*(float)mod_freq*(1.0/Fs)));
 							}
 						}
 						if (bell_adsr < 0.1) {
-							adsr_state[i] = 0;
-							adsr[i] = 0.0;
-							freqs[i] = 0.0;
+							adsr_state[index] = 0;
+							adsr[index] = 0.0;
+							//freqs[i] = 0.0;
 							pressedkeys--;
 						}
 					}
@@ -584,14 +596,16 @@ int main( int argc, char *argv[] ) {
 			} else {
 				clear_v = 1;
 				for(i = 0; i < MIDI_POLY_MAX; i++) {
-					if(freqs[i] > 0 || adsr_state[i] > 0) {
-						ADSR(i);
+					unsigned char index = pressedkeys_index_of(-i);
+					float fifo_freq = pressedkeys_pull(-i);
+					if(fifo_freq > 0 && adsr_state[index] > 0) {
+						ADSR(index);
 						if (clear_v == 1){
 							if(flag_violin == 1) { // this is executed when the key is pressed
 								flag_violin = 0;
-								if(freqs[i] > -0.1 && freqs[i] < 0.1)
+								if(fifo_freq > -0.1 && fifo_freq < 0.1)
 									continue;
-								baseDelay = Fs/freqs[i] - 4.0;
+								baseDelay = Fs/fifo_freq - 4.0;
 								if (baseDelay <= 0.0) baseDelay = 0.3;
 								// neck delay line
 								neck_delay = baseDelay*(1.0-betaRatio);
@@ -621,20 +635,20 @@ int main( int argc, char *argv[] ) {
 								bridge_omAlpha = 1.0 - bridge_alpha;
 								if (bridge_outPoint == nDelays+1)
 									bridge_outPoint = 0;
-								for(i = 0; i < 343; i++) {
-									bridgeDelay[i] = 0.0;
-									neckDelay[i] = 0.0;
+								for(j = 0; j < 343; j++) {
+									bridgeDelay[j] = 0.0;
+									neckDelay[j] = 0.0;
 								}
 								vibrato_rate = vibrato_TABLE_SIZE*vibrato_freq/(double)Fs; // vibrato can be changed via user interface, so it needs to be reinitialized
-								for (i = 0; i <  vibrato_TABLE_SIZE; i++){
-									vibrato_table[i] = sin((double)i*2.0*M_PI/(double)vibrato_TABLE_SIZE);
+								for (j = 0; j <  vibrato_TABLE_SIZE; j++){
+									vibrato_table[j] = sin((double)j*2.0*M_PI/(double)vibrato_TABLE_SIZE);
 								}
 							}
 							for(j = 0; j < OVERLAP; j++){  // to avoid overlapping despite not turning it off, the last OVERLAP samples are rewritten to the beggining of next data frame
 									v[j*2] = v[(N-OVERLAP+j)*2];
 							}
 							for(j = OVERLAP; j < N; j++) { // the rest N-OVERLAP samples are generated
-								double bowVelocity = maxVelocity*adsr[i];
+								double bowVelocity = maxVelocity*adsr[index];
 								stringfilter = stringfilter_b*stringfilter_gain*bridgeDelay[0] - stringfilter_a*stringfilter;
 
 								double bridgeReflection = -stringfilter;

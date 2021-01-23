@@ -17,6 +17,7 @@ interrupt void midi_isr( void );
 #include "audioBufConst&ExtVar.h"
 #include "uart_fifo.h"
 #include "midi_fifo.h"
+#include "pressedkeys_fifo.h"
 #include "additive.h"
 
 int SetupInterrupts()
@@ -191,38 +192,19 @@ interrupt void midi_isr( void )
 			if (status == 0x09) { // note on
 				unsigned char note = MIDI_pull(-1)&0x7f;
 				float freq_wav = MIDI_A_SOUND_FREQ*pow(1.059463, note - MIDI_A_SOUND_NUM);
-				int i = 0, keyOccupFlag = 0;
-				for (i = 0; i < MIDI_POLY_MAX; i++) {
-					if (freqs[i] >= freq_wav-0.5 && freqs[i] <= freq_wav+0.5) {
-						adsr_state[i] = 1;
-						adsr[i] = 0;
-						keyOccupFlag = 1;
-						break;
-					}
-				}
-				if(keyOccupFlag == 0) {
-					for (i = 0; i < MIDI_POLY_MAX; i++) {
-						if (freqs[i] == 0) {
-							freqs[i] = freq_wav;
-							flag_flute = 1;
-							flag_violin = 1;
-							adsr_state[i] = 1;
-							break;
-						}
-					}
-					pressedkeys++;
-				}
+				pressedkeys_push(freq_wav);
+				unsigned char newindex = pressedkeys_index_of(0);
+				adsr_state[newindex] = 1;
+				adsr[newindex] = 0.0;
+				flag_flute = 1;
+				flag_violin = 1;
+				pressedkeys++;
 				MIDI_clear();
 			} else if (status == 0x08) { // note off
 				unsigned char note = MIDI_pull(-1)&0x7f;
 				float freq_wav = MIDI_A_SOUND_FREQ*pow(1.059463,note - MIDI_A_SOUND_NUM);
-				int i = 0;
-				for (i = 0; i< MIDI_POLY_MAX; i++) {
-					if (freqs[i] >= freq_wav-0.5 && freqs[i] <= freq_wav+0.5) {
-						adsr_state[i] = 4;
-						break;
-					}
-				}
+				int ret = pressedkeys_delete(freq_wav);
+				if(ret >= 0) adsr_state[ret] = 4;
 				MIDI_clear();
 			}
 		}

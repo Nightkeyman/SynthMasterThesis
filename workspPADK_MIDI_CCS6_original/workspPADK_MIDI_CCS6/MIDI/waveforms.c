@@ -107,7 +107,7 @@ void ADSR(int adsr_index) {
 		{
 			adsr_state[adsr_index] = 0;
 			adsr[adsr_index] = 0.0;
-			freqs[adsr_index] = 0.0;
+			//freqs[adsr_index] = 0.0;
 			pressedkeys--;
 		}
 	}
